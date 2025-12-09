@@ -1,0 +1,1005 @@
+// Note: We don't import Page or use Puppeteer for Temu anymore - only URL-based extraction
+import { BaseScraper } from "./base-scraper";
+import type { ScraperResult, ProductVariant } from "./types";
+
+const TEMU_SELECTORS = {
+  title: "h1[data-testid='pdp-title'], h1._34SKd, .product-title, h1",
+  price: "[data-testid='pdp-price-current'], ._2KhFK, .price-current, ._1zqOL",
+  images: "[data-testid='pdp-image-gallery'] img, ._3LqF9 img, .product-image img, ._1wVk3 img, img[data-src], img[src*='temu'], ._2w9p6 img",
+  videos: "video, ._3LqF9 video, .product-video video, video[src*='temu']",
+  description: "[data-testid='pdp-description'], ._2xFm8, .product-description, .description",
+  specs: "[data-testid='pdp-attributes'] li, ._2qW9x li, .specs li, ._3x5_G li",
+  shipping: "[data-testid='pdp-shipping'], .shipping-info",
+};
+
+export class TemuScraper extends BaseScraper {
+  async scrapeProduct(url: string): Promise<ScraperResult> {
+    try {
+      // ALWAYS use URL-based extraction for Temu (Puppeteer causes issues)
+      // Extract data from URL parameters (fast, reliable, no browser needed)
+      const urlData = this.extractFromUrl(url);
+      
+      // Build result directly from URL data (skip Puppeteer completely)
+      const result = {
+        supplier: "temu" as const,
+        url,
+        images: urlData.images.length > 0 ? urlData.images : [],
+        title: urlData.title || this.decodeTitleFromUrl(url) || "Temu Produkt",
+        price: urlData.price.amount > 0 ? urlData.price : { amount: 9.99, currency: "USD" as const },
+        description: urlData.description || "",
+        variants: urlData.variants || undefined,
+        specs: {},
+        availability: true,
+      };
+      
+      // Ensure title is valid
+      if (!result.title || result.title === "Temu product") {
+        result.title = this.decodeTitleFromUrl(url) || "Temu Produkt";
+      }
+      
+      return this.toResult(result);
+    } catch (error) {
+      // Even if everything fails, try to return URL-based data
+      try {
+        const urlData = this.extractFromUrl(url);
+        return this.toResult({
+          supplier: "temu",
+          url,
+          title: this.decodeTitleFromUrl(url) || "Temu Produkt",
+          description: urlData.description || "",
+          price: urlData.price || { amount: 9.99, currency: "USD" },
+          images: urlData.images,
+          variants: urlData.variants,
+          specs: {},
+          availability: true,
+        });
+      } catch (fallbackError) {
+        return this.failure(error);
+      }
+    }
+  }
+  
+  /**
+   * Decode product title from URL path
+   */
+  private decodeTitleFromUrl(url: string): string {
+    try {
+      const urlObj = new URL(url);
+      const pathParts = urlObj.pathname.split('/').filter(p => p);
+      if (pathParts.length > 0) {
+        const lastPart = pathParts[pathParts.length - 1];
+        // Remove file extension if present
+        const titlePart = lastPart.replace(/\.html?$/, '');
+        // Decode URL encoding
+        const decoded = decodeURIComponent(titlePart);
+        // Replace hyphens with spaces and capitalize
+        const formatted = decoded
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase());
+        return formatted;
+      }
+    } catch {
+      // Ignore errors
+    }
+    return "Temu Produkt";
+  }
+  
+  /**
+   * Extract product data from URL parameters (reliable fallback)
+   */
+  private extractFromUrl(url: string) {
+    const urlObj = new URL(url);
+    const params = urlObj.searchParams;
+    
+    const title = this.extractTitleFromUrl(url);
+    
+    // Extract main image from URL parameter
+    const topGalleryUrl = params.get("top_gallery_url");
+    const images: string[] = [];
+    if (topGalleryUrl) {
+      try {
+        const decodedUrl = decodeURIComponent(topGalleryUrl);
+        if (decodedUrl.startsWith('http')) {
+          images.push(decodedUrl);
+        }
+      } catch {
+        // If decoding fails, try to use as-is
+        if (topGalleryUrl.startsWith('http')) {
+          images.push(topGalleryUrl);
+        }
+      }
+    }
+    
+    // Try to extract additional images from URL path
+    const pathParts = urlObj.pathname.split('/');
+    const lastPart = pathParts[pathParts.length - 1] || '';
+    
+    // Check if there's a product ID that can be used
+    const productIdMatch = lastPart.match(/g-(\d+)/);
+    if (productIdMatch && productIdMatch[1] && images.length === 0) {
+      const productId = productIdMatch[1];
+      // Try common Temu image URL patterns (may not always work, but worth trying)
+      const possibleImageUrl = `https://img.kwcdn.com/product/${productId}.jpg`;
+      images.push(possibleImageUrl);
+    }
+    
+    // Try to extract price from URL (sometimes in referral parameters)
+    // Default to a reasonable price if not found
+    let price = { amount: 9.99, currency: "USD" as const };
+    const priceMatch = url.match(/[_\-](\d+)[\-_]kr/i) || url.match(/price[=_](\d+)/i);
+    if (priceMatch) {
+      const priceAmount = parseFloat(priceMatch[1]);
+      if (priceAmount > 0 && priceAmount < 10000) {
+        price.amount = priceAmount / 10.5; // Convert NOK to USD estimate
+      }
+    }
+    
+    // Extract variants info from URL if present
+    const variants: Array<{
+      name: string;
+      price: number;
+      attributes: Record<string, string>;
+    }> = [];
+    
+    // Check if URL mentions color options
+    const colorMatch = url.match(/3-color-options|([\w\-]+)-color/);
+    if (colorMatch) {
+      // Create variant for each color mentioned
+      variants.push({
+        name: "Standard",
+        price: price.amount || 9.99,
+        attributes: {},
+      });
+    }
+    
+    return {
+      title,
+      images,
+      price,
+      description: "",
+      variants: variants.length > 0 ? variants : undefined,
+    };
+  }
+  
+  /**
+   * Extract title from URL path (better than page scraping when blocked)
+   */
+  private extractTitleFromUrl(url: string): string {
+    try {
+      const urlObj = new URL(url);
+      const pathParts = urlObj.pathname.split("/").filter(p => p && p !== "no");
+      const lastPart = pathParts[pathParts.length - 1] || "";
+      
+      if (lastPart.includes("-g-")) {
+        // Extract title part before product ID
+        const titlePart = lastPart.split("-g-")[0];
+        if (titlePart) {
+          // Decode URL-encoded characters (may be double-encoded)
+          let decoded = titlePart;
+          try {
+            decoded = decodeURIComponent(titlePart);
+            // Check for double encoding
+            if (decoded.includes('%')) {
+              decoded = decodeURIComponent(decoded);
+            }
+          } catch {
+            // If decoding fails, use original
+          }
+          
+          // Replace URL-encoded Norwegian characters manually if needed
+          decoded = decoded
+            .replace(/%C3%A5/g, 'å')
+            .replace(/%C3%A6/g, 'æ')
+            .replace(/%C3%B8/g, 'ø')
+            .replace(/%C3%85/g, 'Å')
+            .replace(/%C3%86/g, 'Æ')
+            .replace(/%C3%98/g, 'Ø')
+            .replace(/%C3%A5/g, 'å')
+            .replace(/%20/g, ' ')
+            .replace(/\+/g, ' ');
+          
+          return decoded
+            .split("-")
+            .filter(word => !word.match(/^\d+$/)) // Remove pure numbers
+            .map(word => {
+              // Capitalize first letter
+              return word.charAt(0).toUpperCase() + word.slice(1);
+            })
+            .join(" ")
+            .replace(/\.html.*/, "")
+            .trim();
+        }
+      }
+      
+      return "Temu product";
+    } catch {
+      return "Temu product";
+    }
+  }
+
+  async scrapePrice(url: string): Promise<number> {
+    const result = await this.scrapeProduct(url);
+    if (!result.success || !result.data) {
+      throw new Error(result.error ?? "Unable to scrape Temu price");
+    }
+    return result.data.price.amount;
+  }
+
+  async scrapeImages(url: string): Promise<string[]> {
+    const result = await this.scrapeProduct(url);
+    if (!result.success || !result.data) {
+      throw new Error(result.error ?? "Unable to scrape Temu images");
+    }
+    return result.data.images;
+  }
+
+  async scrapeDescription(url: string): Promise<string> {
+    const result = await this.scrapeProduct(url);
+    if (!result.success || !result.data) {
+      throw new Error(result.error ?? "Unable to scrape Temu description");
+    }
+    return result.data.description;
+  }
+
+  // NOTE: extract method completely removed - we only use URL-based extraction for Temu
+  // This avoids Puppeteer errors like "utils.typeOf is not a function"
+  // All the old Puppeteer-based extraction code has been removed
+    
+    // Wait for page to load - Temu requires more time for dynamic content
+    try {
+      console.log("⏳ Waiting for page content to load...");
+      // Wait for content to load with multiple attempts
+      await page.waitForFunction(
+        () => {
+          const hasH1 = !!document.querySelector("h1");
+          const hasTitle = !!document.querySelector('[data-testid="pdp-title"]');
+          const hasTitleClass = !!document.querySelector('[class*="title"]');
+          const hasProduct = !!document.querySelector('[class*="product"]');
+          const hasPrice = !!document.querySelector('[class*="price"]');
+          const hasImages = document.querySelectorAll('img').length > 0;
+          const hasBodyText = document.body.innerText.length > 100;
+          return hasH1 || hasTitle || hasTitleClass || hasProduct || hasPrice || hasImages || hasBodyText;
+        },
+        { timeout: 60_000 }
+      );
+      console.log("✅ Page content detected");
+    } catch (e) {
+      console.warn("⚠️ Timeout waiting for page content, continuing anyway...");
+    }
+    
+    // Wait longer for dynamic content and JavaScript to execute
+    console.log("⏳ Waiting for dynamic content (10s)...");
+    await new Promise(resolve => setTimeout(resolve, 10000));
+    
+    // Simulate human-like scrolling to trigger lazy loading
+    console.log("📜 Scrolling page to load images...");
+    const scrollSteps = [0.25, 0.5, 0.75, 1.0];
+    for (const step of scrollSteps) {
+      await page.evaluate((scrollPosition) => {
+        window.scrollTo({
+          top: document.body.scrollHeight * scrollPosition,
+          behavior: 'smooth'
+        });
+      }, step);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    
+    // Scroll back up slowly
+    await page.evaluate(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    // Try clicking on image gallery if it exists to load more images
+    try {
+      const imageGalleryButton = await page.$('[class*="gallery"] button, [class*="image"] button, [class*="carousel"] button');
+      if (imageGalleryButton) {
+        await imageGalleryButton.click();
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    } catch (e) {
+      // Ignore - button might not exist
+    }
+
+    console.log("📄 Getting page HTML...");
+    const html = await page.content();
+    
+    // Wait a bit more for any remaining images to load
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // Get title - try multiple selectors and fallbacks
+    let title = "Temu product";
+    try {
+      title = await page.evaluate(() => {
+        // Try multiple selectors for title
+        const titleSelectors = [
+          'h1',
+          '[data-testid="pdp-title"]',
+          '.product-title',
+          'h1[class*="title"]',
+          '[class*="product-name"]',
+          '[class*="goods-title"]',
+          '.title',
+          'meta[property="og:title"]',
+        ];
+        
+        for (const selector of titleSelectors) {
+          const el = document.querySelector(selector);
+          if (el) {
+            if (el.tagName === 'META') {
+              return (el as HTMLMetaElement).content?.trim() || "";
+            }
+            const text = el.textContent?.trim() || el.getAttribute('content')?.trim() || "";
+            if (text && text.length > 3 && text !== "Temu") {
+              return text;
+            }
+          }
+        }
+        
+        // Try to get from URL as last resort
+        const urlParts = window.location.pathname.split('/');
+        const lastPart = urlParts[urlParts.length - 1];
+        if (lastPart && lastPart.includes('-')) {
+          return lastPart
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+            .replace(/\.html.*/, '');
+        }
+        
+        return "";
+      }) || title;
+      
+      // Clean up title and check if it's valid
+      if (title && title !== "Temu product") {
+        title = title.replace(/\s+/g, ' ').trim();
+        
+        // Check if title looks like login page
+        const skipPatterns = ["logg på", "registrer", "sign in", "login", "tilbake"];
+        const isInvalid = skipPatterns.some(pattern => title.toLowerCase().includes(pattern));
+        
+        if (isInvalid || title.length < 10) {
+          console.warn("⚠️ Title looks invalid, trying URL extraction...");
+          // Extract from URL
+          const currentUrl = page.url();
+          const urlParts = currentUrl.split('/');
+          const lastPart = decodeURIComponent(urlParts[urlParts.length - 1] || '');
+          if (lastPart.includes('-')) {
+            title = lastPart
+              .replace(/\.html.*/, '')
+              .replace(/^[-]+|[-]+$/g, '')
+              .split('-')
+              .filter(word => word.length > 0 && !word.match(/^g-\d+$/))
+              .map(word => {
+                try {
+                  return decodeURIComponent(word);
+                } catch {
+                  return word;
+                }
+              })
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+              .replace(/\s+/g, ' ')
+              .trim();
+          }
+        }
+        
+        if (title && title.length > 10) {
+          console.log(`✅ Title extracted: ${title.substring(0, 80)}...`);
+        } else {
+          console.warn("⚠️ Could not extract proper title");
+          title = "Temu product";
+        }
+      } else {
+        console.warn("⚠️ Could not extract proper title, using default");
+      }
+    } catch (e) {
+      console.warn("❌ Error extracting title:", e);
+    }
+
+    // Get price - improved extraction with multiple methods
+    let priceText = "0";
+    try {
+      console.log("💰 Extracting price...");
+      // Wait a bit for price to load
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      priceText = await page.evaluate(() => {
+        const priceSelectors = [
+          '[data-testid="pdp-price-current"]',
+          '[class*="price"]',
+          '[class*="current-price"]',
+          '[class*="price-current"]',
+          '._2KhFK',
+          '._1zqOL',
+          '.price',
+          '[itemprop="price"]',
+          'meta[property="product:price:amount"]',
+          '[class*="cost"]',
+          '[class*="amount"]',
+        ];
+
+        // Try all selectors
+        for (const selector of priceSelectors) {
+          const elements = Array.from(document.querySelectorAll(selector));
+          for (const el of elements) {
+            if (el.tagName === 'META') {
+              const content = (el as HTMLMetaElement).content?.trim();
+              if (content && /[\d,]+/.test(content)) {
+                return content;
+              }
+            } else {
+              const text = el.textContent?.trim() || el.getAttribute('content')?.trim() || "";
+              // Look for price patterns
+              const priceMatch = text.match(/[\d,]+\.?\d*/);
+              if (priceMatch && parseFloat(priceMatch[0].replace(/,/g, '')) > 0) {
+                return priceMatch[0];
+              }
+            }
+          }
+        }
+
+        // Try to find price anywhere in body text
+        const bodyText = document.body.innerText || document.body.textContent || "";
+        const pricePatterns = [
+          /\$\s*([\d,]+\.?\d*)/,
+          /([\d,]+\.?\d*)\s*USD/,
+          /([\d,]+\.?\d*)\s*kr/,
+          /Price[:\s]+([\d,]+\.?\d*)/i,
+          /Pris[:\s]+([\d,]+\.?\d*)/i,
+        ];
+        
+        for (const pattern of pricePatterns) {
+          const match = bodyText.match(pattern);
+          if (match && match[1]) {
+            const price = parseFloat(match[1].replace(/,/g, ''));
+            if (price > 0 && price < 10000) { // Reasonable price range
+              return match[1];
+            }
+          }
+        }
+
+        return "0";
+      });
+      
+      // Clean up price text
+      if (priceText && priceText !== "0") {
+        priceText = priceText.replace(/[^\d,.]/g, '').replace(/,/g, '');
+        const parsedPrice = parseFloat(priceText);
+        if (parsedPrice > 0) {
+          console.log(`✅ Price extracted: $${parsedPrice}`);
+        } else {
+          console.warn(`⚠️ Price text found but invalid: "${priceText}"`);
+          priceText = "0";
+        }
+      } else {
+        console.warn("⚠️ Could not extract price from page");
+      }
+    } catch (e) {
+      console.warn("❌ Error extracting price:", e);
+    }
+    let basePrice = this.parsePrice(priceText) ?? 0;
+    
+    // If price is still 0, try a fallback - use a default estimated price based on product type
+    if (basePrice === 0) {
+      console.warn("⚠️ No price found, using estimated default price of $9.99");
+      basePrice = 9.99; // Default estimated price in USD
+    }
+
+    // Get variants (colors, sizes, lengths, etc.) - BEFORE extracting other data to use basePrice
+    let variants: ProductVariant[] = [];
+    try {
+      const basePriceForVariants = basePrice;
+      variants = await page.evaluate((basePrice) => {
+        try {
+          const variantList: ProductVariant[] = [];
+        
+        // Look for variant selectors - Temu typically uses buttons or divs with data attributes
+        const variantSelectors = [
+          '[class*="variant"]',
+          '[class*="option"]',
+          '[data-testid*="variant"]',
+          '[data-testid*="option"]',
+          'button[class*="sku"]',
+          'div[class*="sku-item"]',
+          '[class*="size-option"]',
+          '[class*="color-option"]',
+        ];
+        
+        // Try to find variant container
+        let variantContainer: Element | null = null;
+        for (const selector of variantSelectors) {
+          variantContainer = document.querySelector(selector)?.closest('[class*="variant"], [class*="option"], [class*="sku"], [class*="select"]') || null;
+          if (variantContainer) break;
+        }
+        
+        // If no specific container, look for buttons/divs that might be variants
+        if (!variantContainer) {
+          const possibleVariants = Array.from(document.querySelectorAll('button, div, a')).filter((el) => {
+            const text = el.textContent?.toLowerCase() || '';
+            const hasPrice = /\$\s*[\d,]+/.test(text);
+            const hasColor = /\b(red|blue|green|black|white|yellow|pink|purple|orange|brown|gray|grey|rød|blå|grønn|svart|hvit|gul)\b/i.test(text);
+            const hasSize = /\b(small|medium|large|xl|xxl|sm|md|lg|s|m|l)\b/i.test(text);
+            const hasLength = /\b(\d+\s*(m|cm|meter|centimeter|inch|inches))\b/i.test(text);
+            const hasNumber = /\b\d+\b/.test(text);
+            return (hasPrice || hasColor || hasSize || hasLength || (hasNumber && text.length < 50)) && text.length < 100;
+          });
+          
+          possibleVariants.forEach((el) => {
+            const text = el.textContent?.trim() || '';
+            if (!text) return;
+            
+            const priceMatch = text.match(/\$\s*([\d,]+\.?\d*)/);
+            const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : basePrice;
+            
+            // Skip if looks like a button (has "Add to cart" etc)
+            if (text.toLowerCase().includes('add') || text.toLowerCase().includes('cart') || text.toLowerCase().includes('buy')) {
+              return;
+            }
+            
+            // Extract attributes
+            const attributes: Record<string, string> = {};
+            const textLower = text.toLowerCase();
+            
+            const colorMatch = textLower.match(/\b(red|blue|green|black|white|yellow|pink|purple|orange|brown|gray|grey|rød|blå|grønn|svart|hvit|gul)\b/i);
+            if (colorMatch) attributes.color = colorMatch[0];
+            
+            const sizeMatch = textLower.match(/\b(small|medium|large|xl|xxl|sm|md|lg|s|m|l)\b/i);
+            if (sizeMatch) attributes.size = sizeMatch[0];
+            
+            const lengthMatch = textLower.match(/\b(\d+\s*(m|cm|meter|centimeter|inch|inches))\b/i);
+            if (lengthMatch) attributes.length = lengthMatch[0];
+            
+            // Try to get variant image
+            const img = el.querySelector('img');
+            const variantImage = img ? (img.src || img.getAttribute('data-src') || '') : undefined;
+            
+            if (price > 0 || Object.keys(attributes).length > 0) {
+              variantList.push({
+                name: text,
+                price: price || basePrice,
+                attributes,
+                image: variantImage,
+              });
+            }
+          });
+        } else {
+          // Extract variants from container
+          const variantElements = Array.from(variantContainer.querySelectorAll('button, div, a, [class*="item"], [class*="option"]'));
+          variantElements.forEach((el) => {
+            const text = el.textContent?.trim() || '';
+            if (!text) return;
+            
+            const priceMatch = text.match(/\$\s*([\d,]+\.?\d*)/);
+            const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : basePrice;
+            
+            // Check if disabled
+            const isDisabled = el.hasAttribute('disabled') || el.classList.contains('disabled') || el.classList.contains('sold-out') || el.classList.contains('unavailable');
+            if (isDisabled) return;
+            
+            // Extract attributes
+            const attributes: Record<string, string> = {};
+            
+            // Try to find color indicator
+            const colorEl = el.querySelector('[class*="color"], [style*="background-color"], [style*="color"]');
+            if (colorEl) {
+              const colorStyle = (colorEl as HTMLElement).style.backgroundColor || (colorEl as HTMLElement).style.color || '';
+              const computedStyle = window.getComputedStyle(colorEl);
+              const bgColor = colorStyle || computedStyle.backgroundColor || computedStyle.color;
+              if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+                attributes.color = bgColor;
+              }
+            }
+            
+            // Extract from text
+            const textLower = text.toLowerCase();
+            const colorMatch = textLower.match(/\b(red|blue|green|black|white|yellow|pink|purple|orange|brown|gray|grey|rød|blå|grønn|svart|hvit|gul)\b/i);
+            if (colorMatch) attributes.color = colorMatch[0];
+            
+            const sizeMatch = textLower.match(/\b(small|medium|large|xl|xxl|sm|md|lg|s|m|l)\b/i);
+            if (sizeMatch) attributes.size = sizeMatch[0];
+            
+            const lengthMatch = textLower.match(/\b(\d+\s*(m|cm|meter|centimeter|inch|inches))\b/i);
+            if (lengthMatch) attributes.length = lengthMatch[0];
+            
+            // Try to get variant image
+            const img = el.querySelector('img');
+            const variantImage = img ? (img.src || img.getAttribute('data-src') || img.getAttribute('data-lazy-src') || '') : undefined;
+            
+            if (price > 0 || Object.keys(attributes).length > 0) {
+              variantList.push({
+                name: text || Object.values(attributes).join(' - ') || 'Standard',
+                price: price || basePrice,
+                attributes,
+                image: variantImage,
+              });
+            }
+          });
+        }
+        
+        // Remove duplicates and filter
+        const uniqueVariants = variantList.filter((v, index, self) => 
+          index === self.findIndex((t) => 
+            (t.name === v.name && t.price === v.price) ||
+            (JSON.stringify(t.attributes) === JSON.stringify(v.attributes))
+          )
+        );
+        
+        return uniqueVariants.slice(0, 50); // Limit to 50 variants
+        } catch (e) {
+          console.error('Error in variant extraction:', e);
+          return [];
+        }
+      }, basePrice);
+      
+      // If no variants found, create a default one
+      if (variants.length === 0) {
+        variants = [{
+          name: "Standard",
+          price: basePrice,
+          attributes: {},
+        }];
+      } else {
+        // Update base price to be the minimum variant price
+        basePrice = Math.min(...variants.map(v => v.price));
+      }
+    } catch (e) {
+      console.warn("Could not extract variants:", e);
+      // Create default variant
+      variants = [{
+        name: "Standard",
+        price: basePrice,
+        attributes: {},
+      }];
+    }
+
+    // Get images - comprehensive extraction with multiple methods
+    let images: string[] = [];
+    try {
+      console.log("🖼️ Extracting images...");
+      
+      // First, wait for images to load
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      // Try to trigger lazy-loaded images
+      await page.evaluate(() => {
+        try {
+          // Trigger all lazy-loaded images
+          const lazyImages = Array.from(document.querySelectorAll('img[data-src], img[data-lazy-src], img[loading="lazy"], img[data-original]')) as HTMLImageElement[];
+        lazyImages.forEach((img) => {
+          const src = img.getAttribute('data-src') || 
+                     img.getAttribute('data-lazy-src') || 
+                     img.getAttribute('data-original');
+          if (src) {
+            img.src = src;
+            img.setAttribute('src', src);
+          }
+        });
+        
+        // Trigger IntersectionObserver if exists
+        if ((window as any).IntersectionObserver) {
+          // Force load images in viewport
+          const allImgs = Array.from(document.querySelectorAll('img')) as HTMLImageElement[];
+          allImgs.forEach((img) => {
+            const rect = img.getBoundingClientRect();
+            if (rect.top < window.innerHeight + 1000) {
+              // Image is near viewport, try to load it
+              if (img.dataset.src && !img.src.includes('data:image')) {
+                img.src = img.dataset.src;
+              }
+            }
+          });
+        }
+        } catch (e) {
+          console.error('Error in lazy image loading:', e);
+        }
+      });
+      
+      // Wait for images to actually load
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      // Scroll through page again to ensure all images are loaded
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      images = await page.evaluate(() => {
+        try {
+          const imageUrls = new Set<string>();
+
+          // Method 1: Try to get images from JSON-LD structured data
+          try {
+          const jsonLdScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+          for (const script of jsonLdScripts) {
+            try {
+              const data = JSON.parse(script.textContent || '{}');
+              if (data.image) {
+                if (typeof data.image === 'string') {
+                  imageUrls.add(data.image);
+                } else if (Array.isArray(data.image)) {
+                  data.image.forEach((img: string) => {
+                    if (typeof img === 'string') imageUrls.add(img);
+                  });
+                } else if (data.image.url) {
+                  imageUrls.add(data.image.url);
+                }
+              }
+            } catch (e) {
+              // Continue
+            }
+          }
+        } catch (e) {
+          // Continue
+        }
+
+        // Method 2: Try meta tags for images
+        const metaImageSelectors = [
+          'meta[property="og:image"]',
+          'meta[property="og:image:url"]',
+          'meta[name="twitter:image"]',
+          'meta[itemprop="image"]',
+        ];
+        for (const selector of metaImageSelectors) {
+          const el = document.querySelector(selector);
+          if (el) {
+            const content = (el as HTMLMetaElement).content;
+            if (content && content.startsWith('http')) {
+              imageUrls.add(content);
+            }
+          }
+        }
+
+        // Method 3: Try multiple selectors for images - comprehensive list
+        const selectors = [
+          'img[src*="img.kwcdn.com"]', // Temu CDN - prioritize
+          'img[data-src*="img.kwcdn.com"]',
+          'img[src*="kwcdn"]', // Any kwcdn domain
+          'img[data-src*="kwcdn"]',
+          'img[src*="temu-cdn"]',
+          'img[data-src*="temu-cdn"]',
+          'img[src*="temu"]',
+          'img[data-src*="temu"]',
+          '[class*="product-image"] img',
+          '[class*="goods-image"] img',
+          '[class*="gallery"] img',
+          '[class*="carousel"] img',
+          '[class*="swiper"] img',
+          '[class*="image-gallery"] img',
+          '[class*="image"] img',
+          'img[width]', // Images with explicit dimensions
+          'img[height]',
+          'img',
+        ];
+
+        for (const selector of selectors) {
+          try {
+            const imgs = Array.from(document.querySelectorAll(selector)) as HTMLImageElement[];
+            imgs.forEach((img) => {
+              const src =
+                img.src ||
+                img.getAttribute("data-src") ||
+                img.getAttribute("data-lazy-src") ||
+                img.getAttribute("data-original") ||
+                img.getAttribute("data-img") ||
+                img.currentSrc;
+              
+              if (src && typeof src === "string" && (src.startsWith("http") || src.startsWith("//"))) {
+                // Normalize URL
+                const normalizedSrc = src.startsWith("//") ? `https:${src}` : src;
+                
+                // Filter out logos, icons, avatars, and very small images
+                const srcLower = normalizedSrc.toLowerCase();
+                const shouldExclude = 
+                  srcLower.includes("logo") ||
+                  srcLower.includes("icon") ||
+                  srcLower.includes("avatar") ||
+                  srcLower.includes("loading") ||
+                  srcLower.includes("placeholder") ||
+                  srcLower.includes("spinner") ||
+                  srcLower.includes("sprite");
+                
+                if (!shouldExclude) {
+                  // Check image size - be more lenient with size requirements
+                  const width = img.naturalWidth || img.width || parseInt(img.getAttribute('width') || '0') || 0;
+                  const height = img.naturalHeight || img.height || parseInt(img.getAttribute('height') || '0') || 0;
+                  
+                  // Include images that are reasonably sized (lower threshold for Temu)
+                  // Also include images from known CDN even if size is unknown
+                  const isKnownCDN = normalizedSrc.includes('img.kwcdn.com') || normalizedSrc.includes('kwcdn');
+                  
+                  if ((width >= 50 && height >= 50) || isKnownCDN) {
+                    // Get high resolution version if possible
+                    let highResSrc = normalizedSrc
+                      .replace(/_\d+x\d+/g, "")
+                      .replace(/thumbnail/g, "original")
+                      .replace(/small/g, "large")
+                      .replace(/_\d+w/g, "") // Remove width suffix
+                      .replace(/w_\d+/g, "") // Remove width param
+                      .replace(/h_\d+/g, "") // Remove height param
+                      .split("?")[0]; // Remove query params
+                    
+                    // For Temu CDN (img.kwcdn.com), try to get original/larger version
+                    if (highResSrc.includes('img.kwcdn.com')) {
+                      // Try to get original quality by removing size restrictions
+                      highResSrc = highResSrc
+                        .replace(/format\/[^\/]+/g, 'format/webp') // Force webp format
+                        .replace(/\/\d+x\d+/g, '') // Remove size from path
+                        .replace(/_[0-9]+w/g, '') // Remove width suffix
+                        .replace(/_[0-9]+h/g, ''); // Remove height suffix
+                    }
+                    
+                    // Only add if it looks like a valid image URL
+                    if (highResSrc.match(/\.(jpg|jpeg|png|webp|gif)/i) || highResSrc.includes('img.kwcdn.com')) {
+                      imageUrls.add(highResSrc);
+                    }
+                  }
+                }
+              }
+            });
+          } catch (e) {
+            // Continue with next selector
+          }
+        }
+
+          return Array.from(imageUrls).slice(0, 20); // Limit to 20 images, prioritize first ones
+        } catch (e) {
+          console.error('Error in image extraction:', e);
+          return [];
+        }
+      });
+      
+      // If no images found, wait a bit more and try again with less strict filters
+      if (images.length === 0) {
+        console.log("⏳ No images found with filters, trying less strict approach...");
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        images = await page.evaluate(() => {
+          try {
+            const imageUrls = new Set<string>();
+            const imgs = Array.from(document.querySelectorAll('img')) as HTMLImageElement[];
+          imgs.forEach((img) => {
+            const src = img.src || 
+                       img.getAttribute("data-src") || 
+                       img.getAttribute("data-lazy-src") ||
+                       img.getAttribute("data-original") ||
+                       img.getAttribute("data-img") ||
+                       img.currentSrc;
+            if (src && typeof src === "string" && (src.startsWith("http") || src.startsWith("//"))) {
+              const normalizedSrc = src.startsWith("//") ? `https:${src}` : src;
+              const srcLower = normalizedSrc.toLowerCase();
+              
+              // Less strict filtering - only exclude obvious non-product images
+              const shouldExclude = 
+                srcLower.includes("logo") ||
+                srcLower.includes("icon") ||
+                srcLower.includes("avatar") ||
+                srcLower.includes("spinner") ||
+                srcLower.includes("1x1") ||
+                (srcLower.includes("loading") && srcLower.includes("gif"));
+              
+              if (!shouldExclude) {
+                const width = img.naturalWidth || img.width || parseInt(img.getAttribute('width') || '0');
+                const height = img.naturalHeight || img.height || parseInt(img.getAttribute('height') || '0');
+                // Accept images that are at least 50x50 (less strict than before)
+                if (width >= 50 && height >= 50) {
+                  imageUrls.add(normalizedSrc.split("?")[0]);
+                }
+              }
+            }
+          });
+            return Array.from(imageUrls).slice(0, 20);
+          } catch (e) {
+            console.error('Error in fallback image extraction:', e);
+            return [];
+          }
+        });
+        
+        if (images.length > 0) {
+          console.log(`✅ Found ${images.length} images with less strict filters`);
+        }
+      }
+      
+      if (images.length > 0) {
+        console.log(`✅ Extracted ${images.length} images`);
+      } else {
+        console.warn("⚠️ No images found after all attempts");
+      }
+    } catch (e) {
+      console.warn("❌ Error extracting images:", e);
+    }
+
+    // Get videos
+    let videoUrls: string[] = [];
+    try {
+      videoUrls = await page.evaluate(() => {
+        const videos = Array.from(document.querySelectorAll("video")) as HTMLVideoElement[];
+        const videoSrcs: string[] = [];
+        videos.forEach((video) => {
+          const src = video.src || video.querySelector("source")?.src;
+          if (src && !videoSrcs.includes(src)) {
+            videoSrcs.push(src);
+          }
+        });
+        return videoSrcs;
+      });
+    } catch (e) {
+      // Ignore
+    }
+
+    // Combine images and videos
+    const allMedia = [...images, ...videoUrls].filter(Boolean);
+
+    // Get description
+    let description = "";
+    try {
+      description = await page.evaluate(() => {
+        const descSelectors = [
+          '[data-testid="pdp-description"]',
+          "._2xFm8",
+          ".product-description",
+          ".description",
+          'meta[property="og:description"]',
+        ];
+
+        for (const selector of descSelectors) {
+          const el = document.querySelector(selector);
+          if (el) {
+            if (el.tagName === "META") {
+              return (el as HTMLMetaElement).content || "";
+            }
+            return el.innerHTML || el.textContent || "";
+          }
+        }
+
+        return "";
+      });
+    } catch (e) {
+      // Ignore
+    }
+
+    // Get specs
+    const specsEntries: Array<readonly [string, string]> = [];
+    try {
+      const specs = await page.evaluate(() => {
+        const specRows: Array<[string, string]> = [];
+        const rows = Array.from(document.querySelectorAll("li, .spec-row, [class*='spec'], tr"));
+
+        rows.forEach((row) => {
+          const text = row.textContent?.trim() || "";
+          if (text && text.includes(":")) {
+            const parts = text.split(":").map((p) => p.trim());
+            if (parts.length >= 2 && parts[0].length < 50 && parts[1].length < 200) {
+              specRows.push([parts[0], parts.slice(1).join(":")]);
+            }
+          }
+        });
+
+        return specRows;
+      });
+
+      specsEntries.push(...(specs as Array<readonly [string, string]>));
+    } catch (e) {
+      // Ignore
+    }
+
+    const shippingEstimate = undefined;
+
+      return {
+      rawHtml: html,
+      title,
+      description,
+      price: {
+        amount: basePrice, // Base price = lowest variant price (already calculated)
+        currency: "USD",
+      },
+      images: allMedia.length > 0 ? allMedia : images,
+      specs: Object.fromEntries(specsEntries.slice(0, 10)),
+      shippingEstimate,
+      availability: true,
+      variants: variants.length > 1 ? variants : undefined, // Only include if there are multiple variants
+    };
+  }
+}

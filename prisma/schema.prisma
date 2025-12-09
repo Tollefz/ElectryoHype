@@ -1,0 +1,300 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  manager
+  support
+}
+
+enum OrderStatus {
+  pending
+  paid
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum PaymentMethod {
+  stripe
+  vipps
+  klarna
+  paypal
+}
+
+enum SupplierOrderStatus {
+  PENDING
+  SENT_TO_SUPPLIER
+  ACCEPTED_BY_SUPPLIER
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum CartStatus {
+  ACTIVE
+  RECOVERED
+  EXPIRED
+}
+
+enum SupplierName {
+  alibaba
+  ebay
+  temu
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      UserRole @default(admin)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  storeId   String?
+  addresses Json?
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Product {
+  id                String           @id @default(cuid())
+  name              String
+  slug              String           @unique
+  storeId           String?
+  supplierId        String?
+  supplierSku       String?
+  shortDescription  String?
+  description       String?
+  price             Float // Base price (laveste variant pris)
+  compareAtPrice    Float?
+  supplierPrice     Float? // Base supplier price
+  images            String
+  supplierUrl       String?
+  supplierName      SupplierName?
+  supplierProductId String?
+  profitMargin      String?
+  autoImport        Boolean          @default(false)
+  lastSynced        DateTime?
+  category          String?
+  tags              String
+  sku               String?          @unique
+  stock             Int              @default(0)
+  isActive          Boolean          @default(true)
+  specs             Json?
+  metaTitle         String?
+  metaDescription   String?
+  variants          ProductVariant[]
+  orderItems        OrderItem[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([category])
+  @@index([supplierName])
+  @@index([isActive])
+  @@index([storeId])
+}
+
+model ProductVariant {
+  id             String      @id @default(cuid())
+  productId      String
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name           String // E.g., "Rød - 2m" or "Large - Blå"
+  sku            String?     @unique
+  price          Float // Variant-specific price
+  compareAtPrice Float?
+  supplierPrice  Float? // Variant-specific supplier price
+  image          String? // Variant-specific image
+  attributes     Json // E.g., {"color": "Rød", "length": "2m"}
+  stock          Int         @default(0)
+  isActive       Boolean     @default(true)
+  orderItems     OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([productId])
+  @@index([sku])
+  @@index([isActive])
+}
+
+model Order {
+  id                  String         @id @default(cuid())
+  orderNumber         String         @unique
+  storeId             String?
+  customerId          String?
+  customer            Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  placedById          String?
+  placedBy            User?          @relation(fields: [placedById], references: [id], onDelete: SetNull)
+  status              OrderStatus    @default(pending)
+  items               Json
+  orderItems          OrderItem[]
+  subtotal            Float
+  shippingCost        Float
+  tax                 Float
+  total               Float
+  shippingAddress     Json
+  paymentMethod       PaymentMethod?
+  paymentStatus       PaymentStatus  @default(pending)
+  paymentIntentId     String?
+  supplierOrderId     String?
+  supplierOrderStatus SupplierOrderStatus? @default(PENDING)
+  autoOrderAttempts   Int            @default(0)
+  autoOrderError      String?
+  trackingNumber      String?
+  trackingUrl         String?
+  shippingCarrier     String?
+  supplierEvents      SupplierOrderEvent[]
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  @@index([customerId])
+  @@index([status, createdAt])
+  @@index([paymentStatus])
+  @@index([supplierOrderId])
+  @@index([storeId])
+}
+
+model OrderItem {
+  id          String          @id @default(cuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product         @relation(fields: [productId], references: [id])
+  variantId   String?
+  variant     ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  variantName String? // Snapshot of variant name at time of order
+  quantity    Int
+  price       Float
+  createdAt   DateTime        @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
+}
+
+model SupplierOrderEvent {
+  id          String              @id @default(cuid())
+  orderId     String
+  oldStatus   SupplierOrderStatus?
+  newStatus   SupplierOrderStatus
+  metadata    Json?
+  createdAt   DateTime            @default(now())
+  order       Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([newStatus, createdAt])
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model AbandonedCart {
+  id          String     @id @default(cuid())
+  email       String?
+  items       Json
+  status      CartStatus @default(ACTIVE)
+  storeId     String?
+  token       String?    @unique
+  lastUpdated DateTime   @updatedAt
+  createdAt   DateTime   @default(now())
+
+  @@index([email])
+  @@index([status, lastUpdated])
+  @@index([storeId])
+}
+
+model DiscountCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  percentOff  Float?
+  amountOff   Float?
+  usageLimit  Int?
+  timesUsed   Int      @default(0)
+  storeId     String?
+  expiresAt   DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([isActive, expiresAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  keys      Json?
+  customerId String?
+  storeId   String?
+  createdAt DateTime @default(now())
+
+  @@index([storeId])
+}
+
+model Affiliate {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String?
+  ratePercent Float   @default(10)
+  storeId    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  clicks     AffiliateClick[]
+  orders     AffiliateOrder[]
+
+  @@index([storeId])
+}
+
+model AffiliateClick {
+  id          String   @id @default(cuid())
+  affiliateId String
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([affiliateId])
+}
+
+model AffiliateOrder {
+  id             String    @id @default(cuid())
+  affiliateId    String
+  affiliate      Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  orderId        String
+  commissionAmount Float   @default(0)
+  createdAt      DateTime  @default(now())
+
+  @@index([affiliateId])
+  @@index([orderId])
+}
