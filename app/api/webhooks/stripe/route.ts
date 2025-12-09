@@ -93,7 +93,7 @@ export async function POST(req: Request) {
             data: {
               riskScore: risk.riskScore,
               isFlaggedForReview: risk.isFlagged,
-            },
+            } as any,
           });
 
           // Send e-poster (fire and forget - ikke vent på dem)
