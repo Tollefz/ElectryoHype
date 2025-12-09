@@ -5,7 +5,7 @@ import { validateVariantAttributes } from "@/lib/validation/color-validation";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string; variantId: string }> | { id: string; variantId: string } }
+  context: { params: Promise<{ id: string; variantId: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -13,8 +13,7 @@ export async function PATCH(
   }
 
   try {
-    const paramsResolved = params instanceof Promise ? await params : params;
-    const { variantId } = paramsResolved;
+    const { variantId } = await context.params;
     const body = await req.json();
 
     // Check if variant exists
@@ -60,7 +59,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: Promise<{ id: string; variantId: string }> | { id: string; variantId: string } }
+  context: { params: Promise<{ id: string; variantId: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -68,8 +67,7 @@ export async function DELETE(
   }
 
   try {
-    const paramsResolved = params instanceof Promise ? await params : params;
-    const { variantId } = paramsResolved;
+    const { variantId } = await context.params;
 
     // Check if variant exists
     const variant = await prisma.productVariant.findUnique({

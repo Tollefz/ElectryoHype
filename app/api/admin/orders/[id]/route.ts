@@ -19,7 +19,7 @@ const updateOrderSchema = z.object({
 // GET: Hent ordre detaljer
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     // Sjekk autentisering
@@ -28,9 +28,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Håndter både sync og async params
-    const resolvedParams = params instanceof Promise ? await params : params;
-    const orderId = resolvedParams.id;
+    const { id: orderId } = await context.params;
 
     if (!orderId || orderId.trim() === "") {
       return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
@@ -100,7 +98,7 @@ export async function GET(
 // PATCH: Oppdater ordre
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     // Sjekk autentisering
@@ -109,9 +107,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Håndter både sync og async params
-    const resolvedParams = params instanceof Promise ? await params : params;
-    const orderId = resolvedParams.id;
+    const { id: orderId } = await context.params;
 
     if (!orderId || orderId.trim() === "") {
       return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });

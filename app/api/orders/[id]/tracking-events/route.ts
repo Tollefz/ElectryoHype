@@ -13,9 +13,9 @@ type EventType =
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
   if (!id) {
     return NextResponse.json({ error: "Missing order id" }, { status: 400 });
   }

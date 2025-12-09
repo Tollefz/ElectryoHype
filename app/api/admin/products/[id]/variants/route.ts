@@ -5,7 +5,7 @@ import { validateVariantAttributes } from "@/lib/validation/color-validation";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -13,7 +13,7 @@ export async function GET(
   }
 
   try {
-    const { id } = params instanceof Promise ? await params : params;
+    const { id } = await context.params;
 
     const variants = await prisma.productVariant.findMany({
       where: { productId: id },
@@ -30,7 +30,7 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -38,7 +38,7 @@ export async function POST(
   }
 
   try {
-    const { id } = params instanceof Promise ? await params : params;
+    const { id } = await context.params;
     const variantData = await req.json();
 
     // Valider påkrevde felt
@@ -85,7 +85,7 @@ export async function POST(
 
 export async function PUT(
   req: Request,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -93,7 +93,7 @@ export async function PUT(
   }
 
   try {
-    const { id } = params instanceof Promise ? await params : params;
+    const { id } = await context.params;
     const { variants } = await req.json();
 
     if (!Array.isArray(variants)) {

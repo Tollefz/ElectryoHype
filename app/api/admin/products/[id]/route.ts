@@ -5,7 +5,7 @@ import { improveTitle } from '@/lib/utils/improve-product-title';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -13,8 +13,9 @@ export async function GET(
   }
 
   try {
+    const { id } = await context.params;
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         variants: true,
       },
@@ -36,7 +37,7 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -44,6 +45,7 @@ export async function PATCH(
   }
 
   try {
+    const { id } = await context.params;
     const body = await req.json();
     const { images, name, ...otherFields } = body;
 
@@ -58,7 +60,7 @@ export async function PATCH(
     }
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 
@@ -74,7 +76,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -82,7 +84,7 @@ export async function DELETE(
   }
 
   try {
-    const { id } = await (params instanceof Promise ? params : Promise.resolve(params));
+    const { id } = await context.params;
     
     // Check if product exists
     const product = await prisma.product.findUnique({

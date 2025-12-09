@@ -5,7 +5,7 @@ import { sendOrderConfirmation } from "@/lib/email";
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     // Sjekk autentisering
@@ -14,9 +14,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Håndter både sync og async params
-    const resolvedParams = params instanceof Promise ? await params : params;
-    const orderId = resolvedParams.id;
+    const { id: orderId } = await context.params;
 
     if (!orderId || orderId.trim() === "") {
       return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });

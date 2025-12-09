@@ -4,7 +4,7 @@ import { getAuthSession } from '@/lib/auth';
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user) {
@@ -12,7 +12,7 @@ export async function PATCH(
   }
 
   try {
-    const paramsResolved = params instanceof Promise ? await params : params;
+    const { id } = await context.params;
     const body = await req.json();
     const { image, ...otherFields } = body;
 
@@ -22,7 +22,7 @@ export async function PATCH(
     }
 
     const variant = await prisma.productVariant.update({
-      where: { id: paramsResolved.id },
+      where: { id },
       data: updateData,
     });
 
