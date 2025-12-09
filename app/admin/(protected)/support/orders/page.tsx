@@ -4,6 +4,9 @@ import { SupplierOrderStatus } from "@prisma/client";
 import { getStoreIdFromHeaders } from "@/lib/store";
 import { headers } from "next/headers";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function humanStatus(status: SupplierOrderStatus | null) {
   if (!status) return "PENDING";
   return status;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { CartProvider } from "@/lib/cart-context";
@@ -35,7 +36,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartProvider>
             <div className="flex min-h-screen flex-col">
               <Header />
-              <RefTracker />
+              <Suspense fallback={null}>
+                <RefTracker />
+              </Suspense>
               <main className="flex-1">{children}</main>
               <Footer />
             </div>

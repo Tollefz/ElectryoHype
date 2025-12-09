@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { Suspense } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { FilterSidebar } from "@/components/products/FilterSidebar";
@@ -133,10 +134,14 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               </p>
             )}
           </div>
-          <SortDropdown />
+          <Suspense fallback={<div className="h-10 w-32 rounded-lg bg-gray-200 animate-pulse" />}>
+            <SortDropdown />
+          </Suspense>
         </div>
         <div className="grid gap-8 lg:grid-cols-[280px,1fr]">
-          <FilterSidebar categories={categories} />
+          <Suspense fallback={<div className="h-96 rounded-lg bg-gray-200 animate-pulse" />}>
+            <FilterSidebar categories={categories} />
+          </Suspense>
           <div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {products.length === 0 && (
@@ -165,7 +170,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            <Pagination currentPage={page} totalPages={totalPages} />
+            <Suspense fallback={<div className="h-10 w-full rounded-lg bg-gray-200 animate-pulse mt-4" />}>
+              <Pagination currentPage={page} totalPages={totalPages} />
+            </Suspense>
           </div>
         </div>
       </div>

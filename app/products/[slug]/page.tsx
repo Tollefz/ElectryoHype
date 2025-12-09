@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductPageClientWrapper from '@/components/ProductPageClientWrapper';
@@ -478,11 +479,13 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
               {/* Variant selector - vises før AddToCartButton */}
               {variants.length > 0 && (
                 <div className="mb-6">
-                  <ProductVariantSelector
-                    variants={variants}
-                    defaultImage={productData.image}
-                    variantTypeLabel="Farge"
-                  />
+                  <Suspense fallback={<div className="h-20 w-full rounded-lg bg-gray-200 animate-pulse" />}>
+                    <ProductVariantSelector
+                      variants={variants}
+                      defaultImage={productData.image}
+                      variantTypeLabel="Farge"
+                    />
+                  </Suspense>
                 </div>
               )}
 
