@@ -363,7 +363,7 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
         <h2 className="text-xl font-semibold mb-4">Leverandørhistorikk</h2>
         {order.supplierEvents && order.supplierEvents.length > 0 ? (
           <div className="space-y-4">
-            {order.supplierEvents.map((ev) => (
+            {order.supplierEvents.map((ev: any) => (
               <div key={ev.id} className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <div className="h-3 w-3 rounded-full bg-blue-500"></div>
