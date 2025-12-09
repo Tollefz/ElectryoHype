@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { FilterSidebar } from "@/components/products/FilterSidebar";
 import { SortDropdown } from "@/components/products/SortDropdown";
