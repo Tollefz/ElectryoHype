@@ -19,7 +19,8 @@ async function getParams(searchParams: ProductsPageProps["searchParams"]) {
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await getParams(searchParams);
-  const storeId = getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = getStoreIdFromHeaders(headersList);
   const page = Math.max(1, Number(params.page ?? "1"));
   const category = params.category ?? undefined;
   // Støtt både 'q' og 'query' for søkeparameter

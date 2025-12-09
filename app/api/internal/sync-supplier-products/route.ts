@@ -11,7 +11,8 @@ export async function POST(req: Request) {
 
   const searchParams = new URL(req.url).searchParams;
   const overrideStore = searchParams.get("storeId");
-  const storeId = overrideStore || getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = overrideStore || getStoreIdFromHeaders(headersList);
 
   const dryRun = searchParams.get("dryRun") !== "false";
 

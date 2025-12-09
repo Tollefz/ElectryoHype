@@ -14,7 +14,8 @@ export default async function SupportOrdersPage({
 }: {
   searchParams?: { supplierStatus?: string; errorOnly?: string; minTotal?: string };
 }) {
-  const storeId = getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = getStoreIdFromHeaders(headersList);
   const supplierStatus = searchParams?.supplierStatus;
   const errorOnly = searchParams?.errorOnly === "true";
   const minTotal = searchParams?.minTotal ? Number(searchParams.minTotal) : 0;

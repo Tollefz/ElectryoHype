@@ -7,7 +7,8 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const paymentIntentId = searchParams.get("paymentIntentId");
-    const storeId = getStoreIdFromHeaders(headers());
+    const headersList = await headers();
+    const storeId = getStoreIdFromHeaders(headersList);
 
     if (!paymentIntentId) {
       return NextResponse.json(

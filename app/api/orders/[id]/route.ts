@@ -13,7 +13,8 @@ export async function GET(
   }
 
   try {
-    const storeId = getStoreIdFromHeaders(headers());
+    const headersList = await headers();
+    const storeId = getStoreIdFromHeaders(headersList);
     const order = await prisma.order.findUnique({
       where: { id, storeId },
       include: {

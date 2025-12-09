@@ -24,7 +24,8 @@ async function getParams(params: ProductPageProps["params"]) {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await getParams(params);
-  const storeId = getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = getStoreIdFromHeaders(headersList);
   
   const product = await prisma.product.findFirst({
     where: { slug, storeId },
@@ -76,7 +77,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await getParams(params);
   const { variant: variantParam } = await (searchParams instanceof Promise ? searchParams : Promise.resolve(searchParams));
-  const storeId = getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = getStoreIdFromHeaders(headersList);
   
   const product = await prisma.product.findFirst({
     where: { slug, storeId },

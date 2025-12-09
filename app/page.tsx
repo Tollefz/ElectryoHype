@@ -8,7 +8,8 @@ import { getStoreIdFromHeaders } from '@/lib/store';
 import { headers } from 'next/headers';
 
 export default async function HomePage() {
-  const storeId = getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = getStoreIdFromHeaders(headersList);
   const products = await prisma.product.findMany({
     where: { isActive: true, storeId },
     take: 8,

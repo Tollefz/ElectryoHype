@@ -11,7 +11,8 @@ import { headers } from "next/headers";
 export async function POST(req: Request) {
   try {
     console.log("📥 Payment intent request received");
-    const storeId = getStoreIdFromHeaders(headers());
+    const headersList = await headers();
+    const storeId = getStoreIdFromHeaders(headersList);
     
     // Sjekk og valider Stripe keys
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim();

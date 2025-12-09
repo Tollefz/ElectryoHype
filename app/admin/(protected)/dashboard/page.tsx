@@ -52,7 +52,8 @@ async function getDashboardStats(storeId: string) {
 }
 
 export default async function AdminDashboard() {
-  const storeId = getStoreIdFromHeaders(headers());
+  const headersList = await headers();
+  const storeId = getStoreIdFromHeaders(headersList);
   const stats = await getDashboardStats(storeId);
   const cards = [
     {
