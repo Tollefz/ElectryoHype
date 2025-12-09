@@ -1,4 +1,4 @@
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, SupplierOrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSupplierAdapter } from "@/lib/suppliers";
 import type { Supplier } from "@/lib/suppliers/types";
@@ -80,7 +80,7 @@ export async function processOrderAutomation(orderId: string, options?: ProcessO
     where: { id: order.id },
     data: {
       supplierOrderId: primarySupplier.supplierOrderId,
-      supplierOrderStatus: "pending",
+      supplierOrderStatus: SupplierOrderStatus.PENDING,
       autoOrderAttempts,
       status: OrderStatus.processing,
       updatedAt: new Date(),
