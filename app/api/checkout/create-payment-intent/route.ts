@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       apiVersion: "2025-02-24.acacia",
     });
 
-    const { items, customer, total, shippingCost, discountCode } = await req.json();
+    const { items, customer, total, shippingCost, discountCode, affiliateCode } = await req.json();
     
     console.log("📦 Creating order with:", {
       itemsCount: items?.length || 0,
