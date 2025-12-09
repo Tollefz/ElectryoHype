@@ -141,7 +141,7 @@ export default async function OrderDetailsPage({
 
   // Håndter både sync og async params (Next.js 14 vs 15)
   const resolvedParams = params instanceof Promise ? await params : params;
-  const order = await getOrder(resolvedParams.id);
+  const order: any = await getOrder(resolvedParams.id);
 
   if (!order) {
     notFound();
