@@ -32,7 +32,7 @@ interface Order {
 }
 
 interface OrderDetailsClientProps {
-  order: Order;
+  order: any; // TODO: narrow type later
 }
 
 export default function OrderDetailsClient({ order: initialOrder }: OrderDetailsClientProps) {
