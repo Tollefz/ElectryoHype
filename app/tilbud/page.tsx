@@ -3,29 +3,44 @@ import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
 import { ChevronRight, Tag } from 'lucide-react';
 
+/**
+ * Henter produkter med rabatt fra databasen.
+ * Returnerer tom array hvis databasen/tabellen mangler (f.eks. under Vercel build).
+ */
+async function getDiscountedProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+        compareAtPrice: {
+          not: null,
+          gt: 0,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        price: true,
+        compareAtPrice: true,
+        images: true,
+        category: true,
+      },
+    });
+    return products;
+  } catch (err) {
+    console.error('Failed to load tilbud products', err);
+    // Returner tom array hvis databasen/tabellen mangler (f.eks. under Vercel build)
+    return [];
+  }
+}
+
 export default async function TilbudPage() {
   // Hent alle produkter med rabatt (compareAtPrice > price)
-  const discountedProducts = await prisma.product.findMany({
-    where: {
-      isActive: true,
-      compareAtPrice: {
-        not: null,
-        gt: 0,
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      price: true,
-      compareAtPrice: true,
-      images: true,
-      category: true,
-    },
-  });
+  const discountedProducts = await getDiscountedProducts();
 
   // Filtrer produkter hvor compareAtPrice faktisk er høyere enn price
   const actualDiscounted = discountedProducts.filter((product) => {
