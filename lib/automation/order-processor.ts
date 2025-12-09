@@ -54,7 +54,7 @@ export async function processOrderAutomation(orderId: string, options?: ProcessO
     const supplier = item.product.supplierName.toLowerCase() as Supplier;
     const adapter = await getSupplierAdapter(supplier);
 
-    const result = await adapter.placeOrder({
+    const result = await (adapter as any).placeOrder({
       orderId: order.id,
       productId: item.productId,
       supplierProductId: item.product.supplierProductId,
