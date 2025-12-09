@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { SupplierOrderStatus } from "@prisma/client";
 import { getSupplierAdapter } from "@/lib/suppliers";
+import type { Supplier } from "@/lib/suppliers/types";
 import { logSupplierEvent } from "./supplier-events";
 
 /**
@@ -24,6 +25,16 @@ export async function pollSupplierStatus(storeId?: string) {
       id: true,
       supplierOrderId: true,
       supplierOrderStatus: true,
+      orderItems: {
+        select: {
+          product: {
+            select: {
+              supplierName: true,
+            },
+          },
+        },
+        take: 1,
+      },
     },
   });
 
@@ -31,11 +42,17 @@ export async function pollSupplierStatus(storeId?: string) {
     return { processed: 0, updated: 0 };
   }
 
-  const adapter = await getSupplierAdapter();
   let updated = 0;
 
   for (const order of candidates) {
     try {
+      // Get supplier from first order item, or use config fallback
+      const supplierName = order.orderItems[0]?.product?.supplierName;
+      const supplier = supplierName
+        ? (supplierName.toLowerCase() as Supplier)
+        : undefined;
+      
+      const adapter = await getSupplierAdapter(supplier);
       const status = await adapter.getOrderStatus(order.supplierOrderId!);
       const newStatus = status.status.toUpperCase() as SupplierOrderStatus;
 

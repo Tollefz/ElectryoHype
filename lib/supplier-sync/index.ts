@@ -1,14 +1,18 @@
 import { prisma } from "@/lib/prisma";
 import { getSupplierAdapter } from "@/lib/suppliers";
 import { SupplierAdapter, SupplierProduct } from "@/lib/suppliers/types";
+import type { Supplier } from "@/lib/suppliers/types";
 
 interface ProfitConfig {
   targetMarginPct?: number; // percent
   minMarkup?: number; // multiplier e.g. 1.5
 }
 
-export async function fetchSupplierProducts(adapter?: SupplierAdapter): Promise<SupplierProduct[]> {
-  const adp = adapter ?? (await getSupplierAdapter());
+export async function fetchSupplierProducts(
+  adapter?: SupplierAdapter,
+  supplier?: Supplier
+): Promise<SupplierProduct[]> {
+  const adp = adapter ?? (await getSupplierAdapter(supplier));
   if (!adp.fetchProducts) {
     console.warn("[supplier-sync] Adapter has no fetchProducts; returning empty");
     return [];
@@ -83,6 +87,7 @@ export async function updateLocalProduct(
 }
 
 export async function syncRunner(storeId: string, dryRun = true) {
+  // Use config fallback if no supplier provided
   const adapter = await getSupplierAdapter();
   const supplierProducts = await fetchSupplierProducts(adapter);
 

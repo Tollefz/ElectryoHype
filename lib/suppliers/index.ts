@@ -12,14 +12,17 @@ const registry: Record<Supplier, () => Promise<SupplierAdapter>> = {
   cj: async () => getCjAdapter(),
 };
 
-export async function getSupplierAdapter(): Promise<SupplierAdapter> {
-  const cfg = getDropshippingConfig();
-  if (!cfg.supplierName) {
+export async function getSupplierAdapter(supplier?: Supplier): Promise<SupplierAdapter> {
+  // Use provided supplier, or fall back to config
+  const supplierName = supplier ?? getDropshippingConfig().supplierName;
+  
+  if (!supplierName) {
     throw new Error("Supplier not configured");
   }
-  const factory = registry[cfg.supplierName];
+  
+  const factory = registry[supplierName];
   if (!factory) {
-    throw new Error(`Unsupported supplier: ${cfg.supplierName}`);
+    throw new Error(`Unsupported supplier: ${supplierName}`);
   }
   return factory();
 }

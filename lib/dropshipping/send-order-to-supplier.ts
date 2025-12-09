@@ -3,6 +3,7 @@ import { getDropshippingConfig } from "@/config/dropshipping";
 import { SupplierOrderStatus } from "@prisma/client";
 import { getSupplierAdapter } from "@/lib/suppliers";
 import type { NormalizedOrder } from "@/lib/suppliers/types";
+import type { Supplier } from "@/lib/suppliers/types";
 import { logSupplierEvent } from "@/lib/dropshipping/supplier-events";
 
 export async function sendOrderToSupplier(orderId: string) {
@@ -70,7 +71,13 @@ export async function sendOrderToSupplier(orderId: string) {
   };
 
   try {
-    const adapter = await getSupplierAdapter();
+    // Get supplier from first order item, or use config fallback
+    const supplierName = order.orderItems[0]?.product?.supplierName;
+    const supplier = supplierName
+      ? (supplierName.toLowerCase() as Supplier)
+      : undefined;
+    
+    const adapter = await getSupplierAdapter(supplier);
     const result = await adapter.createOrder(payload);
 
     await prisma.order.update({
