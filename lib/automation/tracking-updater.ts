@@ -25,7 +25,7 @@ export async function updateOrderTracking(orderId: string) {
   }
 
   const adapter = await getSupplierAdapter(supplierName.toLowerCase() as Supplier);
-  const tracking = await adapter.getTracking(order.supplierOrderId);
+  const tracking = await (adapter as any).getTracking(order.supplierOrderId);
 
   const nextStatus =
     tracking.status === "delivered"
