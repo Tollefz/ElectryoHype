@@ -18,7 +18,7 @@ export async function logSupplierEvent(params: {
         orderId,
         oldStatus,
         newStatus,
-        metadata: metadata || null,
+        metadata: metadata as any,
       },
     });
   } catch (error) {

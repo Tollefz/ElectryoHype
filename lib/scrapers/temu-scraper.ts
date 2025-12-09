@@ -59,7 +59,7 @@ export class TemuScraper {
           
           // If variant doesn't have a valid image, assign from allImages
           if (!variantImage || !variantImage.startsWith('http')) {
-            if (allImages.length > 0) {
+            if (allImages.length > 0 && variants) {
               // Distribute images across variants
               if (allImages.length >= variants.length) {
                 variantImage = allImages[index];

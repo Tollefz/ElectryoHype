@@ -1,16 +1,16 @@
 import { Resend } from "resend";
-import { SupplierOrderInput, SupplierOrderResult } from "./types";
+import { NormalizedOrder, SupplierCreateResponse } from "./types";
 
 const isTestMode = !process.env.RESEND_API_KEY || process.env.RESEND_API_KEY.trim() === "";
 const resend = isTestMode ? null : new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmailOrder(
-  input: SupplierOrderInput & { supplierOrderEmail: string }
-): Promise<SupplierOrderResult> {
+  input: NormalizedOrder & { supplierOrderEmail: string }
+): Promise<SupplierCreateResponse> {
   const subject = `Ny ordre ${input.orderId}`;
   const items = input.items
     .map(
-      (item) =>
+      (item: any) =>
         `- ${item.name} x${item.quantity} (supplierSku: ${item.supplierSku ?? "N/A"})`
     )
     .join("\n");
