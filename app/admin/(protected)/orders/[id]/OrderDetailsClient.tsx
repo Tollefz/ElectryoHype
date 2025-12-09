@@ -11,6 +11,7 @@ interface Order {
   paymentStatus: PaymentStatus;
   trackingNumber?: string | null;
   trackingUrl?: string | null;
+  shippingCarrier?: string | null;
   paymentMethod?: string | null;
   paymentIntentId?: string | null;
   supplierOrderStatus?: string | null;
