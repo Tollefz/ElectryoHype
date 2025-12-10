@@ -161,6 +161,8 @@ model Order {
   paymentMethod       PaymentMethod?
   paymentStatus       PaymentStatus  @default(pending)
   paymentIntentId     String?
+  stripeSessionId     String?        // Stripe Checkout Session ID
+  customerEmail       String?        // Customer email from checkout
   supplierOrderId     String?
   supplierOrderStatus SupplierOrderStatus? @default(PENDING)
   autoOrderAttempts   Int            @default(0)

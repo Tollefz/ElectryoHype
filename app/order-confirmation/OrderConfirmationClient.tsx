@@ -26,6 +26,7 @@ interface Order {
 export default function OrderConfirmationClient() {
   const searchParams = useSearchParams();
   const paymentIntentId = searchParams.get('payment_intent');
+  const sessionId = searchParams.get('session_id');
   const redirectStatus = searchParams.get('redirect_status');
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,14 +35,23 @@ export default function OrderConfirmationClient() {
 
   useEffect(() => {
     const fetchOrder = async () => {
-      if (!paymentIntentId) {
+      // Try session_id first (Stripe Checkout Session), then payment_intent (Payment Intent)
+      if (!sessionId && !paymentIntentId) {
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/orders/by-payment-intent?paymentIntentId=${paymentIntentId}`);
-        if (response.ok) {
+        let response;
+        if (sessionId) {
+          // Fetch order by Stripe session ID
+          response = await fetch(`/api/orders/by-session?sessionId=${sessionId}`);
+        } else if (paymentIntentId) {
+          // Fallback to payment intent
+          response = await fetch(`/api/orders/by-payment-intent?paymentIntentId=${paymentIntentId}`);
+        }
+
+        if (response && response.ok) {
           const data = await response.json();
           setOrder(data);
 

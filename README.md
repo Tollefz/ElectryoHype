@@ -1,222 +1,473 @@
-<div align="center">
+# ElektroHype - E-commerce Platform
 
-# 🚀 Dropshipping Upgrade
+En moderne, fullverdig e-commerce plattform bygget med Next.js 16, Prisma, Neon PostgreSQL, og Stripe. Plattformen støtter dropshipping, multi-store funksjonalitet, og komplett admin-dashboard.
 
-Fullverdig dropshipping-plattform bygget på Next.js 14 App Router med Prisma, NextAuth, Tailwind CSS, shadcn/ui og moderne betalings- og automasjonsflyt. Systemet lar deg importere produkter fra Alibaba/eBay/Temu, selge dem på egen nettbutikk, og automatisk sende ordredata til leverandørene når kunder handler.
+## 🚀 Teknologistack
 
-</div>
+- **Frontend:** Next.js 16 (App Router), React 18, TypeScript, Tailwind CSS
+- **Backend:** Next.js API Routes, Server Components
+- **Database:** Neon PostgreSQL (serverless)
+- **ORM:** Prisma
+- **Authentication:** NextAuth.js
+- **Payment:** Stripe Checkout
+- **Image Upload:** UploadThing (konfigurert, kan byttes til Cloudinary)
+- **Deployment:** Vercel
+- **Email:** Resend (via React Email)
+- **Automation:** Inngest
 
----
+## ✨ Funksjoner
 
-## Deployment to Vercel + Neon
+### Kunde-funksjoner
+- ✅ Produktkatalog med filtrering og søk
+- ✅ Handlekurv med localStorage-persistens
+- ✅ Stripe Checkout Session (full integrasjon)
+- ✅ Ordrebekreftelse med e-post
+- ✅ Produktdetaljer med varianter
+- ✅ Kategorifiltrering
+- ✅ Tilbudsseksjon
+- ✅ Responsiv design
 
-- Produkt/kategori-spørringer
-  - Bruk den delte Prisma-klienten.
-  - API-ruter: pakk i try/catch, `console.error` ved feil og returner 500 med JSON-error.
-  - Server-komponenter: vis en feiltilstand i UI – ikke lat som om tomme arrays er OK når DB feiler.
-  - Kategorifiltrering skal gjøres på serveren mot kategori-slug (f.eks. `where: { category: { slug } }`).
+### Admin-funksjoner
+- ✅ Full CRUD for produkter
+- ✅ Bildeopplasting (fil eller URL)
+- ✅ Produktvarianter
+- ✅ Ordrehåndtering med statusoppdatering
+- ✅ Dashboard med statistikk
+- ✅ Kundeoversikt
+- ✅ Dropshipping-integrasjon
+- ✅ Automatisk ordrebehandling
 
-- Vercel-oppsett
-  - Project → Settings → Environment Variables: sett `DATABASE_URL` til Neon-URL (med `sslmode=require`).
-  - Project → Settings → Build & Development: Build Command = `npm run vercel-build`.
-  - Redeploy prosjektet.
-  - Test `/api/health` (hvis tilgjengelig) for å bekrefte DB-tilkobling i produksjon.
+### Tekniske funksjoner
+- ✅ ISR (Incremental Static Regeneration) - 60s revalidate
+- ✅ SEO-optimalisert med OpenGraph og Twitter Cards
+- ✅ Error boundaries og robust feilhåndtering
+- ✅ Server-side autentisering
+- ✅ Multi-store support
+- ✅ Webhook-basert ordrehåndtering
 
----
+## 📦 Installering
 
-## 🧱 Teknisk Stack
+### Forutsetninger
+- Node.js 18+ 
+- npm eller yarn
+- Neon PostgreSQL database
+- Stripe-konto (for betalinger)
 
-| Lag            | Teknologi |
-|----------------|-----------|
-| Frontend       | Next.js 14 (App Router), React 18, Tailwind CSS, Framer Motion, shadcn/ui |
-| Backend        | Next.js server actions + API routes, Prisma ORM |
-| Database       | PostgreSQL (lokalt kan SQLite brukes for utvikling) |
-| Autentisering  | NextAuth (Credentials Provider) |
-| Betalinger     | Stripe, Vipps, Klarna, PayPal |
-| Job Queue      | (Planlagt) Background workers via server actions / cron |
-| Email          | Resend eller Nodemailer + React Email |
+### Lokal utvikling
 
----
-
-## 📁 Prosjektstruktur
-
-```
-app/                # Offentlig storefront + admin app router
-components/         # Delte UI-komponenter (React + shadcn/ui)
-lib/                # Prisma client, auth, helper utilities, suppliers, email
-types/              # Delte TypeScript typer og NextAuth deklarasjoner
-prisma/             # schema.prisma + migrasjoner
-api/                # Eksterne integrasjonsklienter (Vipps/Klarna/Stripe osv.)
-emails/             # React Email maler
-scripts/            # CLI scripts (seed, deploy helpers)
-```
-
----
-
-## ⚙️ Kom i gang
-
-### 1. Klargjør miljøvariabler
-
+1. **Klon repositoriet**
 ```bash
-cp .env.example .env
-# Fyll inn faktiske nøkler før du kjører dev-server
+git clone <repo-url>
+cd dropshipping-upgrade
 ```
 
-### 2. Installer avhengigheter
-
+2. **Installer avhengigheter**
 ```bash
 npm install
 ```
 
-### 3. Generer Prisma client og migrer database
+3. **Sett opp miljøvariabler**
 
-```bash
-npx prisma generate
-npx prisma db push        # eller npx prisma migrate dev --name init
+Opprett `.env` fil i prosjektroten:
+
+```env
+# Database
+DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
+
+# NextAuth
+NEXTAUTH_SECRET="din-super-hemmelige-nøkkel-her"
+NEXTAUTH_URL="http://localhost:3000"
+
+# Stripe
+STRIPE_SECRET_KEY="sk_test_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+
+# UploadThing (valgfritt)
+UPLOADTHING_SECRET="sk_live_..."
+UPLOADTHING_APP_ID="..."
+
+# Admin
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD="admin123"
+
+# Email (Resend)
+RESEND_API_KEY="re_..."
+
+# Store
+DEFAULT_STORE_ID="default-store"
 ```
 
-### 4. Seed admin-bruker (frivillig)
+4. **Sett opp databasen**
 
 ```bash
+# Generer Prisma Client
+npm run db:generate
+
+# Kjør migrasjoner
+npm run db:migrate
+
+# Seed database (valgfritt)
 npm run seed
 ```
 
-### 5. Start utviklingsserver
+5. **Start utviklingsserver**
 
 ```bash
 npm run dev
 ```
 
-Åpne `http://localhost:3000`. Admin-innlogging ligger på `/admin/login`.
+Åpne [http://localhost:3000](http://localhost:3000) i nettleseren.
 
-### 🔧 Vercel build command
+## 🚢 Produksjonsdeploy
 
-I Vercel → Project → Settings → Build & Development → Build Command sett:
+### Vercel Deployment
+
+1. **Push kode til GitHub/GitLab**
+
+2. **Importer prosjekt i Vercel**
+   - Gå til [Vercel Dashboard](https://vercel.com)
+   - Klikk "New Project"
+   - Importer repositoriet
+
+3. **Konfigurer miljøvariabler i Vercel**
+   - Gå til Project → Settings → Environment Variables
+   - Legg til alle variabler fra `.env` (se over)
+   - **VIKTIG:** For `DATABASE_URL`, bruk Neon **POOLER** connection string:
+     ```
+     postgresql://user:password@ep-xxx-pooler.us-east-1.aws.neon.tech/db?sslmode=require
+     ```
+
+4. **Konfigurer Build Command**
+   - Gå til Project → Settings → Build & Development
+   - Sett Build Command til: `npm run vercel-build`
+   - (Dette er allerede satt i `package.json`)
+
+5. **Deploy**
+   - Klikk "Deploy"
+   - Vercel vil automatisk bygge og deploye
+
+### Stripe Webhook Setup
+
+1. **Opprett webhook i Stripe Dashboard**
+   - Gå til Stripe Dashboard → Developers → Webhooks
+   - Klikk "Add endpoint"
+   - URL: `https://din-domene.vercel.app/api/webhooks/stripe`
+   - Velg events:
+     - `checkout.session.completed`
+     - `payment_intent.succeeded`
+     - `payment_intent.payment_failed`
+
+2. **Kopier webhook secret**
+   - Etter opprettelse, kopier "Signing secret"
+   - Legg til i Vercel Environment Variables som `STRIPE_WEBHOOK_SECRET`
+
+## 📁 Prosjektstruktur
 
 ```
-npm run vercel-build
+dropshipping-upgrade/
+├── app/                    # Next.js App Router
+│   ├── admin/             # Admin routes (beskyttet)
+│   ├── api/               # API routes
+│   │   ├── admin/         # Admin API
+│   │   ├── checkout/      # Stripe checkout
+│   │   ├── uploadthing/   # Image upload
+│   │   └── webhooks/      # Stripe webhooks
+│   ├── products/          # Produktsider
+│   ├── cart/              # Handlekurv
+│   ├── checkout/          # Checkout flow
+│   └── order-confirmation/ # Ordrebekreftelse
+├── components/            # React komponenter
+├── lib/                   # Utilities
+│   ├── prisma.ts         # Prisma client singleton
+│   ├── auth.ts           # NextAuth konfigurasjon
+│   ├── cart-context.tsx  # Handlekurv state
+│   └── utils/            # Hjelpefunksjoner
+├── prisma/
+│   ├── schema.prisma     # Database schema
+│   └── migrations/       # Database migrasjoner
+└── public/               # Statiske filer
 ```
 
-Dette sikrer at `prisma migrate deploy` kjøres før `next build` under deploy.
+## 🔐 Sikkerhet
 
----
+- **Admin-routes:** Beskyttet via server-side auth guard i `app/admin/layout.tsx`
+- **API-routes:** Validerer autentisering via `getAuthSession()`
+- **Database:** Bruker Prisma med prepared statements (SQL injection-safe)
+- **Environment variables:** Aldri commit `.env` filer
+- **Stripe:** Webhook-signatur valideres for alle webhook-requests
 
-## 🔐 Autentisering (NextAuth)
+## 🛠️ API-dokumentasjon
 
-- Bruker Credentials Provider med e-post + passord (bcrypt hash lagres i `User`-tabellen).
-- `ADMIN_EMAIL` + `ADMIN_PASSWORD` brukes ved første seed for å opprette superadmin.
-- `middleware.ts` låser ned alle `/admin/*`-ruter og redirecter til `/admin/login` hvis ikke innlogget.
-- Rollebasert layout i `app/admin/layout.tsx`.
+### Produkter
 
----
+#### `GET /api/admin/products`
+Hent alle produkter (admin only)
 
-## 💳 Betalingsintegrasjoner
+**Query params:**
+- `page` - Sidenummer (default: 1)
+- `limit` - Antall per side (default: 50, max: 100)
+- `search` - Søk i produktnavn
+- `category` - Filtrer på kategori
 
-| Gateway | Oppsett |
-|---------|---------|
-| Stripe  | Sett `STRIPE_SECRET_KEY`, `STRIPE_PUBLIC_KEY`, `STRIPE_WEBHOOK_SECRET`. API routes: `/api/create-payment-intent`, `/api/webhooks/stripe`. Bruker Stripe Elements og Payment Intents med 3DS. |
-| Klarna  | Sett `KLARNA_API_KEY`. API route `/api/create-klarna-session` oppretter session og returnerer HTML snippet som rendres i checkout. |
-| PayPal  | Sett `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`. Frontend bruker PayPal JS SDK; backend route `/api/paypal/capture` fanger betalingene. |
-| Vipps   | Sett `VIPPS_CLIENT_ID`, `VIPPS_CLIENT_SECRET`, `VIPPS_SUBSCRIPTION_KEY`, `VIPPS_MERCHANT_SERIAL_NUMBER`. `/api/vipps/initiate` oppretter betaling; `/api/vipps/callback` håndterer retur. |
-
-Alle betalingssuksesser oppdaterer Prisma-ordrer og trigger ordre-automasjon mot leverandører.
-
----
-
-## 📦 Leverandør-automatisering
-
-`/lib/suppliers` eksponerer et felles interface:
-
-```ts
-export interface SupplierAdapter {
-  placeOrder(input: SupplierOrderInput): Promise<SupplierOrderResult>;
-  checkOrderStatus(supplierOrderId: string): Promise<SupplierStatusResult>;
-  getTrackingInfo(supplierOrderId: string): Promise<SupplierTrackingResult>;
+**Response:**
+```json
+{
+  "ok": true,
+  "data": [...],
+  "pagination": {
+    "page": 1,
+    "limit": 50,
+    "total": 100,
+    "totalPages": 2
+  }
 }
 ```
 
-- `alibaba.ts`: genererer detaljert bestillings-epost hvis API mangler, og logger ordre slik at admin kan følge opp manuelt.
-- `ebay.ts`: bruker eBay API (med fallback til e-post).
-- `temu.ts`: e-postbasert bestilling.
-- `orderProcessor` (job worker) plukker ordrer med status `paid`, oppretter leverandørordre, lagrer `supplierOrderId` og status, sender e-poster og logger alt i database.
+#### `POST /api/admin/products`
+Opprett nytt produkt (admin only)
 
----
+**Body:**
+```json
+{
+  "name": "Produktnavn",
+  "price": 999.00,
+  "category": "Data & IT",
+  "images": "[\"https://...\"]",
+  "storeId": "default-store",
+  "isActive": true
+}
+```
 
-## 📬 Epost-system
+#### `PATCH /api/admin/products/[id]`
+Oppdater produkt (admin only)
 
-Ligger i `emails/` og `lib/email.ts`.
+#### `DELETE /api/admin/products/[id]`
+Slett produkt (admin only)
 
-Maler:
-- `order-confirmation.tsx`
-- `order-shipped.tsx`
-- `admin-new-order.tsx`
+### Checkout
 
-Triggers:
-1. Kunde bestiller → ordrebekreftelse + admin varsel.
-2. Leverandørordre registreres → admin får detaljer.
-3. Trackingnummer legges til → send shipping-notis til kunde.
+#### `POST /api/checkout`
+Opprett Stripe Checkout Session
 
-Settes opp via Resend (anbefalt) eller Nodemailer SMTP.
+**Body:**
+```json
+{
+  "items": [
+    {
+      "productId": "...",
+      "name": "Produktnavn",
+      "price": 999.00,
+      "quantity": 1,
+      "image": "https://..."
+    }
+  ],
+  "customerEmail": "kunde@example.com",
+  "shippingAddress": {...}
+}
+```
 
----
+**Response:**
+```json
+{
+  "ok": true,
+  "url": "https://checkout.stripe.com/...",
+  "sessionId": "cs_...",
+  "orderId": "...",
+  "orderNumber": "ORD-..."
+}
+```
 
-## 🧾 Prisma-modeller
+### Ordrer
 
-Se `prisma/schema.prisma` for fullstendig definisjon. Inkluderer:
-- `User`
-- `Customer`
-- `Product`
-- `Order` + `OrderItem`
-- `Setting`
+#### `GET /api/admin/orders/[id]`
+Hent ordredetaljer (admin only)
 
-Med relasjoner mellom kunde → ordre, ordre → orderItems → produkter, og key/value settings.
+#### `PATCH /api/admin/orders/[id]`
+Oppdater ordrestatus (admin only)
 
----
+**Body:**
+```json
+{
+  "status": "shipped",
+  "paymentStatus": "paid",
+  "trackingNumber": "ABC123",
+  "trackingUrl": "https://..."
+}
+```
+
+### Bildeopplasting
+
+#### `POST /api/upload/image`
+Last opp bilde (admin only)
+
+**Body:** `multipart/form-data` med `file` field
+
+**Response:**
+```json
+{
+  "ok": true,
+  "url": "data:image/...;base64,...",
+  "filename": "image.jpg",
+  "size": 12345
+}
+```
+
+**Note:** For produksjon, bytt til UploadThing eller Cloudinary for bedre ytelse.
+
+## 🖼️ Bildeopplasting
+
+Plattformen støtter to metoder for bildeopplasting:
+
+### 1. Filopplasting (via API)
+- Bruk `/api/upload/image` endpoint
+- Støtter base64-encoding (midlertidig løsning)
+- **Anbefalt for produksjon:** Implementer UploadThing eller Cloudinary
+
+### 2. URL-opplasting
+- Lim inn bildelenke direkte i produktformularen
+- Støtter eksterne CDN-er (Alibaba, eBay, Temu)
+
+### UploadThing Setup (Anbefalt)
+
+1. **Opprett konto på [UploadThing](https://uploadthing.com)**
+2. **Installer pakker:**
+```bash
+npm install uploadthing @uploadthing/react
+```
+3. **Sett miljøvariabler:**
+```env
+UPLOADTHING_SECRET="sk_live_..."
+UPLOADTHING_APP_ID="..."
+```
+4. **Konfigurer i `app/api/uploadthing/core.ts`**
+
+## 💳 Stripe Integrasjon
+
+### Test-kort
+- **Kortnummer:** 4242 4242 4242 4242
+- **CVV:** 123
+- **Utløpsdato:** Hvilken som helst fremtidig dato
+
+### Webhook Events
+Plattformen håndterer følgende Stripe events:
+- `checkout.session.completed` - Oppdaterer ordre til "paid"
+- `payment_intent.succeeded` - Alternativ betalingsmetode
+- `payment_intent.payment_failed` - Marker ordre som feilet
+
+### Miljøvariabler
+```env
+STRIPE_SECRET_KEY="sk_test_..." # eller sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..." # eller pk_live_...
+STRIPE_WEBHOOK_SECRET="whsec_..."
+```
+
+## 📊 Ordresystem
+
+### Ordrestatus
+- `pending` - Venter på betaling
+- `paid` - Betalt (automatisk via webhook)
+- `processing` - Behandles
+- `shipped` - Sendt
+- `delivered` - Levert
+- `cancelled` - Kansellert
+
+### Betalingsstatus
+- `pending` - Venter
+- `paid` - Betalt
+- `failed` - Feilet
+- `refunded` - Refundert
+
+### Automatisk ordrebehandling
+- Når betaling mottas via Stripe webhook:
+  1. Ordre oppdateres til "paid" + "processing"
+  2. Risk-evaluering kjøres
+  3. E-postbekreftelse sendes til kunde
+  4. Admin-notifikasjon sendes
+  5. Ordre sendes til leverandør (hvis ikke flagged)
+
+## 🔄 Database Migrasjoner
+
+### Lokal utvikling
+```bash
+# Opprett ny migrasjon
+npm run db:migrate
+
+# Resett database (DANGER: sletter all data)
+npx prisma migrate reset
+```
+
+### Produksjon
+```bash
+# Deploy migrasjoner til produksjon
+npm run db:deploy
+```
+
+**VIKTIG:** Migrasjoner kjøres IKKE automatisk på Vercel. Kjør `db:deploy` manuelt etter schema-endringer.
 
 ## 🧪 Testing
 
-| Type        | Verktøy      | Beskrivelse |
-|-------------|--------------|-------------|
-| Unit        | Vitest       | Tester produktimport, validering, helpers. |
-| Integration | Playwright   | Checkout flyt, admin login, ordreoppdatering. |
-| Emails      | React Email  | Snapshot-testing av maler. |
+### Lokal build test
+```bash
+npm run vercel-build
+```
 
-Se `vitest.config.ts`, `playwright.config.ts` og mapper i `tests/`.
+### Type checking
+```bash
+npx tsc --noEmit
+```
+
+### Linting
+```bash
+npm run lint
+```
+
+## 📝 Conventions
+
+### Kode-stil
+- TypeScript for all kode
+- Server Components som standard (Client Components kun når nødvendig)
+- `async` server components for data-fetching
+- Error handling via `try/catch` og `logError` utility
+
+### Naming
+- Komponenter: PascalCase (`ProductCard.tsx`)
+- Filer: kebab-case for routes (`order-confirmation/page.tsx`)
+- Variabler: camelCase
+- Konstanter: UPPER_SNAKE_CASE
+
+### Database
+- Bruk Prisma Client singleton fra `lib/prisma.ts`
+- Wrap queries i `try/catch` eller `safeQuery` helper
+- Bruk `storeId` filter for multi-store support
+
+## 🐛 Known Issues
+
+- Base64 bildeopplasting er midlertidig - bytt til CDN for produksjon
+- UploadThing konfigurasjon krever ekstra setup
+- Noen Prisma queries kan være suboptimale ved store datasett
+
+## 📚 Ytterligere dokumentasjon
+
+- [Teknisk oversikt](./docs/technical-overview.md)
+- [Markedsføringspitch](./docs/marketing-pitch.md)
+
+## 🤝 Bidrag
+
+1. Fork repositoriet
+2. Opprett feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit endringer (`git commit -m 'Add some AmazingFeature'`)
+4. Push til branch (`git push origin feature/AmazingFeature`)
+5. Åpne Pull Request
+
+## 📄 Lisens
+
+Dette prosjektet er privat og proprietært.
+
+## 📞 Support
+
+For spørsmål eller support, kontakt utviklerteamet.
 
 ---
 
-## 🚀 Deploy-guide
-
-1. **Database**
-   - Supabase eller Railway PostgreSQL.
-   - Kjør `npx prisma migrate deploy`.
-2. **Vercel**
-   - Push til GitHub, koble repo i Vercel, sett alle miljøvariabler fra `.env`.
-3. **Post-deploy sjekkliste**
-   - Verifiser Stripe/Klarna/PayPal/Vipps i testmodus.
-   - Send testordre, sjekk epost og leverandør-logs.
-4. **Produksjon**
-   - Bytt til prod API-nøkler, sett opp domene + SSL, aktiver backup og monitorering (Vercel Analytics, Sentry).
-
-Detaljert sjekkliste kommer i `DEPLOYMENT.md`.
-
----
-
-## 🔐 Sikkerhet & ytelse
-
-- Rate limiting på API-ruter (Next middleware + `lib/rate-limit.ts`).
-- CSRF token på sensitive POST-endepunkter.
-- Zod-validering på både klient og server.
-- Secure headers i `next.config.mjs`.
-- Prisma beskytter mot SQL injection.
-- Bruker Next/Image, ISR, caching og lazy loading for best mulig Core Web Vitals.
-
----
-
-## 🧭 Videre arbeid
-
-- Fullføre automatiske cron-jobs for lageroppdatering.
-- Live sporing av leverandørstatus med websockets.
-- Mer avansert AI-styrt prisoptimalisering (planlagt).
-
-Bli gjerne med og bidra!
+**Laget med ❤️ ved hjelp av Next.js, Prisma, og Stripe**

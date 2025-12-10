@@ -1,13 +1,14 @@
 import { Package, ShoppingCart, DollarSign, Clock, Truck } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/format";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { safeQuery } from "@/lib/safeQuery";
+import Link from "next/link";
 
 async function getDashboardStats(storeId: string) {
-  const [totalProducts, totalOrders, totalRevenue, pendingOrders, dropship] = await Promise.all([
-    safeQuery(() => prisma.product.count({ where: { isActive: true, storeId } }), 0, "dashboard:products"),
+  const [totalProducts, activeProducts, totalOrders, totalRevenue, pendingOrders, dropship, productsByStore, categories] = await Promise.all([
+    safeQuery(() => prisma.product.count(), 0, "dashboard:products:total"),
+    safeQuery(() => prisma.product.count({ where: { isActive: true, storeId } }), 0, "dashboard:products:active"),
     safeQuery(() => prisma.order.count({ where: { storeId } }), 0, "dashboard:orders"),
     safeQuery(
       () =>
@@ -28,6 +29,25 @@ async function getDashboardStats(storeId: string) {
         }),
       [],
       "dashboard:dropship"
+    ),
+    safeQuery(
+      () =>
+        prisma.product.groupBy({
+          by: ["storeId"],
+          _count: { _all: true },
+        }),
+      [],
+      "dashboard:products:by-store"
+    ),
+    safeQuery(
+      () =>
+        prisma.product.findMany({
+          where: { category: { not: null }, isActive: true },
+          select: { category: true },
+          distinct: ["category"],
+        }),
+      [],
+      "dashboard:categories"
     ),
   ]);
 
@@ -60,9 +80,12 @@ async function getDashboardStats(storeId: string) {
 
   return {
     totalProducts,
+    activeProducts,
     totalOrders,
     totalRevenue: Number(totalRevenue._sum.total ?? 0),
     pendingOrders,
+    productsByStore: productsByStore as Array<{ storeId: string | null; _count: { _all: number } }>,
+    categoryCount: categories.length,
     dropshipping: {
       pending: dropshippingMap["PENDING"] ?? 0,
       sent: dropshippingMap["SENT_TO_SUPPLIER"] ?? 0,
@@ -73,8 +96,7 @@ async function getDashboardStats(storeId: string) {
 }
 
 export default async function AdminDashboard() {
-  const headersList = await headers();
-  const storeId = getStoreIdFromHeaders(headersList);
+  const storeId = await getStoreIdFromHeadersServer();
   const stats = await getDashboardStats(storeId);
   const cards = [
     {
@@ -82,6 +104,12 @@ export default async function AdminDashboard() {
       value: stats.totalProducts.toString(),
       icon: Package,
       color: "bg-orange-500",
+    },
+    {
+      title: "Aktive Produkter",
+      value: stats.activeProducts.toString(),
+      icon: Package,
+      color: "bg-green-500",
     },
     {
       title: "Totale Ordrer",
@@ -111,19 +139,22 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-600">Oversikt over butikken din</p>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {cards.map((card) => {
           const Icon = card.icon;
           return (
-            <div key={card.title} className="rounded-xl bg-white p-6 shadow-sm">
+            <div key={card.title} className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-600">{card.title}</p>
-                  <p className="mt-2 text-3xl font-bold">{card.value}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm text-gray-600 font-medium">{card.title}</p>
+                  <p className="mt-1.5 sm:mt-2 text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">{card.value}</p>
                 </div>
-                <div className={`${card.color} rounded-lg p-3 text-white`}>
-                  <Icon size={24} />
+                <div className={`${card.color} rounded-lg p-2.5 sm:p-3 text-white flex-shrink-0 ml-3`}>
+                  <Icon size={20} className="sm:w-6 sm:h-6" />
                 </div>
               </div>
             </div>
@@ -131,31 +162,68 @@ export default async function AdminDashboard() {
         })}
       </div>
 
-      <div className="rounded-xl bg-white p-6 shadow-sm space-y-3">
-        <h2 className="text-xl font-semibold">Dropshipping status</h2>
-        <div className="grid gap-3 md:grid-cols-2">
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-gray-500">PENDING hos leverandør</p>
-            <p className="text-2xl font-bold">{stats.dropshipping.pending}</p>
+      <div className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Dropshipping status</h2>
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium">PENDING hos leverandør</p>
+            <p className="mt-1 text-xl sm:text-2xl font-bold text-gray-900">{stats.dropshipping.pending}</p>
           </div>
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-gray-500">Sendt til leverandør</p>
-            <p className="text-2xl font-bold">{stats.dropshipping.sent}</p>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium">Sendt til leverandør</p>
+            <p className="mt-1 text-xl sm:text-2xl font-bold text-gray-900">{stats.dropshipping.sent}</p>
           </div>
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-gray-500">Feil ved auto-bestilling</p>
-            <p className="text-2xl font-bold">{stats.dropshipping.error}</p>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium">Feil ved auto-bestilling</p>
+            <p className="mt-1 text-xl sm:text-2xl font-bold text-red-600">{stats.dropshipping.error}</p>
           </div>
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-gray-500">Sendt siste 24 timer</p>
-            <p className="text-2xl font-bold">{stats.dropshipping.shippedLast24h}</p>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium">Sendt siste 24 timer</p>
+            <p className="mt-1 text-xl sm:text-2xl font-bold text-green-600">{stats.dropshipping.shippedLast24h}</p>
           </div>
         </div>
-        <div className="flex gap-3 text-sm text-blue-600">
-          <a href="/admin/support/orders">Se support-konsoll</a>
-          <a href="/admin/support/orders?supplierStatus=SENT_TO_SUPPLIER">Filtrer: sendt</a>
-          <a href="/admin/support/orders?errorOnly=true">Filtrer: feil</a>
+        <div className="mt-4 flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm">
+          <Link href="/admin/support/orders" className="text-green-600 hover:text-green-700 hover:underline font-medium">Se support-konsoll</Link>
+          <span className="text-gray-300">|</span>
+          <Link href="/admin/support/orders?supplierStatus=SENT_TO_SUPPLIER" className="text-green-600 hover:text-green-700 hover:underline font-medium">Filtrer: sendt</Link>
+          <span className="text-gray-300">|</span>
+          <Link href="/admin/support/orders?errorOnly=true" className="text-green-600 hover:text-green-700 hover:underline font-medium">Filtrer: feil</Link>
         </div>
+      </div>
+
+      {/* Produkter per store */}
+      <div className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm">
+        <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900">Produkter per Store</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="pb-2 text-xs sm:text-sm font-semibold text-gray-700">Store ID</th>
+                <th className="pb-2 text-xs sm:text-sm font-semibold text-gray-700 text-right">Antall Produkter</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.productsByStore.length > 0 ? (
+                stats.productsByStore.map((item) => (
+                  <tr key={item.storeId || "null"} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td className="py-2.5 sm:py-3 text-sm font-medium text-gray-900">{item.storeId || "(null)"}</td>
+                    <td className="py-2.5 sm:py-3 text-sm text-gray-600 text-right">{item._count._all}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={2} className="py-4 text-sm text-gray-500 text-center">Ingen produkter funnet</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Kategorier */}
+      <div className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm">
+        <h2 className="mb-2 text-lg sm:text-xl font-semibold text-gray-900">Kategorier</h2>
+        <p className="text-sm sm:text-base text-gray-600">Antall unike kategorier: <span className="font-semibold text-gray-900">{stats.categoryCount}</span></p>
       </div>
     </div>
   );

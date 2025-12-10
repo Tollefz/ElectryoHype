@@ -324,11 +324,25 @@ export default async function OrderDetailsPage({
                 <div className="mt-1">{getPaymentStatusBadge(order.paymentStatus)}</div>
               </div>
               {order.paymentIntentId && (
-                <div className="md:col-span-2">
+                <div>
                   <label className="text-sm font-medium text-gray-500">Payment Intent ID</label>
                   <p className="mt-1 font-mono text-sm text-gray-900 break-all">
                     {order.paymentIntentId}
                   </p>
+                </div>
+              )}
+              {order.stripeSessionId && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Stripe Session ID</label>
+                  <p className="mt-1 font-mono text-sm text-gray-900 break-all">
+                    {order.stripeSessionId}
+                  </p>
+                </div>
+              )}
+              {order.customerEmail && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Kunde E-post</label>
+                  <p className="mt-1 text-gray-900">{order.customerEmail}</p>
                 </div>
               )}
             </div>

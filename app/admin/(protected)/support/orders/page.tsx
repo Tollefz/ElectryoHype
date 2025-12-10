@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SupplierOrderStatus } from "@prisma/client";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { safeQuery } from "@/lib/safeQuery";
 
 export const dynamic = "force-dynamic";
@@ -18,8 +17,7 @@ export default async function SupportOrdersPage({
 }: {
   searchParams?: { supplierStatus?: string; errorOnly?: string; minTotal?: string };
 }) {
-  const headersList = await headers();
-  const storeId = getStoreIdFromHeaders(headersList);
+  const storeId = await getStoreIdFromHeadersServer();
   const supplierStatus = searchParams?.supplierStatus;
   const errorOnly = searchParams?.errorOnly === "true";
   const minTotal = searchParams?.minTotal ? Number(searchParams.minTotal) : 0;

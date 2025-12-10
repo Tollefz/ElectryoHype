@@ -6,6 +6,7 @@ import { ShoppingCart, Heart } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { cleanProductName } from '@/lib/utils/url-decode';
+import { getCategoryByDbValue } from '@/lib/categories';
 
 interface ProductCardProps {
   product: any;
@@ -17,10 +18,20 @@ function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
 
   // KRITISK: Parse images fra JSON string med error handling
+  // Støtter både images (JSON array) og imageUrl (single string)
   let images: string[] = [];
   try {
     if (typeof product.images === 'string') {
-      images = JSON.parse(product.images);
+      // Try to parse as JSON array
+      try {
+        const parsed = JSON.parse(product.images);
+        images = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        // If not valid JSON, treat as single URL string
+        if (product.images && product.images.startsWith('http')) {
+          images = [product.images];
+        }
+      }
     } else if (Array.isArray(product.images)) {
       images = product.images;
     }
@@ -29,23 +40,31 @@ function ProductCard({ product }: ProductCardProps) {
     images = [];
   }
 
+  // Check for imageUrl field (if product has it)
+  const imageUrl = (product as any).imageUrl;
+
   // Valider at bildene er gyldige URLs
   const isValidUrl = (url: string) => {
     if (!url || typeof url !== 'string') return false;
     try {
       new URL(url);
-      return url.startsWith('http');
+      return url.startsWith('http') && !url.includes('placehold.co');
     } catch {
       return false;
     }
   };
 
-  // Filtrer ut ugyldige bilder
+  // Filtrer ut ugyldige bilder og placeholders
   const validImages = images.filter(img => isValidUrl(img));
   
+  // Prioritize: imageUrl > images[0] > fallback
   // Fallback hvis ingen bilder
   const fallbackImage = 'https://placehold.co/400x400/f5f5f5/666666?text=Produkt';
-  const mainImage = validImages[0] || fallbackImage;
+  const primaryImage = 
+    (imageUrl && isValidUrl(imageUrl)) 
+      ? imageUrl 
+      : (validImages[0] || fallbackImage);
+  const mainImage = primaryImage;
   const hoverImage = validImages[1] || mainImage; // Hvis ingen andre bilder, bruk samme
   
   // Clean product name (decode URL-encoded characters)
@@ -89,38 +108,38 @@ function ProductCard({ product }: ProductCardProps) {
   return (
     <Link 
       href={`/products/${product.slug}`}
-      className="group block"
+      className="group block h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden rounded-lg border border-gray-border bg-white transition-all duration-200 hover:border-brand hover:shadow-lg">
+      <div className="relative flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:border-green-600 hover:shadow-md">
         
         {/* Badges */}
         {(hasDiscount || product.isNew) && (
-          <div className="absolute left-3 top-3 z-10 flex flex-col gap-1">
+          <div className="absolute left-2 top-2 z-10 flex flex-col gap-1.5 sm:left-3 sm:top-3">
             {hasDiscount && (
-              <span className="rounded bg-sale px-2 py-1 text-xs font-bold text-white">
+              <span className="rounded-md bg-red-500 px-2 py-1 text-xs font-bold text-white shadow-sm">
                 -{discountPercent}%
               </span>
             )}
             {product.isNew && (
-              <span className="rounded bg-brand px-2 py-1 text-xs font-bold text-white">
+              <span className="rounded-md bg-green-500 px-2 py-1 text-xs font-bold text-white shadow-sm">
                 NYHET
               </span>
             )}
           </div>
         )}
 
-        {/* Wishlist button */}
+        {/* Wishlist button - kun på desktop */}
         <button 
-          className="absolute right-3 top-3 z-10 rounded-full bg-white p-2 opacity-0 shadow-md transition-opacity group-hover:opacity-100 hover:bg-gray-light"
+          className="absolute right-2 top-2 z-10 hidden rounded-full bg-white p-2 opacity-0 shadow-md transition-opacity group-hover:opacity-100 hover:bg-gray-50 sm:right-3 sm:top-3 sm:block"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
         >
-          <Heart size={18} className="text-gray-medium hover:text-sale" />
+          <Heart size={16} className="text-gray-600 hover:text-red-500" />
         </button>
 
         {/* Image container med hover-effekt */}
-        <div className="relative aspect-square overflow-hidden bg-gray-light">
+        <div className="relative aspect-square overflow-hidden bg-gray-50">
           {/* Hovedbilde */}
           <div className={`absolute inset-0 transition-opacity duration-300 ${
             isHovered && hoverImage !== mainImage ? 'opacity-0' : 'opacity-100'
@@ -129,8 +148,9 @@ function ProductCard({ product }: ProductCardProps) {
               src={imageError ? fallbackImage : mainImage}
               alt={cleanedName}
               fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              className="object-contain p-4"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-contain p-3 sm:p-4"
+              loading="lazy"
               onError={() => setImageError(true)}
             />
           </div>
@@ -144,8 +164,9 @@ function ProductCard({ product }: ProductCardProps) {
                 src={hoverImage}
                 alt={`${cleanedName} - alternativt bilde`}
                 fill
-                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                className="object-contain p-4"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-contain p-3 sm:p-4"
+                loading="lazy"
                 onError={() => {
                   // Hvis hover-bilde feiler, vis hovedbilde
                   setIsHovered(false);
@@ -156,42 +177,34 @@ function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-4">
+        <div className="flex flex-1 flex-col p-3 sm:p-4">
           {/* Kategori */}
-          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-medium">
-            {product.category || 'Elektronikk'}
+          <p className="mb-1 text-[11px] sm:text-xs font-medium uppercase tracking-wide text-gray-500">
+            {(() => {
+              const categoryDef = getCategoryByDbValue(product.category);
+              return categoryDef?.label || product.category || 'Elektronikk';
+            })()}
           </p>
 
-              {/* Produktnavn */}
-              <h3 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-medium text-dark group-hover:text-brand transition-colors">
-                {cleanedName}
-              </h3>
+          {/* Produktnavn */}
+          <h3 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm sm:text-base font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
+            {cleanedName}
+          </h3>
 
-          {/* Rating (placeholder) */}
-          <div className="mb-3 flex items-center gap-1">
-            <div className="flex text-brand">
-              {'★★★★★'.split('').map((star, i) => (
-                <span key={i} className={i < 4 ? 'text-brand' : 'text-gray-border'}>
-                  ★
-                </span>
-              ))}
-            </div>
-            <span className="text-xs text-gray-medium">(24)</span>
-          </div>
 
           {/* Pris */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-dark">
+              <span className="text-xl sm:text-2xl font-bold text-gray-900">
                 {Math.floor(product.price).toLocaleString('no-NO')},-
               </span>
             </div>
             {hasDiscount && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-medium line-through">
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <span className="text-xs sm:text-sm text-gray-500 line-through">
                   {Math.floor(product.compareAtPrice).toLocaleString('no-NO')},-
                 </span>
-                <span className="text-sm font-semibold text-sale">
+                <span className="text-xs sm:text-sm font-semibold text-red-600">
                   Spar {Math.floor(product.compareAtPrice - product.price).toLocaleString('no-NO')},-
                 </span>
               </div>
@@ -201,14 +214,14 @@ function ProductCard({ product }: ProductCardProps) {
           {/* Legg i handlekurv knapp */}
           <button
             onClick={handleAddToCart}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
+            className="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-2.5 sm:py-3 text-sm font-semibold text-white transition-all hover:bg-green-700 active:scale-[0.98] shadow-sm hover:shadow-md"
           >
-            <ShoppingCart size={18} />
-            Legg i handlekurv
+            <ShoppingCart size={16} />
+            <span>Legg i handlekurv</span>
           </button>
 
-          {/* Leveringsinfo */}
-          <p className="mt-3 text-center text-xs text-brand">
+          {/* Leveringsinfo - skjul på mobil */}
+          <p className="mt-2 hidden text-center text-xs font-medium text-green-600 sm:block">
             ✓ På lager - Sendes i dag
           </p>
         </div>

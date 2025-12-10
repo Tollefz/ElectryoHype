@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getAuthSession } from '@/lib/auth';
 import { improveTitle } from '@/lib/utils/improve-product-title';
 import { safeQuery } from '@/lib/safeQuery';
+import { logError } from '@/lib/utils/logger';
 
 export async function GET(
   req: NextRequest,
@@ -28,14 +29,14 @@ export async function GET(
     );
 
     if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      return NextResponse.json({ ok: false, error: 'Product not found' }, { status: 404 });
     }
 
-    return NextResponse.json(product);
+    return NextResponse.json({ ok: true, data: product });
   } catch (error) {
-    console.error('Error fetching product:', error);
+    logError(error, '[api/admin/products/[id]] GET');
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { ok: false, error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -70,11 +71,11 @@ export async function PATCH(
       data: updateData,
     });
 
-    return NextResponse.json(product);
+    return NextResponse.json({ ok: true, data: product });
   } catch (error) {
-    console.error('Error updating product:', error);
+    logError(error, '[api/admin/products/[id]] PATCH');
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { ok: false, error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -108,7 +109,7 @@ export async function DELETE(
 
     if (!product) {
       return NextResponse.json(
-        { error: 'Produkt ikke funnet' },
+        { ok: false, error: 'Produkt ikke funnet' },
         { status: 404 }
       );
     }
@@ -116,7 +117,7 @@ export async function DELETE(
     // Check if product has associated orders
     if (product.orderItems.length > 0) {
       return NextResponse.json(
-        { error: 'Kan ikke slette produkt som har tilknyttede ordre. Deaktiver produktet i stedet.' },
+        { ok: false, error: 'Kan ikke slette produkt som har tilknyttede ordre. Deaktiver produktet i stedet.' },
         { status: 400 }
       );
     }
@@ -134,13 +135,13 @@ export async function DELETE(
     });
 
     return NextResponse.json(
-      { message: 'Produkt slettet' },
+      { ok: true, message: 'Produkt slettet' },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting product:', error);
+    logError(error, '[api/admin/products/[id]] DELETE');
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Kunne ikke slette produkt' },
+      { ok: false, error: error instanceof Error ? error.message : 'Kunne ikke slette produkt' },
       { status: 500 }
     );
   }

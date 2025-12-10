@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { pollSupplierStatus } from "@/lib/dropshipping/poll-supplier-status";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 
 export async function POST(req: Request) {
   const secret = req.headers.get("x-internal-token");
@@ -12,8 +11,7 @@ export async function POST(req: Request) {
   try {
     const searchParams = new URL(req.url).searchParams;
     const overrideStore = searchParams.get("storeId");
-    const headersList = await headers();
-    const storeId = overrideStore || getStoreIdFromHeaders(headersList);
+    const storeId = overrideStore || await getStoreIdFromHeadersServer();
     const result = await pollSupplierStatus(storeId);
     return NextResponse.json(result);
   } catch (error: any) {

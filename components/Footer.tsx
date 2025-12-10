@@ -5,8 +5,8 @@ export function Footer() {
   return (
     <footer className="bg-dark text-white">
       {/* Hovedfooter */}
-      <div className="mx-auto max-w-7xl px-4 py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-8 sm:py-12">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-5">
           
           {/* Logo og info */}
           <div className="lg:col-span-2">

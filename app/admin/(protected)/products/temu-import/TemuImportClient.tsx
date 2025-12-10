@@ -184,6 +184,8 @@ export default function TemuImportClient() {
             supplierName: product.data!.supplier || 'temu',
             supplierProductId: extractTemuId(product.url),
             sku: `TEMU-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            // storeId will default to DEFAULT_STORE_ID in API route if not provided
+            // This ensures Temu products appear in frontend
             isActive: true,
           }),
         });

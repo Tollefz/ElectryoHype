@@ -2,25 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
 
 export default function CartPage() {
   const { items, total, updateQuantity, removeFromCart } = useCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const shippingCost = total >= 500 ? 0 : 99;
   const totalWithShipping = total + shippingCost;
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto min-h-screen max-w-7xl px-4 py-16 text-center">
-        <ShoppingBag className="mx-auto mb-4 h-24 w-24 text-gray-300" />
-        <h1 className="mb-2 text-2xl font-bold text-dark">Handlekurven er tom</h1>
-        <p className="mb-6 text-gray-medium">
+      <div className="mx-auto min-h-screen max-w-6xl px-3 sm:px-4 lg:px-6 py-12 sm:py-16 text-center">
+        <ShoppingBag className="mx-auto mb-4 h-16 w-16 sm:h-24 sm:w-24 text-gray-300" />
+        <h1 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900">Handlekurven er tom</h1>
+        <p className="mb-6 text-sm sm:text-base text-gray-600">
           Du har ingen produkter i handlekurven ennå.
         </p>
         <Link
           href="/products"
-          className="inline-block rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
+          className="inline-block rounded-lg bg-green-600 px-6 py-3 text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors"
         >
           Start shopping
         </Link>
@@ -29,58 +32,59 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-7xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-dark">Handlekurv</h1>
+    <div className="mx-auto min-h-screen max-w-6xl px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+      <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Handlekurv</h1>
 
-      <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-[2fr,1fr]">
         {/* Venstre - Produktliste */}
-        <div className="lg:col-span-2">
-          <div className="rounded-xl bg-white p-6">
-            <div className="space-y-4">
+        <div>
+          <div className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm">
+            <div className="space-y-3 sm:space-y-4">
               {items.map((item) => {
                 const itemKey = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
                 return (
                   <div
                     key={itemKey}
-                    className="flex gap-4 border-b border-gray-border pb-4 last:border-0"
+                    className="flex gap-3 sm:gap-4 border-b border-gray-200 pb-3 sm:pb-4 last:border-0"
                   >
                     {/* Produktbilde */}
-                    <Link href={`/products/${item.slug || item.productId}`} className="relative h-24 w-24 flex-shrink-0">
+                    <Link href={`/products/${item.slug || item.productId}`} className="relative h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50">
                       <Image
                         src={item.image || 'https://placehold.co/100x100'}
                         alt={item.name}
                         fill
-                        className="rounded-lg object-contain"
+                        className="object-contain"
                       />
                     </Link>
 
                     {/* Produktinfo */}
-                    <div className="flex flex-1 flex-col justify-between">
-                      <div>
-                        <Link href={`/products/${item.slug || item.productId}`} className="font-semibold text-dark hover:text-brand transition-colors">
+                    <div className="flex flex-1 flex-col justify-between min-w-0">
+                      <div className="min-w-0">
+                        <Link href={`/products/${item.slug || item.productId}`} className="block text-sm sm:text-base font-semibold text-gray-900 hover:text-green-600 transition-colors line-clamp-2">
                           {item.name}
                         </Link>
                         {item.variantName && (
-                          <p className="text-sm text-gray-medium">Variant: {item.variantName}</p>
+                          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Variant: {item.variantName}</p>
                         )}
-                        <p className="text-sm text-gray-medium">
+                        <p className="text-sm sm:text-base font-semibold text-gray-900 mt-1">
                           {item.price.toLocaleString('no-NO')},-
                         </p>
                       </div>
 
                       {/* Antall og fjern */}
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center rounded-lg border border-gray-border">
+                      <div className="flex items-center justify-between mt-2 sm:mt-3">
+                        <div className="flex items-center rounded-lg border border-gray-300">
                           <button
                             onClick={() => {
                               const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
                               updateQuantity(key, item.quantity - 1);
                             }}
-                            className="px-3 py-2 hover:bg-gray-light transition-colors"
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-50 transition-colors"
+                            aria-label="Reduser antall"
                           >
-                            <Minus size={16} />
+                            <Minus size={14} className="sm:w-4 sm:h-4" />
                           </button>
-                          <span className="w-12 text-center font-semibold">
+                          <span className="w-8 sm:w-12 text-center text-sm sm:text-base font-semibold">
                             {item.quantity}
                           </span>
                           <button
@@ -88,30 +92,29 @@ export default function CartPage() {
                               const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
                               updateQuantity(key, item.quantity + 1);
                             }}
-                            className="px-3 py-2 hover:bg-gray-light transition-colors"
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-50 transition-colors"
+                            aria-label="Øk antall"
                           >
-                            <Plus size={16} />
+                            <Plus size={14} className="sm:w-4 sm:h-4" />
                           </button>
                         </div>
 
-                        <button
-                          onClick={() => {
-                            const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
-                            removeFromCart(key);
-                          }}
-                          className="text-gray-medium hover:text-sale transition-colors"
-                          aria-label="Fjern produkt"
-                        >
-                          <Trash2 size={20} />
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <p className="text-sm sm:text-base font-bold text-gray-900">
+                            {(item.price * item.quantity).toLocaleString('no-NO')},-
+                          </p>
+                          <button
+                            onClick={() => {
+                              const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
+                              removeFromCart(key);
+                            }}
+                            className="text-gray-500 hover:text-red-600 transition-colors p-1"
+                            aria-label="Fjern produkt"
+                          >
+                            <Trash2 size={18} className="sm:w-5 sm:h-5" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Subtotal */}
-                    <div className="text-right">
-                      <p className="font-bold text-dark">
-                        {(item.price * item.quantity).toLocaleString('no-NO')},-
-                      </p>
                     </div>
                   </div>
                 );
@@ -120,44 +123,87 @@ export default function CartPage() {
           </div>
         </div>
 
-        {/* Høyre - Sammendrag */}
-        <div>
-          <div className="sticky top-24 rounded-xl bg-white p-6">
-            <h2 className="mb-4 text-xl font-bold text-dark">Sammendrag</h2>
+        {/* Høyre - Sammendrag (Desktop) / Nederst (Mobil) */}
+        <div className="lg:col-span-1">
+          <div className="lg:sticky lg:top-24 rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+            <h2 className="mb-3 sm:mb-4 text-lg sm:text-xl font-bold text-gray-900">Sammendrag</h2>
 
-            <div className="space-y-3 border-b border-gray-border pb-4">
-              <div className="flex justify-between text-gray-medium">
+            <div className="space-y-2 sm:space-y-3 border-b border-gray-200 pb-3 sm:pb-4">
+              <div className="flex justify-between text-sm sm:text-base text-gray-600">
                 <span>Subtotal</span>
-                <span>{total.toLocaleString('no-NO')},-</span>
+                <span className="font-medium">{total.toLocaleString('no-NO')},-</span>
               </div>
-              <div className="flex justify-between text-gray-medium">
+              <div className="flex justify-between text-sm sm:text-base text-gray-600">
                 <span>Frakt</span>
-                <span className={shippingCost === 0 ? 'text-brand font-semibold' : ''}>
+                <span className={`font-medium ${shippingCost === 0 ? 'text-green-600' : ''}`}>
                   {shippingCost === 0 ? 'Gratis!' : `${shippingCost},-`}
                 </span>
               </div>
               {total < 500 && (
-                <p className="text-xs text-brand">
+                <p className="text-xs sm:text-sm text-green-600 mt-2">
                   ✨ Kjøp for {(500 - total).toLocaleString('no-NO')},- mer og få gratis frakt!
                 </p>
               )}
             </div>
 
-            <div className="mt-4 flex justify-between text-xl font-bold text-dark">
+            <div className="mt-4 flex justify-between text-lg sm:text-xl font-bold text-gray-900">
               <span>Total</span>
               <span>{totalWithShipping.toLocaleString('no-NO')},-</span>
             </div>
 
-            <Link
-              href="/checkout"
-              className="mt-6 block w-full rounded-lg bg-brand py-4 text-center font-semibold text-white hover:bg-brand-dark transition-colors"
+            {checkoutError && (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {checkoutError}
+              </div>
+            )}
+            <button
+              onClick={async () => {
+                setIsCheckingOut(true);
+                setCheckoutError(null);
+                try {
+                  const response = await fetch("/api/checkout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      items: items.map((item) => ({
+                        productId: item.productId,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        image: item.image,
+                        variantId: item.variantId,
+                        variantName: item.variantName,
+                      })),
+                    }),
+                  });
+                  const data = await response.json();
+                  if (data.ok && data.url) {
+                    window.location.href = data.url;
+                  } else {
+                    setCheckoutError(data.error || "Noe gikk galt med kassen. Prøv igjen senere.");
+                    setIsCheckingOut(false);
+                  }
+                } catch (error) {
+                  setCheckoutError("Noe gikk galt med kassen. Prøv igjen senere.");
+                  setIsCheckingOut(false);
+                }
+              }}
+              disabled={isCheckingOut}
+              className="mt-4 sm:mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-3 sm:py-4 text-center text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Gå til kassen
-            </Link>
+              {isCheckingOut ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  <span>Behandler...</span>
+                </>
+              ) : (
+                "Gå til kassen"
+              )}
+            </button>
 
             <Link
               href="/products"
-              className="mt-3 block text-center text-sm text-brand hover:underline"
+              className="mt-3 block text-center text-xs sm:text-sm text-green-600 hover:text-green-700 hover:underline"
             >
               ← Fortsett å handle
             </Link>

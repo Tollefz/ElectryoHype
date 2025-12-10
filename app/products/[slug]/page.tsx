@@ -9,8 +9,7 @@ import ProductCard from '@/components/ProductCard';
 import ProductTabs from '@/components/ProductTabs';
 import { Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import { cleanProductName } from '@/lib/utils/url-decode';
-import { getStoreIdFromHeaders } from '@/lib/store';
-import { headers } from 'next/headers';
+import { getStoreIdFromHeadersServer } from '@/lib/store-server';
 import { safeQuery } from '@/lib/safeQuery';
 
 interface ProductPageProps {
@@ -34,10 +33,12 @@ async function getParams(params: ProductPageProps["params"]) {
   return params instanceof Promise ? await params : params;
 }
 
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await getParams(params);
-  const headersList = await headers();
-  const storeId = getStoreIdFromHeaders(headersList);
+  const storeId = await getStoreIdFromHeadersServer();
   
   const product = await safeQuery(
     () =>
@@ -78,15 +79,36 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const cleanedName = cleanProductName(product.name);
   const description = product.shortDescription || product.description?.substring(0, 160) || 'Kjøp produkt hos ElektroHype';
 
+  const price = Number(product.price);
+  const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+
   return {
     title: `${cleanedName} | ElektroHype`,
     description,
-    keywords: [cleanedName, product.category || '', 'elektronikk', 'Norge'],
+    keywords: [cleanedName, product.category || '', 'elektronikk', 'Norge', 'kjøp', 'nettbutikk'],
     openGraph: {
       title: cleanedName,
       description,
-      images: images.length > 0 ? [images[0]] : [],
+      images: images.length > 0 ? [
+        {
+          url: images[0],
+          width: 1200,
+          height: 630,
+          alt: cleanedName,
+        }
+      ] : [],
       type: 'website',
+      url: `${baseUrl}/products/${slug}`,
+      siteName: 'ElektroHype',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: cleanedName,
+      description,
+      images: images.length > 0 ? [images[0]] : [],
+    },
+    alternates: {
+      canonical: `${baseUrl}/products/${slug}`,
     },
   };
 }
@@ -94,8 +116,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await getParams(params);
   const { variant: variantParam } = await (searchParams instanceof Promise ? searchParams : Promise.resolve(searchParams));
-  const headersList = await headers();
-  const storeId = getStoreIdFromHeaders(headersList);
+  const storeId = await getStoreIdFromHeadersServer();
   
   const product = await safeQuery(
     () =>
@@ -430,24 +451,24 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   };
 
   return (
-    <main className="min-h-screen bg-gray-light py-8">
-      <div className="mx-auto max-w-7xl px-4">
+    <main className="min-h-screen bg-slate-50 py-4 sm:py-6 lg:py-8">
+      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
         
         {/* Breadcrumbs */}
-        <nav className="mb-6 flex items-center gap-2 text-sm text-gray-medium">
-          <Link href="/" className="hover:text-brand transition-colors">Hjem</Link>
+        <nav className="mb-4 sm:mb-6 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 overflow-x-auto">
+          <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">Hjem</Link>
           <span>/</span>
-          <Link href="/products" className="hover:text-brand transition-colors">Produkter</Link>
+          <Link href="/products" className="hover:text-green-600 transition-colors whitespace-nowrap">Produkter</Link>
           <span>/</span>
           {product.category && (
             <>
-              <Link href={`/products?category=${product.category}`} className="hover:text-brand transition-colors">
+              <Link href={`/products?category=${product.category}`} className="hover:text-green-600 transition-colors whitespace-nowrap">
                 {product.category}
               </Link>
               <span>/</span>
             </>
           )}
-          <span className="text-dark">{cleanedName}</span>
+          <span className="text-gray-900 truncate">{cleanedName}</span>
         </nav>
 
         <ProductPageClientWrapper
@@ -459,67 +480,57 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         >
           {/* Høyre - Produktinfo */}
           <div>
-            <div className="rounded-xl bg-white p-6">
+            <div className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6">
               {/* Badges */}
-              <div className="mb-4 flex gap-2">
+              <div className="mb-3 sm:mb-4 flex flex-wrap gap-2">
                 {hasDiscount && (
-                  <span className="rounded bg-sale px-3 py-1 text-sm font-bold text-white">
+                  <span className="rounded-md bg-red-500 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-bold text-white">
                     SPAR {discountPercent}%
                   </span>
                 )}
-                <span className="rounded bg-brand-light px-3 py-1 text-sm font-semibold text-brand">
+                <span className="rounded-md bg-green-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-green-700">
                   På lager
                 </span>
               </div>
 
               {/* Kategori */}
-              <p className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-medium">
+              <p className="mb-1.5 sm:mb-2 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">
                 {product.category}
               </p>
 
               {/* Tittel */}
-              <h1 className="mb-4 text-2xl font-bold text-dark lg:text-3xl">
+              <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                 {cleanedName}
               </h1>
 
-              {/* Rating */}
-              <div className="mb-4 flex items-center gap-2">
-                <div className="flex text-brand">
-                  {'★★★★★'.split('').map((_, i) => (
-                    <span key={i} className={i < 4 ? 'text-brand' : 'text-gray-border'}>★</span>
-                  ))}
-                </div>
-                <span className="text-sm text-gray-medium">(24 anmeldelser)</span>
-              </div>
-
               {/* Pris */}
-              <div className="mb-6 rounded-lg bg-gray-light p-4">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-bold text-dark">
+              <div className="mb-4 sm:mb-6 rounded-lg bg-gray-50 p-3 sm:p-4">
+                <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
                     {Math.floor(product.price).toLocaleString('no-NO')},-
                   </span>
                   {hasDiscount && (
-                    <span className="text-xl text-gray-medium line-through">
+                    <span className="text-lg sm:text-xl text-gray-500 line-through">
                       {Math.floor(product.compareAtPrice!).toLocaleString('no-NO')},-
                     </span>
                   )}
                 </div>
                 {hasDiscount && (
-                  <p className="mt-1 text-sm font-semibold text-sale">
+                  <p className="mt-1 text-xs sm:text-sm font-semibold text-red-600">
                     Du sparer {Math.floor(product.compareAtPrice! - product.price).toLocaleString('no-NO')},-
                   </p>
                 )}
-                <p className="mt-2 text-xs text-gray-medium">Inkl. mva</p>
+                <p className="mt-2 text-xs text-gray-500">Inkl. mva</p>
               </div>
 
               {/* Kort beskrivelse */}
-              <p className="mb-6 text-gray-medium">
+              <p className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-600 leading-relaxed">
                 {product.shortDescription || product.description?.substring(0, 200)}
               </p>
 
               {/* Variant selector - vises før AddToCartButton */}
               {variants.length > 0 && (
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <Suspense fallback={<div className="h-20 w-full rounded-lg bg-gray-200 animate-pulse" />}>
                     <ProductVariantSelector
                       variants={variants}
@@ -534,33 +545,33 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
               <AddToCartButton product={productData} variants={variants} />
 
               {/* USPs */}
-              <div className="mt-6 grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-3 rounded-lg border border-gray-border p-3">
-                  <Truck className="text-brand" size={24} />
+              <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
+                  <Truck className="text-green-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-semibold text-dark">Fri frakt</p>
-                    <p className="text-xs text-gray-medium">Over 500,-</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-900">Fri frakt</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600">Over 500,-</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-lg border border-gray-border p-3">
-                  <RotateCcw className="text-brand" size={24} />
+                <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
+                  <RotateCcw className="text-green-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-semibold text-dark">30 dagers</p>
-                    <p className="text-xs text-gray-medium">Åpent kjøp</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-900">30 dagers</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600">Åpent kjøp</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-lg border border-gray-border p-3">
-                  <Shield className="text-brand" size={24} />
+                <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
+                  <Shield className="text-green-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-semibold text-dark">2 års garanti</p>
-                    <p className="text-xs text-gray-medium">Full dekning</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-900">2 års garanti</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600">Full dekning</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-lg border border-gray-border p-3">
-                  <Check className="text-brand" size={24} />
+                <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
+                  <Check className="text-green-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-sm font-semibold text-dark">På lager</p>
-                    <p className="text-xs text-gray-medium">Sendes i dag</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-900">På lager</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600">Sendes i dag</p>
                   </div>
                 </div>
               </div>
@@ -576,9 +587,9 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
         {/* Relaterte produkter */}
         {relatedProducts.length > 0 && (
-          <section className="mt-12">
-            <h2 className="mb-6 text-2xl font-bold text-dark">Relaterte produkter</h2>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <section className="mt-8 sm:mt-12">
+            <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-gray-900">Relaterte produkter</h2>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {relatedProducts.map((p) => {
                 const pImages = typeof p.images === 'string' ? JSON.parse(p.images) : p.images || [];
                 return (

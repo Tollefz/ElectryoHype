@@ -140,8 +140,23 @@ function supplierId() {
 }
 
 async function main() {
-  const defaultStoreId = "default-store";
-  await prisma.product.deleteMany();
+  // Use a separate storeId for demo products to avoid overwriting real products
+  const demoStoreId = "demo-store";
+  
+  // Check if demo products already exist
+  const existingDemoProducts = await prisma.product.count({
+    where: { storeId: demoStoreId },
+  });
+
+  if (existingDemoProducts > 0) {
+    console.log(`⚠️  Demo products already exist (${existingDemoProducts} products with storeId="${demoStoreId}")`);
+    console.log("   Skipping seed to preserve existing data.");
+    console.log("   To re-seed demo products, delete them first or change demoStoreId.");
+    return;
+  }
+
+  // Only create demo products if they don't exist
+  console.log(`📦 Creating demo products with storeId="${demoStoreId}"...`);
 
   for (const product of products) {
     const supplierPrice = Number((product.price * 0.65).toFixed(2));
@@ -158,7 +173,7 @@ async function main() {
         tags: JSON.stringify([product.category.toLowerCase(), "nyhet"]),
         category: product.category,
         isActive: true,
-        storeId: defaultStoreId,
+        storeId: demoStoreId, // Use demo-store instead of default-store
         supplierUrl: "https://alibaba.com/product/example",
         supplierName: SupplierName.alibaba,
         supplierProductId: supplierId(),
@@ -168,7 +183,8 @@ async function main() {
     });
   }
 
-  console.log("✅ Seed completed with demo products");
+  console.log(`✅ Seed completed with ${products.length} demo products (storeId="${demoStoreId}")`);
+  console.log("   NOTE: Demo products will NOT appear on /products unless storeId is set to 'demo-store'");
 }
 
 main()

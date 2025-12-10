@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import slugify from "slugify";
 import { improveTitle } from "@/lib/utils/improve-product-title";
 import { safeQuery } from "@/lib/safeQuery";
+import { DEFAULT_STORE_ID } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
@@ -178,6 +179,7 @@ async function importProduct(url: string): Promise<ImportResult> {
     const slug = `${slugBase}-${generateId().substring(0, 4)}`;
 
     // Opprett produkt med varianter
+    // CRITICAL: Set storeId to DEFAULT_STORE_ID so Temu products appear in frontend
     const product = await prisma.product.create({
       data: {
         name: improvedTitle,
@@ -192,6 +194,7 @@ async function importProduct(url: string): Promise<ImportResult> {
         category,
         sku,
         isActive: true,
+        storeId: DEFAULT_STORE_ID, // Set storeId so products appear in frontend
         supplierUrl: url,
         supplierName: "temu",
         variants: hasVariants

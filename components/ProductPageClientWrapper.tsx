@@ -149,9 +149,9 @@ export default function ProductPageClientWrapper({
       setSelectedVariantImage, 
       setSelectedVariant 
     }}>
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-2">
         {/* Venstre - Bilder */}
-        <div className="rounded-xl bg-white p-6">
+        <div className="rounded-lg sm:rounded-xl bg-white p-3 sm:p-4 lg:p-6 order-1 lg:order-1">
           <ProductImageGallery 
             images={displayImages} 
             productName={productName}
@@ -160,7 +160,9 @@ export default function ProductPageClientWrapper({
         </div>
 
         {/* Høyre - Produktinfo (children kan inneholde variant selector) */}
-        {children}
+        <div className="order-2 lg:order-2">
+          {children}
+        </div>
       </div>
     </VariantContext.Provider>
   );

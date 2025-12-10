@@ -29,13 +29,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="no" suppressHydrationWarning>
       <body
-        className={`${inter.variable} min-h-screen bg-background font-sans text-foreground`}
+        className={`${inter.variable} min-h-screen bg-slate-50 font-sans text-gray-900 antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CartProvider>
             <div className="flex min-h-screen flex-col">
-              <Header />
+              <Suspense fallback={
+                <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+                  <div className="h-16 bg-gray-900"></div>
+                </header>
+              }>
+                <Header />
+              </Suspense>
               <Suspense fallback={null}>
                 <RefTracker />
               </Suspense>

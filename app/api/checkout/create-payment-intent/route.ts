@@ -3,8 +3,7 @@ import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { PaymentMethod, OrderStatus, PaymentStatus } from "@prisma/client";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { safeQuery } from "@/lib/safeQuery";
 
 // Stripe instance vil bli opprettet med validert key i POST handler
@@ -12,8 +11,7 @@ import { safeQuery } from "@/lib/safeQuery";
 export async function POST(req: Request) {
   try {
     console.log("📥 Payment intent request received");
-    const headersList = await headers();
-    const storeId = getStoreIdFromHeaders(headersList);
+    const storeId = await getStoreIdFromHeadersServer();
     
     // Sjekk og valider Stripe keys
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim();

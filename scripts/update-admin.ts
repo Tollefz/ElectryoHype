@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { hash } from "bcrypt";
-import { prisma } from "../lib/prisma";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 async function main() {
   const adminEmail = "rob.tol@hotmail.com";

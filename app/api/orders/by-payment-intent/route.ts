@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const paymentIntentId = searchParams.get("paymentIntentId");
-    const headersList = await headers();
-    const storeId = getStoreIdFromHeaders(headersList);
+    const storeId = await getStoreIdFromHeadersServer();
 
     if (!paymentIntentId) {
       return NextResponse.json(

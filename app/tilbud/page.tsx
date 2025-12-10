@@ -2,8 +2,30 @@ import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 import { ChevronRight, Tag } from "lucide-react";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { DEFAULT_STORE_ID } from "@/lib/store";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
+import type { Metadata } from "next";
+
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
+const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+
+export const metadata: Metadata = {
+  title: "Tilbud - ElektroHype",
+  description: "Se våre beste tilbud på elektronikk, gaming-utstyr og mobil. Spesialpriser og rabatter på utvalgte produkter.",
+  keywords: ["tilbud", "rabatt", "elektronikk", "gaming", "mobil", "Norge", "nettbutikk"],
+  openGraph: {
+    title: "Tilbud - ElektroHype",
+    description: "Se våre beste tilbud på elektronikk, gaming-utstyr og mobil.",
+    type: "website",
+    url: `${baseUrl}/tilbud`,
+    siteName: "ElektroHype",
+  },
+  alternates: {
+    canonical: `${baseUrl}/tilbud`,
+  },
+};
 
 /**
  * Henter produkter med rabatt fra databasen.
@@ -12,10 +34,14 @@ async function getDiscountedProducts(storeId: string) {
   return prisma.product.findMany({
     where: {
       isActive: true,
-      storeId,
+      storeId: storeId !== "demo-store" ? storeId : DEFAULT_STORE_ID,
       compareAtPrice: {
         not: null,
         gt: 0,
+      },
+      // Exclude Sport and Klær categories
+      category: {
+        notIn: ["Sport", "Klær"],
       },
     },
     orderBy: {
@@ -34,9 +60,9 @@ async function getDiscountedProducts(storeId: string) {
 }
 
 export default async function TilbudPage() {
-  const headersList = await headers();
-  const headerStoreId = getStoreIdFromHeaders(headersList);
-  const primaryStoreId = headerStoreId || "default-store";
+  const headerStoreId = await getStoreIdFromHeadersServer();
+  // Use DEFAULT_STORE_ID (Electro Hype) as default
+  const primaryStoreId = headerStoreId || DEFAULT_STORE_ID;
 
   let discountedProducts: Awaited<ReturnType<typeof getDiscountedProducts>> = [];
   let loadError: string | null = null;
@@ -44,13 +70,13 @@ export default async function TilbudPage() {
 
   try {
     discountedProducts = await getDiscountedProducts(primaryStoreId);
-    // Fallback: if no offers for primary store, try default-store
-    if (discountedProducts.length === 0 && primaryStoreId !== "default-store") {
-      console.log("[tilbud] no products for storeId, falling back to 'default-store'", {
+    // Fallback: if no offers for primary store, try DEFAULT_STORE_ID (Electro Hype)
+    if (discountedProducts.length === 0 && primaryStoreId !== DEFAULT_STORE_ID) {
+      console.log(`[tilbud] no products for storeId, falling back to '${DEFAULT_STORE_ID}'`, {
         storeId: primaryStoreId,
       });
-      discountedProducts = await getDiscountedProducts("default-store");
-      usedStoreId = "default-store";
+      discountedProducts = await getDiscountedProducts(DEFAULT_STORE_ID);
+      usedStoreId = DEFAULT_STORE_ID;
     }
   } catch (error: any) {
     console.error("[tilbud] Failed to load discounted products", error);
@@ -74,8 +100,8 @@ export default async function TilbudPage() {
     : 0;
 
   return (
-    <main className="min-h-screen bg-gray-light py-8">
-      <div className="mx-auto max-w-7xl px-4">
+    <main className="min-h-screen bg-slate-50 py-6 sm:py-8 lg:py-10">
+      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
         {/* Breadcrumbs */}
         <nav className="mb-6 text-sm text-gray-medium">
           <Link href="/" className="hover:text-brand">Hjem</Link>
@@ -84,22 +110,26 @@ export default async function TilbudPage() {
         </nav>
 
         {/* Header */}
-        <div className="mb-8">
-          <div className="mb-4 flex items-center gap-3">
-            <Tag className="h-8 w-8 text-brand" />
-            <h1 className="text-4xl font-bold text-dark">Ukens tilbud</h1>
+        <div className="mb-6 sm:mb-8">
+          <div className="mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+            <Tag className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Ukens tilbud</h1>
           </div>
-          <p className="text-lg text-gray-medium">
-            Opptil {averageDiscount}% rabatt på utvalgte produkter. Begrenset tid!
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">
+            {actualDiscounted.length > 0 
+              ? `Opptil ${averageDiscount}% rabatt på utvalgte produkter. Begrenset tid!`
+              : 'Sjekk tilbake senere for nye tilbud.'}
           </p>
         </div>
 
         {/* Antall produkter */}
-        <div className="mb-6 rounded-lg bg-brand-light p-4">
-          <p className="text-sm font-semibold text-brand">
-            {actualDiscounted.length} produkt{actualDiscounted.length !== 1 ? 'er' : ''} på tilbud
-          </p>
-        </div>
+        {actualDiscounted.length > 0 && (
+          <div className="mb-6 rounded-lg bg-green-50 border border-green-200 p-3 sm:p-4">
+            <p className="text-xs sm:text-sm font-semibold text-green-700">
+              {actualDiscounted.length} produkt{actualDiscounted.length !== 1 ? 'er' : ''} på tilbud
+            </p>
+          </div>
+        )}
 
         {/* Produkter */}
         {loadError ? (
@@ -109,7 +139,7 @@ export default async function TilbudPage() {
             <p className="mb-6 text-sm">{loadError}</p>
           </div>
         ) : actualDiscounted.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {actualDiscounted.map((product) => {
               const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images || [];
 
@@ -139,33 +169,33 @@ export default async function TilbudPage() {
             })}
           </div>
         ) : (
-          <div className="rounded-xl bg-white p-12 text-center">
-            <Tag className="mx-auto mb-4 h-16 w-16 text-gray-border" />
-            <h2 className="mb-2 text-2xl font-bold text-dark">Ingen tilbud akkurat nå</h2>
-            <p className="mb-6 text-gray-medium">Sjekk tilbake senere for nye tilbud!</p>
+          <div className="rounded-xl bg-white shadow-sm border border-gray-200 p-8 sm:p-12 text-center">
+            <Tag className="mx-auto mb-4 h-12 w-12 sm:h-16 sm:w-16 text-gray-300" />
+            <h2 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900">Ingen tilbud akkurat nå</h2>
+            <p className="mb-6 text-sm sm:text-base text-gray-600">Sjekk tilbake senere for nye tilbud!</p>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors"
             >
               Se alle produkter
-              <ChevronRight size={20} />
+              <ChevronRight size={18} className="sm:w-5 sm:h-5" />
             </Link>
           </div>
         )}
 
         {/* Call to action */}
         {actualDiscounted.length > 0 && (
-          <section className="mt-12 rounded-xl bg-gradient-to-r from-dark to-dark-secondary p-8 text-center text-white">
-            <h2 className="mb-2 text-3xl font-bold">Glemt å sjekke noe?</h2>
-            <p className="mb-6 text-gray-300">
+          <section className="mt-8 sm:mt-12 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 p-6 sm:p-8 lg:p-10 text-center text-white">
+            <h2 className="mb-2 text-xl sm:text-2xl lg:text-3xl font-bold">Glemt å sjekke noe?</h2>
+            <p className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-300">
               Se vårt fulle utvalg av elektronikk og tech-produkter
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-white px-6 py-3 font-semibold text-white hover:bg-white hover:text-dark transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white hover:bg-white hover:text-gray-900 transition-colors"
             >
               Se alle produkter
-              <ChevronRight size={20} />
+              <ChevronRight size={18} className="sm:w-5 sm:h-5" />
             </Link>
           </section>
         )}

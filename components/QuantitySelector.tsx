@@ -28,8 +28,7 @@ export function QuantitySelector({ value, onChange, min = 1, max = 99 }: Quantit
       <Button
         type="button"
         variant="ghost"
-        size="icon"
-        className="h-8 w-8"
+        className="h-8 w-8 p-0"
         onClick={decrease}
         aria-label="Mindre"
       >
@@ -39,8 +38,7 @@ export function QuantitySelector({ value, onChange, min = 1, max = 99 }: Quantit
       <Button
         type="button"
         variant="ghost"
-        size="icon"
-        className="h-8 w-8"
+        className="h-8 w-8 p-0"
         onClick={increase}
         aria-label="Mer"
       >

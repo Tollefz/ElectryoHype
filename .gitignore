@@ -8,6 +8,8 @@ yarn-error.log*
 .next/
 dist/
 out/
+.turbo/
+tsconfig.tsbuildinfo
 
 # Env/secrets
 .env

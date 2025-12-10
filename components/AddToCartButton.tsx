@@ -34,6 +34,8 @@ export default function AddToCartButton({ product, variants = [], onVariantChang
     variants.length > 0 ? variants[0].id : null
   );
   const [added, setAdded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { addToCart } = useCart();
 
   const hasVariants = variants.length > 0;
@@ -55,21 +57,31 @@ export default function AddToCartButton({ product, variants = [], onVariantChang
     : product.compareAtPrice;
   const displayImage = selectedVariant?.image || product.image;
 
-  const handleAddToCart = () => {
-    const itemToAdd = {
-      productId: product.id,
-      name: product.name,
-      price: displayPrice,
-      image: displayImage,
-      quantity: 1, // Will be handled by addToCart
-      slug: product.slug,
-      variantId: selectedVariant?.id || undefined,
-      variantName: selectedVariant?.name || undefined,
-    };
+  const handleAddToCart = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const itemToAdd = {
+        productId: product.id,
+        name: product.name,
+        price: displayPrice,
+        image: displayImage,
+        quantity: 1, // Will be handled by addToCart
+        slug: product.slug,
+        variantId: selectedVariant?.id || undefined,
+        variantName: selectedVariant?.name || undefined,
+      };
 
-    addToCart(itemToAdd, quantity);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+      addToCart(itemToAdd, quantity);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    } catch (err) {
+      setError('Kunne ikke legge produkt i handlekurv. Prøv igjen.');
+      console.error('Error adding to cart:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -95,24 +107,41 @@ export default function AddToCartButton({ product, variants = [], onVariantChang
         </div>
       </div>
 
+      {/* Error message */}
+      {error && (
+        <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       {/* Legg i handlekurv knapp */}
       <button
         onClick={handleAddToCart}
-        disabled={added}
-        className={`flex w-full items-center justify-center gap-3 rounded-lg py-4 text-lg font-semibold transition-all ${
+        disabled={added || isLoading}
+        className={`flex w-full items-center justify-center gap-3 rounded-lg py-3 sm:py-4 text-base sm:text-lg font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed ${
           added 
-            ? 'bg-brand text-white' 
-            : 'bg-dark text-white hover:bg-dark-secondary'
+            ? 'bg-green-600 text-white' 
+            : isLoading
+            ? 'bg-green-600 text-white cursor-wait'
+            : 'bg-green-600 text-white hover:bg-green-700'
         }`}
       >
-        {added ? (
+        {isLoading ? (
           <>
-            <Check size={24} />
+            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Legger til...
+          </>
+        ) : added ? (
+          <>
+            <Check size={20} className="sm:w-6 sm:h-6" />
             Lagt i handlekurv!
           </>
         ) : (
           <>
-            <ShoppingCart size={24} />
+            <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
             Legg i handlekurv
           </>
         )}

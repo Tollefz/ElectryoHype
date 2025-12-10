@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getStoreIdFromHeaders } from "@/lib/store";
-import { headers } from "next/headers";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 
 export async function GET(
   request: Request,
@@ -13,8 +12,7 @@ export async function GET(
   }
 
   try {
-    const headersList = await headers();
-    const storeId = getStoreIdFromHeaders(headersList);
+    const storeId = await getStoreIdFromHeadersServer();
     const order = await prisma.order.findUnique({
       where: { id, storeId },
       include: {

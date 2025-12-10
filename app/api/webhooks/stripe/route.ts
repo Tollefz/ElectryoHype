@@ -70,6 +70,89 @@ export async function POST(req: Request) {
 
   try {
     switch (event.type) {
+      case "checkout.session.completed":
+        const session = event.data.object as Stripe.Checkout.Session;
+        const sessionOrderId = session.metadata?.orderId;
+        
+        if (sessionOrderId) {
+          // Update order with session ID and mark as paid
+          await prisma.order.update({
+            where: { id: sessionOrderId },
+            data: {
+              paymentStatus: "paid",
+              status: "processing",
+              paymentIntentId: session.payment_intent as string || undefined,
+              stripeSessionId: session.id,
+              customerEmail: session.customer_email || undefined,
+            },
+          });
+
+          // Get order for risk evaluation
+          const order = await prisma.order.findUnique({
+            where: { id: sessionOrderId },
+            include: { customer: true },
+          });
+
+          if (order) {
+            const dropshipCfg = getDropshippingConfig();
+            const sendAnywayOnHighRisk = dropshipCfg.sendAnywayOnHighRisk ?? false;
+
+            // Risk evaluation
+            const risk = await evaluateOrderRisk(sessionOrderId);
+            await prisma.order.update({
+              where: { id: sessionOrderId },
+              data: {
+                riskScore: risk.riskScore,
+                isFlaggedForReview: risk.isFlagged,
+              } as any,
+            });
+
+            // Send emails
+            sendOrderConfirmation(sessionOrderId).catch((err) =>
+              console.error("❌ Failed to send order confirmation:", err)
+            );
+            sendAdminNotification(sessionOrderId).catch((err) =>
+              console.error("❌ Failed to send admin notification:", err)
+            );
+
+            const shouldSendToSupplier = !(risk.isFlagged && !sendAnywayOnHighRisk);
+            if (shouldSendToSupplier) {
+              sendOrderToSupplier(sessionOrderId).catch((err) =>
+                console.error("❌ Failed to send order to supplier:", err)
+              );
+            }
+
+            // Trigger Inngest event
+            await inngest.send({
+              name: "order/paid",
+              data: { orderId: sessionOrderId },
+            });
+
+            console.log("✅ Checkout session completed for order:", sessionOrderId);
+          }
+        } else {
+          // If no orderId in metadata, try to find by session ID
+          const orderBySession = await prisma.order.findFirst({
+            where: { stripeSessionId: session.id },
+          });
+          
+          if (orderBySession) {
+            await prisma.order.update({
+              where: { id: orderBySession.id },
+              data: {
+                paymentStatus: "paid",
+                status: "processing",
+                paymentIntentId: session.payment_intent as string || undefined,
+                customerEmail: session.customer_email || undefined,
+              },
+            });
+            console.log("✅ Checkout session completed for order (found by session ID):", orderBySession.id);
+          } else {
+            console.log("⚠️ Checkout session completed but no orderId in metadata and no order found by session ID");
+          }
+        }
+        break;
+
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         const orderId = paymentIntent.metadata.orderId;

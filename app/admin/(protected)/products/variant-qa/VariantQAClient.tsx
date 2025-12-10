@@ -205,42 +205,43 @@ export default function VariantQAClient() {
   return (
     <div className="space-y-6">
       {/* HEADER */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-dark">Variant Quality Check</h1>
-          <p className="text-gray-medium mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Variant Quality Check</h1>
+          <p className="text-sm text-gray-600 mt-1">
             Verifiser at alle produktvarianter har riktige bilder, farger og data
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <Link
             href="/admin/products"
-            className="rounded-lg border border-gray-border px-4 py-2 text-sm font-medium hover:bg-gray-light"
+            className="rounded-lg border border-gray-300 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            ← Tilbake til produkter
+            ← Tilbake
           </Link>
           <button
             onClick={loadProducts}
             disabled={loading}
-            className="flex items-center gap-2 rounded-lg border border-gray-border px-4 py-2 hover:bg-gray-light disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
           >
-            <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
-            Oppdater
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+            <span className="hidden sm:inline">Oppdater</span>
           </button>
           <button
             onClick={checkAllProducts}
             disabled={checking || loading}
-            className="flex items-center gap-2 rounded-lg bg-brand px-6 py-2 text-white hover:bg-brand-dark disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-green-600 px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
           >
             {checking ? (
               <>
-                <RefreshCw className="animate-spin" size={20} />
-                Sjekker...
+                <RefreshCw className="animate-spin" size={16} />
+                <span className="hidden sm:inline">Sjekker...</span>
               </>
             ) : (
               <>
-                <Settings size={20} />
-                Sjekk Alle Produkter
+                <Settings size={16} />
+                <span className="hidden sm:inline">Sjekk Alle Produkter</span>
+                <span className="sm:hidden">Sjekk</span>
               </>
             )}
           </button>
@@ -306,15 +307,15 @@ export default function VariantQAClient() {
       </div>
 
       {/* FILTERS */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {(['all', 'passed', 'failed'] as const).map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            className={`rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors ${
               filter === f
-                ? 'bg-dark text-white'
-                : 'bg-white text-gray-medium hover:bg-gray-light border border-gray-border'
+                ? 'bg-gray-900 text-white shadow-sm'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
             }`}
           >
             {f === 'all' && 'Alle'}

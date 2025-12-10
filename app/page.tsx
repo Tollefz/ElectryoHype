@@ -4,13 +4,62 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight, Truck, Shield, CreditCard, Headphones } from "lucide-react";
 import { getCategoriesWithCounts } from "@/lib/utils/product-count";
-import { getStoreIdFromHeaders } from "@/lib/store";
+import { DEFAULT_STORE_ID } from "@/lib/store";
+import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { headers } from "next/headers";
+import type { Metadata } from "next";
+import { NewsletterForm } from "@/components/NewsletterForm";
+
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
+const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+
+export const metadata: Metadata = {
+  title: "ElektroHype - Beste elektronikk til beste priser",
+  description: "Kjøp elektronikk, gaming-utstyr, mobil og tilbehør til beste priser. Gratis frakt over 500 kr. Rask levering i hele Norge.",
+  keywords: ["elektronikk", "gaming", "mobil", "tilbehør", "Norge", "nettbutikk", "elektronikkbutikk"],
+  openGraph: {
+    title: "ElektroHype - Beste elektronikk til beste priser",
+    description: "Kjøp elektronikk, gaming-utstyr, mobil og tilbehør til beste priser. Gratis frakt over 500 kr.",
+    type: "website",
+    url: baseUrl,
+    siteName: "ElektroHype",
+    images: [
+      {
+        url: `${baseUrl}/og-image.jpg`, // TODO: Legg til faktisk OG image
+        width: 1200,
+        height: 630,
+        alt: "ElektroHype - Elektronikkbutikk",
+      }
+    ],
+    locale: "nb_NO",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ElektroHype - Beste elektronikk til beste priser",
+    description: "Kjøp elektronikk, gaming-utstyr, mobil og tilbehør til beste priser.",
+  },
+  alternates: {
+    canonical: baseUrl,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
 
 export default async function HomePage() {
-  const headersList = await headers();
-  const headerStoreId = getStoreIdFromHeaders(headersList);
-  const primaryStoreId = headerStoreId || "default-store";
+  const headerStoreId = await getStoreIdFromHeadersServer();
+  // Use DEFAULT_STORE_ID (Electro Hype) as default
+  const primaryStoreId = headerStoreId || DEFAULT_STORE_ID;
 
   let products: Array<{
     id: string;
@@ -31,7 +80,14 @@ export default async function HomePage() {
     // Primary query with current store
     const [latest, featured, categoriesWithCounts] = await Promise.all([
       prisma.product.findMany({
-        where: { isActive: true, storeId: primaryStoreId },
+        where: {
+          isActive: true,
+          storeId: primaryStoreId !== "demo-store" ? primaryStoreId : DEFAULT_STORE_ID,
+          // Exclude Sport and Klær categories
+          category: {
+            notIn: ["Sport", "Klær"],
+          },
+        },
         take: 8,
         orderBy: { createdAt: "desc" },
         select: {
@@ -49,10 +105,17 @@ export default async function HomePage() {
       prisma.product.findMany({
         where: {
           isActive: true,
-          storeId: primaryStoreId,
-          compareAtPrice: { not: null },
+          storeId: primaryStoreId !== "demo-store" ? primaryStoreId : DEFAULT_STORE_ID,
+          compareAtPrice: { 
+            not: null,
+            gt: 0,
+          },
+          // Exclude Sport and Klær categories
+          category: {
+            notIn: ["Sport", "Klær"],
+          },
         },
-        take: 4,
+        take: 8,
         orderBy: { createdAt: "desc" },
         select: {
           id: true,
@@ -75,11 +138,19 @@ export default async function HomePage() {
       compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
     }));
 
-    featuredProducts = featured.map((p) => ({
-      ...p,
-      price: Number(p.price),
-      compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
-    }));
+    // Filter to only show products where compareAtPrice > price (actual discount)
+    featuredProducts = featured
+      .filter((p) => {
+        const price = Number(p.price);
+        const compareAtPrice = p.compareAtPrice ? Number(p.compareAtPrice) : null;
+        return compareAtPrice && compareAtPrice > price;
+      })
+      .map((p) => ({
+        ...p,
+        price: Number(p.price),
+        compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+      }))
+      .slice(0, 4);
 
     const categoryImageMap: Record<string, string> = {
       "PC & Data": "https://placehold.co/300x200/f5f5f5/333?text=PC",
@@ -94,6 +165,7 @@ export default async function HomePage() {
     };
 
     categories = categoriesWithCounts
+      .filter(cat => cat.name !== "Sport" && cat.name !== "Klær") // Filter out Sport and Klær
       .slice(0, 6)
       .map((cat) => ({
         name: cat.name,
@@ -103,72 +175,97 @@ export default async function HomePage() {
         count: cat.count,
       }));
 
-    // Fallback: if no products and primary store is not default-store, try default-store
-    if (products.length === 0 && primaryStoreId !== "default-store") {
-      console.log("[home] no products for storeId, falling back to 'default-store'", {
-        storeId: primaryStoreId,
-      });
+    // Fallback: if no products, try DEFAULT_STORE_ID (Electro Hype) but NOT demo-store
+    if (products.length === 0 && primaryStoreId !== DEFAULT_STORE_ID) {
+      const fallbackStoreId = DEFAULT_STORE_ID;
+      
+      if (fallbackStoreId) {
+        console.log(`[home] no products for storeId="${primaryStoreId}", trying fallback="${fallbackStoreId}"`);
 
-      const [fallbackLatest, fallbackFeatured, fallbackCategories] = await Promise.all([
-        prisma.product.findMany({
-          where: { isActive: true, storeId: "default-store" },
-          take: 8,
-          orderBy: { createdAt: "desc" },
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            compareAtPrice: true,
-            images: true,
-            category: true,
-            isActive: true,
-            storeId: true,
-          },
-        }),
-        prisma.product.findMany({
-          where: {
-            isActive: true,
-            storeId: "default-store",
-            compareAtPrice: { not: null },
-          },
-          take: 4,
-          orderBy: { createdAt: "desc" },
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            compareAtPrice: true,
-            images: true,
-            category: true,
-            isActive: true,
-            storeId: true,
-          },
-        }),
-        getCategoriesWithCounts("default-store"),
-      ]);
+        const [fallbackLatest, fallbackFeatured, fallbackCategories] = await Promise.all([
+          prisma.product.findMany({
+            where: { 
+              isActive: true, 
+              storeId: fallbackStoreId,
+              category: {
+                notIn: ["Sport", "Klær"],
+              },
+            },
+            take: 8,
+            orderBy: { createdAt: "desc" },
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              price: true,
+              compareAtPrice: true,
+              images: true,
+              category: true,
+              isActive: true,
+              storeId: true,
+            },
+          }),
+          prisma.product.findMany({
+            where: {
+              isActive: true,
+              storeId: fallbackStoreId,
+              compareAtPrice: { 
+                not: null,
+                gt: 0,
+              },
+              category: {
+                notIn: ["Sport", "Klær"],
+              },
+            },
+            take: 8,
+            orderBy: { createdAt: "desc" },
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              price: true,
+              compareAtPrice: true,
+              images: true,
+              category: true,
+              isActive: true,
+              storeId: true,
+            },
+          }),
+          getCategoriesWithCounts(fallbackStoreId),
+        ]);
 
-      products = fallbackLatest.map((p) => ({
-        ...p,
-        price: Number(p.price),
-        compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
-      }));
-      featuredProducts = fallbackFeatured.map((p) => ({
-        ...p,
-        price: Number(p.price),
-        compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
-      }));
-      categories = fallbackCategories
-        .slice(0, 6)
-        .map((cat) => ({
-          name: cat.name,
-          image:
-            categoryImageMap[cat.name] ||
-            "https://placehold.co/300x200/f5f5f5/333?text=" + encodeURIComponent(cat.name),
-          count: cat.count,
+        products = fallbackLatest.map((p) => ({
+          ...p,
+          price: Number(p.price),
+          compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
         }));
-      usedStoreId = "default-store";
+        // Filter to only show products where compareAtPrice > price (actual discount)
+        featuredProducts = fallbackFeatured
+          .filter((p) => {
+            const price = Number(p.price);
+            const compareAtPrice = p.compareAtPrice ? Number(p.compareAtPrice) : null;
+            return compareAtPrice && compareAtPrice > price;
+          })
+          .map((p) => ({
+            ...p,
+            price: Number(p.price),
+            compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+          }))
+          .slice(0, 4);
+        categories = fallbackCategories
+          .filter(cat => cat.name !== "Sport" && cat.name !== "Klær") // Filter out Sport and Klær
+          .slice(0, 6)
+          .map((cat) => ({
+            name: cat.name,
+            image:
+              categoryImageMap[cat.name] ||
+              "https://placehold.co/300x200/f5f5f5/333?text=" + encodeURIComponent(cat.name),
+            count: cat.count,
+          }));
+        usedStoreId = fallbackStoreId;
+      } else {
+        usedStoreId = primaryStoreId;
+      }
     } else {
       usedStoreId = primaryStoreId;
     }
@@ -178,41 +275,40 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-light">
+    <main className="min-h-screen bg-slate-50">
       
       {/* HERO BANNER */}
-      <section className="bg-gradient-to-r from-dark to-dark-secondary">
-        <div className="mx-auto max-w-7xl px-4 py-12">
-          <div className="grid items-center gap-8 md:grid-cols-2">
+      <section className="bg-gradient-to-r from-gray-900 to-gray-800">
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-8 sm:py-12 lg:py-16">
+          <div className="grid items-center gap-6 sm:gap-8 md:grid-cols-2">
             <div>
-              <span className="mb-4 inline-block rounded-full bg-brand px-4 py-1 text-sm font-semibold text-white">
+              <span className="mb-3 sm:mb-4 inline-block rounded-full bg-green-600 px-3 sm:px-4 py-1 text-xs sm:text-sm font-semibold text-white">
                 🔥 Ukens kampanje
               </span>
-              <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
-                Opptil 40% rabatt på <span className="text-brand">gaming-utstyr</span>
+              <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                Beste elektronikk til <span className="text-green-400">beste priser</span>
               </h1>
-              <p className="mb-6 text-lg text-gray-300">
-                Oppgrader gaming-opplevelsen din med våre beste tilbud. 
-                Begrenset tid!
+              <p className="mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg text-gray-300 max-w-xl">
+                Elektronikk, gaming og hjem – levert raskt i hele Norge
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
-                  href="/products?category=gaming"
-                  className="rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
+                  href="/tilbud"
+                  className="rounded-lg bg-green-600 px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors text-center"
                 >
                   Se tilbud
                 </Link>
                 <Link
                   href="/products"
-                  className="rounded-lg border-2 border-white px-6 py-3 font-semibold text-white hover:bg-white hover:text-dark transition-colors"
+                  className="rounded-lg border-2 border-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white hover:bg-white hover:text-gray-900 transition-colors text-center"
                 >
                   Alle produkter
                 </Link>
               </div>
             </div>
-            <div className="relative h-64 md:h-80">
+            <div className="relative h-48 sm:h-64 md:h-80 hidden md:block">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-9xl">🎮</div>
+                <div className="text-6xl sm:text-8xl lg:text-9xl">🎮</div>
               </div>
             </div>
           </div>
@@ -220,35 +316,35 @@ export default async function HomePage() {
       </section>
 
       {/* USP BAR */}
-      <section className="border-b border-gray-border bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-4">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div className="flex items-center gap-3">
-              <Truck className="h-8 w-8 text-brand" />
+      <section className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Truck className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-dark">Fri frakt</p>
-                <p className="text-xs text-gray-medium">Over 500,-</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Fri frakt</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Over 500,-</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Shield className="h-8 w-8 text-brand" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-dark">Trygg handel</p>
-                <p className="text-xs text-gray-medium">Sikker betaling</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Trygg handel</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Sikker betaling</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <CreditCard className="h-8 w-8 text-brand" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <CreditCard className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-dark">Delbetaling</p>
-                <p className="text-xs text-gray-medium">Med Klarna</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Delbetaling</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Med Klarna</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Headphones className="h-8 w-8 text-brand" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Headphones className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-dark">Kundeservice</p>
-                <p className="text-xs text-gray-medium">Man-Fre 09-18</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Kundeservice</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Man-Fre 09-18</p>
               </div>
             </div>
           </div>
@@ -256,11 +352,11 @@ export default async function HomePage() {
       </section>
 
       {/* KATEGORIER */}
-      <section className="py-10">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-dark">Handle etter kategori</h2>
-            <Link href="/categories" className="flex items-center text-sm font-semibold text-brand hover:underline">
+      <section className="py-6 sm:py-8 lg:py-10">
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+          <div className="mb-4 sm:mb-6 flex items-center justify-between">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Handle etter kategori</h2>
+            <Link href="/products" className="hidden sm:flex items-center text-sm font-semibold text-green-600 hover:text-green-700 hover:underline">
               Se alle <ChevronRight size={16} />
             </Link>
           </div>
@@ -270,26 +366,28 @@ export default async function HomePage() {
               <p className="text-sm">{loadError}</p>
             </div>
           ) : categories.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
               {categories.map((cat) => (
                 <Link
                   key={cat.name}
                   href={`/products?category=${encodeURIComponent(cat.name)}`}
-                  className="group overflow-hidden rounded-xl border border-gray-border bg-white transition-all hover:border-brand hover:shadow-lg"
+                  className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:border-green-600 hover:shadow-md"
                 >
-                  <div className="relative h-32 bg-gray-light">
+                  <div className="relative h-24 sm:h-32 bg-gray-50">
                     <Image
                       src={cat.image}
-                      alt={cat.name}
+                      alt={`${cat.name} kategori`}
                       fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
                       className="object-cover transition-transform group-hover:scale-105"
+                      loading="lazy"
                     />
                   </div>
-                  <div className="p-3 text-center">
-                    <h3 className="font-semibold text-dark group-hover:text-brand transition-colors">
+                  <div className="p-2 sm:p-3 text-center">
+                    <h3 className="text-xs sm:text-sm font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
                       {cat.name}
                     </h3>
-                    <p className="text-xs text-gray-medium">
+                    <p className="text-[10px] sm:text-xs text-gray-600 mt-0.5">
                       {cat.count} {cat.count === 1 ? "produkt" : "produkter"}
                     </p>
                   </div>
@@ -305,32 +403,32 @@ export default async function HomePage() {
       </section>
 
       {/* UKENS TILBUD */}
-      <section className="py-10">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🔥</span>
-              <h2 className="text-2xl font-bold text-dark">Ukens tilbud</h2>
-              <span className="rounded-full bg-sale px-3 py-1 text-xs font-bold text-white">
+      <section className="py-6 sm:py-8 lg:py-10">
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-xl sm:text-2xl">🔥</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ukens tilbud</h2>
+              <span className="rounded-full bg-red-500 px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-bold text-white">
                 SPAR OPP TIL 40%
               </span>
             </div>
-            <Link href="/tilbud" className="flex items-center text-sm font-semibold text-brand hover:underline">
+            <Link href="/tilbud" className="hidden sm:flex items-center text-sm font-semibold text-green-600 hover:text-green-700 hover:underline">
               Se alle tilbud <ChevronRight size={16} />
             </Link>
           </div>
           {loadError ? (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 sm:p-6 text-red-700">
               <p className="font-semibold">Kunne ikke laste tilbud</p>
               <p className="text-sm">{loadError}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {(featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4)).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
               {featuredProducts.length === 0 && products.length === 0 && (
-                <div className="col-span-full rounded-lg border border-gray-border bg-white p-6 text-center text-gray-600">
+                <div className="col-span-full rounded-lg border border-gray-200 bg-white p-6 text-center text-gray-600">
                   Ingen produkter tilgjengelig akkurat nå.
                 </div>
               )}
@@ -340,11 +438,11 @@ export default async function HomePage() {
       </section>
 
       {/* POPULÆRE PRODUKTER */}
-      <section className="py-10">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-dark">Populære produkter</h2>
-            <Link href="/products" className="flex items-center text-sm font-semibold text-brand hover:underline">
+      <section className="py-6 sm:py-8 lg:py-10">
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+          <div className="mb-4 sm:mb-6 flex items-center justify-between">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Populære produkter</h2>
+            <Link href="/products" className="hidden sm:flex items-center text-sm font-semibold text-green-600 hover:text-green-700 hover:underline">
               Se alle produkter <ChevronRight size={16} />
             </Link>
           </div>
@@ -354,9 +452,9 @@ export default async function HomePage() {
               <p className="text-sm">{loadError}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {products.length === 0 && (
-                <div className="col-span-full rounded-lg border border-gray-border bg-white p-6 text-center text-gray-600">
+                <div className="col-span-full rounded-lg border border-gray-200 bg-white p-6 text-center text-gray-600">
                   Ingen produkter tilgjengelig akkurat nå.
                 </div>
               )}
@@ -369,24 +467,15 @@ export default async function HomePage() {
       </section>
 
       {/* NYHETSBREV */}
-      <section className="bg-dark py-12">
-        <div className="mx-auto max-w-7xl px-4 text-center">
-          <h2 className="mb-2 text-2xl font-bold text-white">
+      <section className="bg-gray-900 py-8 sm:py-12">
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 text-center">
+          <h2 className="mb-2 text-xl sm:text-2xl font-bold text-white">
             Få eksklusive tilbud rett i innboksen
           </h2>
-          <p className="mb-6 text-gray-400">
+          <p className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-400">
             Meld deg på vårt nyhetsbrev og få 10% rabatt på første ordre!
           </p>
-          <div className="mx-auto flex max-w-md gap-2">
-            <input
-              type="email"
-              placeholder="Din e-postadresse"
-              className="flex-1 rounded-lg border-0 px-4 py-3 text-dark focus:outline-none focus:ring-2 focus:ring-brand"
-            />
-            <button className="rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors">
-              Meld på
-            </button>
-          </div>
+          <NewsletterForm />
         </div>
       </section>
     </main>

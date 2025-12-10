@@ -4,9 +4,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getCategoryBySlug, CATEGORY_DEFINITIONS, type CategorySlug } from "@/lib/categories";
 
 interface FilterSidebarProps {
-  categories: string[];
+  categories: CategorySlug[];
 }
 
 export function FilterSidebar({ categories }: FilterSidebarProps) {
@@ -30,55 +31,67 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
   };
 
   return (
-    <aside className="space-y-6 rounded-lg border border-border bg-white p-6 shadow-komplett">
+    <aside className="space-y-6 rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
       <div>
-        <h3 className="text-lg font-semibold text-primary">Kategorier</h3>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Kategorier</h3>
         <div className="mt-3 space-y-2">
-          {categories.map((category) => (
-            <label key={category} className="flex items-center gap-2 text-sm text-secondary">
-              <input
-                type="radio"
-                name="category"
-                checked={activeCategory === category}
-                onChange={() => updateParams({ category })}
-              />
-              {category}
-            </label>
-          ))}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="mt-2 px-0 text-primary"
-            onClick={() => updateParams({ category: null })}
-          >
-            Nullstill kategori
-          </Button>
+          <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+            <input
+              type="radio"
+              name="category"
+              checked={!activeCategory}
+              onChange={() => updateParams({ category: null })}
+              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+            />
+            Alle kategorier
+          </label>
+          {categories.map((categorySlug) => {
+            const categoryDef = CATEGORY_DEFINITIONS[categorySlug];
+            if (!categoryDef) return null;
+            return (
+              <label key={categorySlug} className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+                <input
+                  type="radio"
+                  name="category"
+                  checked={activeCategory === categorySlug}
+                  onChange={() => updateParams({ category: categorySlug })}
+                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                />
+                {categoryDef.label}
+              </label>
+            );
+          })}
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-slate-900">Pris</h3>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Pris</h3>
         <div className="mt-3 flex flex-col gap-4">
           <div>
-            <label className="text-xs uppercase tracking-wide text-secondary">Min</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">Min (kr)</label>
             <Input
               type="number"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
               placeholder="0"
+              className="w-full"
             />
           </div>
           <div>
-            <label className="text-xs uppercase tracking-wide text-secondary">Max</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">Max (kr)</label>
             <Input
               type="number"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
               placeholder="5000"
+              className="w-full"
             />
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => updateParams({ minPrice, maxPrice })} className="flex-1">
+            <Button 
+              onClick={() => updateParams({ minPrice, maxPrice })} 
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            >
               Bruk
             </Button>
             <Button
@@ -88,6 +101,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
                 setMaxPrice("");
                 updateParams({ minPrice: null, maxPrice: null });
               }}
+              className="border border-gray-300 hover:bg-gray-50"
             >
               Nullstill
             </Button>
