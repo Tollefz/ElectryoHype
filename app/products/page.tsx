@@ -45,7 +45,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       ? {
           category: {
             equals: categoryName,
-            mode: "insensitive",
           },
         }
       : {}),
