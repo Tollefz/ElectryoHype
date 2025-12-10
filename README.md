@@ -8,6 +8,22 @@ Fullverdig dropshipping-plattform bygget på Next.js 14 App Router med Prisma, N
 
 ---
 
+## Deployment to Vercel + Neon
+
+- Produkt/kategori-spørringer
+  - Bruk den delte Prisma-klienten.
+  - API-ruter: pakk i try/catch, `console.error` ved feil og returner 500 med JSON-error.
+  - Server-komponenter: vis en feiltilstand i UI – ikke lat som om tomme arrays er OK når DB feiler.
+  - Kategorifiltrering skal gjøres på serveren mot kategori-slug (f.eks. `where: { category: { slug } }`).
+
+- Vercel-oppsett
+  - Project → Settings → Environment Variables: sett `DATABASE_URL` til Neon-URL (med `sslmode=require`).
+  - Project → Settings → Build & Development: Build Command = `npm run vercel-build`.
+  - Redeploy prosjektet.
+  - Test `/api/health` (hvis tilgjengelig) for å bekrefte DB-tilkobling i produksjon.
+
+---
+
 ## 🧱 Teknisk Stack
 
 | Lag            | Teknologi |

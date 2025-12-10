@@ -140,6 +140,7 @@ function supplierId() {
 }
 
 async function main() {
+  const defaultStoreId = "default-store";
   await prisma.product.deleteMany();
 
   for (const product of products) {
@@ -157,6 +158,7 @@ async function main() {
         tags: JSON.stringify([product.category.toLowerCase(), "nyhet"]),
         category: product.category,
         isActive: true,
+        storeId: defaultStoreId,
         supplierUrl: "https://alibaba.com/product/example",
         supplierName: SupplierName.alibaba,
         supplierProductId: supplierId(),

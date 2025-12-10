@@ -1,22 +1,39 @@
-import { prisma } from '@/lib/prisma';
-import ProductCard from '@/components/ProductCard';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ChevronRight, Truck, Shield, CreditCard, Headphones } from 'lucide-react';
-import { getCategoriesWithCounts } from '@/lib/utils/product-count';
-import { getStoreIdFromHeaders } from '@/lib/store';
-import { headers } from 'next/headers';
-import { safeQuery } from '@/lib/safeQuery';
+import { prisma } from "@/lib/prisma";
+import ProductCard from "@/components/ProductCard";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronRight, Truck, Shield, CreditCard, Headphones } from "lucide-react";
+import { getCategoriesWithCounts } from "@/lib/utils/product-count";
+import { getStoreIdFromHeaders } from "@/lib/store";
+import { headers } from "next/headers";
 
 export default async function HomePage() {
   const headersList = await headers();
-  const storeId = getStoreIdFromHeaders(headersList);
-  const products = await safeQuery(
-    () =>
+  const headerStoreId = getStoreIdFromHeaders(headersList);
+  const primaryStoreId = headerStoreId || "default-store";
+
+  let products: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    compareAtPrice: number | null;
+    images: any;
+    category: string | null;
+  }> = [];
+
+  let featuredProducts: Array<typeof products[number]> = [];
+  let categories: Array<{ name: string; image: string; count: number }> = [];
+  let loadError: string | null = null;
+    let usedStoreId = primaryStoreId;
+
+  try {
+    // Primary query with current store
+    const [latest, featured, categoriesWithCounts] = await Promise.all([
       prisma.product.findMany({
-        where: { isActive: true, storeId },
+        where: { isActive: true, storeId: primaryStoreId },
         take: 8,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           name: true,
@@ -26,22 +43,17 @@ export default async function HomePage() {
           images: true,
           category: true,
           isActive: true,
+          storeId: true,
         },
       }),
-    [],
-    'home:latest'
-  );
-
-  const featuredProducts = await safeQuery(
-    () =>
       prisma.product.findMany({
-        where: { 
+        where: {
           isActive: true,
-          storeId,
-          compareAtPrice: { not: null }
+          storeId: primaryStoreId,
+          compareAtPrice: { not: null },
         },
         take: 4,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           name: true,
@@ -51,36 +63,119 @@ export default async function HomePage() {
           images: true,
           category: true,
           isActive: true,
+          storeId: true,
         },
       }),
-    [],
-    'home:featured'
-  );
+      getCategoriesWithCounts(primaryStoreId),
+    ]);
 
-  // Get real categories with actual product counts
-  const categoriesWithCounts = await getCategoriesWithCounts(storeId);
-  
-  // Map category names to placeholder images (can be replaced with real images later)
-  const categoryImageMap: Record<string, string> = {
-    'PC & Data': 'https://placehold.co/300x200/f5f5f5/333?text=PC',
-    'Gaming': 'https://placehold.co/300x200/f5f5f5/333?text=Gaming',
-    'TV & Lyd': 'https://placehold.co/300x200/f5f5f5/333?text=TV',
-    'Mobil': 'https://placehold.co/300x200/f5f5f5/333?text=Mobil',
-    'Mobil & Tilbehør': 'https://placehold.co/300x200/f5f5f5/333?text=Mobil',
-    'Hvitevarer': 'https://placehold.co/300x200/f5f5f5/333?text=Hvitevarer',
-    'Smart Home': 'https://placehold.co/300x200/f5f5f5/333?text=SmartHome',
-    'Elektronikk': 'https://placehold.co/300x200/f5f5f5/333?text=Elektronikk',
-    'Datamaskiner': 'https://placehold.co/300x200/f5f5f5/333?text=PC',
-  };
-  
-  // Get top 6 categories by product count
-  const categories = categoriesWithCounts
-    .slice(0, 6)
-    .map((cat) => ({
-      name: cat.name,
-      image: categoryImageMap[cat.name] || 'https://placehold.co/300x200/f5f5f5/333?text=' + encodeURIComponent(cat.name),
-      count: cat.count,
+    products = latest.map((p) => ({
+      ...p,
+      price: Number(p.price),
+      compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
     }));
+
+    featuredProducts = featured.map((p) => ({
+      ...p,
+      price: Number(p.price),
+      compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+    }));
+
+    const categoryImageMap: Record<string, string> = {
+      "PC & Data": "https://placehold.co/300x200/f5f5f5/333?text=PC",
+      Gaming: "https://placehold.co/300x200/f5f5f5/333?text=Gaming",
+      "TV & Lyd": "https://placehold.co/300x200/f5f5f5/333?text=TV",
+      Mobil: "https://placehold.co/300x200/f5f5f5/333?text=Mobil",
+      "Mobil & Tilbehør": "https://placehold.co/300x200/f5f5f5/333?text=Mobil",
+      Hvitevarer: "https://placehold.co/300x200/f5f5f5/333?text=Hvitevarer",
+      "Smart Home": "https://placehold.co/300x200/f5f5f5/333?text=SmartHome",
+      Elektronikk: "https://placehold.co/300x200/f5f5f5/333?text=Elektronikk",
+      Datamaskiner: "https://placehold.co/300x200/f5f5f5/333?text=PC",
+    };
+
+    categories = categoriesWithCounts
+      .slice(0, 6)
+      .map((cat) => ({
+        name: cat.name,
+        image:
+          categoryImageMap[cat.name] ||
+          "https://placehold.co/300x200/f5f5f5/333?text=" + encodeURIComponent(cat.name),
+        count: cat.count,
+      }));
+
+    // Fallback: if no products and primary store is not default-store, try default-store
+    if (products.length === 0 && primaryStoreId !== "default-store") {
+      console.log("[home] no products for storeId, falling back to 'default-store'", {
+        storeId: primaryStoreId,
+      });
+
+      const [fallbackLatest, fallbackFeatured, fallbackCategories] = await Promise.all([
+        prisma.product.findMany({
+          where: { isActive: true, storeId: "default-store" },
+          take: 8,
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            price: true,
+            compareAtPrice: true,
+            images: true,
+            category: true,
+            isActive: true,
+            storeId: true,
+          },
+        }),
+        prisma.product.findMany({
+          where: {
+            isActive: true,
+            storeId: "default-store",
+            compareAtPrice: { not: null },
+          },
+          take: 4,
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            price: true,
+            compareAtPrice: true,
+            images: true,
+            category: true,
+            isActive: true,
+            storeId: true,
+          },
+        }),
+        getCategoriesWithCounts("default-store"),
+      ]);
+
+      products = fallbackLatest.map((p) => ({
+        ...p,
+        price: Number(p.price),
+        compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+      }));
+      featuredProducts = fallbackFeatured.map((p) => ({
+        ...p,
+        price: Number(p.price),
+        compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+      }));
+      categories = fallbackCategories
+        .slice(0, 6)
+        .map((cat) => ({
+          name: cat.name,
+          image:
+            categoryImageMap[cat.name] ||
+            "https://placehold.co/300x200/f5f5f5/333?text=" + encodeURIComponent(cat.name),
+          count: cat.count,
+        }));
+      usedStoreId = "default-store";
+    } else {
+      usedStoreId = primaryStoreId;
+    }
+  } catch (error: any) {
+    console.error("[home] Failed to load homepage data", error);
+    loadError = error?.message ?? "Kunne ikke hente data fra databasen.";
+  }
 
   return (
     <main className="min-h-screen bg-gray-light">
@@ -169,7 +264,12 @@ export default async function HomePage() {
               Se alle <ChevronRight size={16} />
             </Link>
           </div>
-          {categories.length > 0 ? (
+          {loadError ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
+              <p className="font-semibold">Kunne ikke laste kategorier</p>
+              <p className="text-sm">{loadError}</p>
+            </div>
+          ) : categories.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               {categories.map((cat) => (
                 <Link
@@ -190,7 +290,7 @@ export default async function HomePage() {
                       {cat.name}
                     </h3>
                     <p className="text-xs text-gray-medium">
-                      {cat.count} {cat.count === 1 ? 'produkt' : 'produkter'}
+                      {cat.count} {cat.count === 1 ? "produkt" : "produkter"}
                     </p>
                   </div>
                 </Link>
@@ -219,11 +319,23 @@ export default async function HomePage() {
               Se alle tilbud <ChevronRight size={16} />
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {(featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4)).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loadError ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
+              <p className="font-semibold">Kunne ikke laste tilbud</p>
+              <p className="text-sm">{loadError}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {(featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4)).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+              {featuredProducts.length === 0 && products.length === 0 && (
+                <div className="col-span-full rounded-lg border border-gray-border bg-white p-6 text-center text-gray-600">
+                  Ingen produkter tilgjengelig akkurat nå.
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -236,11 +348,23 @@ export default async function HomePage() {
               Se alle produkter <ChevronRight size={16} />
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loadError ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
+              <p className="font-semibold">Kunne ikke laste produkter</p>
+              <p className="text-sm">{loadError}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {products.length === 0 && (
+                <div className="col-span-full rounded-lg border border-gray-border bg-white p-6 text-center text-gray-600">
+                  Ingen produkter tilgjengelig akkurat nå.
+                </div>
+              )}
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

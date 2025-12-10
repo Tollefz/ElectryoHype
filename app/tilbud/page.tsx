@@ -1,45 +1,61 @@
-import { prisma } from '@/lib/prisma';
-import ProductCard from '@/components/ProductCard';
-import Link from 'next/link';
-import { ChevronRight, Tag } from 'lucide-react';
-import { safeQuery } from '@/lib/safeQuery';
+import { prisma } from "@/lib/prisma";
+import ProductCard from "@/components/ProductCard";
+import Link from "next/link";
+import { ChevronRight, Tag } from "lucide-react";
+import { getStoreIdFromHeaders } from "@/lib/store";
+import { headers } from "next/headers";
 
 /**
  * Henter produkter med rabatt fra databasen.
- * Returnerer tom array hvis databasen/tabellen mangler (f.eks. under Vercel build).
  */
-async function getDiscountedProducts() {
-  return safeQuery(
-    () =>
-      prisma.product.findMany({
-        where: {
-          isActive: true,
-          compareAtPrice: {
-            not: null,
-            gt: 0,
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          price: true,
-          compareAtPrice: true,
-          images: true,
-          category: true,
-        },
-      }),
-    [],
-    'tilbud'
-  );
+async function getDiscountedProducts(storeId: string) {
+  return prisma.product.findMany({
+    where: {
+      isActive: true,
+      storeId,
+      compareAtPrice: {
+        not: null,
+        gt: 0,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+      compareAtPrice: true,
+      images: true,
+      category: true,
+    },
+  });
 }
 
 export default async function TilbudPage() {
-  // Hent alle produkter med rabatt (compareAtPrice > price)
-  const discountedProducts = await getDiscountedProducts();
+  const headersList = await headers();
+  const headerStoreId = getStoreIdFromHeaders(headersList);
+  const primaryStoreId = headerStoreId || "default-store";
+
+  let discountedProducts: Awaited<ReturnType<typeof getDiscountedProducts>> = [];
+  let loadError: string | null = null;
+  let usedStoreId = primaryStoreId;
+
+  try {
+    discountedProducts = await getDiscountedProducts(primaryStoreId);
+    // Fallback: if no offers for primary store, try default-store
+    if (discountedProducts.length === 0 && primaryStoreId !== "default-store") {
+      console.log("[tilbud] no products for storeId, falling back to 'default-store'", {
+        storeId: primaryStoreId,
+      });
+      discountedProducts = await getDiscountedProducts("default-store");
+      usedStoreId = "default-store";
+    }
+  } catch (error: any) {
+    console.error("[tilbud] Failed to load discounted products", error);
+    loadError = error?.message ?? "Kunne ikke hente tilbudsprodukter.";
+  }
 
   // Filtrer produkter hvor compareAtPrice faktisk er høyere enn price
   const actualDiscounted = discountedProducts.filter((product) => {
@@ -86,13 +102,17 @@ export default async function TilbudPage() {
         </div>
 
         {/* Produkter */}
-        {actualDiscounted.length > 0 ? (
+        {loadError ? (
+          <div className="rounded-xl bg-white p-12 text-center border border-red-200 bg-red-50 text-red-700">
+            <Tag className="mx-auto mb-4 h-16 w-16 text-red-400" />
+            <h2 className="mb-2 text-2xl font-bold">Kunne ikke laste tilbud</h2>
+            <p className="mb-6 text-sm">{loadError}</p>
+          </div>
+        ) : actualDiscounted.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {actualDiscounted.map((product) => {
-              const images = typeof product.images === 'string' 
-                ? JSON.parse(product.images) 
-                : product.images || [];
-              
+              const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images || [];
+
               const discount = Math.round(
                 ((Number(product.compareAtPrice) - Number(product.price)) / Number(product.compareAtPrice)) * 100
               );
@@ -122,9 +142,7 @@ export default async function TilbudPage() {
           <div className="rounded-xl bg-white p-12 text-center">
             <Tag className="mx-auto mb-4 h-16 w-16 text-gray-border" />
             <h2 className="mb-2 text-2xl font-bold text-dark">Ingen tilbud akkurat nå</h2>
-            <p className="mb-6 text-gray-medium">
-              Sjekk tilbake senere for nye tilbud!
-            </p>
+            <p className="mb-6 text-gray-medium">Sjekk tilbake senere for nye tilbud!</p>
             <Link
               href="/products"
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"

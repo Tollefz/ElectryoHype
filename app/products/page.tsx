@@ -8,7 +8,6 @@ import { SortDropdown } from "@/components/products/SortDropdown";
 import { Pagination } from "@/components/products/Pagination";
 import { getStoreIdFromHeaders } from "@/lib/store";
 import { headers } from "next/headers";
-import { safeQuery } from "@/lib/safeQuery";
 
 interface ProductsPageProps {
   searchParams: Promise<Record<string, string | undefined>> | Record<string, string | undefined>;
@@ -23,9 +22,16 @@ async function getParams(searchParams: ProductsPageProps["searchParams"]) {
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await getParams(searchParams);
   const headersList = await headers();
-  const storeId = getStoreIdFromHeaders(headersList);
+  const headerStoreId = getStoreIdFromHeaders(headersList);
+  const storeId = headerStoreId || "default-store";
   const page = Math.max(1, Number(params.page ?? "1"));
-  const category = params.category ?? undefined;
+  const categorySlug = params.category ?? undefined;
+  const CATEGORY_MAP: Record<string, string> = {
+    data: "Data & IT",
+    gaming: "Gaming",
+    "mobil-tilbehor": "Mobil & Tilbehør",
+  };
+  const categoryName = categorySlug ? CATEGORY_MAP[categorySlug] : undefined;
   // Støtt både 'q' og 'query' for søkeparameter
   const query = params.q ?? params.query ?? undefined;
   const sort = params.sort ?? "newest";
@@ -35,11 +41,19 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const where: Prisma.ProductWhereInput = {
     isActive: true,
     storeId,
-    ...(category ? { category } : {}),
+    ...(categorySlug && categoryName
+      ? {
+          category: {
+            equals: categoryName,
+            mode: "insensitive",
+          },
+        }
+      : {}),
     ...(query
       ? {
           name: {
             contains: query,
+            mode: "insensitive",
           },
         }
       : {}),
@@ -55,26 +69,77 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     }
   }
 
-  let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: "desc" };
-  switch (sort) {
-    case "price-asc":
-      orderBy = { price: "asc" };
-      break;
-    case "price-desc":
-      orderBy = { price: "desc" };
-      break;
-    case "name":
-      orderBy = { name: "asc" };
-      break;
-    default:
-      orderBy = { createdAt: "desc" };
-  }
+  let productsRaw: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    price: number | Prisma.Decimal;
+    compareAtPrice: number | Prisma.Decimal | null;
+    images: any;
+    category: string | null;
+    isActive: boolean;
+  }> = [];
+  let total = 0;
+  let categoryRecords: Array<{ category: string | null }> = [];
+  let loadError: string | null = null;
+  let usedStoreId = storeId;
 
-  const [productsRaw, total, categoryRecords] = await Promise.all([
-    safeQuery(
-      () =>
+  try {
+    const orderByMap: Record<string, Prisma.ProductOrderByWithRelationInput> = {
+      "price-asc": { price: "asc" },
+      "price-desc": { price: "desc" },
+      name: { name: "asc" },
+      newest: { createdAt: "desc" },
+    };
+    const orderBy = orderByMap[sort] ?? { createdAt: "desc" };
+
+    // Primary query
+    const [primaryProducts, primaryTotal, primaryCategories] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          compareAtPrice: true,
+          images: true,
+          category: true,
+          isActive: true,
+        },
+      }),
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where: {
+          storeId,
+          category: { not: null },
+          isActive: true,
+        },
+        distinct: ["category"],
+        select: { category: true },
+      }),
+    ]);
+
+    productsRaw = primaryProducts;
+    total = primaryTotal;
+    categoryRecords = primaryCategories;
+    usedStoreId = storeId;
+
+    // Fallback: if no products and storeId is not default-store, try default-store
+    if (productsRaw.length === 0 && storeId !== "default-store") {
+      console.log("[products page] no products for storeId, falling back to 'default-store'", {
+        storeId,
+      });
+      const fallbackWhere = {
+        ...where,
+        storeId: "default-store",
+      };
+      const [fallbackProducts, fallbackTotal, fallbackCategories] = await Promise.all([
         prisma.product.findMany({
-          where,
+          where: fallbackWhere,
           orderBy,
           skip: (page - 1) * PAGE_SIZE,
           take: PAGE_SIZE,
@@ -89,25 +154,27 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             isActive: true,
           },
         }),
-      [],
-      "products:list"
-    ),
-    safeQuery(() => prisma.product.count({ where }), 0, "products:count"),
-    safeQuery(
-      () =>
+        prisma.product.count({ where: fallbackWhere }),
         prisma.product.findMany({
-          where: { 
-            storeId,
+          where: {
+            storeId: "default-store",
             category: { not: null },
             isActive: true,
           },
           distinct: ["category"],
           select: { category: true },
         }),
-      [],
-      "products:categories"
-    ),
-  ]);
+      ]);
+
+      productsRaw = fallbackProducts;
+      total = fallbackTotal;
+      categoryRecords = fallbackCategories;
+      usedStoreId = "default-store";
+    }
+  } catch (error: any) {
+    console.error("[products:list] Failed to load products", error);
+    loadError = error?.message ?? "Kunne ikke hente produkter.";
+  }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const categories = categoryRecords
@@ -123,10 +190,28 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     images: product.images,
   }));
 
+  // Debug logging to inspect filters and result size (server-side)
+  console.log("[products page] final result count:", products.length, {
+    primaryStoreId: storeId,
+    actuallyUsedStoreId: usedStoreId,
+    hasCategoryFilter: Boolean(where.category),
+    search: query ?? null,
+    minPrice: typeof minPrice === "number" ? minPrice : null,
+    maxPrice: typeof maxPrice === "number" ? maxPrice : null,
+  });
+
   // Get category name for display if filtering by category
-  const categoryName = category 
-    ? categories.find(cat => cat.toLowerCase() === category.toLowerCase()) || category
-    : null;
+  const resolvedCategoryName =
+    categoryName ||
+    (categorySlug
+      ? categories.find((cat) => cat.toLowerCase() === categorySlug.toLowerCase()) || categorySlug
+      : null);
+
+  // Handle unknown category slug
+  const unknownCategoryError =
+    categorySlug && !categoryName
+      ? `Ukjent kategori: ${categorySlug}`
+      : null;
 
   return (
     <div className="bg-white">
@@ -134,14 +219,14 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              {categoryName ? categoryName : 'Produkter'}
+              {resolvedCategoryName ? resolvedCategoryName : "Produkter"}
             </p>
             <h1 className="text-3xl font-bold text-primary">
-              {categoryName ? categoryName : 'Utforsk sortimentet'}
+              {resolvedCategoryName ? resolvedCategoryName : "Utforsk sortimentet"}
             </h1>
-            {categoryName && (
+            {resolvedCategoryName && (
               <p className="mt-2 text-sm text-gray-medium">
-                {total} {total === 1 ? 'produkt' : 'produkter'} i denne kategorien
+                {total} {total === 1 ? "produkt" : "produkter"} i denne kategorien
               </p>
             )}
           </div>
@@ -154,33 +239,45 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             <FilterSidebar categories={categories} />
           </Suspense>
           <div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {products.length === 0 && (
-                <div className="col-span-full rounded-lg border border-border bg-white p-8 text-center">
-                  <p className="text-lg font-semibold text-secondary mb-2">
-                    {categoryName 
-                      ? `Ingen produkter i kategorien "${categoryName}"`
-                      : 'Ingen produkter matcher filtrene dine'}
-                  </p>
-                  <p className="text-sm text-gray-medium mb-4">
-                    {categoryName 
-                      ? 'Prøv å se på andre kategorier eller søk etter produkter.'
-                      : 'Prøv å justere filtrene eller søk etter noe annet.'}
-                  </p>
-                  {categoryName && (
-                    <Link 
-                      href="/products" 
-                      className="inline-block rounded-lg bg-brand px-6 py-2 text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
-                    >
-                      Se alle produkter
-                    </Link>
-                  )}
-                </div>
-              )}
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            {unknownCategoryError ? (
+              <div className="col-span-full rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
+                <p className="font-semibold">Ukjent kategori</p>
+                <p className="text-sm">{unknownCategoryError}</p>
+              </div>
+            ) : loadError ? (
+              <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-700">
+                <p className="font-semibold">Kunne ikke laste produkter</p>
+                <p className="text-sm">{loadError}</p>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {products.length === 0 && (
+                  <div className="col-span-full rounded-lg border border-border bg-white p-8 text-center">
+                    <p className="text-lg font-semibold text-secondary mb-2">
+                      {resolvedCategoryName
+                        ? `Ingen produkter i kategorien "${resolvedCategoryName}"`
+                        : "Ingen produkter matcher filtrene dine"}
+                    </p>
+                    <p className="text-sm text-gray-medium mb-4">
+                      {resolvedCategoryName
+                        ? "Prøv å se på andre kategorier eller søk etter produkter."
+                        : "Prøv å justere filtrene eller søk etter noe annet."}
+                    </p>
+                    {resolvedCategoryName && (
+                      <Link
+                        href="/products"
+                        className="inline-block rounded-lg bg-brand px-6 py-2 text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
+                      >
+                        Se alle produkter
+                      </Link>
+                    )}
+                  </div>
+                )}
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
             <Suspense fallback={<div className="h-10 w-full rounded-lg bg-gray-200 animate-pulse mt-4" />}>
               <Pagination currentPage={page} totalPages={totalPages} />
             </Suspense>
