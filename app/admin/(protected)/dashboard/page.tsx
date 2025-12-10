@@ -3,39 +3,60 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/format";
 import { getStoreIdFromHeaders } from "@/lib/store";
 import { headers } from "next/headers";
+import { safeQuery } from "@/lib/safeQuery";
 
 async function getDashboardStats(storeId: string) {
   const [totalProducts, totalOrders, totalRevenue, pendingOrders, dropship] = await Promise.all([
-    prisma.product.count({ where: { isActive: true, storeId } }),
-    prisma.order.count({ where: { storeId } }),
-    prisma.order.aggregate({
-      _sum: { total: true },
-      where: { paymentStatus: "paid", storeId },
-    }),
-    prisma.order.count({ where: { status: "pending", storeId } }),
-    prisma.order.groupBy({
-      by: ["supplierOrderStatus"],
-      where: { supplierOrderStatus: { not: null }, storeId },
-      _count: { _all: true },
-    }),
+    safeQuery(() => prisma.product.count({ where: { isActive: true, storeId } }), 0, "dashboard:products"),
+    safeQuery(() => prisma.order.count({ where: { storeId } }), 0, "dashboard:orders"),
+    safeQuery(
+      () =>
+        prisma.order.aggregate({
+          _sum: { total: true },
+          where: { paymentStatus: "paid", storeId },
+        }),
+      { _sum: { total: 0 } },
+      "dashboard:revenue"
+    ),
+    safeQuery(() => prisma.order.count({ where: { status: "pending", storeId } }), 0, "dashboard:pending-orders"),
+    safeQuery(
+      () =>
+        prisma.order.groupBy({
+          by: ["supplierOrderStatus"],
+          where: { supplierOrderStatus: { not: null }, storeId },
+          _count: { _all: true },
+        }),
+      [],
+      "dashboard:dropship"
+    ),
   ]);
 
-  const shippedLast24h = await prisma.order.count({
-    where: {
-      supplierOrderStatus: "SHIPPED",
-      updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      storeId,
-    },
-  });
+  const shippedLast24h = await safeQuery(
+    () =>
+      prisma.order.count({
+        where: {
+          supplierOrderStatus: "SHIPPED",
+          updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+          storeId,
+        },
+      }),
+    0,
+    "dashboard:shipped24h"
+  );
 
   const dropshippingMap = dropship.reduce<Record<string, number>>((acc, cur) => {
     acc[cur.supplierOrderStatus as string] = cur._count._all;
     return acc;
   }, {});
 
-  const autoOrderError = await prisma.order.count({
-    where: { autoOrderError: { not: null }, storeId },
-  });
+  const autoOrderError = await safeQuery(
+    () =>
+      prisma.order.count({
+        where: { autoOrderError: { not: null }, storeId },
+      }),
+    0,
+    "dashboard:auto-order-error"
+  );
 
   return {
     totalProducts,

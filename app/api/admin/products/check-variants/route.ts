@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthSession } from '@/lib/auth';
+import { safeQuery } from '@/lib/safeQuery';
 
 export async function POST(req: Request) {
   try {
@@ -15,12 +16,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Product ID is required' }, { status: 400 });
     }
 
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-      include: {
-        variants: true,
-      },
-    });
+    const product = await safeQuery(
+      () =>
+        prisma.product.findUnique({
+          where: { id: productId },
+          include: {
+            variants: true,
+          },
+        }),
+      null,
+      'admin:check-variants'
+    );
 
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });

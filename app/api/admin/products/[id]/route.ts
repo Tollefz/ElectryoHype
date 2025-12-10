@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthSession } from '@/lib/auth';
 import { improveTitle } from '@/lib/utils/improve-product-title';
+import { safeQuery } from '@/lib/safeQuery';
 
 export async function GET(
   req: NextRequest,
@@ -14,12 +15,17 @@ export async function GET(
 
   try {
     const { id } = await context.params;
-    const product = await prisma.product.findUnique({
-      where: { id },
-      include: {
-        variants: true,
-      },
-    });
+    const product = await safeQuery(
+      () =>
+        prisma.product.findUnique({
+          where: { id },
+          include: {
+            variants: true,
+          },
+        }),
+      null,
+      'admin:product:get'
+    );
 
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
@@ -87,13 +93,18 @@ export async function DELETE(
     const { id } = await context.params;
     
     // Check if product exists
-    const product = await prisma.product.findUnique({
-      where: { id },
-      include: {
-        variants: true,
-        orderItems: true,
-      },
-    });
+    const product = await safeQuery(
+      () =>
+        prisma.product.findUnique({
+          where: { id },
+          include: {
+            variants: true,
+            orderItems: true,
+          },
+        }),
+      null,
+      'admin:product:delete'
+    );
 
     if (!product) {
       return NextResponse.json(

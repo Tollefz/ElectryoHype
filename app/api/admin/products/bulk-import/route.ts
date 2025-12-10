@@ -3,6 +3,7 @@ import { getAuthSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import slugify from "slugify";
 import { improveTitle } from "@/lib/utils/improve-product-title";
+import { safeQuery } from "@/lib/safeQuery";
 
 export const dynamic = "force-dynamic";
 
@@ -72,11 +73,16 @@ async function importProduct(url: string): Promise<ImportResult> {
     const data = result.data;
 
     // Sjekk om produktet allerede eksisterer
-    const existing = await prisma.product.findFirst({
-      where: {
-        supplierUrl: url,
-      },
-    });
+    const existing = await safeQuery(
+      () =>
+        prisma.product.findFirst({
+          where: {
+            supplierUrl: url,
+          },
+        }),
+      null,
+      "admin:bulk-import:existing"
+    );
 
     if (existing) {
       return {

@@ -42,3 +42,10 @@ export interface ScraperOptions {
   userAgentRotation?: boolean;
 }
 
+export interface Scraper<TData = ScrapedProductData> {
+  scrapeProduct: (url: string) => Promise<ScraperResult<TData>>;
+  scrapePrice?: (url: string) => Promise<number>;
+  scrapeImages?: (url: string) => Promise<string[]>;
+  scrapeDescription?: (url: string) => Promise<string>;
+}
+

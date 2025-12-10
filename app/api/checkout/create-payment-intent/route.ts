@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { PaymentMethod, OrderStatus, PaymentStatus } from "@prisma/client";
 import { getStoreIdFromHeaders } from "@/lib/store";
 import { headers } from "next/headers";
+import { safeQuery } from "@/lib/safeQuery";
 
 // Stripe instance vil bli opprettet med validert key i POST handler
 
@@ -92,10 +93,15 @@ export async function POST(req: Request) {
 
     // Hent produkter for å verifisere priser og stokk
     const productIds = items.map((item: any) => item.productId);
-    const products = await prisma.product.findMany({
-      where: { id: { in: productIds }, storeId },
-      include: { variants: true },
-    });
+    const products = await safeQuery(
+      () =>
+        prisma.product.findMany({
+          where: { id: { in: productIds }, storeId },
+          include: { variants: true },
+        }),
+      [],
+      "checkout:products"
+    );
 
     // Optional: apply discount code
     let discountAmount = 0;

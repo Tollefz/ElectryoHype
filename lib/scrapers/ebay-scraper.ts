@@ -1,7 +1,7 @@
 import { BaseScraper } from "./base-scraper";
-import type { ScraperResult } from "./types";
+import type { ScraperResult, Scraper } from "./types";
 
-export class EbayScraper extends BaseScraper {
+export class EbayScraper extends BaseScraper implements Scraper {
   async scrapeProduct(url: string): Promise<ScraperResult> {
     try {
       const $ = await this.fetchHtml(url);

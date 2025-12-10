@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { SupplierOrderStatus } from "@prisma/client";
 import { getStoreIdFromHeaders } from "@/lib/store";
 import { headers } from "next/headers";
+import { safeQuery } from "@/lib/safeQuery";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -23,23 +24,28 @@ export default async function SupportOrdersPage({
   const errorOnly = searchParams?.errorOnly === "true";
   const minTotal = searchParams?.minTotal ? Number(searchParams.minTotal) : 0;
 
-  const orders = await prisma.order.findMany({
-    where: {
-      storeId,
-      ...(supplierStatus ? { supplierOrderStatus: supplierStatus as SupplierOrderStatus } : {}),
-      ...(errorOnly ? { autoOrderError: { not: null } } : {}),
-      ...(minTotal > 0 ? { total: { gte: minTotal } } : {}),
-    },
-    orderBy: { createdAt: "desc" },
-    include: {
-      customer: true,
-      supplierEvents: {
+  const orders = await safeQuery(
+    () =>
+      prisma.order.findMany({
+        where: {
+          storeId,
+          ...(supplierStatus ? { supplierOrderStatus: supplierStatus as SupplierOrderStatus } : {}),
+          ...(errorOnly ? { autoOrderError: { not: null } } : {}),
+          ...(minTotal > 0 ? { total: { gte: minTotal } } : {}),
+        },
         orderBy: { createdAt: "desc" },
-        take: 1,
-      },
-    },
-    take: 50,
-  });
+        include: {
+          customer: true,
+          supplierEvents: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+        },
+        take: 50,
+      }),
+    [],
+    "orders:support"
+  );
 
   return (
     <div className="space-y-6">
@@ -68,6 +74,9 @@ export default async function SupportOrdersPage({
           <span>Feil</span>
           <span>Handlinger</span>
         </div>
+        {orders.length === 0 && (
+          <div className="px-4 py-6 text-sm text-gray-600">Ingen ordre å vise akkurat nå.</div>
+        )}
         {orders.map((order) => (
           <div key={order.id} className="grid grid-cols-6 gap-2 px-4 py-3 text-sm items-center">
             <div>

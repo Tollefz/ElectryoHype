@@ -3,17 +3,23 @@ import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "@/lib/auth";
 import slugify from "slugify";
 import { improveTitle } from "@/lib/utils/improve-product-title";
+import { safeQuery } from "@/lib/safeQuery";
 
-export async function GET(req: Request) {
+export async function GET() {
   const session = await getAuthSession();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const products = await prisma.product.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const products = await safeQuery(
+      () =>
+        prisma.product.findMany({
+          orderBy: { createdAt: "desc" },
+        }),
+      [],
+      "admin:products"
+    );
 
     const formattedProducts = products.map((product) => ({
       id: product.id,
@@ -83,9 +89,14 @@ export async function POST(req: Request) {
       });
 
     // Sjekk om slug allerede eksisterer
-    const existingProduct = await prisma.product.findUnique({
-      where: { slug: productSlug },
-    });
+    const existingProduct = await safeQuery(
+      () =>
+        prisma.product.findUnique({
+          where: { slug: productSlug },
+        }),
+      null,
+      "admin:existing-product"
+    );
 
     if (existingProduct) {
       // Legg til timestamp hvis slug eksisterer

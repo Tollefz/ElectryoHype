@@ -6,45 +6,56 @@ import { ChevronRight, Truck, Shield, CreditCard, Headphones } from 'lucide-reac
 import { getCategoriesWithCounts } from '@/lib/utils/product-count';
 import { getStoreIdFromHeaders } from '@/lib/store';
 import { headers } from 'next/headers';
+import { safeQuery } from '@/lib/safeQuery';
 
 export default async function HomePage() {
   const headersList = await headers();
   const storeId = getStoreIdFromHeaders(headersList);
-  const products = await prisma.product.findMany({
-    where: { isActive: true, storeId },
-    take: 8,
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      price: true,
-      compareAtPrice: true,
-      images: true,
-      category: true,
-      isActive: true,
-    },
-  });
+  const products = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: { isActive: true, storeId },
+        take: 8,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          compareAtPrice: true,
+          images: true,
+          category: true,
+          isActive: true,
+        },
+      }),
+    [],
+    'home:latest'
+  );
 
-  const featuredProducts = await prisma.product.findMany({
-    where: { 
-      isActive: true,
-      storeId,
-      compareAtPrice: { not: null }
-    },
-    take: 4,
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      price: true,
-      compareAtPrice: true,
-      images: true,
-      category: true,
-      isActive: true,
-    },
-  });
+  const featuredProducts = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: { 
+          isActive: true,
+          storeId,
+          compareAtPrice: { not: null }
+        },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          compareAtPrice: true,
+          images: true,
+          category: true,
+          isActive: true,
+        },
+      }),
+    [],
+    'home:featured'
+  );
 
   // Get real categories with actual product counts
   const categoriesWithCounts = await getCategoriesWithCounts(storeId);

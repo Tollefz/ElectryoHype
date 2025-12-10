@@ -2,9 +2,9 @@
 // We use axios + cheerio for HTML scraping instead
 import axios from "axios";
 import * as cheerio from "cheerio";
-import type { ScraperResult, ProductVariant, ScrapedProductData } from "./types";
+import type { ScraperResult, ProductVariant, ScrapedProductData, Scraper } from "./types";
 
-export class TemuScraper {
+export class TemuScraper implements Scraper<ScrapedProductData> {
   // Don't extend BaseScraper - this avoids loading Puppeteer entirely
   async scrapeProduct(url: string): Promise<ScraperResult> {
     try {

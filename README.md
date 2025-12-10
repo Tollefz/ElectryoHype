@@ -73,6 +73,16 @@ npm run dev
 
 Åpne `http://localhost:3000`. Admin-innlogging ligger på `/admin/login`.
 
+### 🔧 Vercel build command
+
+I Vercel → Project → Settings → Build & Development → Build Command sett:
+
+```
+npm run vercel-build
+```
+
+Dette sikrer at `prisma migrate deploy` kjøres før `next build` under deploy.
+
 ---
 
 ## 🔐 Autentisering (NextAuth)

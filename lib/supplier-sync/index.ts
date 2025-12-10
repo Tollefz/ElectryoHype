@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getSupplierAdapter } from "@/lib/suppliers";
 import { SupplierAdapter, SupplierProduct } from "@/lib/suppliers/types";
 import type { Supplier } from "@/lib/suppliers/types";
+import { safeQuery } from "../safeQuery";
 
 interface ProfitConfig {
   targetMarginPct?: number; // percent
@@ -24,17 +25,22 @@ export async function matchLocalProducts(supplierProducts: SupplierProduct[], st
   const skus = supplierProducts.map((p) => p.supplierSku).filter(Boolean);
   if (skus.length === 0) return [];
 
-  const locals = await prisma.product.findMany({
-    where: { supplierSku: { in: skus }, storeId },
-    select: {
-      id: true,
-      name: true,
-      supplierSku: true,
-      supplierPrice: true,
-      price: true,
-      stock: true,
-    },
-  });
+  const locals = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: { supplierSku: { in: skus }, storeId },
+        select: {
+          id: true,
+          name: true,
+          supplierSku: true,
+          supplierPrice: true,
+          price: true,
+          stock: true,
+        },
+      }),
+    [],
+    "supplier-sync:locals"
+  );
 
   const map = new Map<string, SupplierProduct>();
   supplierProducts.forEach((p) => map.set(p.supplierSku, p));

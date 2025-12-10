@@ -8,6 +8,7 @@ import { SortDropdown } from "@/components/products/SortDropdown";
 import { Pagination } from "@/components/products/Pagination";
 import { getStoreIdFromHeaders } from "@/lib/store";
 import { headers } from "next/headers";
+import { safeQuery } from "@/lib/safeQuery";
 
 interface ProductsPageProps {
   searchParams: Promise<Record<string, string | undefined>> | Record<string, string | undefined>;
@@ -70,32 +71,42 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   }
 
   const [productsRaw, total, categoryRecords] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      orderBy,
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        price: true,
-        compareAtPrice: true,
-        images: true,
-        category: true,
-        isActive: true,
-      },
-    }),
-    prisma.product.count({ where }),
-    prisma.product.findMany({
-      where: { 
-        storeId,
-        category: { not: null },
-        isActive: true,
-      },
-      distinct: ["category"],
-      select: { category: true },
-    }),
+    safeQuery(
+      () =>
+        prisma.product.findMany({
+          where,
+          orderBy,
+          skip: (page - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            price: true,
+            compareAtPrice: true,
+            images: true,
+            category: true,
+            isActive: true,
+          },
+        }),
+      [],
+      "products:list"
+    ),
+    safeQuery(() => prisma.product.count({ where }), 0, "products:count"),
+    safeQuery(
+      () =>
+        prisma.product.findMany({
+          where: { 
+            storeId,
+            category: { not: null },
+            isActive: true,
+          },
+          distinct: ["category"],
+          select: { category: true },
+        }),
+      [],
+      "products:categories"
+    ),
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);

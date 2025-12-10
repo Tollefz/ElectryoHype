@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env TURBOPACK=0 next dev",
+    "dev": "next dev",
     "build": "next build",
+    "vercel-build": "prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint . --ext .js,.ts,.tsx --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.ts,.tsx --fix",

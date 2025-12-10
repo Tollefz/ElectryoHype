@@ -6,7 +6,7 @@ Hvis Stripe keys ikke fungerer, kan det være ekstra anførselstegn i `.env` fil
 ## ✅ Riktig format i .env filen:
 
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DBNAME?sslmode=require"
 NEXTAUTH_SECRET="superlang-og-tilfeldig-streng-her"
 NEXTAUTH_URL="http://localhost:3000"
 ADMIN_EMAIL="admin@minbutikk.no"

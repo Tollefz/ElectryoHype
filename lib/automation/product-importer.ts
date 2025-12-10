@@ -1,4 +1,4 @@
-import { Prisma, SupplierName } from "@prisma/client";
+import { SupplierName } from "@prisma/client";
 import slugify from "slugify";
 import { improveTitle } from "@/lib/utils/improve-product-title";
 import { prisma } from "@/lib/prisma";
@@ -6,7 +6,8 @@ import { prisma } from "@/lib/prisma";
 // Import only what we need directly
 import { TemuScraper } from "@/lib/scrapers/temu-scraper";
 import { identifySupplier } from "@/lib/scrapers/supplier-identifier";
-import type { SupplierSource } from "@/lib/scrapers/types";
+import type { SupplierSource, Scraper, ScrapedProductData } from "@/lib/scrapers/types";
+import { safeQuery } from "../safeQuery";
 
 type ProfitMarginInput = number | string;
 
@@ -18,7 +19,9 @@ export interface ImportResult {
 }
 
 // Lazy scraper factory to avoid loading Puppeteer for Temu URLs
-const scraperMap: Record<SupplierSource, () => Promise<{ scrapeProduct: (url: string) => Promise<any>; scrapePrice?: (url: string) => Promise<number> }>> = {
+type SupplierScraperFactory = () => Promise<Scraper<ScrapedProductData>>;
+
+const scraperMap: Record<SupplierSource, SupplierScraperFactory> = {
   alibaba: async () => {
     const { AlibabaScraper } = await import("@/lib/scrapers/alibaba-scraper");
     return new AlibabaScraper({ currency: "USD" });
@@ -46,18 +49,22 @@ export async function importProductFromUrl(url: string, profitMargin: ProfitMarg
   const supplierPrice = data.price.amount;
   const salePrice = calculateSalePrice(supplierPrice, profitMargin);
 
-  const slug = generateSlug(data.title);
   const supplierProductId = extractSupplierProductId(url);
 
   // Check if product already exists by supplierUrl or supplierProductId
-  const existing = await prisma.product.findFirst({
-    where: {
-      OR: [
-        { supplierUrl: url },
-        ...(supplierProductId ? [{ supplierProductId }] : []),
-      ],
-    },
-  });
+  const existing = await safeQuery(
+    () =>
+      prisma.product.findFirst({
+        where: {
+          OR: [
+            { supplierUrl: url },
+            ...(supplierProductId ? [{ supplierProductId }] : []),
+          ],
+        },
+      }),
+    null,
+    "automation:existing-product"
+  );
 
   // Forbedre produkt-tittel automatisk
   const improvedTitle = improveTitle(data.title);
@@ -131,9 +138,14 @@ export async function bulkImportProducts(urls: string[], profitMargin: ProfitMar
 }
 
 export async function syncProductPrices() {
-  const products = await prisma.product.findMany({
-    where: { autoImport: true, supplierUrl: { not: null } },
-  });
+  const products = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: { autoImport: true, supplierUrl: { not: null } },
+      }),
+    [],
+    "automation:sync-prices"
+  );
 
   for (const product of products) {
     if (!product.supplierUrl || !product.supplierName) continue;
@@ -188,9 +200,14 @@ export async function syncProductPrices() {
 }
 
 export async function syncProductAvailability() {
-  const products = await prisma.product.findMany({
-    where: { autoImport: true, supplierUrl: { not: null } },
-  });
+  const products = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: { autoImport: true, supplierUrl: { not: null } },
+      }),
+    [],
+    "automation:sync-availability"
+  );
 
   for (const product of products) {
     if (!product.supplierUrl || !product.supplierName) continue;

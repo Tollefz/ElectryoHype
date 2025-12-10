@@ -6,6 +6,7 @@
 
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { safeQuery } from '../safeQuery';
 
 /**
  * Get count of active products matching filters
@@ -44,7 +45,7 @@ export async function getProductCount(
     }
   }
 
-  return prisma.product.count({ where });
+  return safeQuery(() => prisma.product.count({ where }), 0, 'product-count');
 }
 
 /**
@@ -52,16 +53,21 @@ export async function getProductCount(
  * Returns a map of category name to product count
  */
 export async function getCategoryCounts(storeId?: string): Promise<Record<string, number>> {
-  const products = await prisma.product.findMany({
-    where: {
-      isActive: true,
-      category: { not: null },
-      ...(storeId ? { storeId } : {}),
-    },
-    select: {
-      category: true,
-    },
-  });
+  const products = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: {
+          isActive: true,
+          category: { not: null },
+          ...(storeId ? { storeId } : {}),
+        },
+        select: {
+          category: true,
+        },
+      }),
+    [],
+    'product-category-counts'
+  );
 
   const counts: Record<string, number> = {};
   

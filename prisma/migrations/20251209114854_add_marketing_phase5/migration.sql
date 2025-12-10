@@ -13,7 +13,7 @@ CREATE TABLE "SupplierOrderEvent" (
     "oldStatus" TEXT,
     "newStatus" TEXT NOT NULL,
     "metadata" JSONB,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "SupplierOrderEvent_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -25,23 +25,23 @@ CREATE TABLE "AbandonedCart" (
     "status" TEXT NOT NULL DEFAULT 'ACTIVE',
     "storeId" TEXT,
     "token" TEXT,
-    "lastUpdated" DATETIME NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "lastUpdated" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
 CREATE TABLE "DiscountCode" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "code" TEXT NOT NULL,
-    "percentOff" REAL,
-    "amountOff" REAL,
+    "percentOff" DOUBLE PRECISION,
+    "amountOff" DOUBLE PRECISION,
     "usageLimit" INTEGER,
     "timesUsed" INTEGER NOT NULL DEFAULT 0,
     "storeId" TEXT,
-    "expiresAt" DATETIME,
+    "expiresAt" TIMESTAMP(3),
     "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -51,7 +51,7 @@ CREATE TABLE "PushSubscription" (
     "keys" JSONB,
     "customerId" TEXT,
     "storeId" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
@@ -59,10 +59,10 @@ CREATE TABLE "Affiliate" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "code" TEXT NOT NULL,
     "name" TEXT,
-    "ratePercent" REAL NOT NULL DEFAULT 10,
+    "ratePercent" DOUBLE PRECISION NOT NULL DEFAULT 10,
     "storeId" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -71,7 +71,7 @@ CREATE TABLE "AffiliateClick" (
     "affiliateId" TEXT NOT NULL,
     "ip" TEXT,
     "userAgent" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "AffiliateClick_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "Affiliate" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -80,53 +80,18 @@ CREATE TABLE "AffiliateOrder" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "affiliateId" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
-    "commissionAmount" REAL NOT NULL DEFAULT 0,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "commissionAmount" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "AffiliateOrder_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "Affiliate" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- RedefineTables
-PRAGMA defer_foreign_keys=ON;
-PRAGMA foreign_keys=OFF;
-CREATE TABLE "new_Order" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "orderNumber" TEXT NOT NULL,
-    "storeId" TEXT,
-    "customerId" TEXT,
-    "placedById" TEXT,
-    "status" TEXT NOT NULL DEFAULT 'pending',
-    "items" JSONB NOT NULL,
-    "subtotal" REAL NOT NULL,
-    "shippingCost" REAL NOT NULL,
-    "tax" REAL NOT NULL,
-    "total" REAL NOT NULL,
-    "shippingAddress" JSONB NOT NULL,
-    "paymentMethod" TEXT,
-    "paymentStatus" TEXT NOT NULL DEFAULT 'pending',
-    "paymentIntentId" TEXT,
-    "supplierOrderId" TEXT,
-    "supplierOrderStatus" TEXT DEFAULT 'PENDING',
-    "autoOrderAttempts" INTEGER NOT NULL DEFAULT 0,
-    "autoOrderError" TEXT,
-    "trackingNumber" TEXT,
-    "trackingUrl" TEXT,
-    "shippingCarrier" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "Order_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT "Order_placedById_fkey" FOREIGN KEY ("placedById") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-);
-INSERT INTO "new_Order" ("autoOrderAttempts", "autoOrderError", "createdAt", "customerId", "id", "items", "orderNumber", "paymentIntentId", "paymentMethod", "paymentStatus", "placedById", "shippingAddress", "shippingCost", "status", "subtotal", "supplierOrderId", "supplierOrderStatus", "tax", "total", "trackingNumber", "trackingUrl", "updatedAt") SELECT "autoOrderAttempts", "autoOrderError", "createdAt", "customerId", "id", "items", "orderNumber", "paymentIntentId", "paymentMethod", "paymentStatus", "placedById", "shippingAddress", "shippingCost", "status", "subtotal", "supplierOrderId", "supplierOrderStatus", "tax", "total", "trackingNumber", "trackingUrl", "updatedAt" FROM "Order";
-DROP TABLE "Order";
-ALTER TABLE "new_Order" RENAME TO "Order";
-CREATE UNIQUE INDEX "Order_orderNumber_key" ON "Order"("orderNumber");
-CREATE INDEX "Order_customerId_idx" ON "Order"("customerId");
-CREATE INDEX "Order_status_createdAt_idx" ON "Order"("status", "createdAt");
-CREATE INDEX "Order_paymentStatus_idx" ON "Order"("paymentStatus");
-CREATE INDEX "Order_supplierOrderId_idx" ON "Order"("supplierOrderId");
+-- Alter existing Order table for Postgres
+ALTER TABLE "Order" ADD COLUMN "storeId" TEXT;
+ALTER TABLE "Order" ADD COLUMN "shippingCarrier" TEXT;
+ALTER TABLE "Order" ALTER COLUMN "supplierOrderStatus" SET DEFAULT 'PENDING';
+
+-- Index for new Order column
 CREATE INDEX "Order_storeId_idx" ON "Order"("storeId");
-PRAGMA foreign_keys=ON;
-PRAGMA defer_foreign_keys=OFF;
 
 -- CreateIndex
 CREATE INDEX "SupplierOrderEvent_orderId_idx" ON "SupplierOrderEvent"("orderId");

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthSession } from '@/lib/auth';
+import { safeQuery } from '@/lib/safeQuery';
 
 export async function GET() {
   try {
@@ -9,12 +10,17 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const products = await prisma.product.findMany({
-      orderBy: { createdAt: 'desc' },
-      include: {
-        variants: true,
-      },
-    });
+    const products = await safeQuery(
+      () =>
+        prisma.product.findMany({
+          orderBy: { createdAt: 'desc' },
+          include: {
+            variants: true,
+          },
+        }),
+      [],
+      'admin:variant-check'
+    );
 
     const formattedProducts = products.map(product => {
       let images: string[] = [];

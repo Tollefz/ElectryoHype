@@ -3,6 +3,7 @@ import { formatCurrency } from "@/lib/format";
 import Link from "next/link";
 import { Suspense } from "react";
 import { OrderStatus } from "@prisma/client";
+import { safeQuery } from "@/lib/safeQuery";
 
 async function getOrders(filter?: string, search?: string) {
   const where: any = {};
@@ -20,13 +21,18 @@ async function getOrders(filter?: string, search?: string) {
     ];
   }
 
-  return await prisma.order.findMany({
-    where,
-    include: {
-      customer: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  return await safeQuery(
+    () =>
+      prisma.order.findMany({
+        where,
+        include: {
+          customer: true,
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+    [],
+    "orders:list"
+  );
 }
 
 function getStatusBadge(status: string) {

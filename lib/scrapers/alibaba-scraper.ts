@@ -1,6 +1,6 @@
 import type { Page } from "puppeteer";
 import { BaseScraper } from "./base-scraper";
-import type { ScraperResult } from "./types";
+import type { ScraperResult, Scraper } from "./types";
 
 const SELECTORS = {
   title: ".module-pc-detail-heading .title",
@@ -11,7 +11,7 @@ const SELECTORS = {
   shipping: ".trade-detail-main-wrap .module-pc-ship .text",
 };
 
-export class AlibabaScraper extends BaseScraper {
+export class AlibabaScraper extends BaseScraper implements Scraper {
   async scrapeProduct(url: string): Promise<ScraperResult> {
     try {
       const data = await this.withPage(url, async (page) => this.parseProduct(page, url));

@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import OrderDetailsClient from "./OrderDetailsClient";
+import { safeQuery } from "@/lib/safeQuery";
 
 async function getOrder(id: string) {
   // Valider id
@@ -12,20 +13,25 @@ async function getOrder(id: string) {
     return null;
   }
 
-  const order = await prisma.order.findUnique({
-    where: { id: id.trim() },
-    include: {
-      customer: true,
-      orderItems: {
+  const order = await safeQuery(
+    () =>
+      prisma.order.findUnique({
+        where: { id: id.trim() },
         include: {
-          product: true,
+          customer: true,
+          orderItems: {
+            include: {
+              product: true,
+            },
+          },
+          supplierEvents: {
+            orderBy: { createdAt: "asc" },
+          },
         },
-      },
-      supplierEvents: {
-        orderBy: { createdAt: "asc" },
-      },
-    },
-  });
+      }),
+    null,
+    "orders:detail"
+  );
 
   if (!order) {
     return null;

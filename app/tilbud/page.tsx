@@ -2,40 +2,39 @@ import { prisma } from '@/lib/prisma';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
 import { ChevronRight, Tag } from 'lucide-react';
+import { safeQuery } from '@/lib/safeQuery';
 
 /**
  * Henter produkter med rabatt fra databasen.
  * Returnerer tom array hvis databasen/tabellen mangler (f.eks. under Vercel build).
  */
 async function getDiscountedProducts() {
-  try {
-    const products = await prisma.product.findMany({
-      where: {
-        isActive: true,
-        compareAtPrice: {
-          not: null,
-          gt: 0,
+  return safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: {
+          isActive: true,
+          compareAtPrice: {
+            not: null,
+            gt: 0,
+          },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        price: true,
-        compareAtPrice: true,
-        images: true,
-        category: true,
-      },
-    });
-    return products;
-  } catch (err) {
-    console.error('Failed to load tilbud products', err);
-    // Returner tom array hvis databasen/tabellen mangler (f.eks. under Vercel build)
-    return [];
-  }
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          compareAtPrice: true,
+          images: true,
+          category: true,
+        },
+      }),
+    [],
+    'tilbud'
+  );
 }
 
 export default async function TilbudPage() {

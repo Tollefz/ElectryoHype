@@ -1,8 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import ProductPageClientWrapper from '@/components/ProductPageClientWrapper';
 import ProductVariantSelector from '@/components/ProductVariantSelector';
@@ -13,11 +11,24 @@ import { Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import { cleanProductName } from '@/lib/utils/url-decode';
 import { getStoreIdFromHeaders } from '@/lib/store';
 import { headers } from 'next/headers';
+import { safeQuery } from '@/lib/safeQuery';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }> | { slug: string };
   searchParams: Promise<{ variant?: string }> | { variant?: string };
 }
+
+type VariantDisplay = {
+  id: string;
+  name: string;
+  price: number;
+  compareAtPrice: number | null;
+  image: string | null;
+  attributes: Record<string, string>;
+  stock: number;
+  colorCode: string;
+  slug: string;
+};
 
 async function getParams(params: ProductPageProps["params"]) {
   return params instanceof Promise ? await params : params;
@@ -28,17 +39,22 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const headersList = await headers();
   const storeId = getStoreIdFromHeaders(headersList);
   
-  const product = await prisma.product.findFirst({
-    where: { slug, storeId },
-    select: {
-      name: true,
-      description: true,
-      shortDescription: true,
-      price: true,
-      images: true,
-      category: true,
-    },
-  });
+  const product = await safeQuery(
+    () =>
+      prisma.product.findFirst({
+        where: { slug, storeId },
+        select: {
+          name: true,
+          description: true,
+          shortDescription: true,
+          price: true,
+          images: true,
+          category: true,
+        },
+      }),
+    null,
+    'product:metadata'
+  );
 
   if (!product) {
     return {
@@ -81,38 +97,63 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const headersList = await headers();
   const storeId = getStoreIdFromHeaders(headersList);
   
-  const product = await prisma.product.findFirst({
-    where: { slug, storeId },
-    include: {
-      variants: {
-        where: { isActive: true },
-        orderBy: { price: 'asc' },
-      },
-    },
-  });
+  const product = await safeQuery(
+    () =>
+      prisma.product.findFirst({
+        where: { slug, storeId },
+        include: {
+          variants: {
+            where: { isActive: true },
+            orderBy: { price: 'asc' },
+          },
+        },
+      }),
+    null,
+    'product:detail'
+  );
 
   if (!product) {
-    notFound();
+    return (
+      <main className="min-h-screen bg-gray-light py-12">
+        <div className="mx-auto max-w-3xl rounded-xl bg-white p-10 text-center shadow">
+          <h1 className="mb-3 text-2xl font-bold text-dark">Produktet er ikke tilgjengelig</h1>
+          <p className="mb-6 text-gray-medium">
+            Vi klarte ikke å hente produktdetaljene akkurat nå. Prøv igjen senere eller se andre produkter.
+          </p>
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
+          >
+            Gå til produktsiden
+          </Link>
+        </div>
+      </main>
+    );
   }
 
-  const relatedProducts = await prisma.product.findMany({
-    where: {
-      category: product.category,
-      id: { not: product.id },
-      isActive: true,
-      storeId,
-    },
-    take: 4,
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      price: true,
-      compareAtPrice: true,
-      images: true,
-      category: true,
-    },
-  });
+  const relatedProducts = await safeQuery(
+    () =>
+      prisma.product.findMany({
+        where: {
+          category: product.category,
+          id: { not: product.id },
+          isActive: true,
+          storeId,
+        },
+        take: 4,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          compareAtPrice: true,
+          images: true,
+          category: true,
+        },
+      }),
+    [],
+    'product:related'
+  );
 
   // Parse images with error handling
   // CRITICAL: Collect ALL images from product AND variants
@@ -241,7 +282,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const usedImages = new Set<string>();
   
   // Map variants with proper images and color codes
-  const variants = product.variants.map((v, index) => {
+  const variants: VariantDisplay[] = product.variants.map((v, index) => {
     const attrs = (v.attributes as Record<string, string>) || {};
     const color = attrs.color || attrs.farge || v.name.toLowerCase();
     const colorSlug = color.toLowerCase().replace(/\s+/g, '-');
@@ -308,7 +349,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
   // Determine active variant from URL parameter
   const activeVariantSlug = variantParam || variants[0]?.slug;
-  const activeVariant = variants.find((v: any) => v.slug === activeVariantSlug) || variants[0];
+  const activeVariant = variants.find((v) => v.slug === activeVariantSlug) || variants[0];
 
   // Reorder images to show active variant first
   // CRITICAL: Ensure variant image is included in images array
