@@ -63,7 +63,8 @@ export default function ProductsTable({ products, onProductDeleted }: ProductsTa
             const text = await response.text();
             if (text.trim()) {
               const data = JSON.parse(text);
-              errorMessage = data.error || errorMessage;
+              // Handle both { error: "..." } and { ok: false, error: "..." } formats
+              errorMessage = data.error || data.message || errorMessage;
             }
           } else {
             // If not JSON, try to get text
@@ -78,6 +79,12 @@ export default function ProductsTable({ products, onProductDeleted }: ProductsTa
           // If JSON parsing fails, use status text
           errorMessage = `HTTP ${response.status}: ${response.statusText || "Ukjent feil"}`;
         }
+        
+        // For 404 errors (product not found), show a more user-friendly message
+        if (response.status === 404) {
+          errorMessage = "Produktet finnes ikke lenger. Det kan ha blitt slettet av en annen bruker.";
+        }
+        
         throw new Error(errorMessage);
       }
 
@@ -92,10 +99,25 @@ export default function ProductsTable({ products, onProductDeleted }: ProductsTa
       }
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert(error instanceof Error ? error.message : "Kunne ikke slette produkt");
-      // Re-fetch products on error to restore state
-      if (onProductDeleted) {
-        onProductDeleted();
+      const errorMessage = error instanceof Error ? error.message : "Kunne ikke slette produkt";
+      
+      // Show user-friendly error message
+      alert(errorMessage);
+      
+      // For 404 errors (product not found), refresh the list to remove stale data
+      if (error instanceof Error && errorMessage.includes("finnes ikke")) {
+        if (onProductDeleted) {
+          onProductDeleted();
+        } else {
+          router.refresh();
+        }
+        // Remove from local state if product doesn't exist
+        setLocalProducts((prev) => prev.filter((p) => p.id !== productId));
+      } else {
+        // Re-fetch products on other errors to restore state
+        if (onProductDeleted) {
+          onProductDeleted();
+        }
       }
     } finally {
       setDeletingId(null);

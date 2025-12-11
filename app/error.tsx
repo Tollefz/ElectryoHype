@@ -17,7 +17,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="mx-auto min-h-screen max-w-2xl px-4 py-16 text-center">
+    <div className="mx-auto min-h-screen max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-16 text-center">
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
         <AlertCircle size={40} className="text-red-600" />
       </div>

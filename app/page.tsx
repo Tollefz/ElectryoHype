@@ -85,7 +85,7 @@ export default async function HomePage() {
           storeId: primaryStoreId !== "demo-store" ? primaryStoreId : DEFAULT_STORE_ID,
           // Exclude Sport and Klær categories
           category: {
-            notIn: ["Sport", "Klær"],
+            notIn: ["Sport", "Klær", "Sport & Trening"],
           },
         },
         take: 8,
@@ -112,7 +112,7 @@ export default async function HomePage() {
           },
           // Exclude Sport and Klær categories
           category: {
-            notIn: ["Sport", "Klær"],
+            notIn: ["Sport", "Klær", "Sport & Trening"],
           },
         },
         take: 8,
@@ -165,7 +165,7 @@ export default async function HomePage() {
     };
 
     categories = categoriesWithCounts
-      .filter(cat => cat.name !== "Sport" && cat.name !== "Klær") // Filter out Sport and Klær
+      .filter(cat => cat.name !== "Sport" && cat.name !== "Klær" && cat.name !== "Sport & Trening") // Filter out Sport and Klær
       .slice(0, 6)
       .map((cat) => ({
         name: cat.name,
@@ -253,7 +253,7 @@ export default async function HomePage() {
           }))
           .slice(0, 4);
         categories = fallbackCategories
-          .filter(cat => cat.name !== "Sport" && cat.name !== "Klær") // Filter out Sport and Klær
+          .filter(cat => cat.name !== "Sport" && cat.name !== "Klær" && cat.name !== "Sport & Trening") // Filter out Sport and Klær
           .slice(0, 6)
           .map((cat) => ({
             name: cat.name,
@@ -278,37 +278,39 @@ export default async function HomePage() {
     <main className="min-h-screen bg-slate-50">
       
       {/* HERO BANNER */}
-      <section className="bg-gradient-to-r from-gray-900 to-gray-800">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-8 sm:py-12 lg:py-16">
-          <div className="grid items-center gap-6 sm:gap-8 md:grid-cols-2">
-            <div>
-              <span className="mb-3 sm:mb-4 inline-block rounded-full bg-green-600 px-3 sm:px-4 py-1 text-xs sm:text-sm font-semibold text-white">
-                🔥 Ukens kampanje
-              </span>
-              <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                Beste elektronikk til <span className="text-green-400">beste priser</span>
-              </h1>
-              <p className="mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg text-gray-300 max-w-xl">
-                Elektronikk, gaming og hjem – levert raskt i hele Norge
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Link
-                  href="/tilbud"
-                  className="rounded-lg bg-green-600 px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors text-center"
-                >
-                  Se tilbud
-                </Link>
-                <Link
-                  href="/products"
-                  className="rounded-lg border-2 border-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white hover:bg-white hover:text-gray-900 transition-colors text-center"
-                >
-                  Alle produkter
-                </Link>
+      <section className="bg-gradient-to-br from-slate-100 to-white">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
+          <div className="w-full rounded-xl shadow-lg bg-white p-8 sm:p-10 lg:p-12 xl:p-14">
+            <div className="grid items-center gap-8 lg:grid-cols-2">
+              <div>
+                <span className="mb-4 inline-block rounded-full bg-green-600 px-4 py-1.5 text-sm font-semibold text-white">
+                  🔥 Ukens kampanje
+                </span>
+                <h1 className="mb-4 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-semibold text-gray-900 leading-tight">
+                  Beste elektronikk til <span className="text-green-600">beste priser</span>
+                </h1>
+                <p className="mb-6 text-base sm:text-lg text-gray-700 max-w-xl">
+                  Elektronikk, gaming og hjem – levert raskt i hele Norge
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/tilbud"
+                    className="rounded-full bg-green-600 px-6 py-3 text-base font-semibold text-white hover:bg-green-700 transition-colors text-center shadow-sm hover:shadow-md"
+                  >
+                    Se tilbud
+                  </Link>
+                  <Link
+                    href="/products"
+                    className="rounded-full border-2 border-gray-300 px-6 py-3 text-base font-semibold text-gray-700 hover:bg-gray-50 transition-colors text-center"
+                  >
+                    Alle produkter
+                  </Link>
+                </div>
               </div>
-            </div>
-            <div className="relative h-48 sm:h-64 md:h-80 hidden md:block">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-6xl sm:text-8xl lg:text-9xl">🎮</div>
+              <div className="relative h-64 sm:h-80 lg:h-96 hidden lg:block">
+                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-gradient-to-br from-green-50 to-gray-100">
+                  <div className="text-8xl lg:text-9xl">🎮</div>
+                </div>
               </div>
             </div>
           </div>
@@ -317,7 +319,7 @@ export default async function HomePage() {
 
       {/* USP BAR */}
       <section className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
             <div className="flex items-center gap-2 sm:gap-3">
               <Truck className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
@@ -351,11 +353,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* KATEGORIER */}
-      <section className="py-6 sm:py-8 lg:py-10">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
-          <div className="mb-4 sm:mb-6 flex items-center justify-between">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Handle etter kategori</h2>
+      {/* MEST POPULÆRE KATEGORIER */}
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6 sm:mb-8 flex items-center justify-between">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900">Mest populære kategorier</h2>
             <Link href="/products" className="hidden sm:flex items-center text-sm font-semibold text-green-600 hover:text-green-700 hover:underline">
               Se alle <ChevronRight size={16} />
             </Link>
@@ -404,7 +406,7 @@ export default async function HomePage() {
 
       {/* UKENS TILBUD */}
       <section className="py-6 sm:py-8 lg:py-10">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
             <div className="flex items-center gap-2 sm:gap-3">
               <span className="text-xl sm:text-2xl">🔥</span>
@@ -423,7 +425,7 @@ export default async function HomePage() {
               <p className="text-sm">{loadError}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {(featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4)).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -438,10 +440,10 @@ export default async function HomePage() {
       </section>
 
       {/* POPULÆRE PRODUKTER */}
-      <section className="py-6 sm:py-8 lg:py-10">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
-          <div className="mb-4 sm:mb-6 flex items-center justify-between">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Populære produkter</h2>
+      <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6 sm:mb-8 flex items-center justify-between">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900">Populære produkter</h2>
             <Link href="/products" className="hidden sm:flex items-center text-sm font-semibold text-green-600 hover:text-green-700 hover:underline">
               Se alle produkter <ChevronRight size={16} />
             </Link>
@@ -452,7 +454,7 @@ export default async function HomePage() {
               <p className="text-sm">{loadError}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {products.length === 0 && (
                 <div className="col-span-full rounded-lg border border-gray-200 bg-white p-6 text-center text-gray-600">
                   Ingen produkter tilgjengelig akkurat nå.
@@ -468,7 +470,7 @@ export default async function HomePage() {
 
       {/* NYHETSBREV */}
       <section className="bg-gray-900 py-8 sm:py-12">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 text-center">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="mb-2 text-xl sm:text-2xl font-bold text-white">
             Få eksklusive tilbud rett i innboksen
           </h2>

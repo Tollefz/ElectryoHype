@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sparkles, Loader2, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { callAdminAI } from "@/lib/admin-ai";
 
 interface AIHelperProps {
   type: "productDescription" | "seo";
@@ -29,30 +30,24 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
     setResult(null);
 
     try {
-      const response = await fetch("/api/admin/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type,
-          payload: {
-            name: productData.name,
-            category: productData.category,
-            price: productData.price,
-            toneOfVoice,
-            useCase: useCase || undefined,
-            description: productData.description,
-          },
-        }),
+      const response = await callAdminAI(type, {
+        name: productData.name,
+        category: productData.category,
+        price: productData.price,
+        tone: toneOfVoice,
+        notes: useCase || undefined,
+        description: productData.description,
+        // Legacy support
+        toneOfVoice,
+        useCase: useCase || undefined,
       });
 
-      const data = await response.json();
-
-      if (!data.ok) {
-        throw new Error(data.error || "Kunne ikke generere innhold");
+      if (!response.ok) {
+        throw new Error(response.error || "Kunne ikke generere innhold");
       }
 
-      setResult(data.result);
-      onResult(data.result);
+      setResult(response.result);
+      onResult(response.result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ukjent feil");
     } finally {

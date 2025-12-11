@@ -3,8 +3,8 @@ import { Building2, Target, Users, Award } from 'lucide-react';
 
 export default function OmOssPage() {
   return (
-    <main className="min-h-screen bg-gray-light py-12">
-      <div className="mx-auto max-w-4xl px-4">
+    <main className="min-h-screen bg-slate-50 py-12">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm text-gray-medium">
           <Link href="/" className="hover:text-brand">Hjem</Link>
@@ -87,10 +87,10 @@ export default function OmOssPage() {
               Kontakt oss
             </Link>
             <Link
-              href="/karriere"
+              href="/kontakt"
               className="rounded-lg border-2 border-brand px-6 py-3 font-semibold text-brand hover:bg-brand hover:text-white transition-colors"
             >
-              Jobb hos oss
+              Kontakt oss
             </Link>
           </div>
         </section>

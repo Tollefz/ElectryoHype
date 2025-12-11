@@ -63,6 +63,10 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const categoryDef = getCategoryBySlug(categorySlug);
   const categoryName = categoryDef?.label;
   const categoryDbValue = categoryDef?.dbValue;
+  
+  // Handle unknown category slug - if slug exists but is not in our definitions
+  const isUnknownCategory = categorySlug && !categoryDef;
+  
   // Støtt både 'q' og 'query' for søkeparameter
   const query = params.q ?? params.query ?? undefined;
   const sort = params.sort ?? "newest";
@@ -74,9 +78,10 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   
   // Build category filter
   // If valid category slug is provided, use it; otherwise exclude Sport and Klær
-  const categoryFilter = categorySlug && categoryDbValue
+  // For unknown categories, show all products (exclude Sport and Klær)
+  const categoryFilter = !isUnknownCategory && categorySlug && categoryDbValue
     ? { equals: categoryDbValue } // Use database value for known category
-    : { notIn: ["Sport & Trening", "Klær"] }; // Exclude Sport and Klær by default
+    : { notIn: ["Sport & Trening", "Klær", "Sport"] }; // Exclude Sport and Klær by default
 
   const where: Prisma.ProductWhereInput = {
     isActive: true,
@@ -154,7 +159,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           category: { 
             not: null,
             // Exclude Sport and Klær from category list
-            notIn: ["Sport", "Klær"],
+            notIn: ["Sport", "Klær", "Sport & Trening"],
           },
           isActive: true,
         },
@@ -250,31 +255,27 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   // Get category name for display
   const resolvedCategoryName = categoryName || null;
 
-  // Handle unknown category slug - if slug exists but is not in our definitions
-  const isUnknownCategory = categorySlug && !categoryDef;
-
   return (
     <div className="bg-slate-50 min-h-screen">
-      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
         {/* Header section */}
-        <div className="mb-4 sm:mb-6 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-slate-500">
-              {resolvedCategoryName ? resolvedCategoryName : "Produkter"}
-            </p>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-1">
-              {resolvedCategoryName ? resolvedCategoryName : "Utforsk sortimentet"}
-            </h1>
-            {resolvedCategoryName && (
-              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-600">
-                {total} {total === 1 ? "produkt" : "produkter"} i denne kategorien
-              </p>
-            )}
-          </div>
-          <div className="hidden md:block">
-            <Suspense fallback={<div className="h-10 w-32 rounded-lg bg-gray-200 animate-pulse" />}>
-              <SortDropdown />
-            </Suspense>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between mb-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-gray-900">
+                {resolvedCategoryName ? resolvedCategoryName : "Alle produkter"}
+              </h1>
+              {resolvedCategoryName && (
+                <p className="mt-2 text-sm sm:text-base text-slate-600">
+                  {total} {total === 1 ? "produkt" : "produkter"} i denne kategorien
+                </p>
+              )}
+            </div>
+            <div className="hidden md:block">
+              <Suspense fallback={<div className="h-10 w-32 rounded-lg bg-gray-200 animate-pulse" />}>
+                <SortDropdown />
+              </Suspense>
+            </div>
           </div>
         </div>
         {/* Mobile: Filter/Sort buttons */}
@@ -287,47 +288,32 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </Suspense>
         </div>
 
-        <div className="grid gap-4 sm:gap-6 lg:grid-cols-[280px,1fr]">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
           {/* Desktop: Filter sidebar */}
-          <Suspense fallback={<div className="hidden lg:block h-96 rounded-lg bg-gray-200 animate-pulse" />}>
-            <div className="hidden lg:block">
+          <Suspense fallback={<div className="hidden lg:block h-96 w-64 rounded-lg bg-gray-200 animate-pulse" />}>
+            <aside className="hidden lg:block w-64 flex-shrink-0 lg:sticky lg:top-24 lg:self-start">
               <FilterSidebar categories={sidebarCategories} />
-            </div>
+            </aside>
           </Suspense>
 
           {/* Product grid */}
-          <div>
-            {isUnknownCategory ? (
-              <div className="col-span-full rounded-lg border border-gray-200 bg-white p-8 sm:p-12 text-center">
-                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
-                  Ukjent kategori
-                </h2>
-                <p className="text-sm sm:text-base text-gray-600 mb-6 max-w-md mx-auto">
-                  Kategorien "{categorySlug}" finnes ikke. Vi jobber med å utvide sortimentet. I mellomtiden kan du se andre kategorier.
+          <div className="flex-1 min-w-0">
+            {isUnknownCategory && (
+              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 sm:p-6">
+                <p className="text-sm text-blue-800">
+                  <span className="font-semibold">Fant ikke kategorien "{categorySlug}".</span> Viser alle produkter i stedet.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link
-                    href="/products"
-                    className="inline-block rounded-full bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition-colors"
-                  >
-                    Se alle produkter
-                  </Link>
-                  <Link
-                    href="/tilbud"
-                    className="inline-block rounded-full border-2 border-green-600 px-6 py-2.5 text-sm font-semibold text-green-600 hover:bg-green-50 transition-colors"
-                  >
-                    Se tilbud
-                  </Link>
-                </div>
               </div>
-            ) : loadError ? (
+            )}
+            {loadError ? (
               <div className="rounded-lg border border-red-200 bg-red-50 p-4 sm:p-6 text-red-700">
                 <p className="font-semibold">Kunne ikke laste produkter</p>
                 <p className="text-sm">{loadError}</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-                {products.length === 0 && !isUnknownCategory && (
+              <>
+                <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                {products.length === 0 && (
                   <div className="col-span-full rounded-lg border border-gray-200 bg-white p-8 sm:p-12 text-center">
                     <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
                       {resolvedCategoryName
@@ -361,6 +347,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
+              </>
             )}
             <Suspense fallback={<div className="h-10 w-full rounded-lg bg-gray-200 animate-pulse mt-4" />}>
               <Pagination currentPage={page} totalPages={totalPages} />

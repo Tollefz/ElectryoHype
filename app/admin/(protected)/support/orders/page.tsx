@@ -15,12 +15,15 @@ function humanStatus(status: SupplierOrderStatus | null) {
 export default async function SupportOrdersPage({
   searchParams,
 }: {
-  searchParams?: { supplierStatus?: string; errorOnly?: string; minTotal?: string };
+  searchParams?: Promise<{ supplierStatus?: string; errorOnly?: string; minTotal?: string }> | { supplierStatus?: string; errorOnly?: string; minTotal?: string };
 }) {
   const storeId = await getStoreIdFromHeadersServer();
-  const supplierStatus = searchParams?.supplierStatus;
-  const errorOnly = searchParams?.errorOnly === "true";
-  const minTotal = searchParams?.minTotal ? Number(searchParams.minTotal) : 0;
+  
+  // Safely parse searchParams - handle both Promise and object
+  const params = searchParams instanceof Promise ? await searchParams : searchParams || {};
+  const supplierStatus = params?.supplierStatus ?? "";
+  const errorOnly = params?.errorOnly === "true";
+  const minTotal = params?.minTotal ? Number(params.minTotal) : 0;
 
   const orders = await safeQuery(
     () =>

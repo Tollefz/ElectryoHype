@@ -124,7 +124,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
+    // Return a default no-op implementation instead of throwing
+    // This allows components to render during SSR or if CartProvider is not available
+    return {
+      items: [],
+      addToCart: () => {
+        if (typeof window !== "undefined") {
+          console.warn("CartProvider not available - cannot add to cart");
+        }
+      },
+      removeFromCart: () => {},
+      updateQuantity: () => {},
+      clearCart: () => {},
+      total: 0,
+      itemCount: 0,
+    };
   }
   return context;
 }

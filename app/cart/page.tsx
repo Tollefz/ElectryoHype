@@ -15,7 +15,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto min-h-screen max-w-6xl px-3 sm:px-4 lg:px-6 py-12 sm:py-16 text-center">
+      <div className="mx-auto min-h-screen max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
         <ShoppingBag className="mx-auto mb-4 h-16 w-16 sm:h-24 sm:w-24 text-gray-300" />
         <h1 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900">Handlekurven er tom</h1>
         <p className="mb-6 text-sm sm:text-base text-gray-600">
@@ -32,7 +32,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-6xl px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+    <div className="mx-auto min-h-screen max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Handlekurv</h1>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-[2fr,1fr]">

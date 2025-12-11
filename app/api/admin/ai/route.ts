@@ -15,17 +15,33 @@ import { logError, logInfo } from "@/lib/utils/logger";
  */
 
 interface AIRequest {
-  type: "productDescription" | "seo" | "heroCopy";
+  type: "productDescription" | "seo" | "heroCopy" | "categoryCopy" | "emailTemplate";
   payload: {
+    // ProductDescription
     name?: string;
     category?: string;
     price?: number;
-    toneOfVoice?: "nøytral" | "entusiastisk" | "teknisk";
-    useCase?: string;
+    tone?: "nøytral" | "entusiastisk" | "teknisk";
+    toneOfVoice?: "nøytral" | "entusiastisk" | "teknisk"; // Legacy support
+    notes?: string;
+    useCase?: string; // Legacy support
     description?: string;
+    shortDescription?: string;
+    // SEO
+    pageType?: "product" | "category" | "frontpage" | "other";
+    // CategoryCopy
+    categoryName?: string;
+    productsHint?: string;
+    // HeroCopy
     campaignName?: string;
-    productTypes?: string;
-    discount?: number;
+    focus?: string;
+    discountInfo?: string;
+    productTypes?: string; // Legacy support
+    discount?: number; // Legacy support
+    // EmailTemplate
+    templateType?: "welcome" | "campaign" | "newsletter";
+    audienceDescription?: string;
+    offerDescription?: string;
   };
 }
 
@@ -60,15 +76,17 @@ export async function POST(req: Request) {
 
     switch (type) {
       case "productDescription": {
-        const { name, category, price, toneOfVoice = "nøytral", useCase } = payload;
+        const { name, category, price, tone = "nøytral", toneOfVoice, notes, useCase } = payload;
+        const finalTone = tone || toneOfVoice || "nøytral";
+        const extraNotes = notes || useCase || "";
         prompt = `Skriv en profesjonell produktbeskrivelse for følgende produkt:
 
 Navn: ${name || "Ikke spesifisert"}
 Kategori: ${category || "Ikke spesifisert"}
 Pris: ${price ? `${price} kr` : "Ikke spesifisert"}
-${useCase ? `Bruksområde: ${useCase}` : ""}
+${extraNotes ? `Stikkord/bruksområde: ${extraNotes}` : ""}
 
-Tone: ${toneOfVoice}
+Tone: ${finalTone}
 
 Skriv:
 1. En kort, fengende innledning (1-2 setninger)
@@ -84,12 +102,17 @@ Formatér svaret som JSON:
       }
 
       case "seo": {
-        const { name, category, description } = payload;
-        prompt = `Generer SEO-optimalisert innhold for følgende produkt:
+        const { name, category, description, shortDescription, pageType = "product" } = payload;
+        const pageTypeText = 
+          pageType === "product" ? "produktside" :
+          pageType === "category" ? "kategoriside" :
+          pageType === "frontpage" ? "forside" : "side";
+        const desc = description || shortDescription || "Ikke spesifisert";
+        prompt = `Generer SEO-optimalisert innhold for en ${pageTypeText}:
 
-Navn: ${name || "Ikke spesifisert"}
+Navn/tittel: ${name || "Ikke spesifisert"}
 Kategori: ${category || "Ikke spesifisert"}
-Beskrivelse: ${description || "Ikke spesifisert"}
+Beskrivelse: ${desc}
 
 Generer:
 1. En SEO-tittel (50-60 tegn, inkluder produktnavn og kategori)
@@ -104,23 +127,79 @@ Formatér svaret som JSON:
       }
 
       case "heroCopy": {
-        const { campaignName, productTypes, discount } = payload;
+        const { campaignName, focus, discountInfo, productTypes, discount } = payload;
+        const focusText = focus || productTypes || "Elektronikk";
+        const discountText = discountInfo || (discount ? `${discount}% rabatt` : "");
         prompt = `Skriv hero-tekst for en kampanje:
 
 Kampanjenavn: ${campaignName || "Ukens tilbud"}
-Produkttyper: ${productTypes || "Elektronikk"}
-Rabatt: ${discount ? `${discount}%` : "Ikke spesifisert"}
+Fokus: ${focusText}
+Rabattinfo: ${discountText || "Ikke spesifisert"}
 
 Generer:
-1. En fengende hovedtittel (maks 60 tegn)
-2. En undertekst (maks 120 tegn)
-3. CTA-tekst (maks 20 tegn, f.eks. "Se tilbud" eller "Kjøp nå")
+1. En fengende hovedtittel (headline, maks 60 tegn)
+2. En undertekst (subheadline, maks 120 tegn)
+3. Primær CTA-tekst (maks 20 tegn, f.eks. "Se tilbud" eller "Kjøp nå")
+4. Sekundær CTA-tekst (valgfritt, maks 20 tegn, f.eks. "Se alle produkter")
 
 Formatér svaret som JSON:
 {
-  "title": "Hovedtittel her",
-  "subtitle": "Undertekst her",
-  "cta": "CTA-tekst her"
+  "headline": "Hovedtittel her",
+  "subheadline": "Undertekst her",
+  "ctaPrimary": "Primær CTA her",
+  "ctaSecondary": "Sekundær CTA her (valgfritt)"
+}`;
+        break;
+      }
+
+      case "categoryCopy": {
+        const { categoryName, productsHint, tone = "nøytral" } = payload;
+        prompt = `Skriv kategori-tekst for følgende kategori:
+
+Kategorinavn: ${categoryName || "Ikke spesifisert"}
+Produkter i kategorien: ${productsHint || "Ikke spesifisert"}
+Tone: ${tone}
+
+Generer:
+1. En kort introduksjonstekst (2-3 setninger) som beskriver kategorien
+2. En kort blurb (1 setning) som kan brukes i kort visning
+
+Formatér svaret som JSON:
+{
+  "intro": "Introduksjonstekst her",
+  "shortBlurb": "Kort blurb her"
+}`;
+        break;
+      }
+
+      case "emailTemplate": {
+        const { templateType, audienceDescription, offerDescription } = payload;
+        const templateName = 
+          templateType === "welcome" ? "velkomst-e-post" :
+          templateType === "campaign" ? "kampanje-e-post" :
+          templateType === "newsletter" ? "nyhetsbrev" : "e-post";
+        
+        prompt = `Skriv en ${templateName} for en norsk nettbutikk:
+
+Målgruppe: ${audienceDescription || "Generell kundebase"}
+Tilbud/tema: ${offerDescription || "Ikke spesifisert"}
+
+Generer:
+1. En fengende emnelinje (subject, maks 50 tegn)
+2. En preheader-tekst (maks 100 tegn, vises i e-postklienter)
+3. E-postinnhold i HTML-format (bodyHtml) med:
+   - En hilsen
+   - Hovedbudskapet
+   - En klar call-to-action
+   - En avslutning
+   
+Bruk enkel HTML: <h1>, <p>, <a>, <strong>. Ingen kompleks styling.
+
+Formatér svaret som JSON:
+{
+  "subject": "Emnelinje her",
+  "preheader": "Preheader-tekst her",
+  "bodyHtml": "<h1>Tittel</h1><p>Innhold...</p><a href='#'>CTA</a>"
 }`;
         break;
       }

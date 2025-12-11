@@ -2,11 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, AlertCircle, Image as ImageIcon, X } from "lucide-react";
+import { Loader2, Save, AlertCircle, Image as ImageIcon, X, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { AIHelper } from "@/components/admin/AIHelper";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 // Toast not available, using simple alert instead
 
 const DEFAULT_FORM = {
@@ -43,6 +52,8 @@ export default function NewProductPage() {
   const [images, setImages] = useState<string[]>([]);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiModalType, setAiModalType] = useState<"productDescription" | "seo">("productDescription");
 
   const handleAddImage = () => {
     if (newImageUrl.trim()) {
@@ -356,7 +367,48 @@ export default function NewProductPage() {
         </div>
 
         <div className="mt-4">
-          <label className="mb-1 block text-sm font-medium">Beskrivelse</label>
+          <div className="mb-2 flex items-center justify-between">
+            <label className="block text-sm font-medium">Beskrivelse</label>
+            <Dialog open={aiModalOpen && aiModalType === "productDescription"} onOpenChange={setAiModalOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setAiModalType("productDescription");
+                    setAiModalOpen(true);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles size={16} />
+                  Generer med AI
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Generer produktbeskrivelse med AI</DialogTitle>
+                  <DialogDescription>
+                    AI-en vil generere en profesjonell produktbeskrivelse basert på produktnavn, kategori og pris.
+                  </DialogDescription>
+                </DialogHeader>
+                <AIHelper
+                  type="productDescription"
+                  onResult={(result) => {
+                    if (result.description) {
+                      setFormData({ ...formData, description: result.description });
+                      setAiModalOpen(false);
+                    }
+                  }}
+                  productData={{
+                    name: formData.name,
+                    category: formData.category,
+                    price: formData.price,
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -364,36 +416,55 @@ export default function NewProductPage() {
             className="w-full rounded-lg border border-slate-300 p-3"
             placeholder="Detaljert produktbeskrivelse"
           />
-          <div className="mt-3">
-            <AIHelper
-              type="productDescription"
-              onResult={(result) => {
-                if (result.description) {
-                  setFormData({ ...formData, description: result.description });
-                }
-              }}
-              productData={{
-                name: formData.name,
-                category: formData.category,
-                price: formData.price,
-              }}
-            />
-          </div>
         </div>
 
-        <div className="mt-4">
-          <AIHelper
-            type="seo"
-            onResult={(result) => {
-              // SEO results can be used for future SEO fields
-              // For now, just show them to the user
-            }}
-            productData={{
-              name: formData.name,
-              category: formData.category,
-              description: formData.description || formData.shortDescription,
-            }}
-          />
+        <div className="mt-6 border-t pt-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold">SEO (Søkemotoroptimalisering)</h3>
+            <Dialog open={aiModalOpen && aiModalType === "seo"} onOpenChange={(open) => {
+              if (!open) setAiModalOpen(false);
+            }}>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setAiModalType("seo");
+                    setAiModalOpen(true);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles size={16} />
+                  Generer SEO med AI
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Generer SEO-tittel og beskrivelse med AI</DialogTitle>
+                  <DialogDescription>
+                    AI-en vil generere optimal SEO-tittel og meta-beskrivelse for søkemotorer.
+                  </DialogDescription>
+                </DialogHeader>
+                <AIHelper
+                  type="seo"
+                  onResult={(result) => {
+                    // Note: These fields might not exist in formData yet
+                    // For now, we'll show them in the modal and user can copy
+                    console.log("SEO result:", result);
+                  }}
+                  productData={{
+                    name: formData.name,
+                    category: formData.category,
+                    description: formData.description || formData.shortDescription,
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+          <p className="text-sm text-gray-600 mb-4">
+            SEO-felter kan legges til senere. Bruk AI-helper for å generere optimalt innhold.
+          </p>
         </div>
 
         <div className="mt-4">

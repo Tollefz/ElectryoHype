@@ -38,11 +38,6 @@ export const CATEGORY_DEFINITIONS = {
     label: "Hjem & Fritid",
     dbValue: "Hjem & Fritid",
   },
-  sport: {
-    slug: "sport",
-    label: "Sport & Trening",
-    dbValue: "Sport & Trening",
-  },
 } as const;
 
 export type CategorySlug = keyof typeof CATEGORY_DEFINITIONS;

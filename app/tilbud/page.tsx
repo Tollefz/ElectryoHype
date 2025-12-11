@@ -41,7 +41,7 @@ async function getDiscountedProducts(storeId: string) {
       },
       // Exclude Sport and Klær categories
       category: {
-        notIn: ["Sport", "Klær"],
+        notIn: ["Sport", "Klær", "Sport & Trening"],
       },
     },
     orderBy: {
@@ -101,7 +101,7 @@ export default async function TilbudPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 py-6 sm:py-8 lg:py-10">
-      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="mb-6 text-sm text-gray-medium">
           <Link href="/" className="hover:text-brand">Hjem</Link>
@@ -139,7 +139,7 @@ export default async function TilbudPage() {
             <p className="mb-6 text-sm">{loadError}</p>
           </div>
         ) : actualDiscounted.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {actualDiscounted.map((product) => {
               const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images || [];
 

@@ -112,7 +112,7 @@ function ProductCard({ product }: ProductCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:border-green-600 hover:shadow-md">
+      <div className="relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-green-600 hover:shadow-md">
         
         {/* Badges */}
         {(hasDiscount || product.isNew) && (
@@ -139,7 +139,7 @@ function ProductCard({ product }: ProductCardProps) {
         </button>
 
         {/* Image container med hover-effekt */}
-        <div className="relative aspect-square overflow-hidden bg-gray-50">
+        <div className="relative aspect-square overflow-hidden bg-gray-50 group-hover:bg-gray-100 transition-colors duration-300">
           {/* Hovedbilde */}
           <div className={`absolute inset-0 transition-opacity duration-300 ${
             isHovered && hoverImage !== mainImage ? 'opacity-0' : 'opacity-100'
@@ -177,7 +177,7 @@ function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <div className="flex flex-1 flex-col p-4 sm:p-5">
           {/* Kategori */}
           <p className="mb-1 text-[11px] sm:text-xs font-medium uppercase tracking-wide text-gray-500">
             {(() => {
@@ -195,17 +195,17 @@ function ProductCard({ product }: ProductCardProps) {
           {/* Pris */}
           <div className="mb-3 sm:mb-4">
             <div className="flex items-baseline gap-2">
-              <span className="text-xl sm:text-2xl font-bold text-gray-900">
+              <span className="text-xl font-semibold text-gray-900">
                 {Math.floor(product.price).toLocaleString('no-NO')},-
               </span>
             </div>
             {hasDiscount && (
               <div className="mt-1 flex flex-wrap items-center gap-2">
-                <span className="text-xs sm:text-sm text-gray-500 line-through">
+                <span className="text-sm text-gray-400 line-through">
                   {Math.floor(product.compareAtPrice).toLocaleString('no-NO')},-
                 </span>
-                <span className="text-xs sm:text-sm font-semibold text-red-600">
-                  Spar {Math.floor(product.compareAtPrice - product.price).toLocaleString('no-NO')},-
+                <span className="rounded-full bg-green-600 px-2 py-1 text-xs font-semibold text-white">
+                  -{discountPercent}%
                 </span>
               </div>
             )}
@@ -214,7 +214,7 @@ function ProductCard({ product }: ProductCardProps) {
           {/* Legg i handlekurv knapp */}
           <button
             onClick={handleAddToCart}
-            className="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-2.5 sm:py-3 text-sm font-semibold text-white transition-all hover:bg-green-700 active:scale-[0.98] shadow-sm hover:shadow-md"
+            className="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-2.5 sm:py-3 text-sm font-semibold text-white transition-all hover:bg-green-700 active:scale-[0.98] shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
           >
             <ShoppingCart size={16} />
             <span>Legg i handlekurv</span>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingCart, User, Menu, ChevronDown, X } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
@@ -38,7 +38,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
       {/* Øverste linje - grønn */}
       <div className="bg-green-600">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-1.5 text-[10px] sm:text-xs text-white">
             <div className="flex items-center gap-2 sm:gap-4">
               <span className="whitespace-nowrap">Fri frakt over 500,-</span>
@@ -55,7 +55,7 @@ export function Header() {
 
       {/* Hovedheader - hvit */}
       <div className="border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           {/* Mobile: Top row med logo, søkeknapp, handlekurv */}
           <div className="flex items-center justify-between gap-3 py-3 lg:hidden">
             {/* Logo */}
@@ -184,7 +184,7 @@ export function Header() {
 
       {/* Kategorinavigasjon - mørk */}
       <div className="bg-gray-900">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center">
             {/* Mobile menu button */}
             <button
@@ -195,18 +195,6 @@ export function Header() {
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
 
-            {/* Alle kategorier dropdown - Desktop */}
-            <div className="relative group hidden lg:block">
-              <Link 
-                href="/products"
-                className="flex items-center gap-2 bg-gray-800 px-5 py-3.5 font-medium text-white hover:bg-green-600 transition-colors rounded-l-lg"
-              >
-                <Menu size={18} />
-                <span>Alle kategorier</span>
-                <ChevronDown size={16} />
-              </Link>
-            </div>
-
             {/* Kategori-lenker - Desktop */}
             <div className="hidden lg:flex items-center overflow-x-auto">
               {categories.map((category) => {
@@ -216,9 +204,9 @@ export function Header() {
                   <Link
                     key={category.slug}
                     href={category.href}
-                    className={`whitespace-nowrap px-4 py-3 text-sm font-medium transition-colors ${
+                    className={`whitespace-nowrap px-3 py-1 text-sm font-medium transition-colors rounded-md ${
                       isActive
-                        ? 'text-white bg-gray-800 border-b-2 border-green-600'
+                        ? 'text-white bg-green-600'
                         : 'text-gray-200 hover:text-white hover:bg-gray-800'
                     }`}
                   >
@@ -241,16 +229,23 @@ export function Header() {
           {mobileMenuOpen && (
             <div className="lg:hidden border-t border-gray-800 bg-gray-900">
               <div className="py-2">
-                {categories.map((category) => (
-                  <Link
-                    key={category.name}
-                    href={category.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
+                {categories.map((category) => {
+                  const isActive = activeCategory === category.slug;
+                  return (
+                    <Link
+                      key={category.slug}
+                      href={category.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`block px-4 py-3 text-sm font-medium transition-colors ${
+                        isActive
+                          ? 'text-white bg-green-500'
+                          : 'text-white hover:bg-gray-800'
+                      }`}
+                    >
+                      {category.name}
+                    </Link>
+                  );
+                })}
                 <Link
                   href="/tilbud"
                   onClick={() => setMobileMenuOpen(false)}

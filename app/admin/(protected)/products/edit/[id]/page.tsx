@@ -2,9 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Loader2, Save, AlertCircle, Image as ImageIcon, X, ExternalLink, Download, Check, Plus, Trash2 } from "lucide-react";
+import { Loader2, Save, AlertCircle, Image as ImageIcon, X, ExternalLink, Download, Check, Plus, Trash2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { AIHelper } from "@/components/admin/AIHelper";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface ProductVariant {
   id?: string;
@@ -69,6 +79,8 @@ export default function EditProduct() {
     stock: 10,
     isActive: true,
   });
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiModalType, setAiModalType] = useState<"productDescription" | "seo">("productDescription");
 
   const parseImagesFromString = (imagesStr: string): string[] => {
     if (!imagesStr) return [];
@@ -689,13 +701,101 @@ export default function EditProduct() {
         </div>
 
         <div className="mt-4">
-          <label className="mb-1 block text-sm font-medium">Beskrivelse</label>
+          <div className="mb-2 flex items-center justify-between">
+            <label className="block text-sm font-medium">Beskrivelse</label>
+            <Dialog open={aiModalOpen && aiModalType === "productDescription"} onOpenChange={setAiModalOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setAiModalType("productDescription");
+                    setAiModalOpen(true);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles size={16} />
+                  Generer med AI
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Generer produktbeskrivelse med AI</DialogTitle>
+                  <DialogDescription>
+                    AI-en vil generere en profesjonell produktbeskrivelse basert på produktnavn, kategori og pris.
+                  </DialogDescription>
+                </DialogHeader>
+                <AIHelper
+                  type="productDescription"
+                  onResult={(result) => {
+                    if (result.description) {
+                      setFormData({ ...formData, description: result.description });
+                      setAiModalOpen(false);
+                    }
+                  }}
+                  productData={{
+                    name: formData.name,
+                    category: formData.category,
+                    price: formData.price,
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={6}
             className="w-full rounded-lg border border-slate-300 p-3"
           />
+        </div>
+
+        <div className="mt-6 border-t pt-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold">SEO (Søkemotoroptimalisering)</h3>
+            <Dialog open={aiModalOpen && aiModalType === "seo"} onOpenChange={(open) => {
+              if (!open) setAiModalOpen(false);
+            }}>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setAiModalType("seo");
+                    setAiModalOpen(true);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles size={16} />
+                  Generer SEO med AI
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Generer SEO-tittel og beskrivelse med AI</DialogTitle>
+                  <DialogDescription>
+                    AI-en vil generere optimal SEO-tittel og meta-beskrivelse for søkemotorer.
+                  </DialogDescription>
+                </DialogHeader>
+                <AIHelper
+                  type="seo"
+                  onResult={(result) => {
+                    console.log("SEO result:", result);
+                  }}
+                  productData={{
+                    name: formData.name,
+                    category: formData.category,
+                    description: formData.description || formData.shortDescription,
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+          <p className="text-sm text-gray-600 mb-4">
+            SEO-felter kan legges til senere. Bruk AI-helper for å generere optimalt innhold.
+          </p>
         </div>
 
         {/* Produktvarianter */}

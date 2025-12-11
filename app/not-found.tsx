@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="mx-auto min-h-screen max-w-2xl px-4 py-16 text-center">
+    <div className="mx-auto min-h-screen max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-16 text-center">
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
         <Search size={40} className="text-gray-400" />
       </div>

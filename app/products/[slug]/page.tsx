@@ -10,6 +10,7 @@ import ProductTabs from '@/components/ProductTabs';
 import { Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import { cleanProductName } from '@/lib/utils/url-decode';
 import { getStoreIdFromHeadersServer } from '@/lib/store-server';
+import { DEFAULT_STORE_ID } from '@/lib/store';
 import { safeQuery } from '@/lib/safeQuery';
 
 interface ProductPageProps {
@@ -116,12 +117,21 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await getParams(params);
   const { variant: variantParam } = await (searchParams instanceof Promise ? searchParams : Promise.resolve(searchParams));
-  const storeId = await getStoreIdFromHeadersServer();
+  const headerStoreId = await getStoreIdFromHeadersServer();
+  const safeStoreId = headerStoreId && headerStoreId !== 'demo-store' ? headerStoreId : DEFAULT_STORE_ID;
   
-  const product = await safeQuery(
+  // Try multiple strategies to find the product
+  let product = null;
+  
+  // Strategy 1: Try with current storeId and isActive
+  product = await safeQuery(
     () =>
       prisma.product.findFirst({
-        where: { slug, storeId },
+        where: { 
+          slug, 
+          storeId: safeStoreId,
+          isActive: true,
+        },
         include: {
           variants: {
             where: { isActive: true },
@@ -130,23 +140,109 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         },
       }),
     null,
-    'product:detail'
+    'product:detail:strategy1'
   );
+
+  // Strategy 2: If not found, try with DEFAULT_STORE_ID
+  if (!product && safeStoreId !== DEFAULT_STORE_ID) {
+    product = await safeQuery(
+      () =>
+        prisma.product.findFirst({
+          where: { 
+            slug, 
+            storeId: DEFAULT_STORE_ID,
+            isActive: true,
+          },
+          include: {
+            variants: {
+              where: { isActive: true },
+              orderBy: { price: 'asc' },
+            },
+          },
+        }),
+      null,
+      'product:detail:strategy2'
+    );
+  }
+
+  // Strategy 3: If still not found, try without storeId filter (find by slug only)
+  if (!product) {
+    product = await safeQuery(
+      () =>
+        prisma.product.findFirst({
+          where: { 
+            slug,
+            isActive: true,
+            // Exclude demo-store products
+            storeId: { not: 'demo-store' },
+          },
+          include: {
+            variants: {
+              where: { isActive: true },
+              orderBy: { price: 'asc' },
+            },
+          },
+        }),
+      null,
+      'product:detail:strategy3'
+    );
+  }
+
+  // Strategy 4: Last resort - find by slug only (even if inactive, but exclude demo-store)
+  if (!product) {
+    product = await safeQuery(
+      () =>
+        prisma.product.findFirst({
+          where: { 
+            slug,
+            storeId: { not: 'demo-store' },
+          },
+          include: {
+            variants: {
+              where: { isActive: true },
+              orderBy: { price: 'asc' },
+            },
+          },
+        }),
+      null,
+      'product:detail:strategy4'
+    );
+  }
+
+  // Debug logging
+  if (!product) {
+    console.log('[Product Page] Product not found:', {
+      slug,
+      headerStoreId,
+      safeStoreId,
+      defaultStoreId: DEFAULT_STORE_ID,
+    });
+  }
 
   if (!product) {
     return (
-      <main className="min-h-screen bg-gray-light py-12">
-        <div className="mx-auto max-w-3xl rounded-xl bg-white p-10 text-center shadow">
-          <h1 className="mb-3 text-2xl font-bold text-dark">Produktet er ikke tilgjengelig</h1>
-          <p className="mb-6 text-gray-medium">
-            Vi klarte ikke å hente produktdetaljene akkurat nå. Prøv igjen senere eller se andre produkter.
-          </p>
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
-          >
-            Gå til produktsiden
-          </Link>
+      <main className="min-h-screen bg-slate-50 py-12">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 sm:p-12 text-center shadow-sm border border-gray-200">
+            <h1 className="mb-3 text-2xl sm:text-3xl font-bold text-gray-900">Produktet er ikke tilgjengelig</h1>
+            <p className="mb-6 text-sm sm:text-base text-gray-600">
+              Vi klarte ikke å hente produktdetaljene akkurat nå. Produktet kan ha blitt fjernet eller flyttet.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-6 py-3 text-sm font-semibold text-white hover:bg-green-700 transition-colors"
+              >
+                Se alle produkter
+              </Link>
+              <Link
+                href="/tilbud"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-green-600 px-6 py-3 text-sm font-semibold text-green-600 hover:bg-green-50 transition-colors"
+              >
+                Se tilbud
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
     );
@@ -159,7 +255,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
           category: product.category,
           id: { not: product.id },
           isActive: true,
-          storeId,
+          storeId: safeStoreId !== 'demo-store' ? safeStoreId : DEFAULT_STORE_ID,
         },
         take: 4,
         select: {
@@ -452,7 +548,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
   return (
     <main className="min-h-screen bg-slate-50 py-4 sm:py-6 lg:py-8">
-      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumbs */}
         <nav className="mb-4 sm:mb-6 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 overflow-x-auto">

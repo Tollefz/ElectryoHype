@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ShoppingCart, Minus, Plus, Check } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
@@ -37,6 +38,7 @@ export default function AddToCartButton({ product, variants = [], onVariantChang
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { addToCart } = useCart();
+  const router = useRouter();
 
   const hasVariants = variants.length > 0;
   const selectedVariant = useMemo(
@@ -148,8 +150,37 @@ export default function AddToCartButton({ product, variants = [], onVariantChang
       </button>
 
       {/* Kjøp nå knapp */}
-      <button className="w-full rounded-lg border-2 border-brand py-4 text-lg font-semibold text-brand hover:bg-brand hover:text-white transition-colors">
-        Kjøp nå
+      <button
+        onClick={async () => {
+          try {
+            setIsLoading(true);
+            setError(null);
+            
+            const itemToAdd = {
+              productId: product.id,
+              name: product.name,
+              price: displayPrice,
+              image: displayImage,
+              quantity: 1,
+              slug: product.slug,
+              variantId: selectedVariant?.id || undefined,
+              variantName: selectedVariant?.name || undefined,
+            };
+
+            addToCart(itemToAdd, quantity);
+            
+            // Navigate to checkout immediately
+            router.push('/checkout');
+          } catch (err) {
+            setError('Kunne ikke legge produkt i handlekurv. Prøv igjen.');
+            console.error('Error adding to cart:', err);
+            setIsLoading(false);
+          }
+        }}
+        disabled={isLoading}
+        className="w-full rounded-lg border-2 border-green-600 py-4 text-lg font-semibold text-green-600 hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isLoading ? 'Legger til...' : 'Kjøp nå'}
       </button>
     </div>
   );
