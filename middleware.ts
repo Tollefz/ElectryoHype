@@ -4,7 +4,6 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /admin routes
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const adminSession = request.cookies.get('admin_session');
 
@@ -21,4 +20,3 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: ['/admin/:path*'],
 };
-
