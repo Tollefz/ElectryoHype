@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Shield, Lock, Eye, FileText } from 'lucide-react';
+import { SITE_CONFIG } from '@/lib/site';
 
 export default function PersonvernPage() {
   return (
@@ -61,7 +62,7 @@ export default function PersonvernPage() {
             </div>
             <p className="mb-4 text-gray-medium">
               Du har rett til innsyn, retting, sletting og å protestere mot behandlingen av personopplysningene dine.
-              Du kan når som helst be om å få slettet dine personopplysninger ved å kontakte oss på support@electrohypex.com.
+              Du kan når som helst be om å få slettet dine personopplysninger ved å kontakte oss på {SITE_CONFIG.supportEmail}.
             </p>
           </div>
         </section>
@@ -70,7 +71,7 @@ export default function PersonvernPage() {
         <section className="rounded-xl bg-brand-light p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-dark">Spørsmål om personvern?</h2>
           <p className="mb-6 text-gray-medium">
-            Kontakt oss på <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">support@electrohypex.com</a>
+            Kontakt oss på <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-brand hover:underline">{SITE_CONFIG.supportEmail}</a>
           </p>
         </section>
       </div>

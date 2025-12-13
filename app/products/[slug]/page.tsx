@@ -12,6 +12,7 @@ import { cleanProductName } from '@/lib/utils/url-decode';
 import { getStoreIdFromHeadersServer } from '@/lib/store-server';
 import { DEFAULT_STORE_ID } from '@/lib/store';
 import { safeQuery } from '@/lib/safeQuery';
+import { SITE_CONFIG } from '@/lib/site';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -81,7 +82,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const description = product.shortDescription || product.description?.substring(0, 160) || 'Kjøp produkt hos ElectroHypeX';
 
   const price = Number(product.price);
-  const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
+  const baseUrl = SITE_CONFIG.siteUrl;
 
   return {
       title: `${cleanedName} | ElectroHypeX`,
@@ -634,6 +635,15 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
               {/* Add to cart */}
               <AddToCartButton product={productData} variants={variants} />
 
+              {/* Manuell oppfyllelse info */}
+              <div className="mt-4 rounded-lg bg-blue-50 border border-blue-200 p-3 sm:p-4">
+                <p className="text-xs sm:text-sm text-blue-900">
+                  <strong>Hva skjer etter betaling?</strong> Ordren behandles manuelt av vårt team. 
+                  Du mottar bekreftelse på e-post og sporingsinformasjon når pakken er sendt. 
+                  Forventet leveringstid: 5–12 virkedager fra ordrebehandling.
+                </p>
+              </div>
+
               {/* USPs */}
               <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2 sm:gap-4">
                 <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
@@ -671,7 +681,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
         {/* Tabs */}
         <ProductTabs 
-          description={product.description || 'Ingen beskrivelse tilgjengelig.'} 
+          description={product.description || ''} 
           specifications={{}}
         />
 

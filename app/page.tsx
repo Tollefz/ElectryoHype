@@ -389,8 +389,8 @@ export default async function HomePage() {
             <div className="flex items-center gap-2 sm:gap-3">
               <CreditCard className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
               <div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-900">Delbetaling</p>
-                <p className="text-[10px] sm:text-xs text-gray-600">Med Klarna</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Sikker betaling</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Via Stripe</p>
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">

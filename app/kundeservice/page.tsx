@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Mail, Phone, MessageCircle, Clock, HelpCircle, Package, Truck, RotateCcw } from 'lucide-react';
+import { SITE_CONFIG } from '@/lib/site';
 
 export default function KundeservicePage() {
   return (
@@ -26,8 +27,8 @@ export default function KundeservicePage() {
             <Phone className="mx-auto mb-4 h-12 w-12 text-brand" />
             <h3 className="mb-2 font-bold text-dark">Ring oss</h3>
             <p className="mb-4 text-sm text-gray-medium">Man-Fre: 09:00 - 18:00</p>
-            <a href="tel:+4741299063" className="text-lg font-semibold text-brand hover:underline">
-              +47 41299063
+            <a href={`tel:${SITE_CONFIG.supportPhoneTel}`} className="text-lg font-semibold text-brand hover:underline">
+              {SITE_CONFIG.supportPhoneDisplay}
             </a>
           </div>
 
@@ -35,8 +36,8 @@ export default function KundeservicePage() {
             <Mail className="mx-auto mb-4 h-12 w-12 text-brand" />
             <h3 className="mb-2 font-bold text-dark">E-post</h3>
             <p className="mb-4 text-sm text-gray-medium">Svar innen 24 timer</p>
-            <a href="mailto:support@electrohypex.com" className="text-lg font-semibold text-brand hover:underline">
-              support@electrohypex.com
+            <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-lg font-semibold text-brand hover:underline">
+              {SITE_CONFIG.supportEmail}
             </a>
           </div>
 
@@ -61,7 +62,7 @@ export default function KundeservicePage() {
             <div>
               <h3 className="mb-2 font-semibold text-dark">Hvor lang leveringstid har dere?</h3>
               <p className="text-gray-medium">
-                Vi leverer vanligvis innen 1-3 virkedager. Gratis frakt over 500,-!
+                Ordrene behandles manuelt etter betaling. Estimert leveringstid: 5–12 virkedager fra ordrebehandling. Gratis frakt over 500,-!
               </p>
             </div>
 
@@ -75,7 +76,7 @@ export default function KundeservicePage() {
             <div>
               <h3 className="mb-2 font-semibold text-dark">Hvilke betalingsmetoder aksepterer dere?</h3>
               <p className="text-gray-medium">
-                Vi aksepterer Visa, Mastercard, Vipps, Klarna og PayPal. Alle betalinger er sikre og krypterte.
+                Vi aksepterer kortbetaling via Stripe (Visa, Mastercard). Alle betalinger er sikre og krypterte.
               </p>
             </div>
 

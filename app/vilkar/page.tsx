@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { SITE_CONFIG } from '@/lib/site';
 
 export default function VilkarPage() {
   return (
@@ -74,7 +75,7 @@ export default function VilkarPage() {
         <section className="rounded-xl bg-brand-light p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-dark">Spørsmål om vilkårene?</h2>
           <p className="mb-6 text-gray-medium">
-            Kontakt oss på <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">support@electrohypex.com</a>
+            Kontakt oss på <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-brand hover:underline">{SITE_CONFIG.supportEmail}</a>
           </p>
         </section>
       </div>

@@ -35,12 +35,25 @@ export function ProductTabs({ description, specs }: ProductTabsProps) {
       </div>
       <div className="pt-4">
         {active === "Beskrivelse" && (
-          <div
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: description || "<p>Ingen beskrivelse tilgjengelig.</p>",
-            }}
-          />
+          <div className="prose max-w-none">
+            {description ? (
+              <div dangerouslySetInnerHTML={{ __html: description }} />
+            ) : (
+              <div className="text-gray-medium">
+                <p className="mb-4">
+                  Dette produktet er en del av vårt utvalg av elektronikk og tilbehør. 
+                  Vi leverer kvalitetsprodukter med fokus på funksjonalitet og verdi.
+                </p>
+                <p className="mb-4">
+                  Produktet leveres med full garanti og støtte fra vårt team. 
+                  Hvis du har spørsmål om produktet, kan du kontakte vår kundeservice.
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Levering:</strong> 5–12 virkedager etter ordrebehandling.
+                </p>
+              </div>
+            )}
+          </div>
         )}
         {active === "Spesifikasjoner" && (
           <table className="w-full text-sm">

@@ -8,6 +8,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { LogoV5 } from '@/components/Logo';
 import { CATEGORY_DEFINITIONS, getAllCategorySlugs } from '@/lib/categories';
+import { SITE_CONFIG } from '@/lib/site';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,9 +42,9 @@ export function Header() {
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-1.5 text-[10px] sm:text-xs text-white">
             <div className="flex items-center gap-2 sm:gap-4">
-              <span className="whitespace-nowrap">Fri frakt over 500,-</span>
+              <span className="whitespace-nowrap">Fri frakt over {SITE_CONFIG.freeShippingThreshold},-</span>
               <span className="hidden sm:inline">|</span>
-              <span className="hidden sm:inline whitespace-nowrap">Rask levering 1-3 dager</span>
+              <span className="hidden sm:inline whitespace-nowrap">{SITE_CONFIG.deliveryPromise}</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
               <Link href="/kundeservice" className="hover:underline whitespace-nowrap text-[10px] sm:text-xs">Kundeservice</Link>

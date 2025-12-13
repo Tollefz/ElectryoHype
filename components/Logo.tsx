@@ -1,5 +1,5 @@
 /**
- * Logo-komponenter for ElektroHype
+ * Logo-komponenter for ElectroHypeX
  * 
  * SVG (Scalable Vector Graphics) = Vektorbasert bildeformat
  * - Skalerer perfekt på alle skjermstørrelser (ikke pixeler)
@@ -28,8 +28,8 @@ export function LogoV1({ className = "" }: { className?: string }) {
         </svg>
       </div>
       <div>
-        <span className="text-xl font-bold text-dark">Elektro</span>
-        <span className="text-xl font-bold text-brand">Hype</span>
+        <span className="text-xl font-bold text-dark">Electro</span>
+        <span className="text-xl font-bold text-brand">HypeX</span>
       </div>
     </div>
   );
@@ -62,8 +62,8 @@ export function LogoV2({ className = "" }: { className?: string }) {
         </svg>
       </div>
       <div>
-        <span className="text-xl font-bold text-dark">Elektro</span>
-        <span className="text-xl font-bold text-brand">Hype</span>
+        <span className="text-xl font-bold text-dark">Electro</span>
+        <span className="text-xl font-bold text-brand">HypeX</span>
       </div>
     </div>
   );
@@ -73,11 +73,11 @@ export function LogoV2({ className = "" }: { className?: string }) {
 export function LogoV3({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="text-2xl font-bold text-dark">ELEKTRO</span>
+      <span className="text-2xl font-bold text-dark">Electro</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#00C853">
         <path d="M13 2L3 14h8l-1 8 10-12h-8l2-8z"/>
       </svg>
-      <span className="text-2xl font-bold text-brand">HYPE</span>
+      <span className="text-2xl font-bold text-brand">HypeX</span>
     </div>
   );
 }
@@ -93,8 +93,8 @@ export function LogoV4({ className = "" }: { className?: string }) {
         <path d="M13 2L3 14h8l-1 8 10-12h-8l2-8z"/>
       </svg>
       <div>
-        <div className="text-lg font-bold text-dark leading-tight">Elektro</div>
-        <div className="text-lg font-bold text-brand leading-tight">Hype</div>
+        <div className="text-lg font-bold text-dark leading-tight">Electro</div>
+        <div className="text-lg font-bold text-brand leading-tight">HypeX</div>
       </div>
     </div>
   );
@@ -115,8 +115,8 @@ export function LogoV5({ className = "" }: { className?: string }) {
         </svg>
       </div>
       <div>
-        <div className="text-lg font-bold text-dark">ELEKTRO</div>
-        <div className="text-lg font-bold text-brand">HYPE</div>
+        <div className="text-lg font-bold text-dark">Electro</div>
+        <div className="text-lg font-bold text-brand">HypeX</div>
       </div>
     </div>
   );
@@ -139,8 +139,8 @@ export function LogoV6({ className = "" }: { className?: string }) {
       </div>
       {/* Tekst */}
       <div className="flex flex-col">
-        <span className="text-xl font-bold text-dark leading-none tracking-tight">ELEKTRO</span>
-        <span className="text-xl font-bold text-brand leading-none tracking-tight">HYPE</span>
+        <span className="text-xl font-bold text-dark leading-none tracking-tight">Electro</span>
+        <span className="text-xl font-bold text-brand leading-none tracking-tight">HypeX</span>
         <span className="text-xs font-medium text-gray-medium mt-0.5 hidden md:block">Elektronikk & Tech</span>
       </div>
     </div>

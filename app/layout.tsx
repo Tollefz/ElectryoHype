@@ -8,14 +8,14 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import RefTracker from "./RefTracker";
 import { Toaster } from "react-hot-toast";
-import { CONTACT_INFO } from "@/lib/contact";
+import { SITE_CONFIG } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const siteUrl = CONTACT_INFO.siteUrl;
+const siteUrl = SITE_CONFIG.siteUrl;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: "ElectroHypeX",
     template: "%s | ElectroHypeX",
   },
-  description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling, rask kundeservice og enkle returer.",
+  description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
   keywords: ["elektronikk", "gaming", "tech", "nettbutikk", "Norge", "elektronikkbutikk", "elektronikk tilbud"],
   authors: [{ name: "ElectroHypeX" }],
   creator: "ElectroHypeX",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "ElectroHypeX",
     title: "ElectroHypeX - Norges beste elektronikkbutikk",
-    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling, rask kundeservice og enkle returer.",
+    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
     images: [
       {
         url: `${siteUrl}/og-image.jpg`,
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ElectroHypeX - Norges beste elektronikkbutikk",
-    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling, rask kundeservice og enkle returer.",
+    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
     images: [`${siteUrl}/og-image.jpg`],
   },
   robots: {

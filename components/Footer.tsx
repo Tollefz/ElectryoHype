@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Twitter, Mail, Phone, MapPin } from 'lucide-react';
-import { CONTACT_INFO } from '@/lib/contact';
+import { SITE_CONFIG } from '@/lib/site';
 
 export function Footer() {
   return (
@@ -21,14 +21,14 @@ export function Footer() {
               <li><Link href="/frakt" className="hover:text-green-600 transition-colors">Frakt & Levering</Link></li>
               <li><Link href="/garanti" className="hover:text-green-600 transition-colors">Garanti</Link></li>
             </ul>
-            <div className="mt-4 space-y-2 text-sm">
-              <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors">
-                <Mail size={16} />
-                <span>{CONTACT_INFO.email}</span>
+            <div className="mt-4 space-y-3 text-sm">
+              <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors">
+                <Mail size={16} className="flex-shrink-0" />
+                <span className="break-all">{SITE_CONFIG.supportEmail}</span>
               </a>
-              <a href={CONTACT_INFO.phoneLink} className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors">
-                <Phone size={16} />
-                <span>{CONTACT_INFO.phone}</span>
+              <a href={`tel:${SITE_CONFIG.supportPhoneTel}`} className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors">
+                <Phone size={16} className="flex-shrink-0" />
+                <span>{SITE_CONFIG.supportPhoneDisplay}</span>
               </a>
             </div>
           </div>
@@ -74,14 +74,14 @@ export function Footer() {
             <p className="mb-4 text-sm text-gray-700">
               Din destinasjon for elektronikk, gaming og tech. 
               Vi leverer kvalitetsprodukter til konkurransedyktige priser 
-              med rask levering i hele Norge.
+              med {SITE_CONFIG.deliveryPromise.toLowerCase()} i hele Norge.
             </p>
             <div className="mb-4 space-y-2 text-sm text-gray-700">
-              <a href={`mailto:${CONTACT_INFO.email}`} className="block hover:text-green-600 transition-colors">
-                {CONTACT_INFO.email}
+              <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="block hover:text-green-600 transition-colors break-all">
+                {SITE_CONFIG.supportEmail}
               </a>
-              <a href={CONTACT_INFO.phoneLink} className="block hover:text-green-600 transition-colors">
-                {CONTACT_INFO.phone}
+              <a href={`tel:${SITE_CONFIG.supportPhoneTel}`} className="block hover:text-green-600 transition-colors">
+                {SITE_CONFIG.supportPhoneDisplay}
               </a>
             </div>
             <div className="flex gap-3">
@@ -103,7 +103,10 @@ export function Footer() {
       <div className="border-t border-gray-300 bg-gray-200">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center text-sm text-gray-600">
-            <p>© {new Date().getFullYear()} {CONTACT_INFO.brand} AS. Alle rettigheter reservert. Org.nr: 999 888 777 {/* TODO: Oppdater med ekte org.nr når tilgjengelig */}</p>
+            <p>
+              © {new Date().getFullYear()} {SITE_CONFIG.siteName} AS. Alle rettigheter reservert.
+              {SITE_CONFIG.orgNumber && ` Org.nr: ${SITE_CONFIG.orgNumber}`}
+            </p>
           </div>
         </div>
       </div>

@@ -8,15 +8,11 @@ export default function FAQPage() {
       questions: [
         {
           q: 'Hvilke betalingsmetoder aksepterer dere?',
-          a: 'Vi aksepterer Visa, Mastercard, Vipps, Klarna og PayPal. Alle betalinger er sikre og krypterte.',
-        },
-        {
-          q: 'Kan jeg betale med delbetaling?',
-          a: 'Ja, du kan velge Klarna ved kassen for å betale med delbetaling. Velg ønsket avbetalingsplan ved kassen.',
+          a: 'Vi aksepterer kortbetaling via Stripe (Visa, Mastercard). Alle betalinger er sikre og krypterte.',
         },
         {
           q: 'Når blir kortet mitt belastet?',
-          a: 'Kortet ditt blir belastet når vi sender ordren din, ikke når du legger inn ordren.',
+          a: 'Kortet ditt blir belastet ved kassen når du fullfører bestillingen. Betalingen behandles umiddelbart via Stripe.',
         },
       ],
     },

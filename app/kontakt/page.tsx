@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
-import { CONTACT_INFO } from '@/lib/contact';
+import { SITE_CONFIG } from '@/lib/site';
 
 export default function KontaktPage() {
   return (
@@ -34,8 +34,8 @@ export default function KontaktPage() {
                   <Phone className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
                   <div>
                     <h3 className="mb-1 font-semibold text-dark">Telefon</h3>
-                    <a href={CONTACT_INFO.phoneLink} className="text-brand hover:underline">
-                      {CONTACT_INFO.phone}
+                    <a href={`tel:${SITE_CONFIG.supportPhoneTel}`} className="text-brand hover:underline">
+                      {SITE_CONFIG.supportPhoneDisplay}
                     </a>
                     <p className="mt-1 text-sm text-gray-medium">Man-Fre: 09:00 - 18:00</p>
                   </div>
@@ -45,25 +45,24 @@ export default function KontaktPage() {
                   <Mail className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
                   <div>
                     <h3 className="mb-1 font-semibold text-dark">E-post</h3>
-                    <a href={`mailto:${CONTACT_INFO.email}`} className="text-brand hover:underline">
-                      {CONTACT_INFO.email}
+                    <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-brand hover:underline">
+                      {SITE_CONFIG.supportEmail}
                     </a>
                     <p className="mt-1 text-sm text-gray-medium">Svar innen 24 timer</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <MapPin className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
-                  <div>
-                    <h3 className="mb-1 font-semibold text-dark">Adresse</h3>
-                    <p className="text-gray-medium">
-                      Teknologiveien 1<br />
-                      0150 Oslo<br />
-                      Norge
-                      {/* TODO: Oppdater med faktisk adresse når tilgjengelig */}
-                    </p>
+                {SITE_CONFIG.companyAddress && (
+                  <div className="flex items-start gap-4">
+                    <MapPin className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
+                    <div>
+                      <h3 className="mb-1 font-semibold text-dark">Adresse</h3>
+                      <p className="text-gray-medium whitespace-pre-line">
+                        {SITE_CONFIG.companyAddress}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="flex items-start gap-4">
                   <Clock className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
@@ -85,13 +84,13 @@ export default function KontaktPage() {
             <h2 className="mb-6 text-2xl font-bold text-dark">Send oss en melding</h2>
             <p className="mb-4 text-sm text-gray-medium">
               Fyll ut skjemaet nedenfor, eller send oss en e-post direkte til{' '}
-              <a href={`mailto:${CONTACT_INFO.email}`} className="text-brand hover:underline">
-                {CONTACT_INFO.email}
+              <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-brand hover:underline">
+                {SITE_CONFIG.supportEmail}
               </a>
             </p>
 
             <form 
-              action={`mailto:${CONTACT_INFO.email}`}
+              action={`mailto:${SITE_CONFIG.supportEmail}`}
               method="get"
               encType="text/plain"
               className="space-y-4"

@@ -1,13 +1,18 @@
 /**
  * Contact information for ElectroHypeX
  * Centralized source for contact details used across the site
+ * 
+ * @deprecated Use SITE_CONFIG from @/lib/site instead
+ * This file is kept for backward compatibility
  */
 
+import { SITE_CONFIG } from './site';
+
 export const CONTACT_INFO = {
-  brand: "ElectroHypeX",
-  email: "support@electrohypex.com",
-  phone: "+47 41299063",
-  phoneLink: "tel:+4741299063", // No spaces in tel: links
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://www.electrohypex.com",
+  brand: SITE_CONFIG.siteName,
+  email: SITE_CONFIG.supportEmail,
+  phone: SITE_CONFIG.supportPhoneDisplay,
+  phoneLink: `tel:${SITE_CONFIG.supportPhoneTel}`,
+  siteUrl: SITE_CONFIG.siteUrl,
 } as const;
 

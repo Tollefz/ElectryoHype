@@ -41,10 +41,26 @@ export default function ProductTabs({ description, specifications }: ProductTabs
       <div className="py-6">
         {activeTab === 'description' && (
           <div className="prose max-w-none">
-            <div 
-              className="text-gray-medium leading-relaxed whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: description || 'Ingen beskrivelse tilgjengelig.' }}
-            />
+            {description && description !== 'Ingen beskrivelse tilgjengelig.' ? (
+              <div 
+                className="text-gray-medium leading-relaxed whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            ) : (
+              <div className="text-gray-medium leading-relaxed">
+                <p className="mb-4">
+                  Dette produktet er en del av vårt utvalg av elektronikk og tilbehør. 
+                  Vi leverer kvalitetsprodukter med fokus på funksjonalitet og verdi.
+                </p>
+                <p className="mb-4">
+                  Produktet leveres med full garanti og støtte fra vårt team. 
+                  Hvis du har spørsmål om produktet, kan du kontakte vår kundeservice.
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Levering:</strong> 5–12 virkedager etter ordrebehandling.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -71,7 +87,7 @@ export default function ProductTabs({ description, specifications }: ProductTabs
                   </div>
                   <div className="flex border-b py-2">
                     <span className="w-1/3 font-semibold">Leveringstid</span>
-                    <span className="w-2/3 text-gray-medium">1-3 virkedager</span>
+                    <span className="w-2/3 text-gray-medium">5–12 virkedager</span>
                   </div>
                 </div>
               </div>
