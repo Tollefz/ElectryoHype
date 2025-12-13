@@ -8,21 +8,66 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import RefTracker from "./RefTracker";
 import { Toaster } from "react-hot-toast";
+import { CONTACT_INFO } from "@/lib/contact";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+const siteUrl = CONTACT_INFO.siteUrl;
+
 export const metadata: Metadata = {
-  title: "ElectroHypeX - Norges beste elektronikkbutikk",
-  description: "Kjøp elektronikk, gaming og tech til gode priser. Gratis frakt over 500kr. Rask levering i hele Norge.",
-  keywords: ["elektronikk", "gaming", "tech", "nettbutikk", "Norge", "elektronikkbutikk"],
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "ElectroHypeX",
+    template: "%s | ElectroHypeX",
+  },
+  description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling, rask kundeservice og enkle returer.",
+  keywords: ["elektronikk", "gaming", "tech", "nettbutikk", "Norge", "elektronikkbutikk", "elektronikk tilbud"],
+  authors: [{ name: "ElectroHypeX" }],
+  creator: "ElectroHypeX",
+  publisher: "ElectroHypeX",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: "ElectroHypeX - Norges beste elektronikkbutikk",
-    description: "Kjøp elektronikk, gaming og tech til gode priser. Gratis frakt over 500kr.",
     type: "website",
     locale: "no_NO",
+    url: "/",
+    siteName: "ElectroHypeX",
+    title: "ElectroHypeX - Norges beste elektronikkbutikk",
+    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling, rask kundeservice og enkle returer.",
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "ElectroHypeX - Elektronikkbutikk",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ElectroHypeX - Norges beste elektronikkbutikk",
+    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling, rask kundeservice og enkle returer.",
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
   },
 };
 

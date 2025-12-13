@@ -26,8 +26,8 @@ export default function KundeservicePage() {
             <Phone className="mx-auto mb-4 h-12 w-12 text-brand" />
             <h3 className="mb-2 font-bold text-dark">Ring oss</h3>
             <p className="mb-4 text-sm text-gray-medium">Man-Fre: 09:00 - 18:00</p>
-            <a href="tel:+4722334455" className="text-lg font-semibold text-brand hover:underline">
-              +47 22 33 44 55
+            <a href="tel:+4741299063" className="text-lg font-semibold text-brand hover:underline">
+              +47 41299063
             </a>
           </div>
 

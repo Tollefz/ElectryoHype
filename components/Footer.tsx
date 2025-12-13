@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { CONTACT_INFO } from '@/lib/contact';
 
 export function Footer() {
   return (
@@ -20,6 +21,16 @@ export function Footer() {
               <li><Link href="/frakt" className="hover:text-green-600 transition-colors">Frakt & Levering</Link></li>
               <li><Link href="/garanti" className="hover:text-green-600 transition-colors">Garanti</Link></li>
             </ul>
+            <div className="mt-4 space-y-2 text-sm">
+              <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors">
+                <Mail size={16} />
+                <span>{CONTACT_INFO.email}</span>
+              </a>
+              <a href={CONTACT_INFO.phoneLink} className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors">
+                <Phone size={16} />
+                <span>{CONTACT_INFO.phone}</span>
+              </a>
+            </div>
           </div>
 
           {/* 2. Informasjon */}
@@ -65,6 +76,14 @@ export function Footer() {
               Vi leverer kvalitetsprodukter til konkurransedyktige priser 
               med rask levering i hele Norge.
             </p>
+            <div className="mb-4 space-y-2 text-sm text-gray-700">
+              <a href={`mailto:${CONTACT_INFO.email}`} className="block hover:text-green-600 transition-colors">
+                {CONTACT_INFO.email}
+              </a>
+              <a href={CONTACT_INFO.phoneLink} className="block hover:text-green-600 transition-colors">
+                {CONTACT_INFO.phone}
+              </a>
+            </div>
             <div className="flex gap-3">
               <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 hover:bg-green-600 hover:text-white transition-colors text-gray-700">
                 <Facebook size={18} />
@@ -84,7 +103,7 @@ export function Footer() {
       <div className="border-t border-gray-300 bg-gray-200">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center text-sm text-gray-600">
-            <p>© {new Date().getFullYear()} ElectroHypeX AS. Alle rettigheter reservert. Org.nr: 999 888 777</p>
+            <p>© {new Date().getFullYear()} {CONTACT_INFO.brand} AS. Alle rettigheter reservert. Org.nr: 999 888 777 {/* TODO: Oppdater med ekte org.nr når tilgjengelig */}</p>
           </div>
         </div>
       </div>

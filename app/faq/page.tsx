@@ -46,7 +46,7 @@ export default function FAQPage() {
         },
         {
           q: 'Hvordan returnerer jeg et produkt?',
-          a: 'Kontakt vår kundeservice på support@electrohypex.com eller ring +47 22 33 44 55. Vi sender deg en returetikett.',
+          a: 'Kontakt vår kundeservice på support@electrohypex.com eller ring +47 41299063. Vi sender deg en returetikett.',
         },
         {
           q: 'Hvem betaler returfrakten?',
@@ -67,7 +67,7 @@ export default function FAQPage() {
         },
         {
           q: 'Hvordan reklamerer jeg et produkt?',
-          a: 'Kontakt oss på support@electrohypex.com eller ring +47 22 33 44 55. Ta med deg produktet og kvitteringen.',
+          a: 'Kontakt oss på support@electrohypex.com eller ring +47 41299063. Ta med deg produktet og kvitteringen.',
         },
       ],
     },
@@ -131,7 +131,7 @@ export default function FAQPage() {
               Kontakt oss
             </Link>
             <a
-              href="tel:+4722334455"
+              href="tel:+4741299063"
               className="rounded-lg border-2 border-brand px-6 py-3 font-semibold text-brand hover:bg-brand hover:text-white transition-colors"
             >
               Ring oss

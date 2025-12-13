@@ -167,7 +167,7 @@ export default function GarantiPage() {
               Send e-post
             </a>
             <a
-              href="tel:+4722334455"
+              href="tel:+4741299063"
               className="flex items-center gap-2 rounded-lg border-2 border-brand px-6 py-3 font-semibold text-brand hover:bg-brand hover:text-white transition-colors"
             >
               <Phone size={20} />

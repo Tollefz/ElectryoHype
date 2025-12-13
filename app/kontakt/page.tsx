@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { CONTACT_INFO } from '@/lib/contact';
 
 export default function KontaktPage() {
   return (
@@ -33,8 +34,8 @@ export default function KontaktPage() {
                   <Phone className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
                   <div>
                     <h3 className="mb-1 font-semibold text-dark">Telefon</h3>
-                    <a href="tel:+4722334455" className="text-brand hover:underline">
-                      +47 22 33 44 55
+                    <a href={CONTACT_INFO.phoneLink} className="text-brand hover:underline">
+                      {CONTACT_INFO.phone}
                     </a>
                     <p className="mt-1 text-sm text-gray-medium">Man-Fre: 09:00 - 18:00</p>
                   </div>
@@ -44,8 +45,8 @@ export default function KontaktPage() {
                   <Mail className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
                   <div>
                     <h3 className="mb-1 font-semibold text-dark">E-post</h3>
-                    <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">
-                      support@electrohypex.com
+                    <a href={`mailto:${CONTACT_INFO.email}`} className="text-brand hover:underline">
+                      {CONTACT_INFO.email}
                     </a>
                     <p className="mt-1 text-sm text-gray-medium">Svar innen 24 timer</p>
                   </div>
@@ -59,6 +60,7 @@ export default function KontaktPage() {
                       Teknologiveien 1<br />
                       0150 Oslo<br />
                       Norge
+                      {/* TODO: Oppdater med faktisk adresse når tilgjengelig */}
                     </p>
                   </div>
                 </div>
@@ -81,12 +83,24 @@ export default function KontaktPage() {
           {/* Kontaktskjema */}
           <div className="rounded-xl bg-white p-6 shadow-sm">
             <h2 className="mb-6 text-2xl font-bold text-dark">Send oss en melding</h2>
+            <p className="mb-4 text-sm text-gray-medium">
+              Fyll ut skjemaet nedenfor, eller send oss en e-post direkte til{' '}
+              <a href={`mailto:${CONTACT_INFO.email}`} className="text-brand hover:underline">
+                {CONTACT_INFO.email}
+              </a>
+            </p>
 
-            <form className="space-y-4">
+            <form 
+              action={`mailto:${CONTACT_INFO.email}`}
+              method="get"
+              encType="text/plain"
+              className="space-y-4"
+            >
               <div>
                 <label className="mb-1 block text-sm font-medium text-dark">Navn</label>
                 <input
                   type="text"
+                  name="name"
                   required
                   className="w-full rounded-lg border border-gray-border px-4 py-3 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                 />
@@ -96,6 +110,7 @@ export default function KontaktPage() {
                 <label className="mb-1 block text-sm font-medium text-dark">E-post</label>
                 <input
                   type="email"
+                  name="email"
                   required
                   className="w-full rounded-lg border border-gray-border px-4 py-3 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                 />
@@ -105,24 +120,26 @@ export default function KontaktPage() {
                 <label className="mb-1 block text-sm font-medium text-dark">Telefon (valgfritt)</label>
                 <input
                   type="tel"
+                  name="phone"
                   className="w-full rounded-lg border border-gray-border px-4 py-3 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                 />
               </div>
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-dark">Emne</label>
-                <select className="w-full rounded-lg border border-gray-border px-4 py-3 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand">
-                  <option>Generelt spørsmål</option>
-                  <option>Ordre og levering</option>
-                  <option>Retur og reklamasjon</option>
-                  <option>Teknisk support</option>
-                  <option>Andre henvendelser</option>
-                </select>
+                <input
+                  type="text"
+                  name="subject"
+                  placeholder="F.eks. Generelt spørsmål, Ordre og levering, Retur og reklamasjon"
+                  required
+                  className="w-full rounded-lg border border-gray-border px-4 py-3 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+                />
               </div>
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-dark">Melding</label>
                 <textarea
+                  name="body"
                   rows={6}
                   required
                   className="w-full rounded-lg border border-gray-border px-4 py-3 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
@@ -133,9 +150,12 @@ export default function KontaktPage() {
                 type="submit"
                 className="w-full rounded-lg bg-brand py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
               >
-                Send melding
+                Åpne e-postklient
               </button>
             </form>
+            <p className="mt-4 text-xs text-gray-medium">
+              Ved å klikke "Åpne e-postklient" åpnes din standard e-postklient med en forhåndsutfylt melding.
+            </p>
           </div>
         </div>
       </div>
