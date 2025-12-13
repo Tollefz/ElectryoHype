@@ -15,7 +15,7 @@ export default function OmOssPage() {
         {/* Header */}
         <div className="mb-12 text-center">
           <Building2 className="mx-auto mb-4 h-16 w-16 text-brand" />
-          <h1 className="mb-4 text-4xl font-bold text-dark">Om ElektroHype</h1>
+          <h1 className="mb-4 text-4xl font-bold text-dark">Om ElectroHypeX</h1>
           <p className="text-lg text-gray-medium">
             Din destinasjon for elektronikk, gaming og tech
           </p>
@@ -26,7 +26,7 @@ export default function OmOssPage() {
           <h2 className="mb-6 text-2xl font-bold text-dark">Vår historie</h2>
           <div className="space-y-4 text-gray-medium">
             <p>
-              ElektroHype ble grunnlagt med et enkelt mål: å gjøre det enkelt å kjøpe kvalitetselektronikk til gode priser.
+              ElectroHypeX ble grunnlagt med et enkelt mål: å gjøre det enkelt å kjøpe kvalitetselektronikk til gode priser.
             </p>
             <p>
               Vi er en moderne nettbutikk som spesialiserer oss på elektronikk, gaming-utstyr og tech-produkter.
@@ -68,7 +68,7 @@ export default function OmOssPage() {
             <Building2 className="mb-4 h-10 w-10 text-brand" />
             <h3 className="mb-2 text-xl font-bold text-dark">Lokalt eid</h3>
             <p className="text-gray-medium">
-              ElektroHype er et norsk selskap med hovedkontor i Oslo. Vi forstår norske forbrukere.
+              ElectroHypeX er et norsk selskap med hovedkontor i Oslo. Vi forstår norske forbrukere.
             </p>
           </div>
         </section>
@@ -77,7 +77,7 @@ export default function OmOssPage() {
         <section className="rounded-xl bg-brand-light p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-dark">Vil du vite mer?</h2>
           <p className="mb-6 text-gray-medium">
-            Kontakt oss gjerne hvis du har spørsmål om ElektroHype
+            Kontakt oss gjerne hvis du har spørsmål om ElectroHypeX
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

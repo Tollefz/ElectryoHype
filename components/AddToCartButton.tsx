@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ShoppingCart, Minus, Plus, Check } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
+import toast from 'react-hot-toast';
 
 interface Variant {
   id: string;
@@ -77,6 +78,9 @@ export default function AddToCartButton({ product, variants = [], onVariantChang
 
       addToCart(itemToAdd, quantity);
       setAdded(true);
+      toast.success(`${product.name} lagt i handlekurv!`, {
+        icon: '🛒',
+      });
       setTimeout(() => setAdded(false), 2000);
     } catch (err) {
       setError('Kunne ikke legge produkt i handlekurv. Prøv igjen.');

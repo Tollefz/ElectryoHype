@@ -44,8 +44,8 @@ export default function KontaktPage() {
                   <Mail className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
                   <div>
                     <h3 className="mb-1 font-semibold text-dark">E-post</h3>
-                    <a href="mailto:hei@elektrohype.no" className="text-brand hover:underline">
-                      hei@elektrohype.no
+                    <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">
+                      support@electrohypex.com
                     </a>
                     <p className="mt-1 text-sm text-gray-medium">Svar innen 24 timer</p>
                   </div>

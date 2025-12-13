@@ -26,7 +26,7 @@ export default function PersonvernPage() {
           <div>
             <h2 className="mb-4 text-2xl font-bold text-dark">Dine personopplysninger</h2>
             <p className="mb-4 text-gray-medium">
-              ElektroHype AS er behandlingsansvarlig for behandlingen av dine personopplysninger.
+              ElectroHypeX AS er behandlingsansvarlig for behandlingen av dine personopplysninger.
               Vi tar personvernet ditt på alvor og behandler personopplysningene dine i tråd med gjeldende personvernlovgivning.
             </p>
           </div>
@@ -61,7 +61,7 @@ export default function PersonvernPage() {
             </div>
             <p className="mb-4 text-gray-medium">
               Du har rett til innsyn, retting, sletting og å protestere mot behandlingen av personopplysningene dine.
-              Du kan når som helst be om å få slettet dine personopplysninger ved å kontakte oss på hei@elektrohype.no.
+              Du kan når som helst be om å få slettet dine personopplysninger ved å kontakte oss på support@electrohypex.com.
             </p>
           </div>
         </section>
@@ -70,7 +70,7 @@ export default function PersonvernPage() {
         <section className="rounded-xl bg-brand-light p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-dark">Spørsmål om personvern?</h2>
           <p className="mb-6 text-gray-medium">
-            Kontakt oss på <a href="mailto:hei@elektrohype.no" className="text-brand hover:underline">hei@elektrohype.no</a>
+            Kontakt oss på <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">support@electrohypex.com</a>
           </p>
         </section>
       </div>

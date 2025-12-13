@@ -2,15 +2,15 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/format";
 import Link from "next/link";
 import { Suspense } from "react";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, FulfillmentStatus } from "@prisma/client";
 import { safeQuery } from "@/lib/safeQuery";
 
 async function getOrders(filter?: string, search?: string) {
   const where: any = {};
 
   if (filter && filter !== "alle") {
-    // Konverter til riktig format (lowercase for Prisma enum)
-    where.status = filter.toLowerCase() as OrderStatus;
+    // Use fulfillmentStatus as single source of truth
+    where.fulfillmentStatus = filter as FulfillmentStatus;
   }
 
   if (search && search.trim()) {
@@ -35,18 +35,17 @@ async function getOrders(filter?: string, search?: string) {
   );
 }
 
-function getStatusBadge(status: string) {
+function getFulfillmentStatusBadge(fulfillmentStatus: string) {
   const statusMap: Record<string, { label: string; className: string }> = {
-    pending: { label: "Venter", className: "bg-yellow-100 text-yellow-800" },
-    paid: { label: "Betalt", className: "bg-green-100 text-green-800" },
-    processing: { label: "Behandles", className: "bg-blue-100 text-blue-800" },
-    shipped: { label: "Sendt", className: "bg-indigo-100 text-indigo-800" },
-    delivered: { label: "Levert", className: "bg-green-100 text-green-800" },
-    cancelled: { label: "Kansellert", className: "bg-red-100 text-red-800" },
+    NEW: { label: "NY", className: "bg-yellow-100 text-yellow-800" },
+    ORDERED_FROM_SUPPLIER: { label: "Bestilt hos leverandør", className: "bg-blue-100 text-blue-800" },
+    SHIPPED: { label: "Sendt", className: "bg-indigo-100 text-indigo-800" },
+    DELIVERED: { label: "Fullført", className: "bg-green-100 text-green-800" },
+    CANCELLED: { label: "Kansellert", className: "bg-red-100 text-red-800" },
   };
 
-  const config = statusMap[status.toLowerCase()] || {
-    label: status,
+  const config = statusMap[fulfillmentStatus] || {
+    label: fulfillmentStatus,
     className: "bg-gray-100 text-gray-800",
   };
 
@@ -116,12 +115,11 @@ export default async function AdminOrdersPage({
               className="flex-1 sm:flex-none rounded-lg border border-gray-300 px-3 py-2 text-xs sm:text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200 bg-white"
             >
               <option value="alle">Alle</option>
-              <option value="pending">Venter</option>
-              <option value="paid">Betalt</option>
-              <option value="processing">Behandles</option>
-              <option value="shipped">Sendt</option>
-              <option value="delivered">Levert</option>
-              <option value="cancelled">Kansellert</option>
+              <option value="NEW">NY</option>
+              <option value="ORDERED_FROM_SUPPLIER">Bestilt hos leverandør</option>
+              <option value="SHIPPED">Sendt</option>
+              <option value="DELIVERED">Fullført</option>
+              <option value="CANCELLED">Kansellert</option>
             </select>
           </div>
 
@@ -222,7 +220,9 @@ export default async function AdminOrdersPage({
                           {formatCurrency(Number(order.total))}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">{getStatusBadge(order.status)}</td>
+                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">
+                        {getFulfillmentStatusBadge(order.fulfillmentStatus || "NEW")}
+                      </td>
                       <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">
                         <div className="text-xs sm:text-sm text-gray-600">
                           {formatDate(order.createdAt)}

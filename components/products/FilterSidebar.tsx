@@ -31,10 +31,10 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
   };
 
   return (
-    <aside className="space-y-6 rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+    <aside className="space-y-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <div>
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Kategorier</h3>
-        <div className="mt-3 space-y-2">
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Kategorier</h3>
+        <div className="space-y-1.5">
           <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
             <input
               type="radio"
@@ -65,34 +65,39 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
       </div>
 
       <div>
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Pris</h3>
-        <div className="mt-3 flex flex-col gap-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">Min (kr)</label>
-            <Input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="0"
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">Max (kr)</label>
-            <Input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="5000"
-              className="w-full"
-            />
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Pris</h3>
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Fra (kr)</label>
+              <Input
+                type="number"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                placeholder="0"
+                className="w-full text-sm"
+                min="0"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Til (kr)</label>
+              <Input
+                type="number"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                placeholder="5000"
+                className="w-full text-sm"
+                min="0"
+              />
+            </div>
           </div>
           <div className="flex gap-2">
             <Button 
               onClick={() => updateParams({ minPrice, maxPrice })} 
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-2"
+              size="sm"
             >
-              Bruk
+              Bruk filter
             </Button>
             <Button
               variant="ghost"
@@ -101,7 +106,8 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
                 setMaxPrice("");
                 updateParams({ minPrice: null, maxPrice: null });
               }}
-              className="border border-gray-300 hover:bg-gray-50"
+              className="border border-gray-300 hover:bg-gray-50 text-sm py-2"
+              size="sm"
             >
               Nullstill
             </Button>

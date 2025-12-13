@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { OrderStatus, PaymentStatus, SupplierOrderStatus } from "@prisma/client";
+import { OrderStatus, PaymentStatus, SupplierOrderStatus, FulfillmentStatus } from "@prisma/client";
 import { z } from "zod";
 import { logSupplierEvent } from "@/lib/dropshipping/supplier-events";
 
 const updateOrderSchema = z.object({
-  status: z.nativeEnum(OrderStatus).optional(),
+  status: z.nativeEnum(OrderStatus).optional(), // Deprecated, kept for backward compatibility
+  fulfillmentStatus: z.nativeEnum(FulfillmentStatus).optional(), // Single source of truth
   paymentStatus: z.nativeEnum(PaymentStatus).optional(),
   trackingNumber: z.string().optional(),
   trackingUrl: z.string().optional(),
   shippingCarrier: z.string().optional(),
-  supplierOrderStatus: z.nativeEnum(SupplierOrderStatus).optional(),
+  supplierOrderStatus: z.nativeEnum(SupplierOrderStatus).optional(), // Internal note only
   notes: z.string().optional(),
 });
 
@@ -125,13 +126,28 @@ export async function PATCH(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    const wasShippedBefore = existingOrder.supplierOrderStatus === "SHIPPED";
+    const wasShippedBefore = existingOrder.fulfillmentStatus === "SHIPPED";
+    const oldFulfillmentStatus = existingOrder.fulfillmentStatus;
     const oldSupplierStatus = existingOrder.supplierOrderStatus;
+
+    // Map fulfillmentStatus to legacy status for backward compatibility
+    const updateData: any = { ...validatedData };
+    if (validatedData.fulfillmentStatus) {
+      // Map fulfillmentStatus to legacy status
+      const statusMap: Record<FulfillmentStatus, OrderStatus> = {
+        NEW: "pending",
+        ORDERED_FROM_SUPPLIER: "processing",
+        SHIPPED: "shipped",
+        DELIVERED: "delivered",
+        CANCELLED: "cancelled",
+      };
+      updateData.status = statusMap[validatedData.fulfillmentStatus];
+    }
 
     // Oppdater ordre
     const updatedOrder = await prisma.order.update({
       where: { id: orderId.trim() },
-      data: validatedData,
+      data: updateData,
       include: {
         customer: true,
         orderItems: {
@@ -142,10 +158,8 @@ export async function PATCH(
       },
     });
 
-    // Hvis status endres til SHIPPED -> send shipping email
-    const isNowShipped =
-      updatedOrder.supplierOrderStatus === "SHIPPED" ||
-      updatedOrder.status === "shipped";
+    // Hvis fulfillmentStatus endres til SHIPPED -> send shipping email
+    const isNowShipped = updatedOrder.fulfillmentStatus === "SHIPPED";
 
     if (isNowShipped && !wasShippedBefore) {
       const trackingNumber =
@@ -165,7 +179,7 @@ export async function PATCH(
       });
     }
 
-    // Log supplier status change if changed
+    // Log supplier status change if changed (internal note only)
     if (
       validatedData.supplierOrderStatus &&
       validatedData.supplierOrderStatus !== oldSupplierStatus
@@ -175,6 +189,14 @@ export async function PATCH(
         oldStatus: oldSupplierStatus || SupplierOrderStatus.PENDING,
         newStatus: validatedData.supplierOrderStatus,
       });
+    }
+
+    // Log fulfillment status change if changed
+    if (
+      validatedData.fulfillmentStatus &&
+      validatedData.fulfillmentStatus !== oldFulfillmentStatus
+    ) {
+      console.log(`Order ${updatedOrder.orderNumber} fulfillment status changed: ${oldFulfillmentStatus} → ${validatedData.fulfillmentStatus}`);
     }
 
     // Parse items for response

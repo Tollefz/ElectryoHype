@@ -25,7 +25,7 @@ export default function FAQPage() {
       questions: [
         {
           q: 'Hvor lang leveringstid har dere?',
-          a: 'Vi leverer vanligvis innen 1-3 virkedager. Leveringstid kan variere avhengig av produktets lagerstatus.',
+          a: 'Ordrene behandles manuelt etter betaling. Estimert leveringstid: 5–12 virkedager fra ordrebehandling.',
         },
         {
           q: 'Hvor mye koster frakt?',
@@ -46,7 +46,7 @@ export default function FAQPage() {
         },
         {
           q: 'Hvordan returnerer jeg et produkt?',
-          a: 'Kontakt vår kundeservice på hei@elektrohype.no eller ring +47 22 33 44 55. Vi sender deg en returetikett.',
+          a: 'Kontakt vår kundeservice på support@electrohypex.com eller ring +47 22 33 44 55. Vi sender deg en returetikett.',
         },
         {
           q: 'Hvem betaler returfrakten?',
@@ -67,7 +67,7 @@ export default function FAQPage() {
         },
         {
           q: 'Hvordan reklamerer jeg et produkt?',
-          a: 'Kontakt oss på hei@elektrohype.no eller ring +47 22 33 44 55. Ta med deg produktet og kvitteringen.',
+          a: 'Kontakt oss på support@electrohypex.com eller ring +47 22 33 44 55. Ta med deg produktet og kvitteringen.',
         },
       ],
     },

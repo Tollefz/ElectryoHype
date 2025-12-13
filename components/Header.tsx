@@ -204,9 +204,9 @@ export function Header() {
                   <Link
                     key={category.slug}
                     href={category.href}
-                    className={`whitespace-nowrap px-3 py-1 text-sm font-medium transition-colors rounded-md ${
+                    className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition-all rounded-md ${
                       isActive
-                        ? 'text-white bg-green-600'
+                        ? 'text-white bg-green-600 shadow-md'
                         : 'text-gray-200 hover:text-white hover:bg-gray-800'
                     }`}
                   >

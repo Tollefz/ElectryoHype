@@ -49,7 +49,7 @@ export async function POST(
       );
     }
 
-    // Validate and normalize color attributes (Electrohype policy: only black)
+    // Validate and normalize color attributes (ElectroHypeX policy: only black)
     let validatedAttributes = variantData.attributes || {};
     try {
       validatedAttributes = validateVariantAttributes(validatedAttributes);

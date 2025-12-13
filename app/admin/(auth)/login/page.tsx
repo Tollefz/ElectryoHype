@@ -4,6 +4,17 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+/**
+ * Admin login page - Public route (no auth required)
+ * 
+ * This page is in the (auth) route group, which means it will NOT
+ * be protected by the auth guard in (panel)/layout.tsx.
+ * 
+ * This prevents redirect loops because:
+ * - Middleware excludes /admin/login explicitly
+ * - (panel)/layout.tsx only protects routes in the (panel) group
+ * - This page is in (auth) group, so it's never checked by auth guard
+ */
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +38,7 @@ export default function AdminLogin() {
       setLoading(false);
     } else {
       router.push("/admin/dashboard");
+      router.refresh();
     }
   };
 

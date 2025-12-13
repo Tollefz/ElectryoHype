@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product) {
     return {
-      title: 'Produkt ikke funnet | ElektroHype',
+      title: 'Produkt ikke funnet | ElectroHypeX',
       description: 'Produktet du leter etter ble ikke funnet.',
     };
   }
@@ -78,13 +78,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   const cleanedName = cleanProductName(product.name);
-  const description = product.shortDescription || product.description?.substring(0, 160) || 'Kjøp produkt hos ElektroHype';
+  const description = product.shortDescription || product.description?.substring(0, 160) || 'Kjøp produkt hos ElectroHypeX';
 
   const price = Number(product.price);
-  const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+  const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
 
   return {
-    title: `${cleanedName} | ElektroHype`,
+      title: `${cleanedName} | ElectroHypeX`,
     description,
     keywords: [cleanedName, product.category || '', 'elektronikk', 'Norge', 'kjøp', 'nettbutikk'],
     openGraph: {
@@ -100,7 +100,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       ] : [],
       type: 'website',
       url: `${baseUrl}/products/${slug}`,
-      siteName: 'ElektroHype',
+      siteName: 'ElectroHypeX',
     },
     twitter: {
       card: 'summary_large_image',
@@ -209,15 +209,6 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     );
   }
 
-  // Debug logging
-  if (!product) {
-    console.log('[Product Page] Product not found:', {
-      slug,
-      headerStoreId,
-      safeStoreId,
-      defaultStoreId: DEFAULT_STORE_ID,
-    });
-  }
 
   if (!product) {
     return (
@@ -248,16 +239,16 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     );
   }
 
+  // Get 3 random related products from same category
   const relatedProducts = await safeQuery(
-    () =>
-      prisma.product.findMany({
+    async () => {
+      const allRelated = await prisma.product.findMany({
         where: {
           category: product.category,
           id: { not: product.id },
           isActive: true,
           storeId: safeStoreId !== 'demo-store' ? safeStoreId : DEFAULT_STORE_ID,
         },
-        take: 4,
         select: {
           id: true,
           name: true,
@@ -267,7 +258,13 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
           images: true,
           category: true,
         },
-      }),
+        take: 20, // Get more to randomize from
+      });
+      
+      // Shuffle and take 3
+      const shuffled = allRelated.sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, 3);
+    },
     [],
     'product:related'
   );
@@ -282,7 +279,6 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       images = product.images;
     }
   } catch (error) {
-    console.error('Failed to parse images:', error);
     images = [];
   }
 
@@ -309,8 +305,6 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   
   // Preserve order: variant images first, then others
   images = [...variantImages, ...Array.from(imagesSet).filter(img => !variantImages.includes(img))];
-  
-  console.log(`[Product Page] Collected ${images.length} total images (${variantImages.length} from variants, ${JSON.parse(product.images || '[]').length} from product)`);
 
   // Parse tags to detect color variants
   let tags: string[] = [];
@@ -585,7 +579,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                   </span>
                 )}
                 <span className="rounded-md bg-green-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-green-700">
-                  På lager
+                  Tilgjengelig
                 </span>
               </div>
 
@@ -666,8 +660,8 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                 <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
                   <Check className="text-green-600 flex-shrink-0" size={20} />
                   <div>
-                    <p className="text-xs sm:text-sm font-semibold text-gray-900">På lager</p>
-                    <p className="text-[10px] sm:text-xs text-gray-600">Sendes i dag</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-900">Tilgjengelig</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600">5–12 virkedager</p>
                   </div>
                 </div>
               </div>
@@ -681,10 +675,10 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
           specifications={{}}
         />
 
-        {/* Relaterte produkter */}
+        {/* Anbefalte produkter */}
         {relatedProducts.length > 0 && (
           <section className="mt-8 sm:mt-12">
-            <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-gray-900">Relaterte produkter</h2>
+            <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-gray-900">Anbefalte produkter</h2>
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {relatedProducts.map((p) => {
                 const pImages = typeof p.images === 'string' ? JSON.parse(p.images) : p.images || [];

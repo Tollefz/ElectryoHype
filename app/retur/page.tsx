@@ -68,7 +68,7 @@ export default function ReturPage() {
               <div>
                 <h3 className="mb-2 font-semibold text-dark">Kontakt oss</h3>
                 <p className="text-gray-medium">
-                  Send e-post til <a href="mailto:hei@elektrohype.no" className="text-brand hover:underline">hei@elektrohype.no</a> eller ring +47 22 33 44 55. Oppgi ordrenummer.
+                  Send e-post til <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">support@electrohypex.com</a> eller ring +47 22 33 44 55. Oppgi ordrenummer.
                 </p>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function ReturPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:hei@elektrohype.no"
+              href="mailto:support@electrohypex.com"
               className="flex items-center gap-2 rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
             >
               <Mail size={20} />

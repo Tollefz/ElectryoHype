@@ -26,7 +26,7 @@ export default function VilkarPage() {
           <div>
             <h2 className="mb-4 text-2xl font-bold text-dark">Generelt</h2>
             <p className="text-gray-medium">
-              Ved å handle hos ElektroHype aksepterer du våre vilkår og betingelser. Disse vilkårene gjelder for alle kjøp
+              Ved å handle hos ElectroHypeX aksepterer du våre vilkår og betingelser. Disse vilkårene gjelder for alle kjøp
               gjort gjennom vår nettbutikk.
             </p>
           </div>
@@ -42,7 +42,7 @@ export default function VilkarPage() {
           <div>
             <h2 className="mb-4 text-2xl font-bold text-dark">Levering</h2>
             <p className="mb-4 text-gray-medium">
-              Vi leverer til hele Norge. Leveringstid er vanligvis 1-3 virkedager for produkter på lager. Vi er ikke ansvarlige
+              Vi leverer til hele Norge. Ordrene behandles manuelt etter betaling. Estimert leveringstid: 5–12 virkedager fra ordrebehandling. Vi er ikke ansvarlige
               for forsinkelser utenfor vår kontroll.
             </p>
           </div>
@@ -65,7 +65,7 @@ export default function VilkarPage() {
           <div>
             <h2 className="mb-4 text-2xl font-bold text-dark">Ansvarsbegrensning</h2>
             <p className="mb-4 text-gray-medium">
-              ElektroHype er ikke ansvarlig for skader som følge av feil bruk av produktet. Vårt ansvar er begrenset til produktets verdi.
+              ElectroHypeX er ikke ansvarlig for skader som følge av feil bruk av produktet. Vårt ansvar er begrenset til produktets verdi.
             </p>
           </div>
         </section>
@@ -74,7 +74,7 @@ export default function VilkarPage() {
         <section className="rounded-xl bg-brand-light p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-dark">Spørsmål om vilkårene?</h2>
           <p className="mb-6 text-gray-medium">
-            Kontakt oss på <a href="mailto:hei@elektrohype.no" className="text-brand hover:underline">hei@elektrohype.no</a>
+            Kontakt oss på <a href="mailto:support@electrohypex.com" className="text-brand hover:underline">support@electrohypex.com</a>
           </p>
         </section>
       </div>

@@ -91,18 +91,17 @@ async function getOrder(id: string) {
   };
 }
 
-function getStatusBadge(status: string) {
+function getFulfillmentStatusBadge(fulfillmentStatus: string) {
   const statusMap: Record<string, { label: string; className: string }> = {
-    pending: { label: "Venter", className: "bg-yellow-100 text-yellow-800 border-yellow-300" },
-    paid: { label: "Betalt", className: "bg-green-100 text-green-800 border-green-300" },
-    processing: { label: "Behandles", className: "bg-blue-100 text-blue-800 border-blue-300" },
-    shipped: { label: "Sendt", className: "bg-indigo-100 text-indigo-800 border-indigo-300" },
-    delivered: { label: "Levert", className: "bg-green-100 text-green-800 border-green-300" },
-    cancelled: { label: "Kansellert", className: "bg-red-100 text-red-800 border-red-300" },
+    NEW: { label: "NY", className: "bg-yellow-100 text-yellow-800 border-yellow-300" },
+    ORDERED_FROM_SUPPLIER: { label: "Bestilt hos leverandør", className: "bg-blue-100 text-blue-800 border-blue-300" },
+    SHIPPED: { label: "Sendt", className: "bg-indigo-100 text-indigo-800 border-indigo-300" },
+    DELIVERED: { label: "Fullført", className: "bg-green-100 text-green-800 border-green-300" },
+    CANCELLED: { label: "Kansellert", className: "bg-red-100 text-red-800 border-red-300" },
   };
 
-  const config = statusMap[status.toLowerCase()] || {
-    label: status,
+  const config = statusMap[fulfillmentStatus] || {
+    label: fulfillmentStatus,
     className: "bg-gray-100 text-gray-800 border-gray-300",
   };
 
@@ -176,7 +175,7 @@ export default async function OrderDetailsPage({
 
       {/* Status badge */}
       <div className="flex items-center gap-4">
-        {getStatusBadge(order.status)}
+        {getFulfillmentStatusBadge(order.fulfillmentStatus || "NEW")}
         {getPaymentStatusBadge(order.paymentStatus)}
       </div>
 

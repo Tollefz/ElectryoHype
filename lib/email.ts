@@ -12,8 +12,10 @@ const resend = isTestMode ? null : new Resend(process.env.RESEND_API_KEY);
 
 /**
  * Send ordre-bekreftelse til kunde
+ * Updates email status in database (SENT/FAILED)
+ * Returns success status - does not throw on failure (for webhook safety)
  */
-export async function sendOrderConfirmation(orderId: string) {
+export async function sendOrderConfirmation(orderId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
@@ -28,7 +30,16 @@ export async function sendOrderConfirmation(orderId: string) {
     });
 
     if (!order || !order.customer) {
-      throw new Error(`Order ${orderId} not found or has no customer`);
+      const errorMsg = `Order ${orderId} not found or has no customer`;
+      // Update status to FAILED
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          customerEmailStatus: 'FAILED',
+          customerEmailLastError: errorMsg.substring(0, 500), // Truncate to safe length
+        },
+      }).catch(() => {}); // Ignore update errors
+      return { success: false, error: errorMsg };
     }
 
     // Parse items og shipping address
@@ -86,40 +97,100 @@ export async function sendOrderConfirmation(orderId: string) {
       },
     };
 
+    if (!order.customer.email) {
+      const errorMsg = 'Customer email not found';
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          customerEmailStatus: 'FAILED',
+          customerEmailLastError: errorMsg.substring(0, 500),
+        },
+      }).catch(() => {});
+      return { success: false, error: errorMsg };
+    }
+
     if (isTestMode || !resend) {
       console.log('📧 [TEST MODE] Ordre-bekreftelse ville blitt sendt til:', order.customer.email);
       console.log('📧 E-post data:', JSON.stringify(emailData, null, 2));
-      return { success: true, mode: 'test' };
+      // In test mode, mark as sent
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          customerEmailStatus: 'SENT',
+          customerEmailSentAt: new Date(),
+        },
+      }).catch(() => {});
+      return { success: true };
     }
 
-    if (!order.customer.email) {
-      throw new Error('Customer email not found');
+    try {
+      const { data, error } = await resend.emails.send({
+        from: process.env.EMAIL_FROM || 'ElectroHypeX <noreply@electrohypex.com>',
+        to: order.customer.email,
+        subject: `Ordrebekreftelse ${order.orderNumber}`,
+        react: OrderConfirmationEmail(emailData),
+      });
+
+      if (error) {
+        const errorMsg = error.message || 'Unknown email error';
+        console.error('❌ Feil ved sending av ordre-bekreftelse:', errorMsg);
+        // Update status to FAILED
+        await prisma.order.update({
+          where: { id: orderId },
+          data: {
+            customerEmailStatus: 'FAILED',
+            customerEmailLastError: errorMsg.substring(0, 500),
+          },
+        }).catch(() => {});
+        return { success: false, error: errorMsg };
+      }
+
+      // Update status to SENT
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          customerEmailStatus: 'SENT',
+          customerEmailSentAt: new Date(),
+          customerEmailLastError: null, // Clear any previous errors
+        },
+      }).catch(() => {});
+
+      console.log('✅ Ordre-bekreftelse sendt til:', order.customer.email);
+      return { success: true };
+    } catch (error: any) {
+      const errorMsg = error?.message || 'Unknown error sending email';
+      console.error('❌ Error sending order confirmation:', errorMsg);
+      // Update status to FAILED
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          customerEmailStatus: 'FAILED',
+          customerEmailLastError: errorMsg.substring(0, 500),
+        },
+      }).catch(() => {});
+      return { success: false, error: errorMsg };
     }
-
-    const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Electrohype <noreply@dinbutikk.no>',
-      to: order.customer.email,
-      subject: `Ordrebekreftelse ${order.orderNumber}`,
-      react: OrderConfirmationEmail(emailData),
-    });
-
-    if (error) {
-      console.error('❌ Feil ved sending av ordre-bekreftelse:', error);
-      throw error;
-    }
-
-    console.log('✅ Ordre-bekreftelse sendt til:', order.customer.email);
-    return { success: true, data };
-  } catch (error) {
-    console.error('❌ Error sending order confirmation:', error);
-    throw error;
+  } catch (error: any) {
+    const errorMsg = error?.message || 'Unknown error';
+    console.error('❌ Error in sendOrderConfirmation:', errorMsg);
+    // Try to update status even if we can't find the order
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        customerEmailStatus: 'FAILED',
+        customerEmailLastError: errorMsg.substring(0, 500),
+      },
+    }).catch(() => {});
+    return { success: false, error: errorMsg };
   }
 }
 
 /**
  * Send ny ordre notifikasjon til admin
+ * Updates adminEmailStatus in database
+ * Returns success status - does not throw on failure
  */
-export async function sendAdminNotification(orderId: string) {
+export async function sendAdminNotification(orderId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
@@ -134,7 +205,14 @@ export async function sendAdminNotification(orderId: string) {
     });
 
     if (!order || !order.customer) {
-      throw new Error(`Order ${orderId} not found or has no customer`);
+      const errorMsg = `Order ${orderId} not found or has no customer`;
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          adminEmailStatus: 'FAILED',
+        },
+      }).catch(() => {});
+      return { success: false, error: errorMsg };
     }
 
     // Parse items og shipping address
@@ -173,7 +251,7 @@ export async function sendAdminNotification(orderId: string) {
       };
     }
 
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://www.electrohypex.com';
     const orderUrl = `${baseUrl}/admin/orders/${order.id}`;
 
     const emailData = {
@@ -196,34 +274,81 @@ export async function sendAdminNotification(orderId: string) {
       orderUrl,
     };
 
+    if (!process.env.ADMIN_EMAIL) {
+      console.warn('⚠️ ADMIN_EMAIL ikke satt - hopper over admin-notifikasjon');
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          adminEmailStatus: 'FAILED',
+        },
+      }).catch(() => {});
+      return { success: false, error: 'ADMIN_EMAIL not set' };
+    }
+
     if (isTestMode || !resend) {
       console.log('📧 [TEST MODE] Admin-notifikasjon ville blitt sendt til:', process.env.ADMIN_EMAIL);
       console.log('📧 E-post data:', JSON.stringify(emailData, null, 2));
-      return { success: true, mode: 'test' };
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          adminEmailStatus: 'SENT',
+          adminEmailSentAt: new Date(),
+        },
+      }).catch(() => {});
+      return { success: true };
     }
 
-    if (!process.env.ADMIN_EMAIL) {
-      console.warn('⚠️ ADMIN_EMAIL ikke satt - hopper over admin-notifikasjon');
-      return { success: false, reason: 'ADMIN_EMAIL not set' };
+    try {
+      const { data, error } = await resend.emails.send({
+        from: process.env.EMAIL_FROM || 'ElectroHypeX <noreply@electrohypex.com>',
+        to: process.env.ADMIN_EMAIL,
+        subject: `🎉 NY ORDRE: ${order.orderNumber} - ${order.total.toFixed(0)} kr`,
+        react: AdminNewOrderEmail(emailData),
+      });
+
+      if (error) {
+        const errorMsg = error.message || 'Unknown email error';
+        console.error('❌ Feil ved sending av admin-notifikasjon:', errorMsg);
+        await prisma.order.update({
+          where: { id: orderId },
+          data: {
+            adminEmailStatus: 'FAILED',
+          },
+        }).catch(() => {});
+        return { success: false, error: errorMsg };
+      }
+
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          adminEmailStatus: 'SENT',
+          adminEmailSentAt: new Date(),
+        },
+      }).catch(() => {});
+
+      console.log('✅ Admin-notifikasjon sendt til:', process.env.ADMIN_EMAIL);
+      return { success: true };
+    } catch (error: any) {
+      const errorMsg = error?.message || 'Unknown error';
+      console.error('❌ Error sending admin notification:', errorMsg);
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          adminEmailStatus: 'FAILED',
+        },
+      }).catch(() => {});
+      return { success: false, error: errorMsg };
     }
-
-    const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'System <system@dinbutikk.no>',
-      to: process.env.ADMIN_EMAIL,
-      subject: `🎉 NY ORDRE: ${order.orderNumber} - ${order.total.toFixed(0)} kr`,
-      react: AdminNewOrderEmail(emailData),
-    });
-
-    if (error) {
-      console.error('❌ Feil ved sending av admin-notifikasjon:', error);
-      throw error;
-    }
-
-    console.log('✅ Admin-notifikasjon sendt til:', process.env.ADMIN_EMAIL);
-    return { success: true, data };
-  } catch (error) {
-    console.error('❌ Error sending admin notification:', error);
-    throw error;
+  } catch (error: any) {
+    const errorMsg = error?.message || 'Unknown error';
+    console.error('❌ Error in sendAdminNotification:', errorMsg);
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        adminEmailStatus: 'FAILED',
+      },
+    }).catch(() => {});
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -275,7 +400,7 @@ export async function sendShippingNotification(
     }
 
     const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Electrohype <noreply@dinbutikk.no>',
+      from: process.env.EMAIL_FROM || 'ElectroHypeX <noreply@electrohypex.com>',
       to: order.customer.email,
       subject: `Din pakke er sendt! 📦 - ${order.orderNumber}`,
       react: OrderShippedEmail(emailData),

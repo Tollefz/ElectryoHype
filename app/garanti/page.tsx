@@ -160,7 +160,7 @@ export default function GarantiPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:hei@elektrohype.no"
+              href="mailto:support@electrohypex.com"
               className="flex items-center gap-2 rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark transition-colors"
             >
               <Mail size={20} />

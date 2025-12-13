@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="bg-[#F3F4F6]">
       {/* Hovedfooter */}
-      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-12 sm:py-10">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           
           {/* 1. Kundeservice */}
@@ -56,8 +56,8 @@ export function Footer() {
                 <span className="text-xl font-black text-white">E</span>
               </div>
               <div>
-                <span className="text-xl font-bold text-gray-900">Elektro</span>
-                <span className="text-xl font-bold text-green-600">Hype</span>
+                <span className="text-xl font-bold text-gray-900">Electro</span>
+                <span className="text-xl font-bold text-green-600">HypeX</span>
               </div>
             </div>
             <p className="mb-4 text-sm text-gray-700">
@@ -84,7 +84,7 @@ export function Footer() {
       <div className="border-t border-gray-300 bg-gray-200">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center text-sm text-gray-600">
-            <p>© {new Date().getFullYear()} ElektroHype AS. Alle rettigheter reservert. Org.nr: 999 888 777</p>
+            <p>© {new Date().getFullYear()} ElectroHypeX AS. Alle rettigheter reservert. Org.nr: 999 888 777</p>
           </div>
         </div>
       </div>

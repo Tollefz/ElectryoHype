@@ -43,7 +43,7 @@ ${items}
   }
 
   const { error } = await resend.emails.send({
-    from: process.env.EMAIL_FROM || "Electrohype <noreply@electrohype.no>",
+    from: process.env.EMAIL_FROM || "ElectroHypeX <noreply@electrohypex.com>",
     to: input.supplierOrderEmail,
     subject,
     text: body,

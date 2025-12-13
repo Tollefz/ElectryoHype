@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Download, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { importProducts } from "./actions";
 
 interface ImportResult {
   success: boolean;
@@ -18,43 +19,29 @@ interface ImportResult {
 export default function BulkImportClient() {
   const router = useRouter();
   const [urls, setUrls] = useState<string>("");
-  const [importing, setImporting] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [results, setResults] = useState<ImportResult[]>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleImport = async () => {
-    // Parse URLs from textarea (one per line)
-    const urlList = urls
-      .split("\n")
-      .map((url) => url.trim())
-      .filter((url) => url.length > 0 && (url.startsWith("http://") || url.startsWith("https://")));
-
-    if (urlList.length === 0) {
-      setError("Vennligst legg inn minst en gyldig URL");
-      return;
-    }
-
-    setImporting(true);
-    setError("");
+  async function handleSubmit(formData: FormData) {
+    setIsPending(true);
+    setError(null);
     setResults([]);
 
     try {
-      const response = await fetch("/api/admin/products/bulk-import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urls: urlList }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Feil ved import");
+      const result = await importProducts(formData);
+      
+      if (result.error) {
+        setError(result.error);
+        setIsPending(false);
+        return;
       }
 
-      const data = await response.json();
-      setResults(data.results || []);
+      const importResults = result.results || [];
+      setResults(importResults);
 
       // Vis suksessmelding hvis noen produkter ble importert
-      const successful = data.results?.filter((r: ImportResult) => r.success) || [];
+      const successful = importResults.filter((r: ImportResult) => r.success);
       if (successful.length > 0) {
         setTimeout(() => {
           router.push("/admin/products");
@@ -63,9 +50,9 @@ export default function BulkImportClient() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ukjent feil ved import");
     } finally {
-      setImporting(false);
+      setIsPending(false);
     }
-  };
+  }
 
   const successful = results.filter((r) => r.success);
   const failed = results.filter((r) => !r.success);
@@ -94,13 +81,22 @@ export default function BulkImportClient() {
         </div>
       )}
 
-      <div className="rounded-xl bg-white p-6 shadow-sm">
+      <form 
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          await handleSubmit(formData);
+        }}
+        className="rounded-xl bg-white p-6 shadow-sm"
+      >
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-medium text-primary">
+            <label htmlFor="urls" className="mb-2 block text-sm font-medium text-primary">
               Temu URL-er (én per linje)
             </label>
             <textarea
+              id="urls"
+              name="urls"
               value={urls}
               onChange={(e) => setUrls(e.target.value)}
               placeholder={`https://www.temu.com/no/produkt-1.html
@@ -108,7 +104,8 @@ https://www.temu.com/no/produkt-2.html
 https://www.temu.com/no/produkt-3.html`}
               rows={12}
               className="w-full rounded-lg border border-border p-4 font-mono text-sm text-primary focus:border-accent-green focus:outline-none focus:ring-1 focus:ring-accent-green"
-              disabled={importing}
+              disabled={isPending}
+              required
             />
             <p className="mt-2 text-xs text-secondary">
               💡 Lim inn alle URL-er du vil importere. Hvert produkt vil få:
@@ -119,11 +116,11 @@ https://www.temu.com/no/produkt-3.html`}
 
           <div className="flex items-center gap-3">
             <button
-              onClick={handleImport}
-              disabled={importing || !urls.trim()}
-              className="flex items-center gap-2 rounded-lg bg-accent-green px-6 py-3 text-white hover:bg-accent-green/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              type="submit"
+              disabled={isPending || !urls.trim()}
+              className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-3 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold"
             >
-              {importing ? (
+              {isPending ? (
                 <>
                   <Loader2 className="animate-spin" size={20} />
                   Importerer produkter...
@@ -131,7 +128,7 @@ https://www.temu.com/no/produkt-3.html`}
               ) : (
                 <>
                   <Download size={20} />
-                  Start Import
+                  Importer produkter
                 </>
               )}
             </button>
@@ -142,7 +139,7 @@ https://www.temu.com/no/produkt-3.html`}
             )}
           </div>
         </div>
-      </div>
+      </form>
 
       {/* Results */}
       {results.length > 0 && (

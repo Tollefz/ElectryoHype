@@ -17,19 +17,24 @@ export async function POST(req: Request) {
   try {
     const storeId = await getStoreIdFromHeadersServer();
     
-    // Validate Stripe secret key
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim();
+    // Validate and clean Stripe secret key
+    let stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim() || "";
+    
+    // Remove extra quotes if present
+    stripeSecretKey = stripeSecretKey.replace(/^["']+|["']+$/g, "").trim();
+    
     if (!stripeSecretKey) {
       logError(new Error("STRIPE_SECRET_KEY not set"), "[api/checkout]");
       return NextResponse.json(
-        { ok: false, error: "Stripe er ikke konfigurert" },
+        { ok: false, error: "Betalingssystemet er ikke konfigurert. Kontakt kundeservice." },
         { status: 500 }
       );
     }
 
     if (!stripeSecretKey.startsWith("sk_test_") && !stripeSecretKey.startsWith("sk_live_")) {
+      logError(new Error(`Invalid Stripe key format: ${stripeSecretKey.substring(0, 10)}...`), "[api/checkout]");
       return NextResponse.json(
-        { ok: false, error: "Ugyldig Stripe secret key format" },
+        { ok: false, error: "Betalingssystemet er ikke konfigurert. Kontakt kundeservice." },
         { status: 500 }
       );
     }
@@ -117,7 +122,7 @@ export async function POST(req: Request) {
     logInfo(`Order created: ${order.id} (${orderNumber})`, "[api/checkout]");
 
     // Create Stripe Checkout Session
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
     
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

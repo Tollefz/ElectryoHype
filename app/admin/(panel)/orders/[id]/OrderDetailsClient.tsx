@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { OrderStatus, PaymentStatus } from "@prisma/client";
+import { OrderStatus, PaymentStatus, FulfillmentStatus, EmailStatus } from "@prisma/client";
 
 interface Order {
   id: string;
   orderNumber: string;
-  status: OrderStatus;
+  status: OrderStatus; // Deprecated, kept for backward compatibility
+  fulfillmentStatus: FulfillmentStatus; // Single source of truth
   paymentStatus: PaymentStatus;
   trackingNumber?: string | null;
   trackingUrl?: string | null;
@@ -17,6 +18,9 @@ interface Order {
   supplierOrderStatus?: string | null;
   supplierOrderId?: string | null;
   autoOrderError?: string | null;
+  customerEmailStatus?: EmailStatus;
+  customerEmailLastError?: string | null;
+  customerEmailSentAt?: Date | null;
   supplierEvents?: Array<{
     id: string;
     oldStatus: string | null;
@@ -43,16 +47,19 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
   const [success, setSuccess] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
 
-  const [status, setStatus] = useState<OrderStatus>(order.status);
+  const [fulfillmentStatus, setFulfillmentStatus] = useState<FulfillmentStatus>(
+    order.fulfillmentStatus || "NEW"
+  );
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(order.paymentStatus);
   const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || "");
   const [trackingUrl, setTrackingUrl] = useState(order.trackingUrl || "");
   const [shippingCarrier, setShippingCarrier] = useState(order.shippingCarrier || "");
   const [supplierStatus, setSupplierStatus] = useState(order.supplierOrderStatus || "PENDING");
   const [sendingSupplier, setSendingSupplier] = useState(false);
+  const [retryingEmail, setRetryingEmail] = useState(false);
 
   useEffect(() => {
-    setStatus(order.status);
+    setFulfillmentStatus(order.fulfillmentStatus || "NEW");
     setPaymentStatus(order.paymentStatus);
     setTrackingNumber(order.trackingNumber || "");
     setTrackingUrl(order.trackingUrl || "");
@@ -71,12 +78,12 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status,
+          fulfillmentStatus, // Single source of truth
           paymentStatus,
           trackingNumber: trackingNumber.trim() || null,
           trackingUrl: trackingUrl.trim() || null,
           shippingCarrier: shippingCarrier.trim() || null,
-          supplierOrderStatus: supplierStatus,
+          supplierOrderStatus: supplierStatus, // Internal note only
           notes: notes.trim() || null,
         }),
       });
@@ -135,18 +142,18 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
     }
   };
 
-  const handleSendEmail = async () => {
+  const handleRetryEmail = async () => {
     if (!order.customer?.email) {
       setError("Ingen e-postadresse registrert for kunden");
       return;
     }
 
-    setLoading(true);
+    setRetryingEmail(true);
     setError(null);
     setSuccess(null);
 
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}/send-email`, {
+      const response = await fetch(`/api/admin/orders/${order.id}/retry-email`, {
         method: "POST",
       });
 
@@ -157,13 +164,16 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
 
       const data = await response.json();
       setSuccess(data.message || "E-post sendt til kunde!");
+      router.refresh(); // Refresh to get updated email status
       setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
       setError(err.message || "Kunne ikke sende e-post");
     } finally {
-      setLoading(false);
+      setRetryingEmail(false);
     }
   };
+
+  const handleSendEmail = handleRetryEmail; // Alias for backward compatibility
 
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString("no-NO", {
@@ -194,24 +204,51 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
         )}
 
         <div className="space-y-4">
-          {/* Status */}
+          {/* Fulfillment Status - Single source of truth */}
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-              Ordre status
+            <label htmlFor="fulfillmentStatus" className="block text-sm font-medium text-gray-700 mb-1">
+              Oppfyllelsesstatus
             </label>
             <select
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as OrderStatus)}
+              id="fulfillmentStatus"
+              value={fulfillmentStatus}
+              onChange={(e) => setFulfillmentStatus(e.target.value as FulfillmentStatus)}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
             >
-              <option value="pending">Venter</option>
-              <option value="paid">Betalt</option>
-              <option value="processing">Behandles</option>
-              <option value="shipped">Sendt</option>
-              <option value="delivered">Levert</option>
-              <option value="cancelled">Kansellert</option>
+              <option value="NEW">NY</option>
+              <option value="ORDERED_FROM_SUPPLIER">Bestilt hos leverandør</option>
+              <option value="SHIPPED">Sendt</option>
+              <option value="DELIVERED">Fullført</option>
+              <option value="CANCELLED">Kansellert</option>
             </select>
+          </div>
+
+          {/* Quick action buttons */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setFulfillmentStatus("ORDERED_FROM_SUPPLIER")}
+              className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700"
+            >
+              Marker som bestilt
+            </button>
+            <button
+              onClick={() => setFulfillmentStatus("SHIPPED")}
+              className="rounded-lg bg-indigo-600 px-3 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+            >
+              Marker som sendt
+            </button>
+            <button
+              onClick={() => setFulfillmentStatus("DELIVERED")}
+              className="rounded-lg bg-green-600 px-3 py-2 text-xs font-medium text-white hover:bg-green-700"
+            >
+              Marker som fullført
+            </button>
+            <button
+              onClick={() => setFulfillmentStatus("CANCELLED")}
+              className="rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white hover:bg-red-700"
+            >
+              Avbryt ordre
+            </button>
           </div>
 
           {/* Betalingsstatus */}
@@ -335,6 +372,48 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
             />
           </div>
 
+          {/* Email Status */}
+          {order.customer?.email && (
+            <div className="rounded-lg border border-gray-200 p-3 bg-slate-50">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-medium text-gray-700">
+                  E-post status
+                </label>
+                <span className={`rounded-full px-2 py-1 text-xs font-medium ${
+                  order.customerEmailStatus === "SENT" 
+                    ? "bg-green-100 text-green-800"
+                    : order.customerEmailStatus === "FAILED"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}>
+                  {order.customerEmailStatus === "SENT" 
+                    ? "✓ Sendt"
+                    : order.customerEmailStatus === "FAILED"
+                    ? "✗ Feilet"
+                    : "Ikke sendt"}
+                </span>
+              </div>
+              {order.customerEmailSentAt && (
+                <p className="text-xs text-gray-600 mb-1">
+                  Sendt: {formatDate(order.customerEmailSentAt)}
+                </p>
+              )}
+              {order.customerEmailLastError && (
+                <p className="text-xs text-red-600 mb-2 break-words">
+                  Feil: {order.customerEmailLastError.substring(0, 100)}
+                  {order.customerEmailLastError.length > 100 ? "..." : ""}
+                </p>
+              )}
+              <button
+                onClick={handleRetryEmail}
+                disabled={retryingEmail}
+                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                {retryingEmail ? "Sender..." : "Send ordrebekreftelse på nytt"}
+              </button>
+            </div>
+          )}
+
           {/* Knapper */}
           <div className="space-y-2 pt-2">
             <button
@@ -344,16 +423,6 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
             >
               {loading ? "Oppdaterer..." : "Oppdater ordre"}
             </button>
-
-            {order.customer?.email && (
-              <button
-                onClick={handleSendEmail}
-                disabled={loading}
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                Send e-post til kunde
-              </button>
-            )}
           </div>
         </div>
       </div>

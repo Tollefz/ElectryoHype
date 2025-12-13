@@ -63,7 +63,7 @@ export default function ProductTabs({ description, specifications }: ProductTabs
                 <div className="space-y-2">
                   <div className="flex border-b py-2">
                     <span className="w-1/3 font-semibold">Merke</span>
-                    <span className="w-2/3 text-gray-medium">ElektroHype</span>
+                    <span className="w-2/3 text-gray-medium">ElectroHypeX</span>
                   </div>
                   <div className="flex border-b py-2">
                     <span className="w-1/3 font-semibold">Garanti</span>

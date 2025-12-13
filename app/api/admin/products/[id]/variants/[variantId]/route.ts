@@ -25,7 +25,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Variant ikke funnet" }, { status: 404 });
     }
 
-    // Validate and normalize color attributes (Electrohype policy: only black)
+    // Validate and normalize color attributes (ElectroHypeX policy: only black)
     let validatedAttributes = variant.attributes as Record<string, any>;
     if (body.attributes !== undefined) {
       try {

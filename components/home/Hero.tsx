@@ -16,7 +16,7 @@ export function Hero() {
           <p className="inline-block rounded-full bg-white/20 px-4 py-1 text-sm font-semibold uppercase tracking-widest backdrop-blur-sm">
             Elektronikk & Tilbehør
           </p>
-          <h1 className="text-4xl font-bold md:text-6xl">Velkommen til ElektroHype</h1>
+          <h1 className="text-4xl font-bold md:text-6xl">Velkommen til ElectroHypeX</h1>
           <p className="text-xl text-white/95">
             Oppdag vårt store utvalg av iPhone-tilbehør og elektronikk. Kvalitetsprodukter til gode priser med rask levering.
           </p>

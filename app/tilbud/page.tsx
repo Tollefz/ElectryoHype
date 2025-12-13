@@ -9,14 +9,14 @@ import type { Metadata } from "next";
 // ISR: Revalidate every 60 seconds
 export const revalidate = 60;
 
-const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
 
 export const metadata: Metadata = {
-  title: "Tilbud - ElektroHype",
+  title: "Tilbud - ElectroHypeX",
   description: "Se våre beste tilbud på elektronikk, gaming-utstyr og mobil. Spesialpriser og rabatter på utvalgte produkter.",
   keywords: ["tilbud", "rabatt", "elektronikk", "gaming", "mobil", "Norge", "nettbutikk"],
   openGraph: {
-    title: "Tilbud - ElektroHype",
+    title: "Tilbud - ElectroHypeX",
     description: "Se våre beste tilbud på elektronikk, gaming-utstyr og mobil.",
     type: "website",
     url: `${baseUrl}/tilbud`,
@@ -100,7 +100,7 @@ export default async function TilbudPage() {
     : 0;
 
   return (
-    <main className="min-h-screen bg-slate-50 py-6 sm:py-8 lg:py-10">
+    <main className="min-h-screen bg-slate-50 py-6 sm:py-8 lg:py-7">
       <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="mb-6 text-sm text-gray-medium">
@@ -139,7 +139,7 @@ export default async function TilbudPage() {
             <p className="mb-6 text-sm">{loadError}</p>
           </div>
         ) : actualDiscounted.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {actualDiscounted.map((product) => {
               const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images || [];
 
@@ -185,7 +185,7 @@ export default async function TilbudPage() {
 
         {/* Call to action */}
         {actualDiscounted.length > 0 && (
-          <section className="mt-8 sm:mt-12 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 p-6 sm:p-8 lg:p-10 text-center text-white">
+          <section className="mt-6 sm:mt-8 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 p-6 sm:p-8 lg:p-10 text-center text-white">
             <h2 className="mb-2 text-xl sm:text-2xl lg:text-3xl font-bold">Glemt å sjekke noe?</h2>
             <p className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-300">
               Se vårt fulle utvalg av elektronikk og tech-produkter

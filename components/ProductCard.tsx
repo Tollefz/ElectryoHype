@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { cleanProductName } from '@/lib/utils/url-decode';
 import { getCategoryByDbValue } from '@/lib/categories';
+import toast from 'react-hot-toast';
 
 interface ProductCardProps {
   product: any;
@@ -36,7 +37,6 @@ function ProductCard({ product }: ProductCardProps) {
       images = product.images;
     }
   } catch (error) {
-    console.error('Failed to parse images:', error);
     images = [];
   }
 
@@ -97,6 +97,9 @@ function ProductCard({ product }: ProductCardProps) {
     };
     
     addToCart(cartItem, 1);
+    toast.success(`${cleanedName} lagt i handlekurv!`, {
+      icon: '🛒',
+    });
   };
 
   // Beregn rabatt
@@ -222,7 +225,7 @@ function ProductCard({ product }: ProductCardProps) {
 
           {/* Leveringsinfo - skjul på mobil */}
           <p className="mt-2 hidden text-center text-xs font-medium text-green-600 sm:block">
-            ✓ På lager - Sendes i dag
+            ✓ Tilgjengelig – 5–12 virkedager
           </p>
         </div>
       </div>

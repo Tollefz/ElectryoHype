@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
-import { PaymentMethod, OrderStatus, PaymentStatus } from "@prisma/client";
+import { PaymentMethod, OrderStatus, PaymentStatus, FulfillmentStatus } from "@prisma/client";
 import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { safeQuery } from "@/lib/safeQuery";
 
@@ -14,12 +14,15 @@ export async function POST(req: Request) {
     const storeId = await getStoreIdFromHeadersServer();
     
     // Sjekk og valider Stripe keys
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim();
+    let stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim() || "";
+    
+    // Remove extra quotes if present
+    stripeSecretKey = stripeSecretKey.replace(/^["']+|["']+$/g, "").trim();
     
     if (!stripeSecretKey) {
       console.error("❌ STRIPE_SECRET_KEY is not set in environment variables");
       return NextResponse.json(
-        { error: "Stripe er ikke konfigurert. STRIPE_SECRET_KEY mangler i .env filen." },
+        { error: "Betalingssystemet er ikke konfigurert. Kontakt kundeservice." },
         { status: 500 }
       );
     }
@@ -33,12 +36,7 @@ export async function POST(req: Request) {
       });
       return NextResponse.json(
         { 
-          error: "Ugyldig Stripe secret key format. Key må starte med 'sk_test_' (test) eller 'sk_live_' (produksjon).",
-          hint: "Sjekk at du har kopiert hele key-en fra Stripe Dashboard uten mellomrom eller linjeskift.",
-          debug: process.env.NODE_ENV === "development" ? {
-            keyLength: stripeSecretKey.length,
-            firstChars: stripeSecretKey.substring(0, 10) + "...",
-          } : undefined,
+          error: "Betalingssystemet er ikke konfigurert. Kontakt kundeservice.",
         },
         { status: 500 }
       );
@@ -180,7 +178,9 @@ export async function POST(req: Request) {
         }),
         paymentMethod: PaymentMethod.stripe, // PaymentMethod enum: stripe, vipps, klarna, paypal
         paymentStatus: PaymentStatus.pending,
-        status: OrderStatus.pending,
+        status: OrderStatus.pending, // Keep for backward compatibility
+        fulfillmentStatus: FulfillmentStatus.NEW, // Single source of truth
+        customerEmailStatus: "NOT_SENT", // Will be updated by email function
         orderItems: {
           create: orderItemsCreate,
         },

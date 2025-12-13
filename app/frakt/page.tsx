@@ -65,19 +65,19 @@ export default function FraktPage() {
             <div className="rounded-lg border border-gray-border p-4">
               <div className="mb-2 flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-brand" />
-                <h3 className="font-semibold text-dark">1-3 virkedager</h3>
+                <h3 className="font-semibold text-dark">5–12 virkedager</h3>
               </div>
               <p className="text-gray-medium">
-                Standard leveringstid for produkter på lager. Leveringstid regnes fra ordrebehandling.
+                Estimert leveringstid fra ordrebehandling. Ordrene behandles manuelt etter betaling.
               </p>
             </div>
             <div className="rounded-lg border border-gray-border p-4">
               <div className="mb-2 flex items-center gap-2">
                 <Package className="h-5 w-5 text-brand" />
-                <h3 className="font-semibold text-dark">På lager</h3>
+                <h3 className="font-semibold text-dark">Manuell behandling</h3>
               </div>
               <p className="text-gray-medium">
-                Produkter merket "På lager" sendes vanligvis samme eller neste virkedag.
+                Alle ordrer behandles manuelt av ElectroHypeX. Du mottar sporingsinformasjon når pakken er sendt.
               </p>
             </div>
           </div>

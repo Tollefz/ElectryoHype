@@ -25,7 +25,9 @@ const stripePromise = getStripeKey() ? loadStripe(getStripeKey()!) : null;
 const infoSchema = z.object({
   email: z.string().email("Ugyldig e-post"),
   fullName: z.string().min(2, "Navn er påkrevd"),
-  phone: z.string().optional(),
+  phone: z.string().optional().refine((val) => !val || val.length >= 8, {
+    message: "Telefonnummer må være minst 8 siffer",
+  }),
 });
 
 const addressSchema = z.object({
@@ -165,7 +167,7 @@ export default function CheckoutPage() {
     defaultValues: { country: "NO" },
   });
 
-  const shippingCost = shippingMethod === "standard" ? (total >= 500 ? 0 : 0) : 99;
+  const shippingCost = shippingMethod === "standard" ? (total >= 500 ? 0 : 99) : 199;
   const grandTotal = Math.max(0, total + shippingCost - discountAmount);
 
   useEffect(() => {
@@ -244,7 +246,6 @@ export default function CheckoutPage() {
     if (paymentMethod !== "card") {
       // For andre betalingsmetoder, gå direkte til bekreftelse
       // Dette kan utvides senere
-      console.log("⚠️ Payment method not implemented yet:", paymentMethod);
       clearCart();
       router.push("/order-confirmation");
       return;
@@ -258,12 +259,6 @@ export default function CheckoutPage() {
       const infoData = infoForm.getValues();
       const addressData = addressForm.getValues();
 
-      console.log("🚀 Creating payment intent...", {
-        itemsCount: items.length,
-        total: grandTotal,
-        shippingCost,
-        customerEmail: infoData.email,
-      });
 
       // Valider at vi har all nødvendig data
       if (!infoData.email || !infoData.fullName) {
@@ -320,11 +315,6 @@ export default function CheckoutPage() {
         throw new Error("Mottok ikke betalingsnøkkel fra server");
       }
 
-      console.log("✅ Payment intent created successfully:", {
-        orderNumber: data.orderNumber,
-        orderId: data.orderId,
-        hasClientSecret: !!data.clientSecret,
-      });
 
       setClientSecret(data.clientSecret);
       setOrderId(data.orderId);
@@ -349,51 +339,52 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="container py-10">
-      <h1 className="text-3xl font-bold text-slate-900">Checkout</h1>
-      <div className="my-8 flex gap-4 text-sm font-semibold text-secondary">
+    <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+      <h1 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900">Checkout</h1>
+      <div className="mb-8 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium">
         {["Informasjon", "Levering", "Leveringsmetode", "Betaling", "Bekreftelse"].map((label, index) => (
           <div key={label} className="flex items-center gap-2">
             <span
-              className={`flex h-8 w-8 items-center justify-center rounded-full border ${
+              className={`flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold transition-all ${
                 step > index + 1
-                  ? "border-primary bg-primary text-white"
+                  ? "border-green-600 bg-green-600 text-white"
                   : step === index + 1
-                    ? "border-primary text-primary"
-                    : "border-slate-200"
+                    ? "border-green-600 bg-green-50 text-green-600"
+                    : "border-gray-300 bg-white text-gray-400"
               }`}
             >
               {index + 1}
             </span>
-            <span className={step === index + 1 ? "text-primary" : ""}>{label}</span>
+            <span className={`hidden sm:inline ${step === index + 1 ? "text-green-600 font-semibold" : step > index + 1 ? "text-gray-600" : "text-gray-400"}`}>{label}</span>
           </div>
         ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[2fr,1fr]">
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.2fr,0.8fr]">
         <div className="space-y-6">
           {/* Rabattkode */}
-          <div className="rounded-3xl border bg-white p-6 shadow-card space-y-3">
-            <h2 className="text-xl font-semibold text-slate-900">Rabattkode</h2>
+          <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-3">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Rabattkode</h2>
             <p className="text-sm text-gray-600">Har du en kode? Legg den inn her.</p>
             <div className="flex gap-2">
               <Input
                 value={discountCode}
                 onChange={(e) => setDiscountCode(e.target.value)}
                 placeholder="Rabattkode"
+                className="flex-1"
               />
-              <Button type="button" onClick={applyDiscount}>
+              <Button type="button" onClick={applyDiscount} className="bg-green-600 hover:bg-green-700 text-white">
                 Aktiver
               </Button>
             </div>
-            {discountMessage && <p className="text-sm text-green-700">{discountMessage}</p>}
+            {discountMessage && <p className="text-sm text-green-700 font-medium">{discountMessage}</p>}
           </div>
           {step === 1 && (
             <form
-              className="rounded-3xl border bg-white p-6 shadow-card space-y-4"
+              className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-4"
               onSubmit={infoForm.handleSubmit(handleInfoSubmit)}
             >
-              <h2 className="text-xl font-semibold text-slate-900">Kundeinformasjon</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Kundeinformasjon</h2>
               <Input
                 type="email"
                 placeholder="E-post *"
@@ -415,7 +406,7 @@ export default function CheckoutPage() {
                 placeholder="Telefon"
                 {...infoForm.register("phone")}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
                 Fortsett til levering
               </Button>
             </form>
@@ -423,10 +414,10 @@ export default function CheckoutPage() {
 
           {step === 2 && (
             <form
-              className="rounded-3xl border bg-white p-6 shadow-card space-y-4"
+              className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-4"
               onSubmit={addressForm.handleSubmit(handleAddressSubmit)}
             >
-              <h2 className="text-xl font-semibold text-slate-900">Leveringsadresse</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Leveringsadresse</h2>
               <Input
                 type="text"
                 placeholder="Adresse *"
@@ -470,15 +461,15 @@ export default function CheckoutPage() {
                 <option value="SE">Sverige</option>
                 <option value="DK">Danmark</option>
               </select>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
                 Fortsett til leveringsmetode
               </Button>
             </form>
           )}
 
           {step === 3 && (
-            <div className="space-y-4 rounded-3xl border bg-white p-6 shadow-card">
-              <h2 className="text-xl font-semibold text-slate-900">Leveringsmetode</h2>
+            <div className="space-y-4 rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Leveringsmetode</h2>
               <div className="space-y-3">
                 <label className="flex cursor-pointer items-center gap-3 rounded-2xl border p-4">
                   <input
@@ -505,15 +496,15 @@ export default function CheckoutPage() {
                   </div>
                 </label>
               </div>
-              <Button className="w-full" onClick={handleShippingMethod}>
+              <Button className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={handleShippingMethod}>
                 Fortsett til betaling
               </Button>
             </div>
           )}
 
           {step === 4 && (
-            <div className="space-y-4 rounded-3xl border bg-white p-6 shadow-card">
-              <h2 className="text-xl font-semibold text-slate-900">Betaling</h2>
+            <div className="space-y-4 rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Betaling</h2>
               
               {error && (
                 <div className="rounded-lg bg-red-50 p-4 text-sm text-red-600 whitespace-pre-line">
@@ -553,7 +544,7 @@ export default function CheckoutPage() {
                 ))}
               </div>
               <Button
-                className="w-full"
+                className="w-full bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
                 onClick={handlePaymentMethod}
                 disabled={loading || stripeKeyStatus === "missing" || paymentMethod !== "card"}
               >
@@ -570,8 +561,8 @@ export default function CheckoutPage() {
           )}
 
           {step === 5 && clientSecret && (
-            <div className="rounded-3xl border bg-white p-6 shadow-card">
-              <h2 className="mb-4 text-xl font-semibold text-slate-900">Betal med kort</h2>
+            <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
+              <h2 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900">Betal med kort</h2>
               {!stripePromise ? (
                 <div className="rounded-lg bg-red-50 p-4 text-red-600">
                   ❌ Stripe er ikke konfigurert. NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY mangler.
@@ -601,8 +592,8 @@ export default function CheckoutPage() {
           )}
         </div>
 
-        <aside className="space-y-4 rounded-3xl border bg-white p-6 shadow-card">
-          <h2 className="text-xl font-semibold text-slate-900">Ordresammendrag</h2>
+        <aside className="lg:sticky lg:top-24 space-y-4 rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm h-fit">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Ordresammendrag</h2>
           <div className="rounded-lg border bg-gray-50 p-3 text-sm space-y-2">
             <label className="block text-sm font-medium text-slate-800">Rabattkode</label>
             <input

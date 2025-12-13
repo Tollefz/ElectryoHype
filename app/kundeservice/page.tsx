@@ -35,8 +35,8 @@ export default function KundeservicePage() {
             <Mail className="mx-auto mb-4 h-12 w-12 text-brand" />
             <h3 className="mb-2 font-bold text-dark">E-post</h3>
             <p className="mb-4 text-sm text-gray-medium">Svar innen 24 timer</p>
-            <a href="mailto:hei@elektrohype.no" className="text-lg font-semibold text-brand hover:underline">
-              hei@elektrohype.no
+            <a href="mailto:support@electrohypex.com" className="text-lg font-semibold text-brand hover:underline">
+              support@electrohypex.com
             </a>
           </div>
 

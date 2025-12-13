@@ -114,17 +114,37 @@ export default function OrderConfirmationEmail({
 
           <Hr style={styles.hr} />
 
-          <Text style={styles.text}>
-            Vi behandler din ordre nå og sender deg sporingsinformasjon så snart pakken er sendt.
-          </Text>
+          <Section style={styles.infoBox}>
+            <Text style={styles.infoText}>
+              <strong>Viktig informasjon om ordrebehandling:</strong>
+            </Text>
+            <Text style={styles.infoText}>
+              Din ordre blir behandlet manuelt av ElectroHypeX. Vi sender deg sporingsinformasjon så snart pakken er sendt.
+            </Text>
+            <Text style={styles.infoText}>
+              <strong>Forventet leveringstid:</strong> 5-12 virkedager fra ordrebehandling.
+            </Text>
+          </Section>
 
           <Text style={styles.text}>
-            Forventet leveringstid: 5-7 virkedager
+            Har du spørsmål om din ordre? Kontakt oss på{' '}
+            <a href="mailto:support@electrohypex.com" style={styles.link}>
+              support@electrohypex.com
+            </a>
+            {' '}eller se{' '}
+            <a href={`${process.env.NEXTAUTH_URL || 'https://www.electrohypex.com'}/vilkar`} style={styles.link}>
+              vilkår og betingelser
+            </a>
+            {' '}og{' '}
+            <a href={`${process.env.NEXTAUTH_URL || 'https://www.electrohypex.com'}/retur`} style={styles.link}>
+              returrett
+            </a>
+            .
           </Text>
 
           <Text style={styles.footer}>
             Med vennlig hilsen,<br />
-            <strong>Electrohype</strong>
+            <strong>ElectroHypeX AS</strong>
           </Text>
         </Container>
       </Body>
@@ -196,6 +216,23 @@ const styles = {
     fontSize: '16px',
     fontWeight: 'bold',
     margin: '8px 0',
+  },
+  infoBox: {
+    backgroundColor: '#f3f4f6',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    padding: '16px',
+    margin: '24px 40px',
+  },
+  infoText: {
+    color: '#4b5563',
+    fontSize: '14px',
+    lineHeight: '20px',
+    margin: '8px 0',
+  },
+  link: {
+    color: '#059669',
+    textDecoration: 'underline',
   },
   footer: {
     color: '#6b7280',

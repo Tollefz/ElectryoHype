@@ -273,6 +273,15 @@ export default function OrderConfirmationClient() {
             )}
           </div>
 
+          {/* Manual Fulfillment Disclosure */}
+          <div className="mb-6 rounded-lg bg-blue-900/30 border border-blue-500/30 p-4">
+            <h3 className="text-sm font-semibold text-blue-200 mb-2">Viktig informasjon</h3>
+            <p className="text-xs text-blue-100">
+              Din ordre blir behandlet <strong>manuelt</strong> av ElectroHypeX. Vi sender deg sporingsinformasjon så snart pakken er sendt. 
+              Forventet leveringstid: <strong>5-12 virkedager</strong> fra ordrebehandling.
+            </p>
+          </div>
+
           {/* Next Steps */}
           <div className="mb-8 rounded-2xl bg-gray-900 border border-green-600/20 p-6">
             <h2 className="mb-4 text-xl font-semibold text-white">Hva skjer nå?</h2>
@@ -293,8 +302,8 @@ export default function OrderConfirmationClient() {
                   <Package size={20} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">2. Vi behandler din ordre</h3>
-                  <p className="text-sm text-gray-300">Ordren din blir behandlet og pakket</p>
+                  <h3 className="font-semibold text-white">2. Vi behandler din ordre manuelt</h3>
+                  <p className="text-sm text-gray-300">Ordren din blir behandlet og pakket av vårt team</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -304,7 +313,7 @@ export default function OrderConfirmationClient() {
                 <div>
                   <h3 className="font-semibold text-white">3. Pakken sendes</h3>
                   <p className="text-sm text-gray-300">
-                    Du får sporingsinformasjon når pakken er sendt (5-7 virkedager)
+                    Du får sporingsinformasjon når pakken er sendt (estimert 5-12 virkedager)
                   </p>
                 </div>
               </div>

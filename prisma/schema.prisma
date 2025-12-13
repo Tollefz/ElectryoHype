@@ -57,6 +57,20 @@ enum SupplierName {
   temu
 }
 
+enum FulfillmentStatus {
+  NEW
+  ORDERED_FROM_SUPPLIER
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum EmailStatus {
+  NOT_SENT
+  SENT
+  FAILED
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -143,42 +157,51 @@ model ProductVariant {
 }
 
 model Order {
-  id                  String         @id @default(cuid())
-  orderNumber         String         @unique
-  storeId             String?
-  customerId          String?
-  customer            Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  placedById          String?
-  placedBy            User?          @relation(fields: [placedById], references: [id], onDelete: SetNull)
-  status              OrderStatus    @default(pending)
-  items               Json
-  orderItems          OrderItem[]
-  subtotal            Float
-  shippingCost        Float
-  tax                 Float
-  total               Float
-  shippingAddress     Json
-  paymentMethod       PaymentMethod?
-  paymentStatus       PaymentStatus  @default(pending)
-  paymentIntentId     String?
-  stripeSessionId     String?        // Stripe Checkout Session ID
-  customerEmail       String?        // Customer email from checkout
-  supplierOrderId     String?
-  supplierOrderStatus SupplierOrderStatus? @default(PENDING)
-  autoOrderAttempts   Int            @default(0)
-  autoOrderError      String?
-  trackingNumber      String?
-  trackingUrl         String?
-  shippingCarrier     String?
-  supplierEvents      SupplierOrderEvent[]
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
+  id                     String               @id @default(cuid())
+  orderNumber            String               @unique
+  storeId                String?
+  customerId             String?
+  customer               Customer?            @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  placedById             String?
+  placedBy               User?                @relation(fields: [placedById], references: [id], onDelete: SetNull)
+  status                 OrderStatus          @default(pending) // DEPRECATED: Use fulfillmentStatus instead. Kept for backward compatibility.
+  fulfillmentStatus      FulfillmentStatus    @default(NEW) // Single source of truth for order fulfillment
+  items                  Json
+  orderItems             OrderItem[]
+  subtotal               Float
+  shippingCost           Float
+  tax                    Float
+  total                  Float
+  shippingAddress        Json
+  paymentMethod          PaymentMethod?
+  paymentStatus          PaymentStatus        @default(pending)
+  paymentIntentId        String?
+  stripeSessionId        String?              @unique // Stripe Checkout Session ID (unique to prevent duplicate orders)
+  customerEmail          String? // Customer email from checkout
+  customerEmailStatus    EmailStatus          @default(NOT_SENT) // Email delivery status
+  customerEmailLastError String? // Last error message if email failed (max 500 chars)
+  customerEmailSentAt    DateTime? // When email was successfully sent
+  adminEmailStatus       EmailStatus? // Admin notification email status (optional)
+  adminEmailSentAt       DateTime? // When admin email was sent
+  supplierOrderId        String?
+  supplierOrderStatus    SupplierOrderStatus? @default(PENDING) // Internal note only, not used for UI truth
+  autoOrderAttempts      Int                  @default(0)
+  autoOrderError         String?
+  trackingNumber         String?
+  trackingUrl            String?
+  shippingCarrier        String?
+  supplierEvents         SupplierOrderEvent[]
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
 
   @@index([customerId])
-  @@index([status, createdAt])
+  @@index([status, createdAt]) // Keep for backward compatibility
+  @@index([fulfillmentStatus, createdAt]) // Primary index for filtering
   @@index([paymentStatus])
   @@index([supplierOrderId])
   @@index([storeId])
+  @@index([stripeSessionId])
+  @@index([customerEmailStatus]) // For filtering orders with failed emails
 }
 
 model OrderItem {
@@ -200,13 +223,13 @@ model OrderItem {
 }
 
 model SupplierOrderEvent {
-  id          String              @id @default(cuid())
-  orderId     String
-  oldStatus   SupplierOrderStatus?
-  newStatus   SupplierOrderStatus
-  metadata    Json?
-  createdAt   DateTime            @default(now())
-  order       Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id        String               @id @default(cuid())
+  orderId   String
+  oldStatus SupplierOrderStatus?
+  newStatus SupplierOrderStatus
+  metadata  Json?
+  createdAt DateTime             @default(now())
+  order     Order                @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
   @@index([newStatus, createdAt])
@@ -236,66 +259,66 @@ model AbandonedCart {
 }
 
 model DiscountCode {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  percentOff  Float?
-  amountOff   Float?
-  usageLimit  Int?
-  timesUsed   Int      @default(0)
-  storeId     String?
-  expiresAt   DateTime?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String    @id @default(cuid())
+  code       String    @unique
+  percentOff Float?
+  amountOff  Float?
+  usageLimit Int?
+  timesUsed  Int       @default(0)
+  storeId    String?
+  expiresAt  DateTime?
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@index([storeId])
   @@index([isActive, expiresAt])
 }
 
 model PushSubscription {
-  id        String   @id @default(cuid())
-  endpoint  String   @unique
-  keys      Json?
+  id         String   @id @default(cuid())
+  endpoint   String   @unique
+  keys       Json?
   customerId String?
-  storeId   String?
-  createdAt DateTime @default(now())
+  storeId    String?
+  createdAt  DateTime @default(now())
 
   @@index([storeId])
 }
 
 model Affiliate {
-  id         String   @id @default(cuid())
-  code       String   @unique
-  name       String?
-  ratePercent Float   @default(10)
-  storeId    String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String?
+  ratePercent Float    @default(10)
+  storeId     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  clicks     AffiliateClick[]
-  orders     AffiliateOrder[]
+  clicks AffiliateClick[]
+  orders AffiliateOrder[]
 
   @@index([storeId])
 }
 
 model AffiliateClick {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   affiliateId String
   affiliate   Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
   ip          String?
   userAgent   String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
 
   @@index([affiliateId])
 }
 
 model AffiliateOrder {
-  id             String    @id @default(cuid())
-  affiliateId    String
-  affiliate      Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
-  orderId        String
-  commissionAmount Float   @default(0)
-  createdAt      DateTime  @default(now())
+  id               String    @id @default(cuid())
+  affiliateId      String
+  affiliate        Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  orderId          String
+  commissionAmount Float     @default(0)
+  createdAt        DateTime  @default(now())
 
   @@index([affiliateId])
   @@index([orderId])

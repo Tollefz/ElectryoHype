@@ -7,6 +7,7 @@ import { CartProvider } from "@/lib/cart-context";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import RefTracker from "./RefTracker";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,11 +15,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ElektroHype - Norges beste elektronikkbutikk",
+  title: "ElectroHypeX - Norges beste elektronikkbutikk",
   description: "Kjøp elektronikk, gaming og tech til gode priser. Gratis frakt over 500kr. Rask levering i hele Norge.",
   keywords: ["elektronikk", "gaming", "tech", "nettbutikk", "Norge", "elektronikkbutikk"],
   openGraph: {
-    title: "ElektroHype - Norges beste elektronikkbutikk",
+    title: "ElectroHypeX - Norges beste elektronikkbutikk",
     description: "Kjøp elektronikk, gaming og tech til gode priser. Gratis frakt over 500kr.",
     type: "website",
     locale: "no_NO",
@@ -48,6 +49,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
+            <Toaster 
+              position="top-right"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: '#10b981',
+                  color: '#fff',
+                },
+                success: {
+                  iconTheme: {
+                    primary: '#fff',
+                    secondary: '#10b981',
+                  },
+                },
+              }}
+            />
           </CartProvider>
         </ThemeProvider>
       </body>

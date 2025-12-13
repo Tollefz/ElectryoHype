@@ -1,4 +1,4 @@
-# ElektroHype - E-commerce Platform
+# ElectroHypeX - E-commerce Platform
 
 En moderne, fullverdig e-commerce plattform bygget med Next.js 16, Prisma, Neon PostgreSQL, og Stripe. Plattformen støtter dropshipping, multi-store funksjonalitet, og komplett admin-dashboard.
 

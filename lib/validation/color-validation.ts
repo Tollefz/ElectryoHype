@@ -1,5 +1,5 @@
 /**
- * Color validation for Electrohype
+ * Color validation for ElectroHypeX
  * 
  * Policy: Only BLACK/SVART colors are allowed for product variants
  */
@@ -62,7 +62,7 @@ export function validateAndNormalizeColor(color: string | null | undefined): str
   
   // Color is specified but not black - this is an error
   throw new Error(
-    `Electrohype policy: Only BLACK/SVART colors are allowed. ` +
+    `ElectroHypeX policy: Only BLACK/SVART colors are allowed. ` +
     `Received color: "${normalized}". Please use "Svart" or "Black" instead.`
   );
 }

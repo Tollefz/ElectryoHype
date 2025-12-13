@@ -80,7 +80,7 @@ export default function OrderShippedEmail({
 
           <Text style={styles.footer}>
             Med vennlig hilsen,<br />
-            <strong>Electrohype</strong>
+            <strong>ElectroHypeX</strong>
           </Text>
         </Container>
       </Body>

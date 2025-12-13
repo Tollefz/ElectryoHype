@@ -13,31 +13,31 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 // ISR: Revalidate every 60 seconds
 export const revalidate = 60;
 
-const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
 
 export const metadata: Metadata = {
-  title: "ElektroHype - Beste elektronikk til beste priser",
+  title: "ElectroHypeX - Beste elektronikk til beste priser",
   description: "Kjøp elektronikk, gaming-utstyr, mobil og tilbehør til beste priser. Gratis frakt over 500 kr. Rask levering i hele Norge.",
   keywords: ["elektronikk", "gaming", "mobil", "tilbehør", "Norge", "nettbutikk", "elektronikkbutikk"],
   openGraph: {
-    title: "ElektroHype - Beste elektronikk til beste priser",
+    title: "ElectroHypeX - Beste elektronikk til beste priser",
     description: "Kjøp elektronikk, gaming-utstyr, mobil og tilbehør til beste priser. Gratis frakt over 500 kr.",
     type: "website",
     url: baseUrl,
-    siteName: "ElektroHype",
+    siteName: "ElectroHypeX",
     images: [
       {
         url: `${baseUrl}/og-image.jpg`, // TODO: Legg til faktisk OG image
         width: 1200,
         height: 630,
-        alt: "ElektroHype - Elektronikkbutikk",
+        alt: "ElectroHypeX - Elektronikkbutikk",
       }
     ],
     locale: "nb_NO",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ElektroHype - Beste elektronikk til beste priser",
+    title: "ElectroHypeX - Beste elektronikk til beste priser",
     description: "Kjøp elektronikk, gaming-utstyr, mobil og tilbehør til beste priser.",
   },
   alternates: {
@@ -317,42 +317,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* USP BAR */}
-      <section className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Truck className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
-              <div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-900">Fri frakt</p>
-                <p className="text-[10px] sm:text-xs text-gray-600">Over 500,-</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
-              <div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-900">Trygg handel</p>
-                <p className="text-[10px] sm:text-xs text-gray-600">Sikker betaling</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <CreditCard className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
-              <div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-900">Delbetaling</p>
-                <p className="text-[10px] sm:text-xs text-gray-600">Med Klarna</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Headphones className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
-              <div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-900">Kundeservice</p>
-                <p className="text-[10px] sm:text-xs text-gray-600">Man-Fre 09-18</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* MEST POPULÆRE KATEGORIER */}
       <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
@@ -401,6 +365,42 @@ export default async function HomePage() {
               <p>Ingen kategorier tilgjengelig for øyeblikket.</p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* USP BAR */}
+      <section className="mt-8 sm:mt-10 border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Truck className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
+              <div>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Fri frakt</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Over 500,-</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
+              <div>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Trygg handel</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Sikker betaling</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <CreditCard className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
+              <div>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Delbetaling</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Med Klarna</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Headphones className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
+              <div>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">Kundeservice</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Man-Fre 09-18</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

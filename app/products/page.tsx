@@ -12,14 +12,14 @@ import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { getCategoryBySlug, getAllCategorySlugs, CATEGORY_DEFINITIONS } from "@/lib/categories";
 import type { Metadata } from "next";
 
-const baseUrl = process.env.NEXTAUTH_URL || "https://elektrohype.no";
+const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
 
 export async function generateMetadata({ searchParams }: ProductsPageProps): Promise<Metadata> {
   const params = await getParams(searchParams);
   const categorySlug = params.category ?? undefined;
   const categoryDef = getCategoryBySlug(categorySlug);
   const categoryName = categoryDef?.label;
-  const title = categoryName ? `${categoryName} - ElektroHype` : "Produkter - ElektroHype";
+  const title = categoryName ? `${categoryName} - ElectroHypeX` : "Produkter - ElectroHypeX";
   const description = categoryName 
     ? `Utforsk vårt utvalg av ${categoryName.toLowerCase()}. Gratis frakt over 500 kr. Rask levering i hele Norge.`
     : "Utforsk vårt utvalg av elektronikk, gaming-utstyr, mobil og tilbehør. Gratis frakt over 500 kr.";
@@ -35,7 +35,7 @@ export async function generateMetadata({ searchParams }: ProductsPageProps): Pro
       description,
       type: "website",
       url: `${baseUrl}/products${categorySlug ? `?category=${categorySlug}` : ''}`,
-      siteName: "ElektroHype",
+      siteName: "ElectroHypeX",
       locale: "nb_NO",
     },
     alternates: {
@@ -310,44 +310,41 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 <p className="font-semibold">Kunne ikke laste produkter</p>
                 <p className="text-sm">{loadError}</p>
               </div>
+            ) : products.length === 0 ? (
+              <div className="rounded-lg border border-gray-200 bg-white p-8 sm:p-12 text-center">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+                  {resolvedCategoryName
+                    ? `Ingen produkter i denne kategorien ennå`
+                    : "Ingen produkter matcher filtrene dine"}
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-6 max-w-md mx-auto">
+                  {resolvedCategoryName
+                    ? "Vi jobber med å utvide sortimentet. I mellomtiden kan du se andre kategorier."
+                    : "Prøv å justere filtrene eller søk etter noe annet."}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link
+                    href="/products"
+                    className="inline-block rounded-lg bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition-colors"
+                  >
+                    Se alle produkter
+                  </Link>
+                  {resolvedCategoryName && (
+                    <Link
+                      href="/tilbud"
+                      className="inline-block rounded-lg border-2 border-green-600 px-6 py-2.5 text-sm font-semibold text-green-600 hover:bg-green-50 transition-colors"
+                    >
+                      Se tilbud
+                    </Link>
+                  )}
+                </div>
+              </div>
             ) : (
-              <>
-                <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                {products.length === 0 && (
-                  <div className="col-span-full rounded-lg border border-gray-200 bg-white p-8 sm:p-12 text-center">
-                    <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
-                      {resolvedCategoryName
-                        ? `Ingen produkter i denne kategorien ennå`
-                        : "Ingen produkter matcher filtrene dine"}
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-600 mb-6 max-w-md mx-auto">
-                      {resolvedCategoryName
-                        ? "Vi jobber med å utvide sortimentet. I mellomtiden kan du se andre kategorier."
-                        : "Prøv å justere filtrene eller søk etter noe annet."}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Link
-                        href="/products"
-                        className="inline-block rounded-full bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition-colors"
-                      >
-                        Se alle produkter
-                      </Link>
-                      {resolvedCategoryName && (
-                        <Link
-                          href="/tilbud"
-                          className="inline-block rounded-full border-2 border-green-600 px-6 py-2.5 text-sm font-semibold text-green-600 hover:bg-green-50 transition-colors"
-                        >
-                          Se tilbud
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                )}
+              <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
-              </>
             )}
             <Suspense fallback={<div className="h-10 w-full rounded-lg bg-gray-200 animate-pulse mt-4" />}>
               <Pagination currentPage={page} totalPages={totalPages} />

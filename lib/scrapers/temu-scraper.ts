@@ -377,7 +377,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
         }
       }
       
-      // ELECTROHYPE POLICY: Only create BLACK/SVART variants
+      // ELECTROHYPEX POLICY: Only create BLACK/SVART variants
       // Filter to only black colors
       const blackColors = foundColors.filter(color => {
         const normalized = color.toLowerCase();
@@ -448,11 +448,11 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           const hasMultipleColors = allText.match(/multi.*color|several.*color|various.*color|3.*color|4.*color|5.*color/i);
           const hasSizeMention = allText.match(/small|medium|large|xl|xs|size/i);
           
-          // ELECTROHYPE POLICY: Only create BLACK variant
+          // ELECTROHYPEX POLICY: Only create BLACK variant
           // Regardless of product type, we only create a single black variant
           let commonColors = ['Svart'];
           
-          console.log(`[TemuScraper] Creating single BLACK variant (Electrohype policy: only black colors)`);
+          console.log(`[TemuScraper] Creating single BLACK variant (ElectroHypeX policy: only black colors)`);
           
           // Map colors to numbers for variant image generation (used in multiple strategies)
           const colorIndexMap: Record<string, number> = {
@@ -468,7 +468,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             'Sølv': 10,
           };
           
-          // ELECTROHYPE: Only create one black variant
+          // ELECTROHYPEX: Only create one black variant
           // Generate variant image - use first available image
           const color = 'Svart';
           let variantImage: string | undefined = undefined;
@@ -508,7 +508,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           
           console.log(`[TemuScraper] Created BLACK variant "${color}" with image: ${variantImage ? 'Yes' : 'No'}`);
         } else {
-          // Default: create at least one BLACK variant (Electrohype policy)
+          // Default: create at least one BLACK variant (ElectroHypeX policy)
           variants.push({
             name: "Svart",
             price: price.amount,
