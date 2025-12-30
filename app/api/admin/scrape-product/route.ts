@@ -1,12 +1,16 @@
+import "server-only";
+
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
+import { scrapeProduct as scrapeProductServer } from "@/lib/server/scrape-product";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
  * API route for å scrape produkter fra Alibaba, Temu eller eBay
  * POST /api/admin/scrape-product
- * Body: { url: string, supplier?: string }
+ * Body: { url: string, provider?: string }
  */
 export async function POST(req: Request) {
   const session = await getAuthSession();
@@ -15,7 +19,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { url } = await req.json();
+    const { url, provider } = await req.json();
 
     if (!url || typeof url !== "string") {
       return NextResponse.json({ error: "URL er påkrevd" }, { status: 400 });
@@ -28,44 +32,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Ugyldig URL format" }, { status: 400 });
     }
 
-    // Identifiser leverandør FØRST (uten å laste scrapers)
-    // Import ONLY from supplier-identifier which has NO Puppeteer dependencies
+    // Get supplier for error messages
     const { identifySupplier } = await import("@/lib/scrapers/supplier-identifier");
-    const supplier = identifySupplier(url);
-    
-    if (!supplier) {
-      return NextResponse.json(
-        { error: "Ustøttet leverandør. Støttede leverandører: Alibaba, Temu, eBay" },
-        { status: 400 }
-      );
-    }
+    const supplier = identifySupplier(url) || (provider?.toLowerCase() as "temu" | "alibaba" | "ebay" | undefined);
 
-    console.log(`[Scrape Product] Scraping ${supplier} produkt fra: ${url}`);
-
-    // For Temu, import ONLY TemuScraper (no Puppeteer)
-    // CRITICAL: Use dynamic import with explicit file path to avoid bundling Puppeteer
+    // Call server-only scraping function
     let result;
     try {
-      if (supplier === "temu") {
-        // Direct import of TemuScraper only - no Puppeteer loaded
-        // Use explicit relative path to ensure no bundling of other scrapers
-        console.log(`[Scrape Product] Loading TemuScraper directly (no Puppeteer)...`);
-        const temuScraperModule = await import("@/lib/scrapers/temu-scraper");
-        const TemuScraper = temuScraperModule.TemuScraper;
-        const scraper = new TemuScraper();
-        console.log(`[Scrape Product] TemuScraper loaded, starting scrape...`);
-        result = await scraper.scrapeProduct(url);
-        console.log(`[Scrape Product] Temu scrape completed`);
-        console.log(`[Scrape Product] Variants count: ${result.data?.variants?.length || 0}`);
-        if (result.data?.variants && result.data.variants.length > 0) {
-          console.log(`[Scrape Product] Variants found:`, JSON.stringify(result.data.variants.slice(0, 2), null, 2));
-        }
-      } else {
-        // Use general scrapeProduct for Alibaba/eBay (loads Puppeteer only when needed)
-        console.log(`[Scrape Product] Loading scraper for ${supplier}...`);
-        const { scrapeProduct } = await import("@/lib/scrapers");
-        result = await scrapeProduct(url);
-      }
+      result = await scrapeProductServer(url, provider);
     } catch (error) {
       console.error(`[Scrape Product] Exception during scraping:`, error);
       const errorMessage = error instanceof Error ? error.message : "Ukjent feil ved scraping";
@@ -81,22 +55,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!result.success || !result.data) {
-      const errorMessage = result.error || "Kunne ikke hente produktdata";
-      console.error(`[Scrape Product] Feil: ${errorMessage}`);
-      return NextResponse.json(
-        {
-          error: errorMessage,
-          supplier,
-          hint: supplier === "temu" 
-            ? "Temu kan være vanskelig å scrape. Prøv å kopiere URL direkte fra produktets side." 
-            : undefined,
-        },
-        { status: 500 }
-      );
-    }
-
-    const data = result.data;
+    const data = result.data!;
 
     // Konverter valuta til NOK (forenklet - burde bruke faktisk valuta-konvertering)
     const priceInNOK = data.price.currency === "USD" 
@@ -186,4 +145,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

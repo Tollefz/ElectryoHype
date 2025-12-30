@@ -6,6 +6,8 @@ import slugify from "slugify";
 import { improveTitle } from "@/lib/utils/improve-product-title";
 import { safeQuery } from "@/lib/safeQuery";
 import { DEFAULT_STORE_ID } from "@/lib/store";
+import { getProviderRegistry } from "@/lib/providers/server-only";
+import type { BulkImportResult } from "@/lib/providers";
 
 const USD_TO_NOK_RATE = 10.5;
 const PROFIT_MARGIN = 2.0; // 100% margin
@@ -15,66 +17,70 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(2, 6);
 }
 
-interface ImportResult {
-  success: boolean;
-  url: string;
-  productName?: string;
-  error?: string;
-  images?: number;
-  price?: number;
-  variants?: number;
-}
-
-async function importProduct(url: string): Promise<ImportResult> {
+async function importProduct(
+  inputUrl: string,
+  providerName?: string
+): Promise<BulkImportResult> {
   try {
-    // Identifiser leverandør FØRST (uten å laste Puppeteer)
-    const { identifySupplier } = await import("@/lib/scrapers/supplier-identifier");
-    const supplier = identifySupplier(url);
+    const registry = getProviderRegistry();
     
-    if (!supplier) {
-      return {
-        success: false,
-        url,
-        error: "Ustøttet leverandør. Støttede: Alibaba, Temu, eBay",
-      };
-    }
+    // Get provider (by name or auto-detect)
+    const provider = registry.getProviderForUrl(url, providerName);
     
-    // For Temu, import ONLY TemuScraper (no Puppeteer)
-    let scraper;
-    if (supplier === "temu") {
-      const { TemuScraper } = await import("@/lib/scrapers/temu-scraper");
-      scraper = new TemuScraper();
-    } else {
-      const { getScraperForUrl } = await import("@/lib/scrapers");
-      scraper = await getScraperForUrl(url);
-    }
-    if (!scraper) {
+    const warnings: string[] = [];
+    
+    if (!provider) {
+      const detectedProviders = registry.getAllProviders().map(p => p.getName()).join(", ");
       return {
-        success: false,
-        url,
-        error: "Ustøttet leverandør. Støttede: Alibaba, Temu, eBay",
+        inputUrl,
+        normalizedUrl: inputUrl,
+        providerUsed: "none",
+        status: "error",
+        message: `Ustøttet leverandør. Støttede: ${detectedProviders}`,
+        warnings,
       };
     }
 
-    // Scrape produktet
-    const result = await scraper.scrapeProduct(url);
+    const providerUsed = provider.getName();
 
-    if (!result.success || !result.data) {
+    // Normalize URL
+    const normalizedUrl = provider.normalizeUrl(inputUrl);
+
+    // Fetch raw product data
+    let rawProduct;
+    try {
+      rawProduct = await provider.fetchProduct(normalizedUrl);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Ukjent feil";
+      console.error(`[Bulk Import] Error fetching product from ${providerUsed}:`, {
+        url: normalizedUrl,
+        error: errorMessage,
+      });
+      
       return {
-        success: false,
-        url,
-        error: result.error || "Ukjent feil ved scraping",
+        inputUrl,
+        normalizedUrl,
+        providerUsed,
+        status: "error",
+        message: "Kunne ikke hente produktdata. Sjekk at URL-en er korrekt og at produktet eksisterer.",
+        warnings,
       };
     }
 
-    const data = result.data;
+    // Check for warnings in raw product metadata
+    if (rawProduct.metadata?.warnings && Array.isArray(rawProduct.metadata.warnings)) {
+      warnings.push(...rawProduct.metadata.warnings);
+    }
 
-    // Sjekk om produktet allerede eksisterer
+    // Map to our product format
+    const data = provider.mapToProduct(rawProduct, normalizedUrl);
+
+    // Sjekk om produktet allerede eksisterer (bruk normalisert URL)
     const existing = await safeQuery(
       () =>
         prisma.product.findFirst({
           where: {
-            supplierUrl: url,
+            supplierUrl: normalizedUrl,
           },
         }),
       null,
@@ -83,10 +89,12 @@ async function importProduct(url: string): Promise<ImportResult> {
 
     if (existing) {
       return {
-        success: false,
-        url,
-        productName: existing.name,
-        error: "Produktet eksisterer allerede",
+        inputUrl,
+        normalizedUrl,
+        providerUsed,
+        status: "warning",
+        message: `Produktet eksisterer allerede: ${existing.name}`,
+        warnings: [...warnings, "Produktet ble ikke opprettet fordi det allerede finnes i databasen"],
       };
     }
 
@@ -162,28 +170,30 @@ async function importProduct(url: string): Promise<ImportResult> {
     // Forbedre produkt-tittel
     const improvedTitle = improveTitle(data.title);
     
-    const sku = `TEMU-${generateId().toUpperCase()}`;
+    const sku = `${providerUsed.toUpperCase()}-${generateId().toUpperCase()}`;
     const slugBase = slugify(improvedTitle, { lower: true, strict: true });
     const slug = `${slugBase}-${generateId().substring(0, 4)}`;
 
     // Opprett produkt med varianter
-    const product = await prisma.product.create({
-      data: {
-        name: improvedTitle,
-        slug,
-        description: description || shortDescription,
-        shortDescription,
-        price: baseSellingPriceNok,
-        compareAtPrice: baseCompareAtPriceNok,
-        supplierPrice: baseSupplierPriceNok,
-        images: JSON.stringify(images),
-        tags: data.specs ? JSON.stringify(Object.keys(data.specs).slice(0, 10)) : JSON.stringify([]),
-        category,
-        sku,
-        isActive: true,
-        storeId: DEFAULT_STORE_ID,
-        supplierUrl: url,
-        supplierName: "temu",
+    let product;
+    try {
+      product = await prisma.product.create({
+        data: {
+          name: improvedTitle,
+          slug,
+          description: description || shortDescription,
+          shortDescription,
+          price: baseSellingPriceNok,
+          compareAtPrice: baseCompareAtPriceNok,
+          supplierPrice: baseSupplierPriceNok,
+          images: JSON.stringify(images),
+          tags: data.specs ? JSON.stringify(Object.keys(data.specs).slice(0, 10)) : JSON.stringify([]),
+          category,
+          sku,
+          isActive: true,
+          storeId: DEFAULT_STORE_ID,
+          supplierUrl: normalizedUrl,
+          supplierName: providerUsed,
         variants: hasVariants
           ? {
               create: variants.map((variant, index) => {
@@ -208,25 +218,58 @@ async function importProduct(url: string): Promise<ImportResult> {
             }
           : undefined,
       },
-      include: {
-        variants: true,
-      },
-    });
+        include: {
+          variants: true,
+        },
+      });
+    } catch (dbError) {
+      console.error(`[Bulk Import] Database error creating product:`, {
+        url: normalizedUrl,
+        provider: providerUsed,
+        error: dbError instanceof Error ? dbError.message : "Ukjent database-feil",
+      });
+      
+      return {
+        inputUrl,
+        normalizedUrl,
+        providerUsed,
+        status: "error",
+        message: "Kunne ikke lagre produktet i databasen. Prøv igjen senere.",
+        warnings,
+      };
+    }
+
+    // Check for warnings
+    if (images.length === 0) {
+      warnings.push("Ingen bilder funnet for produktet");
+    }
+    if (basePrice < 1) {
+      warnings.push("Pris ser ut til å være ugyldig eller manglende");
+    }
 
     return {
-      success: true,
-      url,
-      productName: product.name,
-      images: images.length,
-      price: baseSellingPriceNok,
-      variants: hasVariants && "variants" in product && product.variants ? product.variants.length : 0,
+      inputUrl,
+      normalizedUrl,
+      providerUsed,
+      status: warnings.length > 0 ? "warning" : "success",
+      message: `Produkt importert: ${product.name}`,
+      createdProductId: product.id,
+      warnings: warnings.length > 0 ? warnings : undefined,
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Ukjent feil";
+    const errorMessage = error instanceof Error ? error.message : "Ukjent feil";
+    console.error(`[Bulk Import] Unexpected error:`, {
+      url: inputUrl,
+      error: errorMessage,
+    });
+    
     return {
-      success: false,
-      url,
-      error: message,
+      inputUrl,
+      normalizedUrl: inputUrl,
+      providerUsed: "unknown",
+      status: "error",
+      message: "En uventet feil oppstod under import. Prøv igjen senere.",
+      warnings: [],
     };
   }
 }
@@ -239,6 +282,8 @@ export async function importProducts(formData: FormData) {
 
   try {
     const urlsText = formData.get("urls") as string;
+    const providerName = formData.get("provider") as string | null;
+    
     if (!urlsText) {
       return { error: "URL-er er påkrevd", results: [] };
     }
@@ -254,13 +299,34 @@ export async function importProducts(formData: FormData) {
     }
 
     // Importer alle produkter sekvensielt
-    const results: ImportResult[] = [];
-    for (const url of urlList) {
-      const result = await importProduct(url);
-      results.push(result);
+    // Continue even if individual URLs fail
+    const results: BulkImportResult[] = [];
+    
+    for (let i = 0; i < urlList.length; i++) {
+      const url = urlList[i];
+      
+      try {
+        const result = await importProduct(url, providerName || undefined);
+        results.push(result);
+      } catch (error) {
+        // Log error but continue with next URL
+        console.error(`[Bulk Import] Error processing URL ${i + 1}/${urlList.length}:`, {
+          url,
+          error: error instanceof Error ? error.message : "Ukjent feil",
+        });
+        
+        results.push({
+          inputUrl: url,
+          normalizedUrl: url,
+          providerUsed: "unknown",
+          status: "error",
+          message: "En uventet feil oppstod under import av denne URL-en.",
+          warnings: [],
+        });
+      }
 
-      // Vent litt mellom hver import for å unngå rate limiting
-      if (urlList.indexOf(url) < urlList.length - 1) {
+      // Rate limiting: wait between requests (except for last one)
+      if (i < urlList.length - 1) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     }

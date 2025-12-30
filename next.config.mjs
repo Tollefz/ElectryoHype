@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // NOTE: This project uses Webpack (not Turbopack) for development.
+  // Turbopack is disabled via --webpack flag in package.json "dev" script.
+  
   images: {
     remotePatterns: [
       {
@@ -74,23 +77,23 @@ const nextConfig = {
         protocol: "https",
         hostname: "plus.unsplash.com",
       },
-            {
-              protocol: "https",
-              hostname: "unsplash.com",
-            },
-            {
-              protocol: "https",
-              hostname: "via.placeholder.com",
-            },
-            {
-              protocol: "https",
-              hostname: "placehold.co",
-            },
-          ],
-          dangerouslyAllowSVG: true,
-          contentDispositionType: "attachment",
-          contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-        },
+      {
+        protocol: "https",
+        hostname: "unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
 };
 
 export default nextConfig;

@@ -2,13 +2,14 @@ import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, Truck, Shield, CreditCard, Headphones } from "lucide-react";
+import { ChevronRight, Truck, Shield, CreditCard, Headphones, AlertTriangle } from "lucide-react";
 import { getCategoriesWithCounts } from "@/lib/utils/product-count";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { isDatabaseConfigured, isDevelopment } from "@/lib/utils/database-check";
 
 // ISR: Revalidate every 60 seconds
 export const revalidate = 60;
@@ -74,11 +75,18 @@ export default async function HomePage() {
   let featuredProducts: Array<typeof products[number]> = [];
   let categories: Array<{ name: string; image: string; count: number }> = [];
   let loadError: string | null = null;
-    let usedStoreId = primaryStoreId;
+  let usedStoreId = primaryStoreId;
+  let isDbConfigured = isDatabaseConfigured();
+  const isDev = isDevelopment();
 
-  try {
-    // Primary query with current store
-    const [latest, featured, categoriesWithCounts] = await Promise.all([
+  // In development, if database is not configured, skip queries and show banner
+  if (isDev && !isDbConfigured) {
+    // Return empty data - will show "Database not configured" banner
+    loadError = null; // Not an error, just not configured
+  } else {
+    try {
+      // Primary query with current store
+      const [latest, featured, categoriesWithCounts] = await Promise.all([
       prisma.product.findMany({
         where: {
           isActive: true,
@@ -270,12 +278,85 @@ export default async function HomePage() {
       usedStoreId = primaryStoreId;
     }
   } catch (error: any) {
-    console.error("[home] Failed to load homepage data", error);
-    loadError = error?.message ?? "Kunne ikke hente data fra databasen.";
+    const isDev = process.env.NODE_ENV === "development";
+    
+    // Enhanced error logging in development
+    if (isDev) {
+      console.error("❌ [home] Failed to load homepage data");
+      console.error("   Error:", error?.message || "Unknown error");
+      
+      // Check for Prisma-specific errors
+      if (error?.name === "PrismaClientInitializationError") {
+        console.error("   Type: Prisma Client Initialization Error");
+        if (error?.cause) {
+          console.error("   Cause:", error.cause);
+        }
+        console.error("\n💡 Common fixes:");
+        console.error("   1. Check DATABASE_URL in .env file");
+        console.error("   2. Ensure database is accessible");
+        console.error("   3. Run: npx prisma generate");
+        console.error("   4. Run: npx prisma migrate dev");
+      } else if (error?.code === "P1001") {
+        console.error("   Type: Database connection error");
+        console.error("   Database server is unreachable");
+        console.error("\n💡 Fix: Check DATABASE_URL and network connection");
+      } else if (error?.code === "P1000") {
+        console.error("   Type: Database authentication error");
+        console.error("   Authentication failed");
+        console.error("\n💡 Fix: Check database credentials in DATABASE_URL");
+      } else if (error?.code === "P1003") {
+        console.error("   Type: Database not found");
+        console.error("   Database does not exist");
+        console.error("\n💡 Fix: Check database name in DATABASE_URL");
+      }
+      
+      if (error?.stack) {
+        console.error("   Stack:", error.stack);
+      }
+    } else {
+      console.error("[home] Failed to load homepage data", error);
+    }
+    
+    // Safe error message for user
+    // In production, always show error
+    // In development, only show if DB was configured (otherwise we show banner)
+    if (!isDev || isDbConfigured) {
+      loadError = error?.message ?? "Kunne ikke hente data fra databasen.";
+    }
   }
 
   return (
     <main className="min-h-screen bg-slate-50">
+      {/* Database Not Configured Banner (Dev Only) */}
+      {isDev && !isDbConfigured && (
+        <div className="bg-yellow-50 border-b-2 border-yellow-400">
+          <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-yellow-800 mb-1">
+                  Database not configured
+                </h3>
+                <p className="text-sm text-yellow-700 mb-2">
+                  DATABASE_URL is missing or invalid. The app is running in development mode with empty data.
+                </p>
+                <div className="text-xs text-yellow-600 space-y-1">
+                  <p><strong>To fix:</strong></p>
+                  <ol className="list-decimal list-inside space-y-0.5 ml-2">
+                    <li>Create a <code className="bg-yellow-100 px-1 rounded">.env</code> file in the project root</li>
+                    <li>Add: <code className="bg-yellow-100 px-1 rounded">DATABASE_URL="postgresql://user:password@host/database?sslmode=require"</code></li>
+                    <li>Get your DATABASE_URL from <a href="https://console.neon.tech" target="_blank" rel="noopener noreferrer" className="underline">Neon Dashboard</a> → Connection Details</li>
+                    <li>Restart the dev server: <code className="bg-yellow-100 px-1 rounded">npm run dev</code></li>
+                  </ol>
+                  <p className="mt-2">
+                    See <a href="/docs/local-setup" className="underline">Local Setup Guide</a> for detailed instructions.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* HERO BANNER */}
       <section className="bg-gradient-to-br from-slate-100 to-white">

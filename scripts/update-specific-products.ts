@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma";
-import { getScraperForUrl } from "../lib/scrapers";
+import { getScraperForUrl } from "../lib/scrapers/server";
 
 /**
  * Script for å oppdatere spesifikke produkter med faktiske bilder og varianter

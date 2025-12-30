@@ -55,10 +55,14 @@ En moderne, fullverdig e-commerce plattform bygget med Next.js 16, Prisma, Neon 
 
 ### Lokal utvikling
 
+**📖 Se [Local Setup Guide](./docs/local-setup.md) for detaljert instruksjoner.**
+
+**Quick start:**
+
 1. **Klon repositoriet**
 ```bash
 git clone <repo-url>
-cd dropshipping-upgrade
+cd ElectryoHype
 ```
 
 2. **Installer avhengigheter**
@@ -66,46 +70,42 @@ cd dropshipping-upgrade
 npm install
 ```
 
-3. **Sett opp miljøvariabler**
+3. **Kjør setup** (automatisk oppsett)
+```bash
+npm run setup
+```
 
-Opprett `.env` fil i prosjektroten:
+Dette vil:
+- Opprette `.env` fil fra `.env.example` (hvis mangler)
+- Kjøre `prisma generate`
+- Kjøre `prisma migrate dev` (kun for lokale databaser)
+- Gi tydelige instruksjoner hvis noe mangler
+
+**Alternativt, manuell oppsett:**
+
+3. **Opprett `.env` fil** med minimum variabler:
 
 ```env
-# Database
+# ⚠️ PÅKREVD
 DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
-
-# NextAuth
-NEXTAUTH_SECRET="din-super-hemmelige-nøkkel-her"
-NEXTAUTH_URL="http://localhost:3000"
-
-# Stripe
-STRIPE_SECRET_KEY="sk_test_..."
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
-
-# UploadThing (valgfritt)
-UPLOADTHING_SECRET="sk_live_..."
-UPLOADTHING_APP_ID="..."
-
-# Admin
-ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="admin123"
-
-# Email (Resend)
-RESEND_API_KEY="re_..."
-
-# Store
 DEFAULT_STORE_ID="default-store"
+NEXTAUTH_SECRET="din-super-hemmelige-nøkkel-her-minst-32-tegn"
+NEXTAUTH_URL="http://localhost:3000"
 ```
+
+**💡 Hvordan få DATABASE_URL:**
+- Opprett gratis konto på [Neon](https://neon.tech)
+- Gå til Dashboard → Connection Details
+- Kopier connection string til `.env`
 
 4. **Sett opp databasen**
 
 ```bash
 # Generer Prisma Client
-npm run db:generate
+npx prisma generate
 
 # Kjør migrasjoner
-npm run db:migrate
+npx prisma migrate dev
 
 # Seed database (valgfritt)
 npm run seed
@@ -118,6 +118,8 @@ npm run dev
 ```
 
 Åpne [http://localhost:3000](http://localhost:3000) i nettleseren.
+
+**🔧 Feilsøking:** Se [Local Setup Guide](./docs/local-setup.md#feilsøking) for vanlige feil og løsninger.
 
 ## 🚢 Produksjonsdeploy
 

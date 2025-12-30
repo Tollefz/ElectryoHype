@@ -1,10 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Download, Loader2, Check, AlertCircle } from "lucide-react";
+import { Download, Loader2, Check, AlertCircle, Save } from "lucide-react";
+import toast from "react-hot-toast";
+import { isValidTemuUrl, isValidAlibabaUrl } from "@/lib/utils/url-validation";
 
 type Supplier = "Alibaba" | "eBay" | "Temu" | null;
+type Provider = "temu" | "alibaba" | null;
 
 interface ImportedProductPayload {
   name?: string;
@@ -33,7 +36,9 @@ const DEFAULT_FORM = {
 export default function ImportClient() {
   const router = useRouter();
   const [url, setUrl] = useState("");
+  const [provider, setProvider] = useState<Provider>(null);
   const [loading, setLoading] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [error, setError] = useState("");
   const [productData, setProductData] = useState<ImportedProductPayload | null>(null);
   const [formData, setFormData] = useState(DEFAULT_FORM);
@@ -57,6 +62,27 @@ export default function ImportClient() {
   };
 
   const supplier = useMemo(() => detectSupplier(url), [url]);
+  
+  // Auto-detect provider from URL
+  const detectedProvider = useMemo<Provider>(() => {
+    if (!url) return null;
+    if (isValidTemuUrl(url)) return "temu";
+    if (isValidAlibabaUrl(url)) return "alibaba";
+    return null;
+  }, [url]);
+
+  // Update provider when URL changes (if not manually set)
+  useEffect(() => {
+    if (detectedProvider && !provider) {
+      setProvider(detectedProvider);
+    }
+  }, [detectedProvider, provider]);
+
+  const isValidUrl = useMemo(() => {
+    if (!url) return false;
+    return isValidTemuUrl(url) || isValidAlibabaUrl(url);
+  }, [url]);
+
   const profit = useMemo(() => {
     const diff = formData.price - formData.supplierPrice;
     if (!Number.isFinite(diff) || formData.supplierPrice === 0) {
@@ -149,9 +175,87 @@ export default function ImportClient() {
 
   const resetForm = () => {
     setUrl("");
+    setProvider(null);
     setProductData(null);
     setFormData(DEFAULT_FORM);
     setError("");
+  };
+
+  // Direct import: fetch and save in one step
+  const handleDirectImport = async () => {
+    if (!url || !isValidUrl) {
+      toast.error("Vennligst oppgi en gyldig Temu eller Alibaba URL");
+      return;
+    }
+
+    setImporting(true);
+    setError("");
+
+    try {
+      // Use bulk-import endpoint for single product
+      const response = await fetch("/api/admin/products/bulk-import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          urls: [url],
+          provider: provider || undefined, // Auto-detect if not set
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMsg = data.error || "Feil ved import";
+        toast.error(errorMsg);
+        setError(errorMsg);
+        return;
+      }
+
+      const results = data.results || [];
+      if (results.length === 0) {
+        toast.error("Ingen resultat fra import");
+        return;
+      }
+
+      const result = results[0];
+
+      if (result.status === "error") {
+        toast.error(result.message || "Feil ved import av produkt");
+        setError(result.message);
+        return;
+      }
+
+      if (result.status === "warning") {
+        toast.success(`Produkt importert med advarsler: ${result.message}`, {
+          duration: 4000,
+        });
+        if (result.warnings && result.warnings.length > 0) {
+          console.warn("Import warnings:", result.warnings);
+        }
+      } else {
+        toast.success(result.message || "Produkt importert!");
+      }
+
+      // Redirect to product edit page or products list
+      if (result.createdProductId) {
+        // Redirect to the product edit page if we have the ID
+        setTimeout(() => {
+          router.push(`/admin/products/edit/${result.createdProductId}`);
+        }, 1500);
+      } else {
+        // Fallback to products list
+        setTimeout(() => {
+          router.push("/admin/products");
+        }, 1500);
+      }
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Ukjent feil ved import";
+      toast.error(errorMsg);
+      setError(errorMsg);
+      console.error("[Direct Import] Error:", err);
+    } finally {
+      setImporting(false);
+    }
   };
 
   return (
@@ -162,39 +266,88 @@ export default function ImportClient() {
 
       <div className="rounded-xl bg-white p-6 shadow-sm">
         <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium">Produkt URL (Alibaba/eBay/Temu)</label>
+          <label className="mb-2 block text-sm font-medium">Produkt URL (Temu/Alibaba)</label>
+          
+          {/* Provider dropdown (optional, auto-detected if not set) */}
+          <div className="mb-3">
+            <label className="mb-1 block text-xs text-gray-600">Kilde (valgfritt, autodetekteres)</label>
+            <select
+              value={provider || ""}
+              onChange={(e) => setProvider(e.target.value as Provider || null)}
+              className="w-full max-w-xs rounded-lg border border-slate-300 bg-white p-2 text-sm"
+            >
+              <option value="">Autodetekter fra URL</option>
+              <option value="temu">Temu</option>
+              <option value="alibaba">Alibaba</option>
+            </select>
+          </div>
+
           <div className="flex gap-2 max-sm:flex-col">
             <input
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.alibaba.com/product-detail/..."
+              placeholder="https://www.temu.com/... eller https://www.alibaba.com/product-detail/..."
               className="flex-1 rounded-lg border border-border p-3 focus:border-primary focus:outline-none"
             />
             <button
-              onClick={handleImport}
-              disabled={!url || loading}
-              className="flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-white transition hover:bg-primary-dark disabled:opacity-50"
+              onClick={handleDirectImport}
+              disabled={!isValidUrl || importing}
+              className="flex items-center justify-center gap-2 rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? (
+              {importing ? (
                 <>
                   <Loader2 className="animate-spin" size={20} />
                   Importerer...
                 </>
               ) : (
                 <>
-                  <Download size={20} />
-                  Importer
+                  <Save size={20} />
+                  Importer produkt
                 </>
               )}
             </button>
           </div>
+          
+          {url && !isValidUrl && (
+            <div className="mt-2 flex items-center gap-2 text-amber-600">
+              <AlertCircle size={16} />
+              <span className="text-sm">URL må være fra Temu eller Alibaba</span>
+            </div>
+          )}
+          
           {error && (
             <div className="mt-2 flex items-center gap-2 text-red-600">
               <AlertCircle size={16} />
               <span className="text-sm">{error}</span>
             </div>
           )}
+        </div>
+
+        {/* Legacy: Import and edit flow (keep existing functionality) */}
+        <div className="mb-6 border-t pt-6">
+          <p className="mb-3 text-sm text-gray-600">
+            Eller importer først for å redigere før lagring:
+          </p>
+          <div className="flex gap-2 max-sm:flex-col">
+            <button
+              onClick={handleImport}
+              disabled={!url || loading || !supplier}
+              className="flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-white transition hover:bg-primary-dark disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} />
+                  Henter data...
+                </>
+              ) : (
+                <>
+                  <Download size={20} />
+                  Hent produktdata
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {productData && (

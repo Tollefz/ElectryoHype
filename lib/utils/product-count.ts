@@ -7,6 +7,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { safeQuery } from '../safeQuery';
+import { shouldUseDevFallback, isDatabaseConfigured } from './database-check';
 
 /**
  * Get count of active products matching filters
@@ -22,6 +23,11 @@ export async function getProductCount(
     storeId?: string;
   }
 ): Promise<number> {
+  // In dev, if DB is not configured, return 0 silently
+  if (shouldUseDevFallback()) {
+    return 0;
+  }
+
   const where: Prisma.ProductWhereInput = {
     isActive: filters?.isActive !== undefined ? filters.isActive : true,
     ...(filters?.storeId ? { storeId: filters.storeId } : {}),
@@ -45,7 +51,7 @@ export async function getProductCount(
     }
   }
 
-  return safeQuery(() => prisma.product.count({ where }), 0, 'product-count');
+  return await safeQuery(() => prisma.product.count({ where }), 0, 'product-count');
 }
 
 /**
@@ -53,6 +59,11 @@ export async function getProductCount(
  * Returns a map of category name to product count
  */
 export async function getCategoryCounts(storeId?: string): Promise<Record<string, number>> {
+  // In dev, if DB is not configured, return empty object silently
+  if (shouldUseDevFallback()) {
+    return {};
+  }
+
   const products = await safeQuery(
     () =>
       prisma.product.findMany({

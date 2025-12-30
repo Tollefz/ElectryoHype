@@ -1,4 +1,6 @@
-import { BaseScraper } from "./base-scraper";
+import "server-only";
+
+import { BaseScraper } from "./base-scraper.server";
 import type { ScraperResult, Scraper } from "./types";
 
 export class EbayScraper extends BaseScraper implements Scraper {

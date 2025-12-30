@@ -1,5 +1,7 @@
+import "server-only";
+
 import type { Page } from "puppeteer";
-import { BaseScraper } from "./base-scraper";
+import { BaseScraper } from "./base-scraper.server";
 import type { ScraperResult, Scraper } from "./types";
 
 const SELECTORS = {

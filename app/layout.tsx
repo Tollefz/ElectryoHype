@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import RefTracker from "./RefTracker";
 import { Toaster } from "react-hot-toast";
 import { SITE_CONFIG } from "@/lib/site";
+import { SourceMapSuppress } from "./sourcemap-suppress";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <SourceMapSuppress />
           <CartProvider>
             <div className="flex min-h-screen flex-col">
               <Suspense fallback={

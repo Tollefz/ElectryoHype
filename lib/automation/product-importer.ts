@@ -1,3 +1,5 @@
+import "server-only";
+
 import { SupplierName } from "@prisma/client";
 import slugify from "slugify";
 import { improveTitle } from "@/lib/utils/improve-product-title";

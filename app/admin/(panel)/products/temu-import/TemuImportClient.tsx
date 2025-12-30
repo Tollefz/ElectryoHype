@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2, Upload, Check, X, AlertCircle, ExternalLink, Edit2, Save, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import slugify from 'slugify';
+import { isValidTemuUrl, isValidAlibabaUrl, isAlibabaProductUrl, normalizeUrl } from '@/lib/utils/url-validation';
 
 interface ProductPreview {
   url: string;
@@ -35,29 +36,139 @@ interface ProductPreview {
   error?: string;
 }
 
+type Provider = 'temu' | 'alibaba';
+
+const STORAGE_KEY_PREFIX = 'bulk-import-urls';
+
+function getStorageKey(provider: Provider): string {
+  return `${STORAGE_KEY_PREFIX}-${provider}`;
+}
+
+function loadUrlsFromStorage(provider: Provider): string {
+  if (typeof window === 'undefined') return '';
+  
+  try {
+    const stored = localStorage.getItem(getStorageKey(provider));
+    return stored || '';
+  } catch (error) {
+    console.warn('[Bulk Import] Failed to load URLs from storage:', error);
+    return '';
+  }
+}
+
+function saveUrlsToStorage(provider: Provider, urls: string): void {
+  if (typeof window === 'undefined') return;
+  
+  try {
+    localStorage.setItem(getStorageKey(provider), urls);
+  } catch (error) {
+    console.warn('[Bulk Import] Failed to save URLs to storage:', error);
+  }
+}
+
 export default function TemuImportClient() {
+  // Use mounted flag to prevent hydration mismatch
+  // localStorage is not available during SSR, so we must wait for client-side mount
+  const [mounted, setMounted] = useState(false);
+  const [provider, setProvider] = useState<Provider>('temu');
+  // Initialize with empty string to ensure consistent SSR/client rendering
   const [urls, setUrls] = useState('');
   const [products, setProducts] = useState<ProductPreview[]>([]);
   const [importing, setImporting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isLoadingFromStorage, setIsLoadingFromStorage] = useState(false);
+
+  // Set mounted flag on client-side only
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Load URLs from storage after mount and when provider changes
+  useEffect(() => {
+    if (!mounted) return; // Don't load from storage until mounted
+    
+    setIsLoadingFromStorage(true);
+    const storedUrls = loadUrlsFromStorage(provider);
+    setUrls(storedUrls);
+    // Clear products when switching provider
+    setProducts([]);
+    // Reset flag after a short delay to allow state to update
+    setTimeout(() => setIsLoadingFromStorage(false), 100);
+  }, [provider, mounted]);
+
+  // Save URLs to storage whenever they change (debounced)
+  // Skip saving if we're currently loading from storage
+  useEffect(() => {
+    if (isLoadingFromStorage) return;
+    if (!urls.trim()) return;
+    
+    const timeoutId = setTimeout(() => {
+      saveUrlsToStorage(provider, urls);
+    }, 500); // Debounce: save 500ms after user stops typing
+
+    return () => clearTimeout(timeoutId);
+  }, [urls, provider, isLoadingFromStorage]);
+
+  const validateUrl = (url: string, provider: Provider): boolean => {
+    if (provider === 'temu') {
+      return isValidTemuUrl(url);
+    } else if (provider === 'alibaba') {
+      return isValidAlibabaUrl(url);
+    }
+    return false;
+  };
+
+  const handleLoadUrls = () => {
+    setIsLoadingFromStorage(true);
+    const storedUrls = loadUrlsFromStorage(provider);
+    if (!storedUrls.trim()) {
+      const providerName = provider === 'temu' ? 'Temu' : 'Alibaba';
+      alert(`Ingen lagrede ${providerName}-URLs funnet.`);
+      setIsLoadingFromStorage(false);
+      return;
+    }
+    setUrls(storedUrls);
+    // Reset flag after a short delay
+    setTimeout(() => setIsLoadingFromStorage(false), 100);
+  };
 
   const handleParse = () => {
     const urlList = urls
       .split('\n')
       .map(url => url.trim())
-      .filter(url => url.length > 0 && (url.includes('temu.com') || url.includes('temu.')));
+      .filter(url => {
+        if (url.length === 0) return false;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
+        return validateUrl(url, provider);
+      });
+
+    // For Alibaba, advar hvis URL ikke ser ut som produkt-URL
+    if (provider === 'alibaba') {
+      const invalidUrls = urlList.filter(url => !isAlibabaProductUrl(url));
+      if (invalidUrls.length > 0 && urlList.length > 0) {
+        const warning = `Noen URLs ser ikke ut som produkt-URLs (mangler /product-detail/). Fortsetter likevel...`;
+        console.warn(warning);
+      }
+    }
+
+    // Normalize URLs
+    const normalizedUrlList = urlList.map(url => normalizeUrl(url));
 
     if (urlList.length === 0) {
-      alert('Ingen gyldige Temu URLs funnet!');
+      const providerName = provider === 'temu' ? 'Temu' : 'Alibaba';
+      alert(`Ingen gyldige ${providerName}-URLs funnet!`);
       return;
     }
 
     setProducts(
-      urlList.map(url => ({
+      normalizedUrlList.map(url => ({
         url,
         status: 'pending',
       }))
     );
+
+    // Save parsed URLs to storage
+    saveUrlsToStorage(provider, normalizedUrlList.join('\n'));
   };
 
   const handleImportAll = async () => {
@@ -82,7 +193,7 @@ export default function TemuImportClient() {
         const response = await fetch('/api/admin/scrape-product', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: product.url }),
+          body: JSON.stringify({ url: product.url, provider }),
         });
 
         if (!response.ok) {
@@ -181,9 +292,9 @@ export default function TemuImportClient() {
             tags: JSON.stringify(product.data!.tags),
             category: product.data!.category,
             supplierUrl: product.url,
-            supplierName: product.data!.supplier || 'temu',
-            supplierProductId: extractTemuId(product.url),
-            sku: `TEMU-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            supplierName: product.data!.supplier || provider,
+            supplierProductId: extractSupplierId(product.url, provider),
+            sku: `${provider.toUpperCase()}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             // storeId will default to DEFAULT_STORE_ID in API route if not provided
             // This ensures Temu products appear in frontend
             isActive: true,
@@ -284,9 +395,17 @@ export default function TemuImportClient() {
     }
   };
 
-  const extractTemuId = (url: string) => {
-    const match = url.match(/goods\.html\?goods_id=(\d+)/);
-    return match ? match[1] : url.split('/').pop()?.split('?')[0] || '';
+  const extractSupplierId = (url: string, provider: Provider) => {
+    if (provider === 'temu') {
+      const match = url.match(/goods\.html\?goods_id=(\d+)/);
+      return match ? match[1] : url.split('/').pop()?.split('?')[0] || '';
+    } else if (provider === 'alibaba') {
+      // Extract product ID from Alibaba URL
+      // Format: https://www.alibaba.com/product-detail/123456789.html
+      const match = url.match(/product-detail\/(\d+)/);
+      return match ? match[1] : url.split('/').pop()?.split('.')[0] || '';
+    }
+    return '';
   };
 
   const updateProductData = (index: number, field: string, value: any) => {
@@ -322,9 +441,9 @@ export default function TemuImportClient() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-dark">Temu Bulk Import</h1>
+          <h1 className="text-3xl font-bold text-dark">Bulk Import</h1>
           <p className="text-gray-medium mt-1">
-            Importer flere produkter fra Temu samtidig
+            Importer flere produkter fra Temu eller Alibaba samtidig
           </p>
         </div>
         <Link
@@ -337,29 +456,68 @@ export default function TemuImportClient() {
 
       {/* URL INPUT */}
       <div className="rounded-xl bg-white p-6 shadow-sm border border-gray-border">
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-dark">
+            Kilde
+          </label>
+          <select
+            value={provider}
+            onChange={(e) => {
+              const newProvider = e.target.value as Provider;
+              // Save current URLs before switching
+              saveUrlsToStorage(provider, urls);
+              setProvider(newProvider);
+              // URLs will be loaded from storage via useEffect
+            }}
+            className="w-full sm:w-auto rounded-lg border border-gray-border px-4 py-2 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 bg-white"
+          >
+            <option value="temu">Temu</option>
+            <option value="alibaba">Alibaba</option>
+          </select>
+        </div>
         <label className="block text-sm font-medium mb-2 text-dark">
-          Temu Produkt URLs (én per linje)
+          Produkt URLs (én per linje)
         </label>
         <textarea
           value={urls}
           onChange={(e) => setUrls(e.target.value)}
-          placeholder="https://www.temu.com/goods.html?goods_id=123456789&#10;https://www.temu.com/product-2.html&#10;https://www.temu.com/product-3.html"
+          placeholder={provider === 'temu' 
+            ? "https://www.temu.com/goods.html?goods_id=123456789&#10;https://www.temu.com/product-2.html"
+            : "https://www.alibaba.com/product-detail/123456789.html&#10;https://www.alibaba.com/product-detail/987654321.html"}
           rows={8}
           className="w-full rounded-lg border border-gray-border p-3 font-mono text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
         <div className="mt-4 flex gap-3">
           <button
-            onClick={handleParse}
-            disabled={!urls.trim()}
-            className="flex items-center gap-2 rounded-lg bg-dark px-6 py-3 text-white hover:bg-dark-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            onClick={handleLoadUrls}
+            className="flex items-center gap-2 rounded-lg bg-gray-600 px-6 py-3 text-white hover:bg-gray-700 transition-colors"
+            title={`Last lagrede ${provider === 'temu' ? 'Temu' : 'Alibaba'}-URLs`}
           >
             <Upload size={20} />
-            Last URLs ({urls.split('\n').filter(u => u.trim()).length})
+            Last URLs
+          </button>
+          <button
+            onClick={handleParse}
+            disabled={(() => {
+              // Ensure disabled is always a boolean to prevent hydration mismatch
+              const urlsValue = typeof urls === "string" ? urls : "";
+              const isUrlsEmpty = urlsValue.trim().length === 0;
+              return isUrlsEmpty || isLoadingFromStorage;
+            })()}
+            className="flex items-center gap-2 rounded-lg bg-dark px-6 py-3 text-white hover:bg-dark-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <Check size={20} />
+            Parse URLs ({mounted ? urls.split('\n').filter(u => u.trim()).length : 0})
           </button>
           {products.length > 0 && (
             <button
               onClick={handleImportAll}
-              disabled={importing || loadingCount > 0}
+              disabled={(() => {
+                // Ensure disabled is always a boolean
+                const isLoading = importing === true;
+                const hasLoadingProducts = loadingCount > 0;
+                return isLoading || hasLoadingProducts;
+              })()}
               className="flex items-center gap-2 rounded-lg bg-brand px-6 py-3 text-white hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {importing ? (
@@ -410,7 +568,7 @@ export default function TemuImportClient() {
             {successCount > 0 && (
               <button
                 onClick={handleSaveAll}
-                disabled={saving}
+                disabled={saving === true}
                 className="flex items-center gap-2 rounded-lg bg-brand px-6 py-3 text-white hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {saving ? (

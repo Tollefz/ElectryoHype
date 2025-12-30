@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma";
-import { getScraperForUrl } from "../lib/scrapers";
+import { getScraperForUrl } from "../lib/scrapers/server";
 // Generate unique ID helper
 function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(2, 6);
