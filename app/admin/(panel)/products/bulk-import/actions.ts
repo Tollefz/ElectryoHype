@@ -9,6 +9,7 @@ import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getProviderRegistry } from "@/lib/providers/server-only";
 import type { BulkImportResult } from "@/lib/providers";
 import { SupplierName } from "@prisma/client";
+import { sanitizeDescriptionWithFallback } from "@/lib/import/sanitizeDescription";
 
 const USD_TO_NOK_RATE = 10.5;
 const PROFIT_MARGIN = 2.0; // 100% margin
@@ -123,7 +124,13 @@ async function importProduct(
 
     // Forbered data
     const baseImages = data.images || [];
-    const description = data.description || "";
+    
+    // Sanitize description to remove supplier references
+    const rawDescription = data.description || "";
+    const description = sanitizeDescriptionWithFallback(
+      rawDescription,
+      "Dette produktet er en del av vårt utvalg av elektronikk og tilbehør. Vi leverer kvalitetsprodukter med fokus på funksjonalitet og verdi."
+    );
     const shortDescription = description.substring(0, 150) + (description.length > 150 ? "..." : "");
 
     // Håndter varianter

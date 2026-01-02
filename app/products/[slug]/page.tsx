@@ -14,6 +14,7 @@ import { DEFAULT_STORE_ID } from '@/lib/store';
 import { safeQuery } from '@/lib/safeQuery';
 import { SITE_CONFIG } from '@/lib/site';
 import { generateProductJSONLD, generateBreadcrumbJSONLD, generateSEOMetadata } from '@/lib/seo';
+import { getAvailability, getAvailabilityBadgeClasses } from '@/lib/products/availability';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -520,9 +521,12 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     image: images[0] || 'https://placehold.co/600x600?text=Ingen+bilde',
   };
 
-  // Calculate total stock from variants
-  const totalStock = variants.reduce((sum, v) => sum + v.stock, 0) || product.stock || 0;
-  const isInStock = totalStock > 0;
+  // Get availability using shared helper
+  const availability = getAvailability({
+    stock: product.stock || 0,
+    variants: variants.map(v => ({ stock: v.stock })),
+    isActive: product.isActive !== false,
+  });
 
   // Parse specs from product.specs (JSON field)
   let productSpecs: Record<string, string> = {};
@@ -540,8 +544,8 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   if (Object.keys(productSpecs).length === 0) {
     productSpecs = {
       'Kategori': product.category || 'Elektronikk',
-      'Lagerstatus': isInStock ? `${totalStock} på lager` : 'Ikke på lager',
-      'Leveringstid': '5–12 virkedager',
+      'Lagerstatus': availability.label,
+      'Leveringstid': availability.leadTimeDays ? `${availability.leadTimeDays.min}–${availability.leadTimeDays.max} virkedager` : 'Ikke tilgjengelig',
       'Garanti': '2 år',
     };
   }
@@ -553,7 +557,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     image: images.length > 0 ? images : [productData.image],
     price: product.price,
     currency: 'NOK',
-    availability: isInStock ? 'InStock' : 'OutOfStock',
+    availability: availability.purchasable ? 'InStock' : 'OutOfStock',
     sku: product.sku || undefined,
     brand: 'ElectroHypeX',
     category: product.category || undefined,
@@ -620,15 +624,9 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                     SPAR {discountPercent}%
                   </span>
                 )}
-                {isInStock ? (
-                  <span className="rounded-md bg-green-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-green-700">
-                    {totalStock > 10 ? 'På lager' : `${totalStock} på lager`}
-                  </span>
-                ) : (
-                  <span className="rounded-md bg-red-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-red-700">
-                    Ikke på lager
-                  </span>
-                )}
+                <span className={getAvailabilityBadgeClasses(availability)}>
+                  {availability.label}
+                </span>
               </div>
 
               {/* Kategori */}
@@ -679,8 +677,15 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                 </div>
               )}
 
-              {/* Add to cart */}
-              <AddToCartButton product={productData} variants={variants} />
+              {/* Add to cart - disabled if not purchasable */}
+              {availability.purchasable ? (
+                <AddToCartButton product={productData} variants={variants} />
+              ) : (
+                <div className="rounded-lg border-2 border-red-200 bg-red-50 p-4 text-center">
+                  <p className="text-sm font-semibold text-red-700 mb-2">Ikke tilgjengelig for kjøp</p>
+                  <p className="text-xs text-red-600">Dette produktet er for øyeblikket ikke på lager.</p>
+                </div>
+              )}
 
               {/* Manuell oppfyllelse info */}
               <div className="mt-4 rounded-lg bg-blue-50 border border-blue-200 p-3 sm:p-4">
@@ -714,13 +719,15 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                     <p className="text-[10px] sm:text-xs text-gray-600">Full dekning</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
-                  <Check className="text-green-600 flex-shrink-0" size={20} />
-                  <div>
-                    <p className="text-xs sm:text-sm font-semibold text-gray-900">Tilgjengelig</p>
-                    <p className="text-[10px] sm:text-xs text-gray-600">5–12 virkedager</p>
+                {availability.purchasable && availability.leadTimeDays && (
+                  <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 p-2 sm:p-3">
+                    <Check className="text-green-600 flex-shrink-0" size={20} />
+                    <div>
+                      <p className="text-xs sm:text-sm font-semibold text-gray-900">Tilgjengelig</p>
+                      <p className="text-[10px] sm:text-xs text-gray-600">{availability.leadTimeDays.min}–{availability.leadTimeDays.max} virkedager</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

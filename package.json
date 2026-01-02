@@ -28,6 +28,7 @@
     "update:all-variants": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/update-all-products-variants.ts",
     "cleanup:colors": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/cleanup-color-variants.ts",
     "cleanup:colors:dry-run": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/cleanup-color-variants.ts -- --dry-run",
+    "sanitize:descriptions": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/sanitize-product-descriptions.ts",
     "cleanup:descriptions": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/cleanup-product-descriptions.ts",
     "cleanup:descriptions:dry-run": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/cleanup-product-descriptions.ts -- --dry-run",
     "improve:titles": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/improve-product-titles.ts",

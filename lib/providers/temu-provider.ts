@@ -2,6 +2,7 @@ import type { ImportProvider, RawProduct, MappedProduct } from "./types";
 import type { ScrapedProductData } from "@/lib/scrapers/types";
 import { TemuScraper } from "@/lib/scrapers/temu-scraper";
 import { normalizeUrl as normalizeUrlUtil, isValidTemuUrl } from "@/lib/utils/url-validation";
+import { sanitizeDescriptionWithFallback } from "@/lib/import/sanitizeDescription";
 
 /**
  * Temu import provider
@@ -46,12 +47,19 @@ export class TemuProvider implements ImportProvider {
     // We just need to ensure it matches our MappedProduct interface
     const data = raw as unknown as ScrapedProductData;
 
+    // Sanitize description to remove supplier references
+    const rawDescription = data.description || "";
+    const sanitizedDescription = sanitizeDescriptionWithFallback(
+      rawDescription,
+      "Dette produktet er en del av vårt utvalg av elektronikk og tilbehør. Vi leverer kvalitetsprodukter med fokus på funksjonalitet og verdi."
+    );
+
     // Ensure all required fields are present
     return {
       supplier: data.supplier || "temu",
       url: originalUrl,
       title: data.title || "Temu Produkt",
-      description: data.description || "",
+      description: sanitizedDescription,
       price: data.price || { amount: 9.99, currency: "USD" },
       images: data.images || [],
       specs: data.specs || {},

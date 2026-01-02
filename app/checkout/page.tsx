@@ -11,6 +11,8 @@ import { useCart } from "@/lib/cart-context";
 import { formatCurrency } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { SITE_CONFIG } from "@/lib/site";
 
 // Håndter Stripe publishable key med ekstra anførselstegn
 const getStripeKey = () => {
@@ -173,8 +175,25 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (items.length === 0) {
       router.push("/cart");
+      return;
     }
   }, [items, router]);
+
+  // Show friendly error if cart is empty
+  if (items.length === 0) {
+    return (
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-12 text-center">
+        <h1 className="mb-4 text-2xl font-bold text-gray-900">Handlekurven er tom</h1>
+        <p className="mb-6 text-gray-600">Du må legge til produkter i handlekurven før du kan gå til kassen.</p>
+        <Link
+          href="/products"
+          className="inline-block rounded-lg bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 transition-colors"
+        >
+          Se produkter
+        </Link>
+      </div>
+    );
+  }
 
   // Hent affiliateCode fra cookie hvis satt
   useEffect(() => {
@@ -312,7 +331,9 @@ export default function CheckoutPage() {
 
       if (!data.clientSecret) {
         console.error("❌ No clientSecret in response:", data);
-        throw new Error("Mottok ikke betalingsnøkkel fra server");
+        throw new Error(
+          data.error || "Mottok ikke betalingsnøkkel fra server. Prøv igjen eller kontakt kundeservice."
+        );
       }
 
 
@@ -629,9 +650,14 @@ export default function CheckoutPage() {
                   <span>-{formatCurrency(discountAmount)}</span>
                 </div>
               )}
-            {total < 500 && shippingCost === 0 && (
-              <p className="text-xs text-secondary">
-                Gratis frakt ved kjøp over 500 kr
+            {total < SITE_CONFIG.freeShippingThreshold && (
+              <p className="text-xs text-green-600 font-medium">
+                ✨ Kjøp for {(SITE_CONFIG.freeShippingThreshold - total).toLocaleString('no-NO')},- mer og få gratis frakt!
+              </p>
+            )}
+            {total >= SITE_CONFIG.freeShippingThreshold && shippingCost === 0 && (
+              <p className="text-xs text-green-600 font-medium">
+                ✓ Gratis frakt!
               </p>
             )}
             <div className="flex justify-between border-t pt-2 text-lg font-semibold text-slate-900">

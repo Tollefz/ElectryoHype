@@ -19,7 +19,7 @@ export default function ReturPage() {
           <RotateCcw className="mx-auto mb-4 h-16 w-16 text-brand" />
           <h1 className="mb-4 text-4xl font-bold text-dark">Retur & Bytte</h1>
           <p className="text-lg text-gray-medium">
-            Du har 30 dagers åpent kjøp på alle produkter
+            Din returrett og vårt åpent kjøp
           </p>
         </div>
 
@@ -30,9 +30,18 @@ export default function ReturPage() {
             <div className="flex items-start gap-4">
               <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
               <div>
-                <h3 className="font-semibold text-dark">30 dagers åpent kjøp</h3>
+                <h3 className="font-semibold text-dark">14 dagers angrerett (forbrukerkjøpsloven)</h3>
                 <p className="text-gray-medium">
-                  Du kan returnere produktet innen 30 dager uten å oppgi grunn.
+                  I henhold til forbrukerkjøpsloven har du 14 dagers angrerett på kjøp gjort på nett. Du kan returnere produktet innen 14 dager uten å oppgi grunn.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
+              <div>
+                <h3 className="font-semibold text-dark">30 dagers åpent kjøp (vår policy)</h3>
+                <p className="text-gray-medium">
+                  I tillegg til din juridiske angrerett, tilbyr vi 30 dagers åpent kjøp på alle produkter. Dette gir deg ekstra tid til å teste produktet.
                 </p>
               </div>
             </div>

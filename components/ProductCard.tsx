@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { cleanProductName } from '@/lib/utils/url-decode';
 import { getCategoryByDbValue } from '@/lib/categories';
+import { getAvailability } from '@/lib/products/availability';
 import toast from 'react-hot-toast';
 
 interface ProductCardProps {
@@ -107,6 +108,13 @@ function ProductCard({ product }: ProductCardProps) {
   const discountPercent = hasDiscount 
     ? Math.round((1 - product.price / product.compareAtPrice) * 100) 
     : 0;
+
+  // Get availability info
+  const availability = getAvailability({
+    stock: product.stock || 0,
+    variants: product.variants || [],
+    isActive: product.isActive !== false,
+  });
 
   return (
     <Link 
@@ -217,16 +225,28 @@ function ProductCard({ product }: ProductCardProps) {
           {/* Legg i handlekurv knapp */}
           <button
             onClick={handleAddToCart}
-            className="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-2.5 sm:py-3 text-sm font-semibold text-white transition-all hover:bg-green-700 active:scale-[0.98] shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+            disabled={!availability.purchasable}
+            className={`mt-auto flex w-full items-center justify-center gap-2 rounded-lg py-2.5 sm:py-3 text-sm font-semibold text-white transition-all active:scale-[0.98] shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 ${
+              availability.purchasable
+                ? 'bg-green-600 hover:bg-green-700'
+                : 'bg-gray-400 cursor-not-allowed opacity-60'
+            }`}
           >
             <ShoppingCart size={16} />
-            <span>Legg i handlekurv</span>
+            <span>{availability.purchasable ? 'Legg i handlekurv' : 'Ikke på lager'}</span>
           </button>
 
           {/* Leveringsinfo - skjul på mobil */}
-          <p className="mt-2 hidden text-center text-xs font-medium text-green-600 sm:block">
-            ✓ Tilgjengelig – 5–12 virkedager
-          </p>
+          {availability.purchasable && availability.leadTimeDays && (
+            <p className="mt-2 hidden text-center text-xs font-medium text-green-600 sm:block">
+              ✓ {availability.label} – {availability.leadTimeDays.min}–{availability.leadTimeDays.max} virkedager
+            </p>
+          )}
+          {!availability.purchasable && (
+            <p className="mt-2 hidden text-center text-xs font-medium text-red-600 sm:block">
+              ✗ {availability.label}
+            </p>
+          )}
         </div>
       </div>
     </Link>

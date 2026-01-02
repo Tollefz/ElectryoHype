@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Trash2, Plus, Minus, ShoppingBag, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
+import { SITE_CONFIG } from "@/lib/site";
 
 export default function CartPage() {
   const { items, total, updateQuantity, removeFromCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const shippingCost = total >= 500 ? 0 : 99;
+  const shippingCost = total >= SITE_CONFIG.freeShippingThreshold ? 0 : 99;
   const totalWithShipping = total + shippingCost;
 
   if (items.length === 0) {
@@ -139,9 +140,14 @@ export default function CartPage() {
                   {shippingCost === 0 ? 'Gratis!' : `${shippingCost},-`}
                 </span>
               </div>
-              {total < 500 && (
+              {total < SITE_CONFIG.freeShippingThreshold && (
                 <p className="text-xs sm:text-sm text-green-600 mt-2">
-                  ✨ Kjøp for {(500 - total).toLocaleString('no-NO')},- mer og få gratis frakt!
+                  ✨ Kjøp for {(SITE_CONFIG.freeShippingThreshold - total).toLocaleString('no-NO')},- mer og få gratis frakt!
+                </p>
+              )}
+              {total >= SITE_CONFIG.freeShippingThreshold && (
+                <p className="text-xs sm:text-sm text-green-600 mt-2 font-medium">
+                  ✓ Gratis frakt!
                 </p>
               )}
             </div>

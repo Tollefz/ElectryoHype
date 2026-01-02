@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Truck, Package, Clock, MapPin, CheckCircle } from 'lucide-react';
+import { SITE_CONFIG } from '@/lib/site';
 
 export default function FraktPage() {
   return (
@@ -28,9 +29,9 @@ export default function FraktPage() {
           <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-brand text-2xl text-white">
             🎁
           </div>
-          <h2 className="mb-2 text-3xl font-bold text-dark">Gratis frakt over 500,-</h2>
+          <h2 className="mb-2 text-3xl font-bold text-dark">Gratis frakt over {SITE_CONFIG.freeShippingThreshold},-</h2>
           <p className="text-lg text-gray-medium">
-            Bestiller du for mer enn 500,-, er frakten gratis!
+            Bestiller du for mer enn {SITE_CONFIG.freeShippingThreshold},-, er frakten gratis!
           </p>
         </section>
 
@@ -41,14 +42,14 @@ export default function FraktPage() {
             <div className="flex items-center justify-between rounded-lg border border-gray-border p-4">
               <div>
                 <h3 className="font-semibold text-dark">Gratis frakt</h3>
-                <p className="text-sm text-gray-medium">For ordre over 500,-</p>
+                <p className="text-sm text-gray-medium">For ordre over {SITE_CONFIG.freeShippingThreshold},-</p>
               </div>
               <span className="text-2xl font-bold text-brand">0 kr</span>
             </div>
             <div className="flex items-center justify-between rounded-lg border border-gray-border p-4">
               <div>
                 <h3 className="font-semibold text-dark">Standard frakt</h3>
-                <p className="text-sm text-gray-medium">For ordre under 500,-</p>
+                <p className="text-sm text-gray-medium">For ordre under {SITE_CONFIG.freeShippingThreshold},-</p>
               </div>
               <span className="text-2xl font-bold text-dark">79 kr</span>
             </div>
