@@ -324,6 +324,7 @@ export default async function HomePage() {
       loadError = error?.message ?? "Kunne ikke hente data fra databasen.";
     }
   }
+  }
 
   return (
     <main className="min-h-screen bg-slate-50">

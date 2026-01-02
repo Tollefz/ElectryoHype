@@ -8,6 +8,7 @@ import { safeQuery } from "@/lib/safeQuery";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getProviderRegistry } from "@/lib/providers/server-only";
 import type { BulkImportResult } from "@/lib/providers";
+import { SupplierName } from "@prisma/client";
 
 const USD_TO_NOK_RATE = 10.5;
 const PROFIT_MARGIN = 2.0; // 100% margin
@@ -15,6 +16,28 @@ const COMPARE_AT_PRICE_MULTIPLIER = 1.3;
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(2, 6);
+}
+
+/**
+ * Map provider name string to SupplierName enum value
+ * Returns null if provider name doesn't match any known supplier
+ */
+function mapProviderToSupplierName(providerName: string): SupplierName | null {
+  const normalized = providerName.toLowerCase().trim();
+  
+  // Map known provider names to SupplierName enum values
+  if (normalized === "alibaba") {
+    return SupplierName.alibaba;
+  }
+  if (normalized === "ebay") {
+    return SupplierName.ebay;
+  }
+  if (normalized === "temu") {
+    return SupplierName.temu;
+  }
+  
+  // Unknown provider
+  return null;
 }
 
 async function importProduct(
@@ -25,7 +48,7 @@ async function importProduct(
     const registry = getProviderRegistry();
     
     // Get provider (by name or auto-detect)
-    const provider = registry.getProviderForUrl(url, providerName);
+    const provider = registry.getProviderForUrl(inputUrl, providerName);
     
     const warnings: string[] = [];
     
@@ -193,7 +216,7 @@ async function importProduct(
           isActive: true,
           storeId: DEFAULT_STORE_ID,
           supplierUrl: normalizedUrl,
-          supplierName: providerUsed,
+          supplierName: mapProviderToSupplierName(providerUsed),
         variants: hasVariants
           ? {
               create: variants.map((variant, index) => {

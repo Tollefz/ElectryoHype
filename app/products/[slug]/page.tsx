@@ -13,6 +13,7 @@ import { getStoreIdFromHeadersServer } from '@/lib/store-server';
 import { DEFAULT_STORE_ID } from '@/lib/store';
 import { safeQuery } from '@/lib/safeQuery';
 import { SITE_CONFIG } from '@/lib/site';
+import { generateProductJSONLD, generateBreadcrumbJSONLD, generateSEOMetadata } from '@/lib/seo';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -81,38 +82,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const cleanedName = cleanProductName(product.name);
   const description = product.shortDescription || product.description?.substring(0, 160) || 'Kjøp produkt hos ElectroHypeX';
 
-  const price = Number(product.price);
-  const baseUrl = SITE_CONFIG.siteUrl;
-
-  return {
-      title: `${cleanedName} | ElectroHypeX`,
+  // Use SEO helper for consistent metadata
+  return generateSEOMetadata({
+    title: cleanedName,
     description,
+    url: `/products/${slug}`,
+    images: images.length > 0 ? [{ url: images[0], width: 1200, height: 630, alt: cleanedName }] : [],
     keywords: [cleanedName, product.category || '', 'elektronikk', 'Norge', 'kjøp', 'nettbutikk'],
-    openGraph: {
-      title: cleanedName,
-      description,
-      images: images.length > 0 ? [
-        {
-          url: images[0],
-          width: 1200,
-          height: 630,
-          alt: cleanedName,
-        }
-      ] : [],
-      type: 'website',
-      url: `${baseUrl}/products/${slug}`,
-      siteName: 'ElectroHypeX',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: cleanedName,
-      description,
-      images: images.length > 0 ? [images[0]] : [],
-    },
-    alternates: {
-      canonical: `${baseUrl}/products/${slug}`,
-    },
-  };
+    type: 'product',
+    canonical: `/products/${slug}`,
+  });
 }
 
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
@@ -541,11 +520,73 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     image: images[0] || 'https://placehold.co/600x600?text=Ingen+bilde',
   };
 
+  // Calculate total stock from variants
+  const totalStock = variants.reduce((sum, v) => sum + v.stock, 0) || product.stock || 0;
+  const isInStock = totalStock > 0;
+
+  // Parse specs from product.specs (JSON field)
+  let productSpecs: Record<string, string> = {};
+  try {
+    if (product.specs && typeof product.specs === 'object') {
+      productSpecs = product.specs as Record<string, string>;
+    } else if (typeof product.specs === 'string') {
+      productSpecs = JSON.parse(product.specs);
+    }
+  } catch {
+    productSpecs = {};
+  }
+
+  // Add default specs if none exist
+  if (Object.keys(productSpecs).length === 0) {
+    productSpecs = {
+      'Kategori': product.category || 'Elektronikk',
+      'Lagerstatus': isInStock ? `${totalStock} på lager` : 'Ikke på lager',
+      'Leveringstid': '5–12 virkedager',
+      'Garanti': '2 år',
+    };
+  }
+
+  // Generate JSON-LD structured data
+  const productJSONLD = generateProductJSONLD({
+    name: cleanedName,
+    description: product.shortDescription || product.description?.substring(0, 200) || cleanedName,
+    image: images.length > 0 ? images : [productData.image],
+    price: product.price,
+    currency: 'NOK',
+    availability: isInStock ? 'InStock' : 'OutOfStock',
+    sku: product.sku || undefined,
+    brand: 'ElectroHypeX',
+    category: product.category || undefined,
+    url: `/products/${product.slug}`,
+  });
+
+  // Generate breadcrumb JSON-LD
+  const breadcrumbItems = [
+    { name: 'Hjem', url: '/' },
+    { name: 'Produkter', url: '/products' },
+  ];
+  if (product.category) {
+    breadcrumbItems.push({ name: product.category, url: `/products?category=${encodeURIComponent(product.category)}` });
+  }
+  breadcrumbItems.push({ name: cleanedName, url: `/products/${product.slug}` });
+  const breadcrumbJSONLD = generateBreadcrumbJSONLD(breadcrumbItems);
+
   return (
-    <main className="min-h-screen bg-slate-50 py-4 sm:py-6 lg:py-8">
-      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-        
-        {/* Breadcrumbs */}
+    <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJSONLD) }}
+      />
+      
+      <main className="min-h-screen bg-slate-50 py-4 sm:py-6 lg:py-8">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+          
+          {/* Breadcrumbs */}
         <nav className="mb-4 sm:mb-6 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 overflow-x-auto">
           <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">Hjem</Link>
           <span>/</span>
@@ -579,9 +620,15 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                     SPAR {discountPercent}%
                   </span>
                 )}
-                <span className="rounded-md bg-green-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-green-700">
-                  Tilgjengelig
-                </span>
+                {isInStock ? (
+                  <span className="rounded-md bg-green-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-green-700">
+                    {totalStock > 10 ? 'På lager' : `${totalStock} på lager`}
+                  </span>
+                ) : (
+                  <span className="rounded-md bg-red-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-red-700">
+                    Ikke på lager
+                  </span>
+                )}
               </div>
 
               {/* Kategori */}
@@ -682,7 +729,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         {/* Tabs */}
         <ProductTabs 
           description={product.description || ''} 
-          specifications={{}}
+          specifications={productSpecs}
         />
 
         {/* Anbefalte produkter */}
@@ -710,7 +757,8 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
             </div>
           </section>
         )}
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   );
 }

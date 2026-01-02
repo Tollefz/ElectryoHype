@@ -10,6 +10,7 @@ import RefTracker from "./RefTracker";
 import { Toaster } from "react-hot-toast";
 import { SITE_CONFIG } from "@/lib/site";
 import { SourceMapSuppress } from "./sourcemap-suppress";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -96,6 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
+            <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
             <Toaster 
               position="top-right"
               toastOptions={{

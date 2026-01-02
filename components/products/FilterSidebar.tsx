@@ -16,6 +16,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") ?? "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
   const activeCategory = searchParams.get("category");
+  const inStockOnly = searchParams.get("inStock") === "true";
 
   const updateParams = (params: Record<string, string | null>) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -113,6 +114,19 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
             </Button>
           </div>
         </div>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Lagerstatus</h3>
+        <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+          <input
+            type="checkbox"
+            checked={inStockOnly}
+            onChange={(e) => updateParams({ inStock: e.target.checked ? "true" : null })}
+            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          />
+          Kun produkter på lager
+        </label>
       </div>
     </aside>
   );

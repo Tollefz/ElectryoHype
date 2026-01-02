@@ -72,6 +72,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const sort = params.sort ?? "newest";
   const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
+  const inStockOnly = params.inStock === "true";
 
   // Ensure we don't query demo-store products - fallback to DEFAULT_STORE_ID (Electro Hype)
   const safeStoreId = storeId === "demo-store" ? DEFAULT_STORE_ID : storeId;
@@ -108,6 +109,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     if (maxPrice) {
       where.price.lte = maxPrice;
     }
+  }
+
+  // Filter by stock if requested
+  if (inStockOnly) {
+    where.stock = {
+      gt: 0,
+    };
   }
 
   let productsRaw: Array<{

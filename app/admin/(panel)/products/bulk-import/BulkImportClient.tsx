@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Download, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { importProducts } from "./actions";
+import type { BulkImportResult } from "@/lib/providers";
 
 interface ImportResult {
   success: boolean;
@@ -14,6 +15,33 @@ interface ImportResult {
   images?: number;
   price?: number;
   variants?: number;
+}
+
+/**
+ * Map BulkImportResult to ImportResult format
+ * BulkImportResult uses status ("success" | "error" | "warning") and message
+ * ImportResult uses success (boolean) and separate error field
+ */
+function mapBulkImportResultToImportResult(bulkResult: BulkImportResult): ImportResult {
+  // Consider both "success" and "warning" as successful (warning means product was created but has warnings)
+  const success = bulkResult.status === "success" || bulkResult.status === "warning";
+  
+  // Extract product name from message if available (format: "Produkt importert: {name}")
+  let productName: string | undefined;
+  if (success && bulkResult.message.includes("Produkt importert:")) {
+    productName = bulkResult.message.replace("Produkt importert:", "").trim();
+  }
+  
+  return {
+    success,
+    url: bulkResult.inputUrl || bulkResult.normalizedUrl,
+    productName,
+    error: bulkResult.status === "error" ? bulkResult.message : undefined,
+    // images, price, variants are not available in BulkImportResult
+    images: undefined,
+    price: undefined,
+    variants: undefined,
+  };
 }
 
 export default function BulkImportClient() {
@@ -37,11 +65,11 @@ export default function BulkImportClient() {
         return;
       }
 
-      const importResults = result.results || [];
+      const importResults = (result.results || []).map(mapBulkImportResultToImportResult);
       setResults(importResults);
 
       // Vis suksessmelding hvis noen produkter ble importert
-      const successful = importResults.filter((r: ImportResult) => r.success);
+      const successful = importResults.filter((r) => r.success);
       if (successful.length > 0) {
         setTimeout(() => {
           router.push("/admin/products");
