@@ -13,54 +13,79 @@ async function sanitizeProductDescriptions() {
 
   try {
     // Find products with supplier references in description or shortDescription
+    // Search for: temu, alibaba, ebay, oppdag, discover, temu.com
     const products = await prisma.product.findMany({
       where: {
         OR: [
           {
             description: {
-              contains: 'Temu',
+              contains: 'temu',
               mode: 'insensitive',
             },
           },
           {
             description: {
-              contains: 'Alibaba',
+              contains: 'alibaba',
               mode: 'insensitive',
             },
           },
           {
             description: {
-              contains: 'eBay',
+              contains: 'ebay',
               mode: 'insensitive',
             },
           },
           {
             description: {
-              contains: 'Oppdag flere',
+              contains: 'oppdag',
+              mode: 'insensitive',
+            },
+          },
+          {
+            description: {
+              contains: 'discover',
+              mode: 'insensitive',
+            },
+          },
+          {
+            description: {
+              contains: 'temu.com',
               mode: 'insensitive',
             },
           },
           {
             shortDescription: {
-              contains: 'Temu',
+              contains: 'temu',
               mode: 'insensitive',
             },
           },
           {
             shortDescription: {
-              contains: 'Alibaba',
+              contains: 'alibaba',
               mode: 'insensitive',
             },
           },
           {
             shortDescription: {
-              contains: 'eBay',
+              contains: 'ebay',
               mode: 'insensitive',
             },
           },
           {
             shortDescription: {
-              contains: 'Oppdag flere',
+              contains: 'oppdag',
+              mode: 'insensitive',
+            },
+          },
+          {
+            shortDescription: {
+              contains: 'discover',
+              mode: 'insensitive',
+            },
+          },
+          {
+            shortDescription: {
+              contains: 'temu.com',
               mode: 'insensitive',
             },
           },
@@ -84,6 +109,7 @@ async function sanitizeProductDescriptions() {
 
     let updated = 0;
     let skipped = 0;
+    const fallbackDescription = 'Dette produktet er en del av vårt utvalg av elektronikk og tilbehør. Vi leverer kvalitetsprodukter med fokus på funksjonalitet og verdi.';
 
     for (const product of products) {
       try {
@@ -92,24 +118,28 @@ async function sanitizeProductDescriptions() {
         let newShortDescription = product.shortDescription;
 
         // Sanitize description if it exists
-        if (product.description) {
+        if (product.description && product.description.trim().length > 0) {
           const sanitized = sanitizeDescriptionWithFallback(
             product.description,
-            product.description // Keep original if sanitization removes too much
+            fallbackDescription
           );
-          if (sanitized !== product.description) {
+          // Only update if sanitized result is different and not empty
+          if (sanitized !== product.description && sanitized.trim().length > 0) {
             newDescription = sanitized;
             needsUpdate = true;
           }
         }
 
         // Sanitize shortDescription if it exists
-        if (product.shortDescription) {
+        if (product.shortDescription && product.shortDescription.trim().length > 0) {
           const sanitized = sanitizeDescriptionWithFallback(
             product.shortDescription,
-            product.shortDescription // Keep original if sanitization removes too much
+            product.shortDescription.length > 50 
+              ? product.shortDescription.substring(0, 50) + '...'
+              : product.shortDescription
           );
-          if (sanitized !== product.shortDescription) {
+          // Only update if sanitized result is different and not empty
+          if (sanitized !== product.shortDescription && sanitized.trim().length > 0) {
             newShortDescription = sanitized;
             needsUpdate = true;
           }
@@ -119,8 +149,8 @@ async function sanitizeProductDescriptions() {
           await prisma.product.update({
             where: { id: product.id },
             data: {
-              description: newDescription,
-              shortDescription: newShortDescription,
+              description: newDescription || product.description,
+              shortDescription: newShortDescription || product.shortDescription,
             },
           });
           updated++;
@@ -149,4 +179,3 @@ async function sanitizeProductDescriptions() {
 
 // Run the script
 sanitizeProductDescriptions();
-

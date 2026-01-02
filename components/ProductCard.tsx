@@ -237,9 +237,9 @@ function ProductCard({ product }: ProductCardProps) {
           </button>
 
           {/* Leveringsinfo - skjul på mobil */}
-          {availability.purchasable && availability.leadTimeDays && (
+          {availability.purchasable && (
             <p className="mt-2 hidden text-center text-xs font-medium text-green-600 sm:block">
-              ✓ {availability.label} – {availability.leadTimeDays.min}–{availability.leadTimeDays.max} virkedager
+              ✓ {availability.label}
             </p>
           )}
           {!availability.purchasable && (

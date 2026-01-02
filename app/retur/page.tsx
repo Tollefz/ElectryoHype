@@ -30,18 +30,18 @@ export default function ReturPage() {
             <div className="flex items-start gap-4">
               <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
               <div>
-                <h3 className="font-semibold text-dark">14 dagers angrerett (forbrukerkjøpsloven)</h3>
+                <h3 className="font-semibold text-dark">14 dagers angrerett</h3>
                 <p className="text-gray-medium">
-                  I henhold til forbrukerkjøpsloven har du 14 dagers angrerett på kjøp gjort på nett. Du kan returnere produktet innen 14 dager uten å oppgi grunn.
+                  I henhold til forbrukerkjøpsloven har du 14 dagers angrerett på kjøp gjort på nett. Dette er en juridisk rettighet som betyr at du kan returnere produktet innen 14 dager uten å oppgi grunn.
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-4">
               <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-brand" />
               <div>
-                <h3 className="font-semibold text-dark">30 dagers åpent kjøp (vår policy)</h3>
+                <h3 className="font-semibold text-dark">30 dagers åpent kjøp</h3>
                 <p className="text-gray-medium">
-                  I tillegg til din juridiske angrerett, tilbyr vi 30 dagers åpent kjøp på alle produkter. Dette gir deg ekstra tid til å teste produktet.
+                  I tillegg til din juridiske angrerett, tilbyr vi 30 dagers åpent kjøp på alle produkter. Dette er vår frivillige butikkpolicy og gir deg ekstra tid til å teste produktet.
                 </p>
               </div>
             </div>

@@ -51,13 +51,13 @@ export default function VilkarPage() {
           <div>
             <h2 className="mb-4 text-2xl font-bold text-dark">Returrett og angrerett</h2>
             <p className="mb-4 text-gray-medium">
-              I henhold til forbrukerkjøpsloven har du 14 dagers angrerett på kjøp gjort på nett. Dette betyr at du kan returnere produktet innen 14 dager uten å oppgi grunn, så lenge produktet er ubrukt og i original emballasje.
+              <strong>Angrerett (14 dager):</strong> I henhold til forbrukerkjøpsloven har du 14 dagers angrerett på kjøp gjort på nett. Dette er en juridisk rettighet som betyr at du kan returnere produktet innen 14 dager uten å oppgi grunn, så lenge produktet er ubrukt og i original emballasje.
             </p>
             <p className="mb-4 text-gray-medium">
-              I tillegg til din juridiske angrerett, tilbyr vi 30 dagers åpent kjøp på alle produkter. Dette er vår butikkpolicy og gir deg ekstra tid til å teste produktet.
+              <strong>Reklamasjon:</strong> I henhold til forbrukerkjøpsloven har du rett til reklamasjon ved feil og mangler. Produktet skal være i samsvar med det som er lovet og forventet ved kjøp.
             </p>
-            <p className="mb-4 text-sm text-gray-500">
-              <strong>Merk:</strong> Angrerett (14 dager) er en juridisk rettighet i henhold til forbrukerkjøpsloven. Åpent kjøp (30 dager) er vår frivillige butikkpolicy.
+            <p className="mb-4 text-gray-medium">
+              <strong>Åpent kjøp (30 dager):</strong> I tillegg til dine juridiske rettigheter, tilbyr vi 30 dagers åpent kjøp på alle produkter. Dette er vår frivillige butikkpolicy og gir deg ekstra tid til å teste produktet.
             </p>
           </div>
 

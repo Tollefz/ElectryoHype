@@ -37,13 +37,13 @@ export function getAvailability(product: ProductData): AvailabilityInfo {
   const purchasable = isActive;
   const isInStock = totalStock > 0; // Informational only
 
-  // Generate label
+  // Generate label - include lead time for purchasable products for consistency
   let label: string;
   if (!purchasable) {
     label = "Ikke på lager";
   } else {
-    // Purchasable products show "Tilgjengelig" (not stock count)
-    label = "Tilgjengelig";
+    // Purchasable products show "Tilgjengelig – 5–12 virkedager" for consistency
+    label = "Tilgjengelig – 5–12 virkedager";
   }
 
   return {
