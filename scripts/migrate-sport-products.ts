@@ -12,7 +12,6 @@ async function main() {
 
   // Find all products that should be moved to demo-store
   const sportCategories = ["Sport", "Klær"];
-  const sportKeywords = ["Trenings", "Sport", "Yoga", "Ball", "Undertøy"];
 
   // Find products to migrate
   const productsToMigrate = await prisma.product.findMany({

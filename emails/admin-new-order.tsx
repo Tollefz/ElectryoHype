@@ -1,25 +1,38 @@
 import {
   Body,
+  Button,
   Container,
-  Head,
   Heading,
+  Hr,
   Html,
   Preview,
-  Text,
   Section,
-  Button,
-  Hr,
-} from '@react-email/components';
+  Text,
+} from "@react-email/components";
+import type { EmailOrderItem } from "@/lib/email-items";
+import {
+  EmailFooter,
+  EmailHeadStyles,
+  EmailLogoHeader,
+  EmailProductRows,
+  brand,
+} from "./shared";
 
 interface AdminNewOrderEmailProps {
   orderNumber: string;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  items: any[];
+  items: EmailOrderItem[];
   total: number;
-  shippingAddress: any;
+  shippingAddress: {
+    name?: string;
+    address?: string;
+    zip?: string;
+    city?: string;
+  };
   orderUrl: string;
+  logoUrl: string;
 }
 
 export default function AdminNewOrderEmail({
@@ -31,59 +44,67 @@ export default function AdminNewOrderEmail({
   total,
   shippingAddress,
   orderUrl,
+  logoUrl,
 }: AdminNewOrderEmailProps) {
   return (
     <Html>
-      <Head />
-      <Preview>Ny ordre mottatt: {orderNumber}</Preview>
-      <Body style={styles.body}>
-        <Container style={styles.container}>
-          <Heading style={styles.h1}>🎉 NY ORDRE MOTTATT!</Heading>
-          
-          <Text style={styles.alert}>
-            Ordre {orderNumber} er betalt og venter på behandling.
+      <EmailHeadStyles />
+      <Preview>Ny betalt ordre {orderNumber}</Preview>
+      <Body style={styles.body} className="ehx-body">
+        <Container style={styles.container} className="ehx-container">
+          <EmailLogoHeader logoUrl={logoUrl} />
+
+          <Heading style={styles.h1} className="ehx-h1 ehx-pad ehx-text">
+            Ny ordre
+          </Heading>
+          <Text style={styles.alert} className="ehx-info ehx-card">
+            {orderNumber} er betalt og venter på behandling.
           </Text>
 
-          <Section style={styles.section}>
-            <Heading as="h2" style={styles.h2}>Kundeinformasjon</Heading>
-            <Text style={styles.text}>
-              <strong>Navn:</strong> {customerName}<br />
-              <strong>E-post:</strong> {customerEmail}<br />
-              <strong>Telefon:</strong> {customerPhone}
+          <Section style={styles.card} className="ehx-card">
+            <Heading as="h2" style={styles.h2} className="ehx-h2">
+              Kunde
+            </Heading>
+            <Text style={styles.text} className="ehx-text">
+              <strong>{customerName}</strong>
+              <br />
+              {customerEmail}
+              <br />
+              {customerPhone}
             </Text>
           </Section>
 
-          <Section style={styles.section}>
-            <Heading as="h2" style={styles.h2}>Leveringsadresse</Heading>
-            <Text style={styles.text}>
-              {shippingAddress.name}<br />
-              {shippingAddress.address}<br />
+          <Section style={styles.card} className="ehx-card">
+            <Heading as="h2" style={styles.h2} className="ehx-h2">
+              Levering
+            </Heading>
+            <Text style={styles.text} className="ehx-text">
+              {shippingAddress.name}
+              <br />
+              {shippingAddress.address}
+              <br />
               {shippingAddress.zip} {shippingAddress.city}
             </Text>
           </Section>
 
-          <Section style={styles.section}>
-            <Heading as="h2" style={styles.h2}>Produkter</Heading>
-            {items.map((item: any, index: number) => (
-              <Text key={index} style={styles.productText}>
-                • {item.quantity}x {item.name} - {item.price} kr
-              </Text>
-            ))}
+          <Section style={styles.card} className="ehx-card">
+            <Heading as="h2" style={styles.h2} className="ehx-h2">
+              Produkter
+            </Heading>
+            <EmailProductRows items={items} />
             <Hr style={styles.hr} />
-            <Text style={styles.totalText}>
-              <strong>Total: {total.toFixed(0)} kr</strong>
+            <Text style={styles.total} className="ehx-total">
+              Totalt: {total.toFixed(0)} kr
             </Text>
           </Section>
 
-          <Section style={styles.buttonSection}>
+          <Section style={styles.buttonSection} className="ehx-pad">
             <Button style={styles.button} href={orderUrl}>
-              Se ordre i admin panel
+              Åpne ordre i admin
             </Button>
           </Section>
 
-          <Text style={styles.footer}>
-            Logg inn i admin panelet for å behandle ordren og bestille fra leverandør.
-          </Text>
+          <EmailFooter />
         </Container>
       </Body>
     </Html>
@@ -92,84 +113,79 @@ export default function AdminNewOrderEmail({
 
 const styles = {
   body: {
-    backgroundColor: '#f6f9fc',
-    fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+    backgroundColor: brand.body,
+    fontFamily: brand.font,
+    margin: "0",
+    padding: "24px 0",
   },
   container: {
-    backgroundColor: '#ffffff',
-    margin: '0 auto',
-    padding: '20px 0 48px',
-    maxWidth: '600px',
+    backgroundColor: brand.white,
+    margin: "0 auto",
+    padding: "0 0 36px",
+    maxWidth: "600px",
+    borderRadius: "12px",
+    border: `1px solid ${brand.border}`,
   },
   h1: {
-    color: '#1f2937',
-    fontSize: '24px',
-    fontWeight: 'bold',
-    margin: '40px 0',
-    padding: '0 40px',
+    color: brand.dark,
+    fontSize: "24px",
+    fontWeight: 700,
+    margin: "8px 0 16px",
+    padding: "0 32px",
   },
   h2: {
-    color: '#1f2937',
-    fontSize: '18px',
-    fontWeight: '600',
-    margin: '20px 0 12px',
+    color: brand.dark,
+    fontSize: "13px",
+    fontWeight: 700,
+    margin: "0 0 12px",
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.04em",
   },
   text: {
-    color: '#4b5563',
-    fontSize: '14px',
-    lineHeight: '22px',
-    margin: '8px 0',
+    color: "#374151",
+    fontSize: "14px",
+    lineHeight: "22px",
+    margin: "0",
   },
   alert: {
-    backgroundColor: '#fef3c7',
-    border: '1px solid #fbbf24',
-    borderRadius: '8px',
-    color: '#92400e',
-    fontSize: '14px',
-    fontWeight: '600',
-    padding: '16px',
-    margin: '0 40px 24px',
+    backgroundColor: "#ecfdf5",
+    border: "1px solid #a7f3d0",
+    borderRadius: "10px",
+    color: "#065f46",
+    fontSize: "14px",
+    fontWeight: 600,
+    padding: "14px 16px",
+    margin: "0 24px 18px",
   },
-  section: {
-    padding: '0 40px',
-    margin: '24px 0',
-  },
-  productText: {
-    color: '#1f2937',
-    fontSize: '14px',
-    margin: '4px 0',
+  card: {
+    margin: "14px 24px",
+    padding: "18px",
+    backgroundColor: brand.card,
+    borderRadius: "10px",
+    border: `1px solid ${brand.border}`,
   },
   hr: {
-    borderColor: '#e5e7eb',
-    margin: '16px 0',
+    borderColor: brand.border,
+    margin: "8px 0 12px",
   },
-  totalText: {
-    color: '#1f2937',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    margin: '8px 0',
+  total: {
+    color: brand.dark,
+    fontSize: "16px",
+    fontWeight: 700,
+    margin: "0",
   },
   buttonSection: {
-    padding: '0 40px',
-    margin: '32px 0',
+    padding: "8px 24px 0",
   },
   button: {
-    backgroundColor: '#3b82f6',
-    borderRadius: '8px',
-    color: '#ffffff',
-    fontSize: '14px',
-    fontWeight: '600',
-    textDecoration: 'none',
-    textAlign: 'center' as const,
-    display: 'block',
-    padding: '12px 24px',
-  },
-  footer: {
-    color: '#6b7280',
-    fontSize: '12px',
-    lineHeight: '20px',
-    margin: '24px 0 0',
-    padding: '0 40px',
+    backgroundColor: brand.green,
+    borderRadius: "8px",
+    color: "#ffffff",
+    fontSize: "14px",
+    fontWeight: 600,
+    textDecoration: "none",
+    textAlign: "center" as const,
+    display: "block",
+    padding: "14px 24px",
   },
 };
-

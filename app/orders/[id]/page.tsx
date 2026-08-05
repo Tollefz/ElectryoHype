@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 type SupplierOrderStatus =
   | "PENDING"
@@ -53,13 +54,15 @@ function humanSupplierStatus(status?: SupplierOrderStatus | null) {
   return map[status] || status;
 }
 
-export default function OrderTrackingPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function OrderTrackingPage() {
+  const routeParams = useParams<{ id: string }>();
+  const id = routeParams.id;
   const [order, setOrder] = useState<Order | null>(null);
   const [events, setEvents] = useState<SupplierEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) return;
     const load = async () => {
       try {
         const orderRes = await fetch(`/api/orders/${id}`);

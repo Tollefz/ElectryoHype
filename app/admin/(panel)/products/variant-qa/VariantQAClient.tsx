@@ -176,7 +176,7 @@ export default function VariantQAClient() {
         throw new Error('Fix failed');
       }
 
-      const result = await response.json();
+      await response.json();
       alert(`✅ Fiksing fullført! Sjekk konsollen for detaljer.`);
       
       // Reload products to see updates
@@ -207,7 +207,9 @@ export default function VariantQAClient() {
       {/* HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Variant Quality Check</h1>
+          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+            Variantkontroll
+          </h1>
           <p className="text-sm text-gray-600 mt-1">
             Verifiser at alle produktvarianter har riktige bilder, farger og data
           </p>

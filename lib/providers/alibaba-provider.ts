@@ -1,10 +1,53 @@
 import "server-only";
 
 import type { ImportProvider, RawProduct, MappedProduct } from "./types";
-import type { ScrapedProductData, ProductVariant } from "@/lib/scrapers/types";
+import type { ProductVariant } from "@/lib/scrapers/types";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { normalizeUrl as normalizeUrlUtil, isValidAlibabaUrl } from "@/lib/utils/url-validation";
+
+type JsonRecord = Record<string, unknown>;
+
+interface AlibabaPriceInfo {
+  amount?: number;
+  currency?: string;
+  fromPrice?: number;
+  toPrice?: number;
+  minPrice?: number;
+  from?: number;
+  to?: number;
+  min?: number;
+  max?: number;
+}
+
+interface AlibabaProductData {
+  title?: string;
+  name?: string;
+  description?: string;
+  longDescription?: string;
+  images?: string[];
+  price?: AlibabaPriceInfo | number | null;
+  specs?: Record<string, string>;
+  variants?: ProductVariant[];
+  options?: Array<Record<string, unknown>>;
+  moq?: number | null;
+  shippingEstimate?: string;
+  availability?: boolean;
+  metadata?: JsonRecord & {
+    priceRange?: AlibabaPriceInfo;
+    moq?: number;
+    shipping?: string;
+  };
+  warnings?: string[];
+}
+
+function strField(obj: JsonRecord, ...keys: string[]): string | undefined {
+  for (const key of keys) {
+    const v = obj[key];
+    if (typeof v === "string" && v) return v;
+  }
+  return undefined;
+}
 
 /**
  * Alibaba import provider
@@ -195,7 +238,7 @@ export class AlibabaProvider implements ImportProvider {
   }
 
   mapToProduct(raw: RawProduct, originalUrl: string): MappedProduct {
-    const data = raw as any;
+    const data = raw as AlibabaProductData;
     
     // Extract price (handle intervals)
     let price = { amount: 0, currency: "USD" };
@@ -219,7 +262,7 @@ export class AlibabaProvider implements ImportProvider {
     // Extract variants
     let variants: ProductVariant[] = [];
     if (data.variants && Array.isArray(data.variants) && data.variants.length > 0) {
-      variants = data.variants.map((v: any) => ({
+      variants = data.variants.map((v) => ({
         name: v.name || "Standard",
         price: v.price || price.amount,
         attributes: v.attributes || {},
@@ -228,12 +271,12 @@ export class AlibabaProvider implements ImportProvider {
       }));
     } else if (data.options && Array.isArray(data.options)) {
       // Convert options to variants
-      variants = data.options.map((opt: any) => ({
-        name: opt.name || opt.label || "Standard",
-        price: opt.price || price.amount,
-        attributes: opt.attributes || {},
-        image: opt.image,
-        stock: opt.stock || 0,
+      variants = data.options.map((opt) => ({
+        name: (opt.name as string) || (opt.label as string) || "Standard",
+        price: (opt.price as number) || price.amount,
+        attributes: (opt.attributes as Record<string, string>) || {},
+        image: opt.image as string | undefined,
+        stock: (opt.stock as number) || 0,
       }));
     }
 
@@ -281,21 +324,21 @@ export class AlibabaProvider implements ImportProvider {
   /**
    * Extract product data from JSON-LD structured data
    */
-  private extractFromJsonLd($: cheerio.CheerioAPI): any {
+  private extractFromJsonLd($: cheerio.CheerioAPI): AlibabaProductData | null {
     try {
       const jsonLdScripts = $('script[type="application/ld+json"]');
-      let productData: any = null;
+      let productData: AlibabaProductData | null = null;
 
       jsonLdScripts.each((_, el) => {
         try {
           const jsonText = $(el).text();
-          const json = JSON.parse(jsonText);
+          const json = JSON.parse(jsonText) as JsonRecord;
           
           // Look for Product or ProductGroup schema
           if (json['@type'] === 'Product' || json['@type'] === 'http://schema.org/Product') {
             productData = {
-              title: json.name || json.title,
-              description: json.description,
+              title: strField(json, 'name', 'title'),
+              description: strField(json, 'description'),
               images: this.extractImagesFromJsonLd(json),
               price: this.extractPriceFromJsonLd(json),
               specs: this.extractSpecsFromJsonLd(json),
@@ -304,7 +347,7 @@ export class AlibabaProvider implements ImportProvider {
             };
             return false; // Stop iteration
           }
-        } catch (e) {
+        } catch {
           // Continue with next script
         }
       });
@@ -320,7 +363,7 @@ export class AlibabaProvider implements ImportProvider {
    * Extract product data from embedded JSON in script tags
    * Improved parsing for __INIT_DATA__ and __NEXT_DATA__
    */
-  private extractFromEmbeddedJson($: cheerio.CheerioAPI, html: string): any {
+  private extractFromEmbeddedJson($: cheerio.CheerioAPI, html: string): AlibabaProductData | null {
     try {
       // Try __INIT_DATA__ pattern (with dotall support)
       const initDataPattern = /window\.__INIT_DATA__\s*=\s*({[\s\S]*?});/;
@@ -420,30 +463,32 @@ export class AlibabaProvider implements ImportProvider {
   /**
    * Extract product data from nested JSON structure
    */
-  private extractFromNestedJson(json: any, depth = 0): any {
+  private extractFromNestedJson(json: unknown, depth = 0): AlibabaProductData | null {
     if (depth > 5) return null; // Limit recursion
 
     if (!json || typeof json !== 'object') return null;
 
+    const obj = json as JsonRecord;
+
     // Check if this looks like product data
-    if (json.title || json.name || json.productName) {
+    if (obj.title || obj.name || obj.productName) {
       return {
-        title: json.title || json.name || json.productName,
-        description: json.description || json.desc || json.productDescription,
-        images: this.extractImagesFromNested(json),
-        price: this.extractPriceFromNested(json),
-        variants: this.extractVariantsFromNested(json),
-        moq: json.moq || json.minOrderQuantity || json.minimumOrderQuantity,
-        specs: json.specs || json.specifications || json.attributes,
+        title: (obj.title || obj.name || obj.productName) as string,
+        description: (obj.description || obj.desc || obj.productDescription) as string | undefined,
+        images: this.extractImagesFromNested(obj),
+        price: this.extractPriceFromNested(obj),
+        variants: this.extractVariantsFromNested(obj),
+        moq: (obj.moq || obj.minOrderQuantity || obj.minimumOrderQuantity) as number | null | undefined,
+        specs: (obj.specs || obj.specifications || obj.attributes) as Record<string, string> | undefined,
       };
     }
 
     // Recursively search nested objects
-    for (const key in json) {
+    for (const key in obj) {
       if (key.toLowerCase().includes('product') || 
           key.toLowerCase().includes('goods') ||
           key.toLowerCase().includes('item')) {
-        const result = this.extractFromNestedJson(json[key], depth + 1);
+        const result = this.extractFromNestedJson(obj[key], depth + 1);
         if (result) return result;
       }
     }
@@ -463,7 +508,7 @@ export class AlibabaProvider implements ImportProvider {
    * Extract product data from HTML using selectors (fallback)
    * Uses multiple alternative selectors for robustness
    */
-  private extractFromHtml($: cheerio.CheerioAPI, url: string): any {
+  private extractFromHtml($: cheerio.CheerioAPI, url: string): AlibabaProductData | null {
     try {
       // Extract title with multiple fallback selectors
       const title = this.extractTitle($);
@@ -543,7 +588,7 @@ export class AlibabaProvider implements ImportProvider {
   /**
    * Extract price with multiple fallback selectors
    */
-  private extractPrice($: cheerio.CheerioAPI): any {
+  private extractPrice($: cheerio.CheerioAPI): AlibabaPriceInfo | null {
     // Try multiple selectors
     const priceSelectors = [
       ".price .price-text",
@@ -843,13 +888,14 @@ export class AlibabaProvider implements ImportProvider {
   /**
    * Helper methods for data extraction
    */
-  private extractImagesFromJsonLd(json: any): string[] {
+  private extractImagesFromJsonLd(json: JsonRecord): string[] {
     const images: string[] = [];
     if (json.image) {
       const imageArray = Array.isArray(json.image) ? json.image : [json.image];
-      imageArray.forEach((img: any) => {
-        const url = typeof img === 'string' ? img : (img.url || img['@id'] || img.contentUrl);
-        if (url && url.startsWith('http')) {
+      imageArray.forEach((img: unknown) => {
+        const imgObj = typeof img === 'string' ? null : (img as JsonRecord | null);
+        const url = typeof img === 'string' ? img : (imgObj?.url || imgObj?.['@id'] || imgObj?.contentUrl);
+        if (typeof url === 'string' && url.startsWith('http')) {
           images.push(url);
         }
       });
@@ -857,19 +903,19 @@ export class AlibabaProvider implements ImportProvider {
     return images;
   }
 
-  private extractPriceFromJsonLd(json: any): any {
+  private extractPriceFromJsonLd(json: JsonRecord): AlibabaPriceInfo | null {
     if (json.offers) {
       const offers = Array.isArray(json.offers) ? json.offers : [json.offers];
       if (offers.length > 0) {
-        const offer = offers[0];
+        const offer = offers[0] as JsonRecord;
         if (offer.price) {
           const priceValue = typeof offer.price === 'string' 
             ? parseFloat(offer.price.replace(/[^0-9.]/g, ''))
-            : offer.price;
+            : (offer.price as number);
           
           return {
             amount: priceValue,
-            currency: offer.priceCurrency || "USD",
+            currency: (offer.priceCurrency as string) || "USD",
           };
         }
       }
@@ -877,40 +923,44 @@ export class AlibabaProvider implements ImportProvider {
     return null;
   }
 
-  private extractSpecsFromJsonLd(json: any): Record<string, string> {
+  private extractSpecsFromJsonLd(json: JsonRecord): Record<string, string> {
     const specs: Record<string, string> = {};
     if (json.additionalProperty && Array.isArray(json.additionalProperty)) {
-      json.additionalProperty.forEach((prop: any) => {
-        if (prop.name && prop.value) {
-          specs[prop.name] = prop.value;
+      json.additionalProperty.forEach((prop: unknown) => {
+        const p = prop as JsonRecord;
+        if (p.name && p.value) {
+          specs[String(p.name)] = String(p.value);
         }
       });
     }
     return specs;
   }
 
-  private extractVariantsFromJsonLd(json: any): ProductVariant[] {
+  private extractVariantsFromJsonLd(json: JsonRecord): ProductVariant[] {
     const variants: ProductVariant[] = [];
     if (json.offers && Array.isArray(json.offers) && json.offers.length > 1) {
-      json.offers.forEach((offer: any) => {
+      json.offers.forEach((offer: unknown) => {
+        const o = offer as JsonRecord;
         variants.push({
-          name: offer.name || "Variant",
-          price: typeof offer.price === 'string' 
-            ? parseFloat(offer.price.replace(/[^0-9.]/g, ''))
-            : (offer.price || 0),
+          name: (o.name as string) || "Variant",
+          price: typeof o.price === 'string' 
+            ? parseFloat(o.price.replace(/[^0-9.]/g, ''))
+            : ((o.price as number) || 0),
           attributes: {},
-          image: offer.image,
+          image: o.image as string | undefined,
         });
       });
     }
     return variants;
   }
 
-  private extractMoqFromJsonLd(json: any): number | null {
+  private extractMoqFromJsonLd(json: JsonRecord): number | null {
     if (json.offers && Array.isArray(json.offers)) {
       for (const offer of json.offers) {
-        if (offer.eligibleQuantity) {
-          const minValue = offer.eligibleQuantity.minValue;
+        const o = offer as JsonRecord;
+        const eligible = o.eligibleQuantity as JsonRecord | undefined;
+        if (eligible) {
+          const minValue = eligible.minValue;
           if (minValue) {
             return parseInt(String(minValue));
           }
@@ -920,16 +970,17 @@ export class AlibabaProvider implements ImportProvider {
     return null;
   }
 
-  private extractImagesFromNested(json: any): string[] {
+  private extractImagesFromNested(json: JsonRecord): string[] {
     const images: string[] = [];
     const imageFields = ['images', 'imageList', 'gallery', 'productImages', 'thumbnails'];
     
     for (const field of imageFields) {
       if (json[field]) {
         const imgArray = Array.isArray(json[field]) ? json[field] : [json[field]];
-        imgArray.forEach((img: any) => {
-          const url = typeof img === 'string' ? img : (img.url || img.src || img.original || img.thumbnail);
-          if (url && url.startsWith('http')) {
+        imgArray.forEach((img: unknown) => {
+          const imgObj = typeof img === 'string' ? null : (img as JsonRecord | null);
+          const url = typeof img === 'string' ? img : (imgObj?.url || imgObj?.src || imgObj?.original || imgObj?.thumbnail);
+          if (typeof url === 'string' && url.startsWith('http')) {
             images.push(url);
           }
         });
@@ -940,19 +991,20 @@ export class AlibabaProvider implements ImportProvider {
     return images;
   }
 
-  private extractPriceFromNested(json: any): any {
+  private extractPriceFromNested(json: JsonRecord): AlibabaPriceInfo | null {
     const priceFields = ['price', 'productPrice', 'unitPrice', 'salePrice', 'priceRange'];
     
     for (const field of priceFields) {
       if (json[field]) {
         if (typeof json[field] === 'number') {
-          return { amount: json[field], currency: json.currency || "USD" };
-        } else if (typeof json[field] === 'object') {
+          return { amount: json[field], currency: (json.currency as string) || "USD" };
+        } else if (typeof json[field] === 'object' && json[field] !== null) {
+          const p = json[field] as JsonRecord;
           return {
-            fromPrice: json[field].from || json[field].min || json[field].fromPrice,
-            toPrice: json[field].to || json[field].max || json[field].toPrice,
-            amount: json[field].from || json[field].min || json[field].fromPrice || json[field].amount,
-            currency: json[field].currency || json.currency || "USD",
+            fromPrice: (p.from || p.min || p.fromPrice) as number | undefined,
+            toPrice: (p.to || p.max || p.toPrice) as number | undefined,
+            amount: (p.from || p.min || p.fromPrice || p.amount) as number | undefined,
+            currency: (p.currency as string) || (json.currency as string) || "USD",
           };
         } else if (typeof json[field] === 'string') {
           return this.parsePriceRange(json[field]);
@@ -963,19 +1015,20 @@ export class AlibabaProvider implements ImportProvider {
     return null;
   }
 
-  private extractVariantsFromNested(json: any): ProductVariant[] {
+  private extractVariantsFromNested(json: JsonRecord): ProductVariant[] {
     const variants: ProductVariant[] = [];
     const variantFields = ['variants', 'options', 'skuList', 'productOptions'];
     
     for (const field of variantFields) {
       if (json[field] && Array.isArray(json[field])) {
-        json[field].forEach((variant: any) => {
+        (json[field] as unknown[]).forEach((variant: unknown) => {
+          const v = variant as JsonRecord;
           variants.push({
-            name: variant.name || variant.label || variant.title || "Variant",
-            price: variant.price || variant.unitPrice || 0,
-            attributes: variant.attributes || variant.specs || {},
-            image: variant.image || variant.thumbnail,
-            stock: variant.stock || variant.quantity || 0,
+            name: (v.name as string) || (v.label as string) || (v.title as string) || "Variant",
+            price: (v.price as number) || (v.unitPrice as number) || 0,
+            attributes: (v.attributes as Record<string, string>) || (v.specs as Record<string, string>) || {},
+            image: (v.image as string) || (v.thumbnail as string),
+            stock: (v.stock as number) || (v.quantity as number) || 0,
           });
         });
         if (variants.length > 0) break;
@@ -985,7 +1038,7 @@ export class AlibabaProvider implements ImportProvider {
     return variants;
   }
 
-  private parsePriceRange(priceText: string): any {
+  private parsePriceRange(priceText: string): AlibabaPriceInfo | null {
     if (!priceText) return null;
     
     // Try to extract price range (e.g., "$10.00 - $20.00" or "USD 10-20")
@@ -1022,13 +1075,13 @@ export class AlibabaProvider implements ImportProvider {
     return null;
   }
 
-  private hasEnoughData(data: any): boolean {
+  private hasEnoughData(data: AlibabaProductData | null): boolean {
     if (!data) return false;
     // Need at least title or name
     return !!(data.title || data.name);
   }
 
-  private mergeProductData(existing: any, newData: any): any {
+  private mergeProductData(existing: AlibabaProductData | null, newData: AlibabaProductData | null): AlibabaProductData | null {
     if (!existing) return newData;
     if (!newData) return existing;
     

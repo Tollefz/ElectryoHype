@@ -60,7 +60,7 @@ export class TemuProvider implements ImportProvider {
       url: originalUrl,
       title: data.title || "Temu Produkt",
       description: sanitizedDescription,
-      price: data.price || { amount: 9.99, currency: "USD" },
+      price: data.price || { amount: 0, currency: "NOK" },
       images: data.images || [],
       specs: data.specs || {},
       shippingEstimate: data.shippingEstimate,

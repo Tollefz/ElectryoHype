@@ -1,0 +1,489 @@
+{
+  "now": "2026-08-02T08:58:14.272Z",
+  "midnight": "2026-08-01T22:00:00.000Z",
+  "since12h": "2026-08-01T20:58:14.272Z",
+  "activeRun": {
+    "id": "cms9g1qzh00f4vf80v7ufeq6b",
+    "status": "running",
+    "scanned": 1760,
+    "kept": 906,
+    "filtered": 854,
+    "target": 50000,
+    "startedAt": "2026-07-31T21:17:46.587Z",
+    "updatedAt": "2026-08-02T08:41:23.456Z",
+    "finishedAt": null,
+    "error": null,
+    "ageHours": 35.7,
+    "staleMinutes": 17
+  },
+  "checkpoint": {
+    "page": 21,
+    "seedIdx": 1,
+    "supplierIdx": 0,
+    "seenKeysLen": 1760,
+    "discovery": {
+      "currentFamilyId": "magsafe",
+      "currentQuery": "MagSafe Power Bank",
+      "pagesOnCurrent": 1,
+      "emptyStreak": null,
+      "familyScanCounts": {
+        "magsafe": 327,
+        "gaming_keyboard": 393
+      },
+      "groupScanCounts": {
+        "mobil": 327,
+        "pc_gaming": 393
+      },
+      "recentFamilies": [
+        "gaming_keyboard",
+        "powerbank",
+        "magsafe"
+      ]
+    }
+  },
+  "progress": {
+    "stage": "analyzing",
+    "stageLabel": "AnalysererÔÇª",
+    "seedQuery": "MagSafe Power Bank",
+    "supplierLabel": "cj",
+    "current": 1760,
+    "total": 50000,
+    "kept": 906,
+    "filtered": 854,
+    "discoveryPlanNow": {
+      "label": "MagSafe",
+      "query": "MagSafe Power Bank",
+      "reason": "Familien mangler helt i butikken",
+      "groupId": "mobil",
+      "familyId": "magsafe",
+      "groupLabel": "Mobil"
+    },
+    "discoveryPlanQueue": [
+      {
+        "label": "Hurtiglader",
+        "query": "GaN Charger",
+        "reason": "Familien mangler helt i butikken",
+        "groupId": "mobil",
+        "familyId": "charger",
+        "groupLabel": "Mobil"
+      },
+      {
+        "label": "USB-C kabel",
+        "query": "USB-C Cable",
+        "reason": "Familien mangler helt i butikken",
+        "groupId": "mobil",
+        "familyId": "usb_c_cable",
+        "groupLabel": "Mobil"
+      },
+      {
+        "label": "SSD",
+        "query": "NVMe SSD",
+        "reason": "Familien mangler helt i butikken",
+        "groupId": "data_it",
+        "familyId": "ssd",
+        "groupLabel": "Data & IT"
+      },
+      {
+        "label": "RAM",
+        "query": "DDR4 RAM",
+        "reason": "Familien mangler helt i butikken",
+        "groupId": "data_it",
+        "familyId": "ram",
+        "groupLabel": "Data & IT"
+      },
+      {
+        "label": "USB-C Hub",
+        "query": "USB-C Hub",
+        "reason": "Familien mangler helt i butikken",
+        "groupId": "data_it",
+        "familyId": "usb_c_hub",
+        "groupLabel": "Data & IT"
+      },
+      {
+        "label": "Docking",
+        "query": "USB-C Docking Station",
+        "reason": "Familien mangler helt i butikken",
+        "groupId": "data_it",
+        "familyId": "docking_station",
+        "groupLabel": "Data & IT"
+      }
+    ],
+    "groupSharePct": [
+      {
+        "pct": 100,
+        "label": "Gaming",
+        "groupId": "pc_gaming"
+      },
+      {
+        "pct": 0,
+        "label": "Mobil",
+        "groupId": "mobil"
+      },
+      {
+        "pct": 0,
+        "label": "Kontor",
+        "groupId": "kontor"
+      },
+      {
+        "pct": 0,
+        "label": "Streaming",
+        "groupId": "streaming"
+      },
+      {
+        "pct": 0,
+        "label": "TV & Lyd",
+        "groupId": "tv_lyd"
+      },
+      {
+        "pct": 0,
+        "label": "Smart Home",
+        "groupId": "smart_home"
+      },
+      {
+        "pct": 0,
+        "label": "Data & IT",
+        "groupId": "data_it"
+      },
+      {
+        "pct": 0,
+        "label": "Maker",
+        "groupId": "maker"
+      }
+    ]
+  },
+  "decisions": {
+    "total": 2,
+    "sinceMidnight": 0,
+    "last12h": 0,
+    "recent": []
+  },
+  "growth": {
+    "keptBefore11h": 882,
+    "keptNow": 906,
+    "deltaKept": 24,
+    "createdLast11h": 102,
+    "keptCreatedLast11h": 24,
+    "totalCandidates": 1760
+  },
+  "hourly": [
+    {
+      "hour": "20:58ÔÇô21:58 Z",
+      "created": 32,
+      "updatedOnly": 8,
+      "keptCreated": 9,
+      "filteredCreated": 23,
+      "topFamiliesCreated": [
+        [
+          "other",
+          4
+        ],
+        [
+          "powerbank",
+          4
+        ],
+        [
+          "qi_charger",
+          1
+        ]
+      ]
+    },
+    {
+      "hour": "21:58ÔÇô22:58 Z",
+      "created": 20,
+      "updatedOnly": 1,
+      "keptCreated": 3,
+      "filteredCreated": 17,
+      "topFamiliesCreated": [
+        [
+          "powerbank",
+          2
+        ],
+        [
+          "other",
+          1
+        ]
+      ]
+    },
+    {
+      "hour": "22:58ÔÇô23:58 Z",
+      "created": 17,
+      "updatedOnly": 2,
+      "keptCreated": 3,
+      "filteredCreated": 14,
+      "topFamiliesCreated": [
+        [
+          "qi_charger",
+          1
+        ],
+        [
+          "other",
+          1
+        ],
+        [
+          "bluetooth_speaker",
+          1
+        ]
+      ]
+    },
+    {
+      "hour": "23:58ÔÇô00:58 Z",
+      "created": 35,
+      "updatedOnly": 5,
+      "keptCreated": 11,
+      "filteredCreated": 24,
+      "topFamiliesCreated": [
+        [
+          "powerbank",
+          3
+        ],
+        [
+          "other",
+          2
+        ],
+        [
+          "led_lighting",
+          2
+        ],
+        [
+          "qi_charger",
+          2
+        ],
+        [
+          "magsafe",
+          1
+        ]
+      ]
+    },
+    {
+      "hour": "00:58ÔÇô01:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "01:58ÔÇô02:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "02:58ÔÇô03:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "03:58ÔÇô04:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "04:58ÔÇô05:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "05:58ÔÇô06:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "06:58ÔÇô07:58 Z",
+      "created": 0,
+      "updatedOnly": 0,
+      "keptCreated": 0,
+      "filteredCreated": 0,
+      "topFamiliesCreated": []
+    },
+    {
+      "hour": "07:58ÔÇô08:58 Z",
+      "created": 30,
+      "updatedOnly": 10,
+      "keptCreated": 7,
+      "filteredCreated": 23,
+      "topFamiliesCreated": [
+        [
+          "powerbank",
+          3
+        ],
+        [
+          "other",
+          2
+        ],
+        [
+          "air_compressor",
+          1
+        ],
+        [
+          "led_lighting",
+          1
+        ]
+      ]
+    }
+  ],
+  "recent50Fam": [
+    [
+      "filtered:powerbank",
+      28
+    ],
+    [
+      "ranked:powerbank",
+      4
+    ],
+    [
+      "ranked:led_lighting",
+      3
+    ],
+    [
+      "filtered:qi_charger",
+      3
+    ],
+    [
+      "filtered:other",
+      3
+    ],
+    [
+      "filtered:led_lighting",
+      3
+    ],
+    [
+      "ranked:qi_charger",
+      2
+    ],
+    [
+      "ranked:other",
+      2
+    ],
+    [
+      "ranked:phone_mount",
+      1
+    ],
+    [
+      "ranked:air_compressor",
+      1
+    ]
+  ],
+  "jobs": {
+    "table": "supplierJob",
+    "totalLast12h": 4,
+    "buyerLast12h": 4,
+    "byStatus": {
+      "succeeded": 3,
+      "pending": 1
+    },
+    "retryishCount": 0,
+    "retryishSample": [],
+    "timings": [
+      {
+        "id": "cmsawehp000ggvf9k452w8lbd",
+        "type": "buyer_scan_batch",
+        "status": "succeeded",
+        "attempts": 1,
+        "lastError": null,
+        "createdAt": "2026-08-01T21:43:21.109Z",
+        "startedAt": "2026-08-01T22:41:09.288Z",
+        "finishedAt": "2026-08-01T23:18:39.365Z",
+        "durationSec": 2250,
+        "scanRunId": "cms9g1qzh00f4vf80v7ufeq6b",
+        "idempotencyKey": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1640"
+      },
+      {
+        "id": "cmsazt1rm00j0vf9kp4xztxef",
+        "type": "buyer_scan_batch",
+        "status": "succeeded",
+        "attempts": 1,
+        "lastError": null,
+        "createdAt": "2026-08-01T23:18:38.381Z",
+        "startedAt": "2026-08-02T00:15:44.013Z",
+        "finishedAt": "2026-08-02T00:29:47.542Z",
+        "durationSec": 844,
+        "scanRunId": "cms9g1qzh00f4vf80v7ufeq6b",
+        "idempotencyKey": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1680"
+      },
+      {
+        "id": "cmsb2cj4300ltvf9kutpn8ykg",
+        "type": "buyer_scan_batch",
+        "status": "succeeded",
+        "attempts": 1,
+        "lastError": null,
+        "createdAt": "2026-08-02T00:29:47.332Z",
+        "startedAt": "2026-08-02T08:40:03.654Z",
+        "finishedAt": "2026-08-02T08:41:24.091Z",
+        "durationSec": 80,
+        "scanRunId": "cms9g1qzh00f4vf80v7ufeq6b",
+        "idempotencyKey": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1720"
+      },
+      {
+        "id": "cmsbjwqsp00ofvf9kud0c7l7a",
+        "type": "buyer_scan_batch",
+        "status": "pending",
+        "attempts": 0,
+        "lastError": null,
+        "createdAt": "2026-08-02T08:41:23.882Z",
+        "startedAt": null,
+        "finishedAt": null,
+        "durationSec": 0,
+        "scanRunId": "cms9g1qzh00f4vf80v7ufeq6b",
+        "idempotencyKey": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1760"
+      }
+    ],
+    "midnightBuyerJobs": 0
+  },
+  "otherRuns": [
+    {
+      "id": "cms9g1qzh00f4vf80v7ufeq6b",
+      "status": "running",
+      "scanned": 1760,
+      "kept": 906,
+      "updatedAt": "2026-08-02T08:41:23.456Z",
+      "error": null
+    },
+    {
+      "id": "cms9fx059009bvf800s37q6e6",
+      "status": "failed",
+      "scanned": 80,
+      "kept": 38,
+      "updatedAt": "2026-07-31T21:16:19.842Z",
+      "error": "UX verify ÔÇö stop to show idle CTA"
+    },
+    {
+      "id": "cms9fppu9003hvf80aqnxq4me",
+      "status": "failed",
+      "scanned": 80,
+      "kept": 38,
+      "updatedAt": "2026-07-31T21:10:06.935Z",
+      "error": "UI test cleanup"
+    },
+    {
+      "id": "cms9fo6hn000fvf80veereonp",
+      "status": "completed",
+      "scanned": 42,
+      "kept": 20,
+      "updatedAt": "2026-08-01T14:24:14.473Z",
+      "error": null
+    },
+    {
+      "id": "cms9flac60000vfxsaesszsjo",
+      "status": "completed",
+      "scanned": 42,
+      "kept": 20,
+      "updatedAt": "2026-07-31T21:05:24.960Z",
+      "error": null
+    }
+  ]
+}

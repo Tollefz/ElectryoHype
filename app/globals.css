@@ -2,21 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ElectroHypeX Custom Styles */
+/* ElectroHypeX Storefront Design System V2 — premium electronics retailer */
 :root {
-  --brand: #00C853;
-  --brand-dark: #00A844;
-  --dark: #000000;
-  --gray-light: #f5f5f5;
-  --background: #ffffff;
-  --foreground: #1a1a1a;
+  --brand: #00b84a;
+  --brand-dark: #00963d;
+  --brand-soft: rgba(0, 184, 74, 0.1);
+  --navy: #0b1220;
+  --navy-soft: #141c2e;
+  --dark: #0f172a;
+  --gray-light: #f4f6f8;
+  --surface: #ffffff;
+  --surface-muted: #f7f8fa;
+  --border: #e8ecf1;
+  --border-strong: #d5dbe3;
+  --text: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --danger: #ef4444;
+  --background: #f7f8fa;
+  --foreground: #0f172a;
+
+  /* One radius scale */
+  --ehx-radius-sm: 0.5rem;
+  --ehx-radius-md: 0.75rem;
+  --ehx-radius-lg: 1rem;
+  --ehx-radius-xl: 1.25rem;
+  --ehx-radius: var(--ehx-radius-md);
+
+  /* Stripe/Apple-like shadows — discrete */
+  --ehx-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+  --ehx-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.06);
+  --ehx-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.08);
+  --ehx-shadow-hover: 0 14px 32px rgba(15, 23, 42, 0.11);
+
+  /* Section rhythm — dense retailer */
+  --ehx-section-y: clamp(1.5rem, 2.6vw, 2.25rem);
+  --ehx-gutter: clamp(0.875rem, 1.8vw, 1.5rem);
+  --ehx-container: 96rem;
+  --ehx-card-lift: translateY(-3px);
+  --ehx-image-pad: 0.75rem;
+  --ehx-image-bg: #f1f4f7;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -24,47 +57,283 @@ a {
   text-decoration: none;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f5f5;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: #94a3b8;
 }
 
-/* Product card hover animation */
-.product-card-hover:hover img {
-  transform: scale(1.05);
-}
-
-/* Focus styles for accessibility */
 *:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 
 .shadow-card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--ehx-shadow-md);
 }
 
 .shadow-card-hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--ehx-shadow-hover);
+}
+
+.ehx-page-bg {
+  background: var(--surface-muted);
+}
+
+.ehx-section {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--ehx-section-y);
+  padding-bottom: var(--ehx-section-y);
+}
+
+/* Homepage: tighter stack so hero + USP + categories fit above the fold */
+.ehx-home .ehx-section {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .ehx-home .ehx-section {
+    padding-top: 1.65rem;
+    padding-bottom: 1.65rem;
+  }
+}
+
+.ehx-home .ehx-section-tight {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.ehx-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--ehx-container);
+  padding-left: var(--ehx-gutter);
+  padding-right: var(--ehx-gutter);
+}
+
+.ehx-heading-1 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.ehx-heading-2 {
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.ehx-heading-3 {
+  font-size: 1.125rem;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.ehx-body {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.ehx-muted {
+  color: var(--text-muted);
+}
+
+.ehx-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .ehx-product-grid {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .ehx-product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .ehx-product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .ehx-product-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.ehx-product-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .ehx-product-grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* Listing with sidebar — max 4 cols so cards stay balanced */
+.ehx-product-grid-listing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+@media (min-width: 640px) {
+  .ehx-product-grid-listing {
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .ehx-product-grid-listing {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .ehx-product-grid-listing {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+.ehx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--ehx-radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background-color 200ms ease, border-color 200ms ease,
+    box-shadow 220ms ease, transform 160ms ease, color 200ms ease;
+}
+
+.ehx-btn:active {
+  transform: scale(0.98);
+}
+
+.ehx-btn-primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: var(--ehx-shadow-sm);
+}
+
+.ehx-btn-primary:hover {
+  background: var(--brand-dark);
+  box-shadow: var(--ehx-shadow-md);
+}
+
+.ehx-btn-secondary {
+  background: #fff;
+  color: var(--text);
+  border: 1.5px solid var(--border-strong);
+}
+
+.ehx-btn-secondary:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.ehx-card-lift {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease;
+}
+
+.ehx-card-lift:hover {
+  transform: var(--ehx-card-lift);
+  box-shadow: var(--ehx-shadow-hover);
+  border-color: rgba(11, 18, 32, 0.12);
+}
+
+.ehx-cat-card {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease;
+}
+
+.ehx-cat-card:hover {
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: var(--ehx-shadow-hover);
+  border-color: rgba(11, 18, 32, 0.1);
+}
+
+@keyframes ehx-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ehx-fade-up {
+  animation: ehx-fade-up 0.45s ease both;
+}
+
+.ehx-fade-up-delay-1 {
+  animation-delay: 0.06s;
+}
+
+.ehx-fade-up-delay-2 {
+  animation-delay: 0.12s;
+}
+
+.ehx-fade-up-delay-3 {
+  animation-delay: 0.18s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ehx-fade-up,
+  .ehx-fade-up-delay-1,
+  .ehx-fade-up-delay-2,
+  .ehx-fade-up-delay-3,
+  .ehx-card-lift,
+  .ehx-cat-card {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
 }
 
 @layer utilities {

@@ -4,7 +4,7 @@ import type { ScrapedProductData } from "@/lib/scrapers/types";
  * Raw product data as fetched from the source
  */
 export interface RawProduct {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

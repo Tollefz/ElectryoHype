@@ -1,0 +1,145 @@
+
+> dropshipping-upgrade@0.1.0 build
+> prisma generate && next build
+
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+
+Ô£ö Generated Prisma Client (v6.19.0) to .\node_modules\@prisma\client in 110ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Ôû▓ Next.js 16.0.7 (Turbopack)
+   - Environments: .env
+
+ ÔÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ Ô£ô Compiled successfully in 7.9s
+   Running TypeScript ...
+   Collecting page data using 15 workers ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages using 15 workers (0/55) ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages using 15 workers (13/55) 
+   Generating static pages using 15 workers (27/55) 
+   Generating static pages using 15 workers (41/55) 
+ Ô£ô Generating static pages using 15 workers (55/55) in 3.9s
+   Finalizing page optimization ...
+
+Route (app)                                            Revalidate  Expire
+Ôöî ãÆ /
+Ôö£ Ôùï /_not-found
+Ôö£ ãÆ /admin/customers
+Ôö£ ãÆ /admin/dashboard
+Ôö£ Ôùï /admin/login
+Ôö£ ãÆ /admin/orders
+Ôö£ ãÆ /admin/orders/[id]
+Ôö£ ãÆ /admin/orders/[id]/print
+Ôö£ ãÆ /admin/products
+Ôö£ ãÆ /admin/products/[id]/edit-variants
+Ôö£ ãÆ /admin/products/bulk-import
+Ôö£ ãÆ /admin/products/edit/[id]
+Ôö£ ãÆ /admin/products/import
+Ôö£ ãÆ /admin/products/new
+Ôö£ ãÆ /admin/products/temu-import
+Ôö£ ãÆ /admin/products/variant-qa
+Ôö£ ãÆ /admin/settings
+Ôö£ ãÆ /admin/support/orders
+Ôö£ ãÆ /api/abandoned-cart/capture
+Ôö£ ãÆ /api/admin/ai
+Ôö£ ãÆ /api/admin/import/improve
+Ôö£ ãÆ /api/admin/import/pipeline
+Ôö£ ãÆ /api/admin/orders/[id]
+Ôö£ ãÆ /api/admin/orders/[id]/retry-email
+Ôö£ ãÆ /api/admin/orders/[id]/send-email
+Ôö£ ãÆ /api/admin/orders/[id]/send-shipping-notification
+Ôö£ ãÆ /api/admin/orders/[id]/send-to-supplier
+Ôö£ ãÆ /api/admin/orders/bulk
+Ôö£ ãÆ /api/admin/products
+Ôö£ ãÆ /api/admin/products/[id]
+Ôö£ ãÆ /api/admin/products/[id]/variants
+Ôö£ ãÆ /api/admin/products/[id]/variants/[variantId]
+Ôö£ ãÆ /api/admin/products/auto-fix-variants
+Ôö£ ãÆ /api/admin/products/bulk
+Ôö£ ãÆ /api/admin/products/bulk-import
+Ôö£ ãÆ /api/admin/products/check-variants
+Ôö£ ãÆ /api/admin/products/fix-variants
+Ôö£ ãÆ /api/admin/products/import
+Ôö£ ãÆ /api/admin/products/sync
+Ôö£ ãÆ /api/admin/products/variant-check
+Ôö£ ãÆ /api/admin/products/variants/[id]
+Ôö£ ãÆ /api/admin/scrape-product
+Ôö£ ãÆ /api/affiliate/click
+Ôö£ ãÆ /api/affiliate/order
+Ôö£ ãÆ /api/auth/[...nextauth]
+Ôö£ ãÆ /api/checkout
+Ôö£ ãÆ /api/checkout/create-payment-intent
+Ôö£ ãÆ /api/debug/products
+Ôö£ ãÆ /api/debug/products-all
+Ôö£ ãÆ /api/debug/store-ids
+Ôö£ ãÆ /api/debug/temu-products
+Ôö£ ãÆ /api/discounts
+Ôö£ ãÆ /api/discounts/validate
+Ôö£ ãÆ /api/inngest
+Ôö£ ãÆ /api/internal/abandoned-cart/worker
+Ôö£ ãÆ /api/internal/poll-supplier-status
+Ôö£ ãÆ /api/internal/sync-supplier-products
+Ôö£ ãÆ /api/newsletter
+Ôö£ ãÆ /api/orders/[id]
+Ôö£ ãÆ /api/orders/[id]/tracking-events
+Ôö£ ãÆ /api/orders/by-payment-intent
+Ôö£ ãÆ /api/orders/by-session
+Ôö£ ãÆ /api/push/subscribe
+Ôö£ ãÆ /api/push/test
+Ôö£ ãÆ /api/upload/image
+Ôö£ ãÆ /api/webhooks/stripe
+Ôö£ Ôùï /cart
+Ôö£ Ôùï /checkout
+Ôö£ Ôùï /cookies
+Ôö£ Ôùï /faq
+Ôö£ Ôùï /frakt
+Ôö£ Ôùï /garanti
+Ôö£ ãÆ /health
+Ôö£ Ôùï /kontakt
+Ôö£ Ôùï /kundeservice
+Ôö£ Ôùï /om-oss
+Ôö£ ãÆ /order-confirmation
+Ôö£ ãÆ /orders/[id]
+Ôö£ Ôùï /personvern
+Ôö£ ãÆ /products
+Ôö£ ãÆ /products/[slug]
+Ôö£ Ôùï /retur
+Ôö£ Ôùï /robots.txt
+Ôö£ Ôùï /sitemap.xml                                               1h      1y
+Ôö£ ãÆ /tilbud
+Ôöö Ôùï /vilkar
+
+
+ãÆ Proxy (Middleware)
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+

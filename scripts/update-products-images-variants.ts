@@ -1,7 +1,14 @@
 import "dotenv/config";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { getScraperForUrl } from "../lib/scrapers/server";
-import { identifySupplier } from "../lib/scrapers";
+import type { ProductVariant } from "../lib/scrapers/types";
+import {
+  calculateCompareAtPrice,
+  calculateSuggestedRetailPrice,
+  convertPriceToNOK,
+  USD_TO_NOK_RATE,
+} from "../lib/import/pricing";
 
 /**
  * Script for å oppdatere alle produkter med faktiske bilder og varianter fra leverandør-URLer
@@ -9,10 +16,6 @@ import { identifySupplier } from "../lib/scrapers";
  * Bruk:
  * npm run update:products
  */
-
-const USD_TO_NOK_RATE = 10.5;
-const PROFIT_MARGIN = 2; // 100% margin
-const COMPARE_AT_PRICE_MULTIPLIER = 1.5;
 
 interface UpdateResult {
   success: boolean;
@@ -197,7 +200,6 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
 
     // Håndter varianter
     let variantsAdded = 0;
-    const existingVariants = product.variants || [];
     
     if (data.variants && data.variants.length > 1) {
       // Slett eksisterende varianter
@@ -210,7 +212,7 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
                        (data.price?.amount ? data.price.amount * USD_TO_NOK_RATE : 99);
 
       // Filtrer ut ugyldige varianter (f.eks. navigasjonstekst, lenker, etc.)
-      const validVariants = data.variants.filter((variant: any) => {
+      const validVariants = data.variants.filter((variant: ProductVariant) => {
         if (!variant || !variant.name) return false;
         const name = variant.name.toLowerCase().trim();
         
@@ -252,12 +254,10 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
         console.log("⚠️ Ingen gyldige varianter funnet etter filtrering");
       } else {
         // Opprett nye varianter
-        const variantData = validVariants.map((variant: any) => {
-          const variantSupplierPriceNok = Math.round(variant.price * USD_TO_NOK_RATE);
-          const variantSellingPriceNok = Math.round(variantSupplierPriceNok * PROFIT_MARGIN);
-          const variantCompareAtPriceNok = variant.compareAtPrice
-            ? Math.round(variant.compareAtPrice * USD_TO_NOK_RATE * PROFIT_MARGIN)
-            : Math.round(variantSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+        const variantData = validVariants.map((variant: ProductVariant) => {
+          const variantSupplierPriceNok = Math.round(convertPriceToNOK(variant.price, "USD"));
+          const variantSellingPriceNok = calculateSuggestedRetailPrice(variantSupplierPriceNok);
+          const variantCompareAtPriceNok = calculateCompareAtPrice(variantSellingPriceNok);
 
           return {
             name: variant.name.trim(),
@@ -272,7 +272,7 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
         });
 
         await prisma.productVariant.createMany({
-          data: variantData.map((v: any) => ({
+          data: variantData.map((v) => ({
             ...v,
             productId,
           })),
@@ -280,6 +280,7 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
 
         variantsAdded = variantData.length;
         console.log(`✅ Lagt til ${variantsAdded} gyldige varianter (filtrert fra ${data.variants.length})`);
+      }
     } else {
       // Prøv å finne varianter fra URL eller produktnavn
       const urlLower = supplierUrl.toLowerCase();
@@ -287,7 +288,7 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
       const categoryLower = (product.category || "").toLowerCase();
 
       // Sjekk for fargevarianter
-      let colorVariants: Array<{ name: string; attributes: Record<string, string> }> = [];
+      const colorVariants: Array<{ name: string; attributes: Record<string, string> }> = [];
       
       // Vanlige farger
       const colors = ["Svart", "Hvit", "Grå", "Rød", "Blå", "Grønn", "Gul", "Rosa", "Lilla", "Oransje", "Beige", "Brun"];
@@ -398,8 +399,8 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
         // Opprett varianter
         const basePrice = product.supplierPrice ? Number(product.supplierPrice) : 99;
         const variantData = colorVariants.map((variant) => {
-          const variantSellingPriceNok = Math.round(basePrice * PROFIT_MARGIN);
-          const variantCompareAtPriceNok = Math.round(variantSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+          const variantSellingPriceNok = calculateSuggestedRetailPrice(basePrice);
+          const variantCompareAtPriceNok = calculateCompareAtPrice(variantSellingPriceNok);
 
           return {
             productId,
@@ -424,7 +425,7 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
     }
 
     // Oppdater produktet
-    const updateData: any = {};
+    const updateData: Prisma.ProductUpdateInput = {};
     
     if (imagesUpdated && images.length > 0) {
       updateData.images = JSON.stringify(images);
@@ -432,18 +433,18 @@ async function updateProduct(productId: string, supplierUrl: string): Promise<Up
 
     // Oppdater base pris hvis vi har variant-priser
     if (data.variants && data.variants.length > 0) {
-      const basePrice = Math.min(...data.variants.map((v: any) => v.price));
-      const baseSupplierPriceNok = Math.round(basePrice * USD_TO_NOK_RATE);
-      const baseSellingPriceNok = Math.round(baseSupplierPriceNok * PROFIT_MARGIN);
-      const baseCompareAtPriceNok = Math.round(baseSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+      const basePrice = Math.min(...data.variants.map((v: ProductVariant) => v.price));
+      const baseSupplierPriceNok = Math.round(convertPriceToNOK(basePrice, "USD"));
+      const baseSellingPriceNok = calculateSuggestedRetailPrice(baseSupplierPriceNok);
+      const baseCompareAtPriceNok = calculateCompareAtPrice(baseSellingPriceNok);
 
       updateData.price = baseSellingPriceNok;
       updateData.compareAtPrice = baseCompareAtPriceNok;
       updateData.supplierPrice = baseSupplierPriceNok;
     } else if (data.price && data.price.amount) {
-      const supplierPriceNok = Math.round(data.price.amount * USD_TO_NOK_RATE);
-      const sellingPriceNok = Math.round(supplierPriceNok * PROFIT_MARGIN);
-      const compareAtPriceNok = Math.round(sellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+      const supplierPriceNok = Math.round(convertPriceToNOK(data.price.amount, "USD"));
+      const sellingPriceNok = calculateSuggestedRetailPrice(supplierPriceNok);
+      const compareAtPriceNok = calculateCompareAtPrice(sellingPriceNok);
 
       updateData.price = sellingPriceNok;
       updateData.compareAtPrice = compareAtPriceNok;

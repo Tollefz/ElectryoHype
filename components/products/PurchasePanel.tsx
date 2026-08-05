@@ -25,6 +25,7 @@ interface PurchasePanelProps {
     price: number;
     compareAtPrice?: number | null;
     image: string;
+    category?: string | null;
   };
   variants?: Variant[];
 }
@@ -93,6 +94,7 @@ export function PurchasePanel({ product, variants = [] }: PurchasePanelProps) {
         slug: product.slug,
         variantId: selectedVariantId || undefined,
         variantName: selectedVariant?.name || undefined,
+        category: product.category || undefined,
       },
       quantity
     );

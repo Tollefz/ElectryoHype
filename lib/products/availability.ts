@@ -32,18 +32,15 @@ export function getAvailability(product: ProductData): AvailabilityInfo {
   const totalStock = variantStock || product.stock || 0;
   const isActive = product.isActive !== false; // Default to true if not specified
 
-  // For dropshipping products: if active, always purchasable with lead time
-  // Stock count is informational only, doesn't affect purchasability
+  // Dropshipping: active ⇒ purchasable with lead time. Stock is informational only.
   const purchasable = isActive;
-  const isInStock = totalStock > 0; // Informational only
+  const isInStock = totalStock > 0;
 
-  // Generate label - include lead time for purchasable products for consistency
   let label: string;
   if (!purchasable) {
     label = "Ikke på lager";
   } else {
-    // Purchasable products show "Tilgjengelig – 5–12 virkedager" for consistency
-    label = "Tilgjengelig – 5–12 virkedager";
+    label = "Tilgjengelig";
   }
 
   return {
@@ -60,8 +57,8 @@ export function getAvailability(product: ProductData): AvailabilityInfo {
  */
 export function getAvailabilityBadgeClasses(availability: AvailabilityInfo): string {
   if (!availability.purchasable) {
-    return "rounded-md bg-red-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-red-700";
+    return "rounded-[var(--ehx-radius-sm)] bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 sm:px-3 sm:text-sm";
   }
-  return "rounded-md bg-green-100 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-semibold text-green-700";
+  return "rounded-[var(--ehx-radius-sm)] bg-[var(--brand-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--brand-dark)] sm:px-3 sm:text-sm";
 }
 

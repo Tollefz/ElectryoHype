@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { SupplierOrderStatus } from "@prisma/client";
+import { Prisma, SupplierOrderStatus } from "@prisma/client";
 
 /**
  * Log a supplier order event for auditing and timeline.
@@ -8,7 +8,7 @@ export async function logSupplierEvent(params: {
   orderId: string;
   oldStatus?: SupplierOrderStatus | null;
   newStatus: SupplierOrderStatus;
-  metadata?: Record<string, any>;
+  metadata?: Prisma.InputJsonValue;
 }) {
   const { orderId, oldStatus, newStatus, metadata } = params;
 
@@ -18,7 +18,7 @@ export async function logSupplierEvent(params: {
         orderId,
         oldStatus,
         newStatus,
-        metadata: metadata as any,
+        metadata,
       },
     });
   } catch (error) {

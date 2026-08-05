@@ -49,7 +49,7 @@ export async function POST(
       );
     }
 
-    // Validate and normalize color attributes (ElectroHypeX policy: only black)
+    // Normalize color attributes (all supplier colors are allowed)
     let validatedAttributes = variantData.attributes || {};
     try {
       validatedAttributes = validateVariantAttributes(validatedAttributes);
@@ -65,12 +65,13 @@ export async function POST(
       data: {
         productId: id,
         name: variantData.name,
+        sku: variantData.sku ? String(variantData.sku) : null,
         price: Number(variantData.price) || 0,
         compareAtPrice: variantData.compareAtPrice ? Number(variantData.compareAtPrice) : null,
         supplierPrice: variantData.supplierPrice ? Number(variantData.supplierPrice) : null,
         image: variantData.image || null,
         attributes: validatedAttributes,
-        stock: variantData.stock || 10,
+        stock: variantData.stock ?? 10,
         isActive: variantData.isActive !== undefined ? variantData.isActive : true,
       },
     });
@@ -106,7 +107,18 @@ export async function PUT(
     });
 
     // Validate all variants before creating
-    const validatedVariants = variants.map((variant: any) => {
+    interface IncomingVariant {
+      name: string;
+      price?: number;
+      compareAtPrice?: number | null;
+      supplierPrice?: number | null;
+      image?: string | null;
+      attributes?: Record<string, unknown>;
+      stock?: number;
+      isActive?: boolean;
+    }
+
+    const validatedVariants = (variants as IncomingVariant[]).map((variant) => {
       let validatedAttributes = variant.attributes || {};
       try {
         validatedAttributes = validateVariantAttributes(validatedAttributes);
@@ -123,7 +135,7 @@ export async function PUT(
 
     // Opprett nye varianter
     const createdVariants = await Promise.all(
-      validatedVariants.map((variant: any) =>
+      validatedVariants.map((variant) =>
         prisma.productVariant.create({
           data: {
             productId: id,

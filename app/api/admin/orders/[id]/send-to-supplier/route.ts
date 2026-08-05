@@ -16,9 +16,10 @@ export async function POST(
   try {
     await sendOrderToSupplier(id);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error?.message || "Kunne ikke sende ordre til leverandør" },
+      { error: message || "Kunne ikke sende ordre til leverandør" },
       { status: 500 }
     );
   }

@@ -1,0 +1,4 @@
+id,sku,title,description,price,currency,stock,category,warehouse,images,specs,attributes,videos,supplier_url
+csv-mouse-01,CSV-MOUSE-01,Reference Gaming Mouse,CSV plug-and-play proof product,12.50,USD,120,Gaming,NO,https://placehold.co/600x600/png?text=Mouse1|https://placehold.co/600x600/png?text=Mouse2,"Color:Black;DPI:16000","color:Black",,https://example.com/csv/mouse-01
+csv-hub-01,CSV-HUB-01,USB-C Hub 7-in-1,Minimal hub without video,18.00,USD,45,Data & IT,CN,https://placehold.co/600x600/png?text=Hub,"Ports:7;Material:Aluminum","color:Silver",,https://example.com/csv/hub-01
+csv-pad-01,CSV-PAD-01,Desk Pad XL,Large desk pad with video demo,9.90,USD,0,Gaming,DE,https://placehold.co/600x600/png?text=Pad,"Size:900x400","color:Black","[{""id"":""v1"",""url"":""https://example.com/demo.mp4"",""name"":""Demo""}]",https://example.com/csv/pad-01

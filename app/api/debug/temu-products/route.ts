@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logError, logInfo } from "@/lib/utils/logger";
+import { requireDebugAccess } from "@/lib/api-auth";
 
 /**
  * Debug route to check Temu products in database
- * 
- * This route helps identify:
- * - How many Temu products exist
- * - What storeId they use
- * - Sample products with their data
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireDebugAccess(req);
+  if (denied) return denied;
+
   try {
     // Find products with supplierName = "temu" or supplierUrl containing "temu"
     const temuProducts = await prisma.product.findMany({
@@ -124,12 +123,13 @@ export async function GET() {
         ? byStoreId[0].storeId || "null"
         : "No Temu products found",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logError(error, "[api/debug/temu-products]");
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       {
         ok: false,
-        error: error?.message ?? "Unknown error",
+        error: message || "Unknown error",
       },
       { status: 500 }
     );

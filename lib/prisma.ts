@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { logError } from "@/lib/utils/logger";
+import { recordDbQuery, dbMetricsEnabled } from "@/lib/db/query-metrics";
 
 const datasourceUrl = process.env.DATABASE_URL;
 
@@ -50,54 +51,48 @@ const globalForPrisma = globalThis as unknown as {
  */
 function createPrismaClient(): PrismaClient {
   try {
-    const client = new PrismaClient({
-      log: process.env.NODE_ENV === "development" 
-        ? ["error", "warn", "query"] 
-        : ["error", "warn"],
-      // Note: Connection pooling is handled by Neon pooler in production
-      // No need to configure connection pool size manually
+    // Avoid Prisma's default console.error(Error) — it opens Next Dev Issues.
+    // Technical detail goes through admin-logger / stderr strings only.
+    const debugPrisma = process.env.NEXT_PUBLIC_DEBUG === "true";
+    const base = new PrismaClient({
+      log: debugPrisma
+        ? [
+            { emit: "stdout", level: "warn" },
+            { emit: "stdout", level: "error" },
+          ]
+        : [],
     });
-    
-    // In development, test connection on startup (non-blocking)
-    if (process.env.NODE_ENV === "development") {
-      client.$connect().catch((err) => {
-        console.error("❌ [Prisma] Failed to connect to database:");
-        console.error("   Error:", err.message);
-        if (err.cause) {
-          console.error("   Cause:", err.cause);
-        }
-        console.error("   Check:");
-        console.error("   1. DATABASE_URL is correct in .env");
-        console.error("   2. Database is accessible (check Neon Dashboard)");
-        console.error("   3. Network/firewall allows connection");
-        console.error("   4. Database credentials are valid");
+
+    // DEV metrics via $extends (Prisma 6 — $use removed)
+    const client = dbMetricsEnabled()
+      ? base.$extends({
+          query: {
+            $allModels: {
+              async $allOperations({ model, operation, args, query }) {
+                recordDbQuery(model, operation);
+                return query(args);
+              },
+            },
+          },
+        })
+      : base;
+
+    // Soft connect probe — never throw; never console.error(Error)
+    // Skip auto-connect when DATABASE_URL points at unreachable Neon during quota lock
+    if (
+      process.env.NODE_ENV === "development" &&
+      process.env.PRISMA_SKIP_CONNECT !== "1"
+    ) {
+      void (client as PrismaClient).$connect().catch((err: unknown) => {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.warn(`[prisma] connect failed: ${msg.slice(0, 200)}`);
       });
     }
-    
-    return client;
-  } catch (err: any) {
-    const isDev = process.env.NODE_ENV === "development";
-    
-    if (isDev) {
-      console.error("❌ [Prisma] Failed to initialize PrismaClient:");
-      console.error("   Error:", err?.message || "Unknown error");
-      if (err?.cause) {
-        console.error("   Cause:", err.cause);
-      }
-      if (err?.stack) {
-        console.error("   Stack:", err.stack);
-      }
-      
-      // Common error messages and fixes
-      if (err?.message?.includes("Can't reach database server")) {
-        console.error("\n💡 Fix: Check DATABASE_URL and ensure database is running");
-      } else if (err?.message?.includes("authentication failed")) {
-        console.error("\n💡 Fix: Check database credentials in DATABASE_URL");
-      } else if (err?.message?.includes("does not exist")) {
-        console.error("\n💡 Fix: Database name in DATABASE_URL may be incorrect");
-      }
-    }
-    
+
+    return client as unknown as PrismaClient;
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn(`[prisma] Failed to initialize PrismaClient: ${msg.slice(0, 200)}`);
     logError(err, "[prisma] Failed to initialize PrismaClient");
     throw err;
   }

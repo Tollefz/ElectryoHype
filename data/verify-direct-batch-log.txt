@@ -1,0 +1,1214 @@
+=== JOBS ===
+[
+  {
+    "id": "cms6kt481008uvfqkruhuk63v",
+    "status": "pending",
+    "payload": {
+      "scanRunId": "cms6dls6h002vvf2gmohqpa7e"
+    },
+    "attempts": 0,
+    "key": "buyer_scan_batch:cms6dls6h002vvf2gmohqpa7e:80",
+    "lastError": null,
+    "result": null
+  },
+  {
+    "id": "cms6ksvd9005yvfqkuv4dt7h7",
+    "status": "pending",
+    "payload": {
+      "scanRunId": "cms6krztf0001vfqkcohfemye"
+    },
+    "attempts": 0,
+    "key": "buyer_scan_batch:cms6krztf0001vfqkcohfemye:40",
+    "lastError": null,
+    "result": null
+  },
+  {
+    "id": "cms6ksnfm0035vfqkccgg0xc7",
+    "status": "pending",
+    "payload": {
+      "scanRunId": "cms6ksmgd0033vfqkprxqlkwl"
+    },
+    "attempts": 0,
+    "key": "buyer_scan_batch:cms6ksmgd0033vfqkprxqlkwl:1785359241633",
+    "lastError": null,
+    "result": null
+  },
+  {
+    "id": "cms6ksmaf0032vfqk1hdr6qev",
+    "status": "pending",
+    "payload": {
+      "scanRunId": "cms6kslb20030vfqkhfc0rfhs"
+    },
+    "attempts": 0,
+    "key": "buyer_scan_batch:cms6kslb20030vfqkhfc0rfhs:1785359240149",
+    "lastError": null,
+    "result": null
+  },
+  {
+    "id": "cms6ksitp002zvfqk6m0skrdx",
+    "status": "pending",
+    "payload": {
+      "scanRunId": "cms6kshcx002xvfqkykjoz7g0"
+    },
+    "attempts": 0,
+    "key": "buyer_scan_batch:cms6kshcx002xvfqkykjoz7g0:1785359235659",
+    "lastError": null,
+    "result": null
+  },
+  {
+    "id": "cms6ksdgg002wvfqkw17pufmq",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6dls6h002vvf2gmohqpa7e"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6dls6h002vvf2gmohqpa7e:40",
+    "lastError": null,
+    "result": {
+      "done": false,
+      "target": 10000,
+      "scanned": 80,
+      "keptDelta": 20,
+      "scannedDelta": 40,
+      "filteredDelta": 20
+    }
+  },
+  {
+    "id": "cms6ks21p0003vfqk08kkj0ps",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6krztf0001vfqkcohfemye"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6krztf0001vfqkcohfemye:1785359213915",
+    "lastError": null,
+    "result": {
+      "done": false,
+      "target": 500,
+      "scanned": 40,
+      "keptDelta": 18,
+      "scannedDelta": 40,
+      "filteredDelta": 22
+    }
+  },
+  {
+    "id": "cms6gzcpb00hvvf7kf6yyo7wd",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6gypo30000vf7kpfg5kh8w"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6gypo30000vf7kpfg5kh8w:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6gzbto00gvvf7kr7xh7zvy",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6gyz2n002yvf7km60y61zy"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6gyz2n002yvf7km60y61zy:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6gzb2x00g4vf7kjmaqcchp",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6gyqzn0001vf7k40z2ag6r"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6gyqzn0001vf7k40z2ag6r:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6gz5xk00aevf7k3e81x8l1",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6gyz2n002yvf7km60y61zy"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6gyz2n002yvf7km60y61zy:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6gz3bj007avf7k84yk693h",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6gyqzn0001vf7k40z2ag6r"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6gyqzn0001vf7k40z2ag6r:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6gz2dm006evf7k5d93ktd9",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6gypo30000vf7kpfg5kh8w"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6gypo30000vf7kpfg5kh8w:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6dlsue002xvf2g6aj1n4ts",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6dls6h002vvf2gmohqpa7e"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6dls6h002vvf2gmohqpa7e:1785347164741",
+    "lastError": null,
+    "result": {
+      "done": false,
+      "target": 10000,
+      "scanned": 40,
+      "keptDelta": 18,
+      "scannedDelta": 40,
+      "filteredDelta": 22
+    }
+  },
+  {
+    "id": "cms6bcob800ncvf0c79d56g6q",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6bca2r00hmvf0cwe1f1qf6"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6bca2r00hmvf0cwe1f1qf6:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6bch9k00kgvf0cqi7j0jot",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6bca2r00hmvf0cwe1f1qf6"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6bca2r00hmvf0cwe1f1qf6:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6bbyxu00ggvf0cg97s5dqg",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6bbkua00bovf0cr2w9hvwc"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6bbkua00bovf0cr2w9hvwc:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6bbth200e3vf0caed2jaor",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6bbkua00bovf0cr2w9hvwc"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6bbkua00bovf0cr2w9hvwc:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6ba7us00aivf0cvku08fpv",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6b9wd0005uvf0cosuz913b"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6b9wd0005uvf0cosuz913b:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6ba2q10086vf0cqyyhazxq",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6b9wd0005uvf0cosuz913b"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6b9wd0005uvf0cosuz913b:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6b9imt004ovf0c2o2by34z",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6b94ku0000vf0cctsz7y3n"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6b94ku0000vf0cctsz7y3n:80",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  },
+  {
+    "id": "cms6b9ckd002cvf0ctrcmczpg",
+    "status": "succeeded",
+    "payload": {
+      "scanRunId": "cms6b94ku0000vf0cctsz7y3n"
+    },
+    "attempts": 1,
+    "key": "buyer_scan_batch:cms6b94ku0000vf0cctsz7y3n:40",
+    "lastError": null,
+    "result": {
+      "done": true,
+      "target": 100,
+      "scanned": 100,
+      "keptDelta": 0,
+      "scannedDelta": 0,
+      "filteredDelta": 0
+    }
+  }
+]
+=== BEFORE ===
+{
+  "id": "cms6krztf0001vfqkcohfemye",
+  "status": "running",
+  "target": 500,
+  "scanned": 40,
+  "kept": 18,
+  "filtered": 22,
+  "checkpoint": {
+    "page": 3,
+    "seedIdx": 0,
+    "seenKeys": [
+      "cj:1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+      "cj:1436966941628698624",
+      "cj:1428189769438990336",
+      "cj:B3AA1FBF-0E9B-421D-BF0B-9FAF608DB9B7",
+      "cj:1386914148104933376",
+      "cj:1DB964D6-538D-45C6-93F1-A1D91BDBEF31",
+      "cj:FB9C42CE-3605-4AF1-8CCB-E96509C222B5",
+      "cj:D99EE6AB-4C56-47F6-8ED0-EA72B3A13EE0",
+      "cj:E92E0976-BF54-4898-A177-31CA5175E66B",
+      "cj:1359735113218396160",
+      "cj:2ADAEC52-ED97-4262-8E9D-FC074BD40FCB",
+      "cj:013A8A4C-7AC8-47FB-84C2-EEC2F3C2EABB",
+      "cj:1402886158270205952",
+      "cj:1389789703376605184",
+      "cj:32AEFDE6-CDA9-47D5-959A-F2CD2856DFB7",
+      "cj:D1F1E58D-3C49-4EB9-AB64-89D325889207",
+      "cj:06DB43A0-1CF4-4858-AD2D-A2EC94AB94DF",
+      "cj:372652C2-5C5C-4873-8630-AADD10C6DE1C",
+      "cj:1392743188518801408",
+      "cj:1382663732030738432",
+      "cj:A4987847-0CB2-4B37-98EE-8DE58AA793E7",
+      "cj:6711AD66-001B-4643-BBCD-46A00E0CEE82",
+      "cj:F080333A-5A1B-4790-A23D-A2CDC8F84D85",
+      "cj:2E6576FA-6F94-400D-A14D-7FF0044FACA4",
+      "cj:1514128038953496576",
+      "cj:1412286946415349760",
+      "cj:1401810436990570496",
+      "cj:66CD22DC-8A26-407C-B0EC-5BD668632481",
+      "cj:926F1E70-B2E3-4FC8-921B-46E5153FEDB8",
+      "cj:1425289745512140800",
+      "cj:1398165665852035072",
+      "cj:DC16EB5F-794F-4901-977A-AEEB296460BD",
+      "cj:1426496260759752704",
+      "cj:1514149767801221120",
+      "cj:1380173480624001024",
+      "cj:1372450796167368704",
+      "cj:1372459006383230976",
+      "cj:1365252121582243840",
+      "cj:1407938254023561216",
+      "cj:1514127889581748224"
+    ],
+    "supplierIdx": 0
+  },
+  "stage": "analyzing",
+  "progressCurrent": 40,
+  "missionSize": "quick",
+  "error": null
+}
+{
+  "id": "cms6kshcx002xvfqkykjoz7g0",
+  "status": "running",
+  "target": 10000,
+  "scanned": 0,
+  "kept": 0,
+  "filtered": 0,
+  "checkpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "stage": "scanning",
+  "progressCurrent": 0,
+  "missionSize": "standard",
+  "error": null
+}
+{
+  "id": "cms6dls6h002vvf2gmohqpa7e",
+  "status": "running",
+  "target": 10000,
+  "scanned": 80,
+  "kept": 38,
+  "filtered": 42,
+  "checkpoint": {
+    "page": 5,
+    "seedIdx": 0,
+    "seenKeys": [
+      "cj:1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+      "cj:1436966941628698624",
+      "cj:1428189769438990336",
+      "cj:B3AA1FBF-0E9B-421D-BF0B-9FAF608DB9B7",
+      "cj:1386914148104933376",
+      "cj:1DB964D6-538D-45C6-93F1-A1D91BDBEF31",
+      "cj:FB9C42CE-3605-4AF1-8CCB-E96509C222B5",
+      "cj:D99EE6AB-4C56-47F6-8ED0-EA72B3A13EE0",
+      "cj:E92E0976-BF54-4898-A177-31CA5175E66B",
+      "cj:1359735113218396160",
+      "cj:2ADAEC52-ED97-4262-8E9D-FC074BD40FCB",
+      "cj:013A8A4C-7AC8-47FB-84C2-EEC2F3C2EABB",
+      "cj:1402886158270205952",
+      "cj:1389789703376605184",
+      "cj:32AEFDE6-CDA9-47D5-959A-F2CD2856DFB7",
+      "cj:D1F1E58D-3C49-4EB9-AB64-89D325889207",
+      "cj:06DB43A0-1CF4-4858-AD2D-A2EC94AB94DF",
+      "cj:372652C2-5C5C-4873-8630-AADD10C6DE1C",
+      "cj:1392743188518801408",
+      "cj:1382663732030738432",
+      "cj:A4987847-0CB2-4B37-98EE-8DE58AA793E7",
+      "cj:6711AD66-001B-4643-BBCD-46A00E0CEE82",
+      "cj:F080333A-5A1B-4790-A23D-A2CDC8F84D85",
+      "cj:2E6576FA-6F94-400D-A14D-7FF0044FACA4",
+      "cj:1514128038953496576",
+      "cj:1412286946415349760",
+      "cj:1401810436990570496",
+      "cj:66CD22DC-8A26-407C-B0EC-5BD668632481",
+      "cj:926F1E70-B2E3-4FC8-921B-46E5153FEDB8",
+      "cj:1425289745512140800",
+      "cj:1398165665852035072",
+      "cj:DC16EB5F-794F-4901-977A-AEEB296460BD",
+      "cj:1426496260759752704",
+      "cj:1514149767801221120",
+      "cj:1380173480624001024",
+      "cj:1372450796167368704",
+      "cj:1372459006383230976",
+      "cj:1365252121582243840",
+      "cj:1407938254023561216",
+      "cj:1514127889581748224",
+      "cj:A404F3F2-E9AB-4313-9650-1034FFD10023",
+      "cj:769DDF90-A930-4249-85E8-4A9B66E55365",
+      "cj:1385919424179081216",
+      "cj:1379710725257302016",
+      "cj:5B1577F6-C994-4498-B565-FF6A04CA3F7C",
+      "cj:3CC03BB9-9C79-4466-84AD-10877F0E9CF6",
+      "cj:1523584722553810944",
+      "cj:1412948101504831488",
+      "cj:1560142134823628800",
+      "cj:3B476EA5-03D5-46D1-9EC0-A9C802FE7400",
+      "cj:83854BAB-8CBE-4C1F-A039-2832724413DA",
+      "cj:1391700604434386944",
+      "cj:1493074700748853248",
+      "cj:D9808848-C291-4761-B0ED-4E5622E59753",
+      "cj:1390506582827208704",
+      "cj:1514149906292944896",
+      "cj:1432959747069448192",
+      "cj:1427897891296514048",
+      "cj:1523148296477487104",
+      "cj:5718F320-804A-4606-9949-F8AD0A2D1E9A",
+      "cj:5323E1E1-7D61-451F-AB6A-7FC4F8D216A0",
+      "cj:1422359883205971968",
+      "cj:1925836332113891330",
+      "cj:7F3A6DAF-EF5F-4EFF-BBC5-6D3C0E273D74",
+      "cj:1395195771648872448",
+      "cj:DEC4E66E-CFDD-486C-AB5B-03950D5AE002",
+      "cj:1378917039242088448",
+      "cj:0290BD1D-46EC-48DF-9814-11182BE4BD9F",
+      "cj:1642830638166315008",
+      "cj:41C07701-32E5-49D6-A679-C891893D5C0B",
+      "cj:1573943855865671680",
+      "cj:1619183806399918080",
+      "cj:1551856096288190464",
+      "cj:97664B41-259F-4A75-99E3-8921F807B335",
+      "cj:1523147939961647104",
+      "cj:1646340580982665216",
+      "cj:16FCA947-9178-4813-B7CA-C7F5F6A410A3",
+      "cj:1365245676346281984",
+      "cj:1428960284441186304",
+      "cj:38D032C3-E6AE-41B8-82D8-0E68AE97454A"
+    ],
+    "supplierIdx": 0
+  },
+  "stage": "analyzing",
+  "progressCurrent": 80,
+  "missionSize": "standard",
+  "error": null
+}
+=== DIRECT BATCH 1 ===
+{
+  "ms": 12114,
+  "res": {
+    "done": false,
+    "scannedDelta": 40,
+    "keptDelta": 20,
+    "filteredDelta": 20,
+    "scanned": 80,
+    "target": 500
+  }
+}
+{
+  "id": "cms6krztf0001vfqkcohfemye",
+  "status": "running",
+  "target": 500,
+  "scanned": 80,
+  "kept": 38,
+  "filtered": 42,
+  "checkpoint": {
+    "page": 5,
+    "seedIdx": 0,
+    "seenKeys": [
+      "cj:1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+      "cj:1436966941628698624",
+      "cj:1428189769438990336",
+      "cj:B3AA1FBF-0E9B-421D-BF0B-9FAF608DB9B7",
+      "cj:1386914148104933376",
+      "cj:1DB964D6-538D-45C6-93F1-A1D91BDBEF31",
+      "cj:FB9C42CE-3605-4AF1-8CCB-E96509C222B5",
+      "cj:D99EE6AB-4C56-47F6-8ED0-EA72B3A13EE0",
+      "cj:E92E0976-BF54-4898-A177-31CA5175E66B",
+      "cj:1359735113218396160",
+      "cj:2ADAEC52-ED97-4262-8E9D-FC074BD40FCB",
+      "cj:013A8A4C-7AC8-47FB-84C2-EEC2F3C2EABB",
+      "cj:1402886158270205952",
+      "cj:1389789703376605184",
+      "cj:32AEFDE6-CDA9-47D5-959A-F2CD2856DFB7",
+      "cj:D1F1E58D-3C49-4EB9-AB64-89D325889207",
+      "cj:06DB43A0-1CF4-4858-AD2D-A2EC94AB94DF",
+      "cj:372652C2-5C5C-4873-8630-AADD10C6DE1C",
+      "cj:1392743188518801408",
+      "cj:1382663732030738432",
+      "cj:A4987847-0CB2-4B37-98EE-8DE58AA793E7",
+      "cj:6711AD66-001B-4643-BBCD-46A00E0CEE82",
+      "cj:F080333A-5A1B-4790-A23D-A2CDC8F84D85",
+      "cj:2E6576FA-6F94-400D-A14D-7FF0044FACA4",
+      "cj:1514128038953496576",
+      "cj:1412286946415349760",
+      "cj:1401810436990570496",
+      "cj:66CD22DC-8A26-407C-B0EC-5BD668632481",
+      "cj:926F1E70-B2E3-4FC8-921B-46E5153FEDB8",
+      "cj:1425289745512140800",
+      "cj:1398165665852035072",
+      "cj:DC16EB5F-794F-4901-977A-AEEB296460BD",
+      "cj:1426496260759752704",
+      "cj:1514149767801221120",
+      "cj:1380173480624001024",
+      "cj:1372450796167368704",
+      "cj:1372459006383230976",
+      "cj:1365252121582243840",
+      "cj:1407938254023561216",
+      "cj:1514127889581748224",
+      "cj:A404F3F2-E9AB-4313-9650-1034FFD10023",
+      "cj:769DDF90-A930-4249-85E8-4A9B66E55365",
+      "cj:1385919424179081216",
+      "cj:1379710725257302016",
+      "cj:5B1577F6-C994-4498-B565-FF6A04CA3F7C",
+      "cj:3CC03BB9-9C79-4466-84AD-10877F0E9CF6",
+      "cj:1523584722553810944",
+      "cj:1412948101504831488",
+      "cj:1560142134823628800",
+      "cj:3B476EA5-03D5-46D1-9EC0-A9C802FE7400",
+      "cj:83854BAB-8CBE-4C1F-A039-2832724413DA",
+      "cj:1391700604434386944",
+      "cj:1493074700748853248",
+      "cj:D9808848-C291-4761-B0ED-4E5622E59753",
+      "cj:1390506582827208704",
+      "cj:1514149906292944896",
+      "cj:1432959747069448192",
+      "cj:1427897891296514048",
+      "cj:1523148296477487104",
+      "cj:5718F320-804A-4606-9949-F8AD0A2D1E9A",
+      "cj:5323E1E1-7D61-451F-AB6A-7FC4F8D216A0",
+      "cj:1422359883205971968",
+      "cj:1925836332113891330",
+      "cj:7F3A6DAF-EF5F-4EFF-BBC5-6D3C0E273D74",
+      "cj:1395195771648872448",
+      "cj:DEC4E66E-CFDD-486C-AB5B-03950D5AE002",
+      "cj:1378917039242088448",
+      "cj:0290BD1D-46EC-48DF-9814-11182BE4BD9F",
+      "cj:1642830638166315008",
+      "cj:41C07701-32E5-49D6-A679-C891893D5C0B",
+      "cj:1573943855865671680",
+      "cj:1619183806399918080",
+      "cj:1551856096288190464",
+      "cj:97664B41-259F-4A75-99E3-8921F807B335",
+      "cj:1523147939961647104",
+      "cj:1646340580982665216",
+      "cj:16FCA947-9178-4813-B7CA-C7F5F6A410A3",
+      "cj:1365245676346281984",
+      "cj:1428960284441186304",
+      "cj:38D032C3-E6AE-41B8-82D8-0E68AE97454A"
+    ],
+    "supplierIdx": 0
+  },
+  "stage": "analyzing",
+  "progressCurrent": 80,
+  "missionSize": "quick",
+  "error": null
+}
+=== DIRECT BATCH 2 ===
+{
+  "ms": 10648,
+  "res": {
+    "done": false,
+    "scannedDelta": 40,
+    "keptDelta": 25,
+    "filteredDelta": 15,
+    "scanned": 120,
+    "target": 500
+  }
+}
+{
+  "id": "cms6krztf0001vfqkcohfemye",
+  "status": "running",
+  "target": 500,
+  "scanned": 120,
+  "kept": 63,
+  "filtered": 57,
+  "checkpoint": {
+    "page": 7,
+    "seedIdx": 0,
+    "seenKeys": [
+      "cj:1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+      "cj:1436966941628698624",
+      "cj:1428189769438990336",
+      "cj:B3AA1FBF-0E9B-421D-BF0B-9FAF608DB9B7",
+      "cj:1386914148104933376",
+      "cj:1DB964D6-538D-45C6-93F1-A1D91BDBEF31",
+      "cj:FB9C42CE-3605-4AF1-8CCB-E96509C222B5",
+      "cj:D99EE6AB-4C56-47F6-8ED0-EA72B3A13EE0",
+      "cj:E92E0976-BF54-4898-A177-31CA5175E66B",
+      "cj:1359735113218396160",
+      "cj:2ADAEC52-ED97-4262-8E9D-FC074BD40FCB",
+      "cj:013A8A4C-7AC8-47FB-84C2-EEC2F3C2EABB",
+      "cj:1402886158270205952",
+      "cj:1389789703376605184",
+      "cj:32AEFDE6-CDA9-47D5-959A-F2CD2856DFB7",
+      "cj:D1F1E58D-3C49-4EB9-AB64-89D325889207",
+      "cj:06DB43A0-1CF4-4858-AD2D-A2EC94AB94DF",
+      "cj:372652C2-5C5C-4873-8630-AADD10C6DE1C",
+      "cj:1392743188518801408",
+      "cj:1382663732030738432",
+      "cj:A4987847-0CB2-4B37-98EE-8DE58AA793E7",
+      "cj:6711AD66-001B-4643-BBCD-46A00E0CEE82",
+      "cj:F080333A-5A1B-4790-A23D-A2CDC8F84D85",
+      "cj:2E6576FA-6F94-400D-A14D-7FF0044FACA4",
+      "cj:1514128038953496576",
+      "cj:1412286946415349760",
+      "cj:1401810436990570496",
+      "cj:66CD22DC-8A26-407C-B0EC-5BD668632481",
+      "cj:926F1E70-B2E3-4FC8-921B-46E5153FEDB8",
+      "cj:1425289745512140800",
+      "cj:1398165665852035072",
+      "cj:DC16EB5F-794F-4901-977A-AEEB296460BD",
+      "cj:1426496260759752704",
+      "cj:1514149767801221120",
+      "cj:1380173480624001024",
+      "cj:1372450796167368704",
+      "cj:1372459006383230976",
+      "cj:1365252121582243840",
+      "cj:1407938254023561216",
+      "cj:1514127889581748224",
+      "cj:A404F3F2-E9AB-4313-9650-1034FFD10023",
+      "cj:769DDF90-A930-4249-85E8-4A9B66E55365",
+      "cj:1385919424179081216",
+      "cj:1379710725257302016",
+      "cj:5B1577F6-C994-4498-B565-FF6A04CA3F7C",
+      "cj:3CC03BB9-9C79-4466-84AD-10877F0E9CF6",
+      "cj:1523584722553810944",
+      "cj:1412948101504831488",
+      "cj:1560142134823628800",
+      "cj:3B476EA5-03D5-46D1-9EC0-A9C802FE7400",
+      "cj:83854BAB-8CBE-4C1F-A039-2832724413DA",
+      "cj:1391700604434386944",
+      "cj:1493074700748853248",
+      "cj:D9808848-C291-4761-B0ED-4E5622E59753",
+      "cj:1390506582827208704",
+      "cj:1514149906292944896",
+      "cj:1432959747069448192",
+      "cj:1427897891296514048",
+      "cj:1523148296477487104",
+      "cj:5718F320-804A-4606-9949-F8AD0A2D1E9A",
+      "cj:5323E1E1-7D61-451F-AB6A-7FC4F8D216A0",
+      "cj:1422359883205971968",
+      "cj:1925836332113891330",
+      "cj:7F3A6DAF-EF5F-4EFF-BBC5-6D3C0E273D74",
+      "cj:1395195771648872448",
+      "cj:DEC4E66E-CFDD-486C-AB5B-03950D5AE002",
+      "cj:1378917039242088448",
+      "cj:0290BD1D-46EC-48DF-9814-11182BE4BD9F",
+      "cj:1642830638166315008",
+      "cj:41C07701-32E5-49D6-A679-C891893D5C0B",
+      "cj:1573943855865671680",
+      "cj:1619183806399918080",
+      "cj:1551856096288190464",
+      "cj:97664B41-259F-4A75-99E3-8921F807B335",
+      "cj:1523147939961647104",
+      "cj:1646340580982665216",
+      "cj:16FCA947-9178-4813-B7CA-C7F5F6A410A3",
+      "cj:1365245676346281984",
+      "cj:1428960284441186304",
+      "cj:38D032C3-E6AE-41B8-82D8-0E68AE97454A",
+      "cj:1432900746889793536",
+      "cj:1372832801795215360",
+      "cj:1375420036415623168",
+      "cj:1395206403269988352",
+      "cj:1597120796579868672",
+      "cj:FD75C01A-FB34-476E-9D24-14AC6F4BEAF5",
+      "cj:5ECA6B57-ED6D-424D-B2AA-DFA078095D25",
+      "cj:1528577092114460672",
+      "cj:1494219496620167168",
+      "cj:1646784372424585216",
+      "cj:6A56A124-E77B-40D3-8710-10815F5AC778",
+      "cj:1425694500638035968",
+      "cj:0BC3A12F-758B-4109-B517-5D728E5D9E0D",
+      "cj:2407170542521627700",
+      "cj:1605129318185840640",
+      "cj:1650392650815643648",
+      "cj:1382559743557636096",
+      "cj:1361513393332293632",
+      "cj:1357645546038366208",
+      "cj:1365469641119502336",
+      "cj:1365226653659303936",
+      "cj:1369928685414649856",
+      "cj:1382979490610810880",
+      "cj:1603576970678382592",
+      "cj:7E360FB4-A373-4FBA-BEC7-711BBC58578F",
+      "cj:1358689537395658752",
+      "cj:1387205123079540736",
+      "cj:4AE9AED8-7D09-46D5-9069-12E3C4D2874B",
+      "cj:0020631D-481A-4204-91EE-D74A44F8B3B8",
+      "cj:1387289019498500096",
+      "cj:1572533003560169472",
+      "cj:1516787229933449216",
+      "cj:1429251409022423040",
+      "cj:1524935364794920960",
+      "cj:6D3680C3-AE46-4984-8252-B9D0306BAA26",
+      "cj:1640645331723497472",
+      "cj:1422501758147629056",
+      "cj:1512284309514891264",
+      "cj:1387304990284058624",
+      "cj:9E8DD5F9-D99E-4740-97A8-0A5B7A359534"
+    ],
+    "supplierIdx": 0
+  },
+  "stage": "analyzing",
+  "progressCurrent": 120,
+  "missionSize": "quick",
+  "error": null
+}
+=== DIRECT BATCH 3 ===
+{
+  "ms": 9359,
+  "res": {
+    "done": false,
+    "scannedDelta": 40,
+    "keptDelta": 15,
+    "filteredDelta": 25,
+    "scanned": 160,
+    "target": 500
+  }
+}
+{
+  "id": "cms6krztf0001vfqkcohfemye",
+  "status": "running",
+  "target": 500,
+  "scanned": 160,
+  "kept": 78,
+  "filtered": 82,
+  "checkpoint": {
+    "page": 9,
+    "seedIdx": 0,
+    "seenKeys": [
+      "cj:1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+      "cj:1436966941628698624",
+      "cj:1428189769438990336",
+      "cj:B3AA1FBF-0E9B-421D-BF0B-9FAF608DB9B7",
+      "cj:1386914148104933376",
+      "cj:1DB964D6-538D-45C6-93F1-A1D91BDBEF31",
+      "cj:FB9C42CE-3605-4AF1-8CCB-E96509C222B5",
+      "cj:D99EE6AB-4C56-47F6-8ED0-EA72B3A13EE0",
+      "cj:E92E0976-BF54-4898-A177-31CA5175E66B",
+      "cj:1359735113218396160",
+      "cj:2ADAEC52-ED97-4262-8E9D-FC074BD40FCB",
+      "cj:013A8A4C-7AC8-47FB-84C2-EEC2F3C2EABB",
+      "cj:1402886158270205952",
+      "cj:1389789703376605184",
+      "cj:32AEFDE6-CDA9-47D5-959A-F2CD2856DFB7",
+      "cj:D1F1E58D-3C49-4EB9-AB64-89D325889207",
+      "cj:06DB43A0-1CF4-4858-AD2D-A2EC94AB94DF",
+      "cj:372652C2-5C5C-4873-8630-AADD10C6DE1C",
+      "cj:1392743188518801408",
+      "cj:1382663732030738432",
+      "cj:A4987847-0CB2-4B37-98EE-8DE58AA793E7",
+      "cj:6711AD66-001B-4643-BBCD-46A00E0CEE82",
+      "cj:F080333A-5A1B-4790-A23D-A2CDC8F84D85",
+      "cj:2E6576FA-6F94-400D-A14D-7FF0044FACA4",
+      "cj:1514128038953496576",
+      "cj:1412286946415349760",
+      "cj:1401810436990570496",
+      "cj:66CD22DC-8A26-407C-B0EC-5BD668632481",
+      "cj:926F1E70-B2E3-4FC8-921B-46E5153FEDB8",
+      "cj:1425289745512140800",
+      "cj:1398165665852035072",
+      "cj:DC16EB5F-794F-4901-977A-AEEB296460BD",
+      "cj:1426496260759752704",
+      "cj:1514149767801221120",
+      "cj:1380173480624001024",
+      "cj:1372450796167368704",
+      "cj:1372459006383230976",
+      "cj:1365252121582243840",
+      "cj:1407938254023561216",
+      "cj:1514127889581748224",
+      "cj:A404F3F2-E9AB-4313-9650-1034FFD10023",
+      "cj:769DDF90-A930-4249-85E8-4A9B66E55365",
+      "cj:1385919424179081216",
+      "cj:1379710725257302016",
+      "cj:5B1577F6-C994-4498-B565-FF6A04CA3F7C",
+      "cj:3CC03BB9-9C79-4466-84AD-10877F0E9CF6",
+      "cj:1523584722553810944",
+      "cj:1412948101504831488",
+      "cj:1560142134823628800",
+      "cj:3B476EA5-03D5-46D1-9EC0-A9C802FE7400",
+      "cj:83854BAB-8CBE-4C1F-A039-2832724413DA",
+      "cj:1391700604434386944",
+      "cj:1493074700748853248",
+      "cj:D9808848-C291-4761-B0ED-4E5622E59753",
+      "cj:1390506582827208704",
+      "cj:1514149906292944896",
+      "cj:1432959747069448192",
+      "cj:1427897891296514048",
+      "cj:1523148296477487104",
+      "cj:5718F320-804A-4606-9949-F8AD0A2D1E9A",
+      "cj:5323E1E1-7D61-451F-AB6A-7FC4F8D216A0",
+      "cj:1422359883205971968",
+      "cj:1925836332113891330",
+      "cj:7F3A6DAF-EF5F-4EFF-BBC5-6D3C0E273D74",
+      "cj:1395195771648872448",
+      "cj:DEC4E66E-CFDD-486C-AB5B-03950D5AE002",
+      "cj:1378917039242088448",
+      "cj:0290BD1D-46EC-48DF-9814-11182BE4BD9F",
+      "cj:1642830638166315008",
+      "cj:41C07701-32E5-49D6-A679-C891893D5C0B",
+      "cj:1573943855865671680",
+      "cj:1619183806399918080",
+      "cj:1551856096288190464",
+      "cj:97664B41-259F-4A75-99E3-8921F807B335",
+      "cj:1523147939961647104",
+      "cj:1646340580982665216",
+      "cj:16FCA947-9178-4813-B7CA-C7F5F6A410A3",
+      "cj:1365245676346281984",
+      "cj:1428960284441186304",
+      "cj:38D032C3-E6AE-41B8-82D8-0E68AE97454A",
+      "cj:1432900746889793536",
+      "cj:1372832801795215360",
+      "cj:1375420036415623168",
+      "cj:1395206403269988352",
+      "cj:1597120796579868672",
+      "cj:FD75C01A-FB34-476E-9D24-14AC6F4BEAF5",
+      "cj:5ECA6B57-ED6D-424D-B2AA-DFA078095D25",
+      "cj:1528577092114460672",
+      "cj:1494219496620167168",
+      "cj:1646784372424585216",
+      "cj:6A56A124-E77B-40D3-8710-10815F5AC778",
+      "cj:1425694500638035968",
+      "cj:0BC3A12F-758B-4109-B517-5D728E5D9E0D",
+      "cj:2407170542521627700",
+      "cj:1605129318185840640",
+      "cj:1650392650815643648",
+      "cj:1382559743557636096",
+      "cj:1361513393332293632",
+      "cj:1357645546038366208",
+      "cj:1365469641119502336",
+      "cj:1365226653659303936",
+      "cj:1369928685414649856",
+      "cj:1382979490610810880",
+      "cj:1603576970678382592",
+      "cj:7E360FB4-A373-4FBA-BEC7-711BBC58578F",
+      "cj:1358689537395658752",
+      "cj:1387205123079540736",
+      "cj:4AE9AED8-7D09-46D5-9069-12E3C4D2874B",
+      "cj:0020631D-481A-4204-91EE-D74A44F8B3B8",
+      "cj:1387289019498500096",
+      "cj:1572533003560169472",
+      "cj:1516787229933449216",
+      "cj:1429251409022423040",
+      "cj:1524935364794920960",
+      "cj:6D3680C3-AE46-4984-8252-B9D0306BAA26",
+      "cj:1640645331723497472",
+      "cj:1422501758147629056",
+      "cj:1512284309514891264",
+      "cj:1387304990284058624",
+      "cj:9E8DD5F9-D99E-4740-97A8-0A5B7A359534",
+      "cj:7310E214-64A5-4960-9B9D-51BD469505FF",
+      "cj:1616294680654786560",
+      "cj:1382132226006847488",
+      "cj:1386920811713138688",
+      "cj:2E7E4401-8778-4812-92A3-0EF50435EFE4",
+      "cj:F7245011-1D7C-4BD1-BB50-595BB0AB274E",
+      "cj:1361863256658022400",
+      "cj:1388703153821716480",
+      "cj:8C5D42E6-2E66-4239-9D38-6F5C86620A34",
+      "cj:4B7307ED-5C8C-4911-9E69-346865FC70E2",
+      "cj:1389146770021421056",
+      "cj:6ABA80B8-D977-4D61-9A20-91B97087FA50",
+      "cj:1413075302317428736",
+      "cj:1432747816962363392",
+      "cj:1413069269226360832",
+      "cj:1397123215653998592",
+      "cj:104D5D16-CC7E-47BA-9B8E-D0BB9A137FBA",
+      "cj:1544277955625627648",
+      "cj:1648236355891236864",
+      "cj:1457971128566943744",
+      "cj:1512970591429734400",
+      "cj:F40C4DD0-EEE1-4626-9C08-0D1B5F97DC76",
+      "cj:1397543679937351680",
+      "cj:1E47B90C-3997-450B-9932-6069EA23F0F5",
+      "cj:1512374143973601280",
+      "cj:1427892301518213120",
+      "cj:1441327073611354112",
+      "cj:1381793059112620032",
+      "cj:511A6764-B615-4E12-AC63-0D94CA16B617",
+      "cj:3801ECDC-DC54-488F-A3BC-9D5DAE9EA874",
+      "cj:1547869125475840000",
+      "cj:1378287394385694720",
+      "cj:985007ED-DC0D-44DD-B28E-7D13EFECD193",
+      "cj:1419607419197198336",
+      "cj:1511577037243428864",
+      "cj:146E0FE2-AA36-4FAC-88F3-F1BA7D654B88",
+      "cj:1377171211028664320",
+      "cj:1391575972142256128",
+      "cj:1440918173653274624",
+      "cj:1457265038757859328"
+    ],
+    "supplierIdx": 0
+  },
+  "stage": "analyzing",
+  "progressCurrent": 160,
+  "missionSize": "quick",
+  "error": null
+}
+=== CANDIDATES ===
+[
+  {
+    "id": "cms6b9lf5005rvf0cbg8r56vk",
+    "title": "Vertical Gaming Mouse Controller Vertical",
+    "supplier": "cj",
+    "supplierProductId": "1361513393332293632",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 73,
+    "merchandiserRecId": "cms6bcryu00onvf0cvf0p5i24"
+  },
+  {
+    "id": "cms6b9jt0004rvf0ctw5ahk1a",
+    "title": "TYPE-C Interface Seven-button Gaming RGB Luminous Mouse",
+    "supplier": "cj",
+    "supplierProductId": "1432900746889793536",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 73,
+    "merchandiserRecId": "cms6bcpos00nevf0cadpoea9c"
+  },
+  {
+    "id": "cms6b9fpf003hvf0cq3pnz90b",
+    "title": "Gaming mouse pad",
+    "supplier": "cj",
+    "supplierProductId": "5718F320-804A-4606-9949-F8AD0A2D1E9A",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 72,
+    "merchandiserRecId": "cms6bcknl00ltvf0chn5sbouy"
+  },
+  {
+    "id": "cms6b9bo5001wvf0czb6wrzjw",
+    "title": "Rechargeable Wireless RGB Gaming Mouse High-value Gaming Mouse",
+    "supplier": "cj",
+    "supplierProductId": "1426496260759752704",
+    "status": "filtered",
+    "shopMatchPct": 92,
+    "overallScore": 74,
+    "merchandiserRecId": null
+  },
+  {
+    "id": "cms6b9bkx001uvf0c9qlk9vnq",
+    "title": "Gaming gaming mouse seven-speed DPI adjustable RGB light",
+    "supplier": "cj",
+    "supplierProductId": "DC16EB5F-794F-4901-977A-AEEB296460BD",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 72,
+    "merchandiserRecId": "cms6bcg2000jtvf0cjnb4t83r"
+  },
+  {
+    "id": "cms6b9kff0055vf0c62r8bxcp",
+    "title": "SA-1 Dual Mode Honeycomb Shell RGB Wireless Bluetooth Computer Gaming Mouse",
+    "supplier": "cj",
+    "supplierProductId": "1528577092114460672",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 73,
+    "merchandiserRecId": "cms6bcqja00nvvf0camwmfmvi"
+  },
+  {
+    "id": "cms6b9ewb002zvf0cfiuad7eg",
+    "title": "Color Wireless Gaming RGB Rechargeable Mute Button Mouse",
+    "supplier": "cj",
+    "supplierProductId": "83854BAB-8CBE-4C1F-A039-2832724413DA",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 73,
+    "merchandiserRecId": "cms6bcjpr00l9vf0cfrj0tbmo"
+  },
+  {
+    "id": "cms6kvl22004vvfysxk6vxa23",
+    "title": "Competitive Gaming Office Waterproof Mouse Pad",
+    "supplier": "cj",
+    "supplierProductId": "1387205123079540736",
+    "status": "ranked",
+    "shopMatchPct": 92,
+    "overallScore": 73,
+    "merchandiserRecId": "cms6kvkyv004tvfysgfi7uyno"
+  }
+]
+counts [{"_count":82,"status":"filtered"},{"_count":78,"status":"ranked"}]
+=== IMPORT TOP 3 ===
+{
+  "ok": true,
+  "imported": 3,
+  "results": [
+    {
+      "id": "cms6bbx9q00fevf0c156xzgbj",
+      "ok": true,
+      "queueItemId": "cms6kvxnc008tvfys8otg7odb"
+    },
+    {
+      "id": "cms6bcdg000invf0ce6hgts8z",
+      "ok": true,
+      "queueItemId": "cms6kvzxn0093vfysbose8wf4"
+    },
+    {
+      "id": "cms6bcr1f00o5vf0c4egmppfk",
+      "ok": true,
+      "queueItemId": "cms6kw1px009dvfysiuqjv9f8"
+    }
+  ]
+}
+prisma:error 
+Invalid `prisma.importQueueItem.findMany()` invocation in
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\scripts\_verify-direct-batch.ts:145:46
+
+  142   console.log("=== IMPORT SKIPPED (no ranked+merchRec on sample) ===");
+  143 }
+  144 
+ÔåÆ 145 const queue = await prisma.importQueueItem.findMany({
+        orderBy: {
+          createdAt: "desc"
+        },
+        take: 5,
+        select: {
+          id: true,
+          status: true,
+          supplierName: true,
+          ~~~~~~~~~~~~
+          supplierProductId: true,
+          title: true,
+          productId: true,
+          createdAt: true,
+      ?   storeId?: true,
+      ?   supplier?: true,
+      ?   supplierAccountId?: true,
+      ?   supplierSku?: true,
+      ?   imageUrl?: true,
+      ?   supplierPrice?: true,
+      ?   supplierCurrency?: true,
+      ?   rawPayload?: true,
+      ?   rawArtifactId?: true,
+      ?   mappedDraft?: true,
+      ?   enrichment?: true,
+      ?   pricing?: true,
+      ?   completeness?: true,
+      ?   imageReport?: true,
+      ?   pipelineStage?: true,
+      ?   validationReport?: true,
+      ?   error?: true,
+      ?   attempts?: true,
+      ?   jobId?: true,
+      ?   autoApproved?: true,
+      ?   reviewReason?: true,
+      ?   createdById?: true,
+      ?   createdByEmail?: true,
+      ?   processedAt?: true,
+      ?   publishedAt?: true,
+      ?   updatedAt?: true,
+      ?   supplierAccount?: true,
+      ?   rawArtifact?: true
+        }
+      })
+
+Unknown field `supplierName` for select statement on model `ImportQueueItem`. Available options are marked with ?.
+PrismaClientValidationError: 
+Invalid `prisma.importQueueItem.findMany()` invocation in
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\scripts\_verify-direct-batch.ts:145:46
+
+  142   console.log("=== IMPORT SKIPPED (no ranked+merchRec on sample) ===");
+  143 }
+  144 
+ÔåÆ 145 const queue = await prisma.importQueueItem.findMany({
+        orderBy: {
+          createdAt: "desc"
+        },
+        take: 5,
+        select: {
+          id: true,
+          status: true,
+          supplierName: true,
+          ~~~~~~~~~~~~
+          supplierProductId: true,
+          title: true,
+          productId: true,
+          createdAt: true,
+      ?   storeId?: true,
+      ?   supplier?: true,
+      ?   supplierAccountId?: true,
+      ?   supplierSku?: true,
+      ?   imageUrl?: true,
+      ?   supplierPrice?: true,
+      ?   supplierCurrency?: true,
+      ?   rawPayload?: true,
+      ?   rawArtifactId?: true,
+      ?   mappedDraft?: true,
+      ?   enrichment?: true,
+      ?   pricing?: true,
+      ?   completeness?: true,
+      ?   imageReport?: true,
+      ?   pipelineStage?: true,
+      ?   validationReport?: true,
+      ?   error?: true,
+      ?   attempts?: true,
+      ?   jobId?: true,
+      ?   autoApproved?: true,
+      ?   reviewReason?: true,
+      ?   createdById?: true,
+      ?   createdByEmail?: true,
+      ?   processedAt?: true,
+      ?   publishedAt?: true,
+      ?   updatedAt?: true,
+      ?   supplierAccount?: true,
+      ?   rawArtifact?: true
+        }
+      })
+
+Unknown field `supplierName` for select statement on model `ImportQueueItem`. Available options are marked with ?.
+    at throwValidationException (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ei.handleRequestError (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ei.handleAndLogRequestError (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ei.request (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async a (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:833:24)
+    at async main (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\scripts\_verify-direct-batch.ts:145:17) {
+  clientVersion: '6.19.0'
+}

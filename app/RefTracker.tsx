@@ -2,31 +2,58 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import {
+  AFFILIATE_COOKIE_MAX_AGE,
+  PENDING_AFFILIATE_KEY,
+  hasMarketingConsent,
+} from "@/lib/consent";
 
+function trackAffiliateClick(ref: string) {
+  const dedupeKey = `ref-tracked-${ref}`;
+  try {
+    if (localStorage.getItem(dedupeKey)) return;
+    localStorage.setItem(dedupeKey, "1");
+  } catch {
+    /* still attempt track */
+  }
+
+  fetch("/api/affiliate/click", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      code: ref,
+      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+    }),
+  }).catch((err) => console.error("ref track failed", err));
+}
+
+function setAffiliateCookie(ref: string) {
+  document.cookie = `affiliateCode=${encodeURIComponent(ref)};path=/;max-age=${AFFILIATE_COOKIE_MAX_AGE};samesite=lax`;
+}
+
+/**
+ * Affiliate ref tracking.
+ * Cookie + click beacon are marketing → only after GDPR consent ("all").
+ * Pending code kept in localStorage so consent can apply later.
+ */
 export default function RefTracker() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const ref = searchParams.get("ref");
+    const ref = searchParams.get("ref")?.trim();
     if (!ref) return;
-    const key = `ref-tracked-${ref}`;
-    if (typeof window !== "undefined" && localStorage.getItem(key)) return;
 
-    fetch("/api/affiliate/click", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        code: ref,
-        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
-      }),
-    }).catch((err) => console.error("ref track failed", err));
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem(key, "1");
-      document.cookie = `affiliateCode=${ref};path=/;max-age=${60 * 60 * 24 * 30}`;
+    try {
+      localStorage.setItem(PENDING_AFFILIATE_KEY, ref);
+    } catch {
+      /* ignore */
     }
+
+    if (!hasMarketingConsent()) return;
+
+    trackAffiliateClick(ref);
+    setAffiliateCookie(ref);
   }, [searchParams]);
 
   return null;
 }
-

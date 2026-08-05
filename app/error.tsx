@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { AlertCircle } from 'lucide-react';
+import { classifyAdminError } from '@/lib/admin/data-errors';
 
 export default function Error({
   error,
@@ -12,8 +13,8 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error to error reporting service
-    console.error('Error:', error);
+    const classified = classifyAdminError(error);
+    console.error('[app/error]', classified.logMessage, error.digest);
   }, [error]);
 
   return (
@@ -23,7 +24,7 @@ export default function Error({
       </div>
       <h1 className="mb-4 text-2xl font-bold text-dark">Noe gikk galt</h1>
       <p className="mb-6 text-gray-medium">
-        {error.message || 'En uventet feil oppstod. Vennligst prøv igjen.'}
+        En uventet feil oppstod. Vennligst prøv igjen.
       </p>
       <div className="flex gap-4 justify-center">
         <button
@@ -42,4 +43,3 @@ export default function Error({
     </div>
   );
 }
-

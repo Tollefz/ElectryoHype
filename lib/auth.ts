@@ -2,6 +2,11 @@ import { compare } from "bcrypt";
 import NextAuth, { type NextAuthOptions, getServerSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./prisma";
+import {
+  nextAuthErrorCode,
+  verifyCredentials,
+} from "@/lib/auth/verify-credentials";
+import { logAdminError } from "@/lib/admin/admin-logger";
 
 export const authOptions: NextAuthOptions = {
   pages: {
@@ -18,29 +23,55 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
+        const result = await verifyCredentials(
+          credentials?.email,
+          credentials?.password,
+          {
+            findUserByEmail: async (email) => {
+              const user = await prisma.user.findUnique({
+                where: { email },
+                select: {
+                  id: true,
+                  email: true,
+                  name: true,
+                  role: true,
+                  password: true,
+                },
+              });
+              if (!user) return null;
+              return {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                password: user.password,
+              };
+            },
+            comparePassword: (plain, hash) => compare(plain, hash),
+          }
+        );
+
+        if (result.ok) {
+          return {
+            id: result.user.id,
+            email: result.user.email,
+            name: result.user.name,
+            role: result.user.role,
+          };
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email.toLowerCase() },
-        });
-
-        if (!user?.password) {
-          return null;
+        const throwCode = nextAuthErrorCode(result);
+        if (throwCode) {
+          // NextAuth v4 passes error.message to client when authorize throws
+          logAdminError(result.code, {
+            label: "auth:authorize",
+            api: "credentials",
+          });
+          throw new Error(throwCode);
         }
 
-        const valid = await compare(credentials.password, user.password);
-        if (!valid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
+        // Invalid credentials — return null → CredentialsSignin (no user enumeration)
+        return null;
       },
     }),
   ],
@@ -64,4 +95,3 @@ export const authOptions: NextAuthOptions = {
 export const { handlers: authHandlers } = NextAuth(authOptions);
 
 export const getAuthSession = () => getServerSession(authOptions);
-

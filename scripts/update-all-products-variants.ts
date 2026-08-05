@@ -1,10 +1,16 @@
 import "dotenv/config";
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { TemuScraper } from '../lib/scrapers/temu-scraper';
 import { cleanProductName } from '../lib/utils/url-decode';
+import {
+  calculateCompareAtPrice,
+  calculateSuggestedRetailPrice,
+} from '../lib/import/pricing';
 
 const prisma = new PrismaClient();
 const scraper = new TemuScraper();
+
+type VariantCreateInput = Omit<Prisma.ProductVariantCreateManyInput, 'productId'>;
 
 async function updateAllProducts() {
   try {
@@ -88,7 +94,7 @@ async function updateAllProducts() {
           temuPriceNOK > 0 && temuPriceNOK < 10000; // Rimelig pris
 
         // Forbered varianter
-        let variantsToCreate: any[] = [];
+        let variantsToCreate: VariantCreateInput[] = [];
         
         // Hvis scraperen fant varianter, bruk dem
         if (data.variants && data.variants.length > 0) {
@@ -118,16 +124,15 @@ async function updateAllProducts() {
               variantPriceNOK = Number(product.price);
             }
 
-            // Beregn salgspris (legg til profittmargin)
+            // Beregn salgspris: arv produktets egen margin hvis den finnes,
+            // ellers bruk den dynamiske priskurven
             const supplierPrice = variantPriceNOK;
-            const profitMargin = product.supplierPrice && product.supplierPrice > 0
-              ? (Number(product.price) - Number(product.supplierPrice)) / Number(product.supplierPrice)
-              : 1.0; // 100% margin som standard
-            
-            const sellingPrice = Math.round(supplierPrice * (1 + profitMargin));
+            const sellingPrice = product.supplierPrice && product.supplierPrice > 0
+              ? Math.round(supplierPrice * (Number(product.price) / Number(product.supplierPrice)))
+              : calculateSuggestedRetailPrice(supplierPrice);
             const compareAtPrice = product.compareAtPrice 
               ? Math.round(sellingPrice * (Number(product.compareAtPrice) / Number(product.price)))
-              : Math.round(sellingPrice * 1.5);
+              : calculateCompareAtPrice(sellingPrice);
 
             // Prøv å finne bildet for denne varianten
             let variantImage: string | null = null;
@@ -138,7 +143,6 @@ async function updateAllProducts() {
             }
             // 2. Prøv å matche farge med bilder basert på indeks
             else if (variant.attributes?.color && allImages.length > 0) {
-              const colorName = variant.attributes.color.toLowerCase();
               // Prøv å finne et bilde som kan matche fargen (bruk indeks som fallback)
               const colorIndex = index < allImages.length ? index : index % allImages.length;
               variantImage = allImages[colorIndex] || allImages[0] || null;
@@ -169,7 +173,6 @@ async function updateAllProducts() {
           
           const urlLower = supplierUrl.toLowerCase();
           const productNameLower = cleanedTitle.toLowerCase();
-          const categoryLower = (product.category || "").toLowerCase();
           
           // Sjekk for lengdevarianter (kabler, ladere)
           const isCable = productNameLower.includes("kabel") || productNameLower.includes("cable") ||
@@ -245,9 +248,6 @@ async function updateAllProducts() {
             const relevantColors = colors.slice(0, hasColorOptions ? 5 : 3);
             relevantColors.forEach((color) => {
               const variantSupplierPrice = Number(product.supplierPrice || 0);
-              const profitMargin = variantSupplierPrice > 0
-                ? (Number(product.price) - variantSupplierPrice) / variantSupplierPrice
-                : 1.0;
               
               // Prøv å finne et passende bilde for denne fargen
               let variantImage: string | null = null;
@@ -277,7 +277,7 @@ async function updateAllProducts() {
         }
 
         // Oppdater produkt
-        const updateData: any = {};
+        const updateData: Prisma.ProductUpdateInput = {};
         const updates: string[] = [];
 
         if (shouldUpdateName) {

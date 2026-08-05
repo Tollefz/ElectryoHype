@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -10,11 +10,15 @@ import RefTracker from "./RefTracker";
 import { Toaster } from "react-hot-toast";
 import { SITE_CONFIG } from "@/lib/site";
 import { SourceMapSuppress } from "./sourcemap-suppress";
-import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { ConsentAwareAnalytics } from "@/components/ConsentAwareAnalytics";
+import { AppErrorBoundary } from "@/components/AppErrorBoundary";
+import { AppOverlayGuard } from "@/components/AppOverlayGuard";
 
-const inter = Inter({
+const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 const siteUrl = SITE_CONFIG.siteUrl;
@@ -25,8 +29,17 @@ export const metadata: Metadata = {
     default: "ElectroHypeX",
     template: "%s | ElectroHypeX",
   },
-  description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
-  keywords: ["elektronikk", "gaming", "tech", "nettbutikk", "Norge", "elektronikkbutikk", "elektronikk tilbud"],
+  description:
+    "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
+  keywords: [
+    "elektronikk",
+    "gaming",
+    "tech",
+    "nettbutikk",
+    "Norge",
+    "elektronikkbutikk",
+    "elektronikk tilbud",
+  ],
   authors: [{ name: "ElectroHypeX" }],
   creator: "ElectroHypeX",
   publisher: "ElectroHypeX",
@@ -41,7 +54,8 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "ElectroHypeX",
     title: "ElectroHypeX - Norges beste elektronikkbutikk",
-    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
+    description:
+      "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
     images: [
       {
         url: `${siteUrl}/og-image.jpg`,
@@ -54,7 +68,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ElectroHypeX - Norges beste elektronikkbutikk",
-    description: "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
+    description:
+      "ElectroHypeX tilbyr populære gadgets og elektronikk til gode priser – trygg betaling via Stripe, rask kundeservice og enkle returer.",
     images: [`${siteUrl}/og-image.jpg`],
   },
   robots: {
@@ -71,50 +86,75 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? {
+          "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION,
+        }
+      : undefined,
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="no" suppressHydrationWarning>
       <body
-        className={`${inter.variable} min-h-screen bg-slate-50 font-sans text-gray-900 antialiased`}
+        className={`${sans.variable} min-h-screen bg-[var(--surface-muted)] font-sans text-[var(--text)] antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+        >
           <SourceMapSuppress />
-          <CartProvider>
-            <div className="flex min-h-screen flex-col">
-              <Suspense fallback={
-                <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-                  <div className="h-16 bg-gray-900"></div>
-                </header>
-              }>
-                <Header />
-              </Suspense>
+          <AppOverlayGuard />
+          <AppErrorBoundary>
+            <CartProvider>
+              <div className="flex min-h-screen flex-col">
+                <Suspense
+                  fallback={
+                    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+                      <div className="h-16 bg-gray-900"></div>
+                    </header>
+                  }
+                >
+                  <Header />
+                </Suspense>
+                <Suspense fallback={null}>
+                  <RefTracker />
+                </Suspense>
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
               <Suspense fallback={null}>
-                <RefTracker />
+                <ConsentAwareAnalytics />
               </Suspense>
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-            <Toaster 
-              position="top-right"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  background: '#10b981',
-                  color: '#fff',
-                },
-                success: {
-                  iconTheme: {
-                    primary: '#fff',
-                    secondary: '#10b981',
+              <CookieConsentBanner />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    background: "#0f172a",
+                    color: "#fff",
+                    borderRadius: "0.75rem",
                   },
-                },
-              }}
-            />
-          </CartProvider>
+                  success: {
+                    iconTheme: {
+                      primary: "#00c853",
+                      secondary: "#fff",
+                    },
+                  },
+                }}
+              />
+            </CartProvider>
+          </AppErrorBoundary>
         </ThemeProvider>
       </body>
     </html>

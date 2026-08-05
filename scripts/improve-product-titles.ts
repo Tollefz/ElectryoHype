@@ -146,7 +146,6 @@ function improveTitle(original: string): string {
   }
   
   let improved = original.trim();
-  const originalLower = original.toLowerCase();
   
   // Step 1: Remove unwanted patterns
   for (const [pattern, replacement] of REMOVE_PATTERNS) {

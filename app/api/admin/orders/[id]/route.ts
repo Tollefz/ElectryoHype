@@ -2,19 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { OrderStatus, PaymentStatus, SupplierOrderStatus, FulfillmentStatus } from "@prisma/client";
+import {
+  OrderStatus,
+  PaymentStatus,
+  Prisma,
+  SupplierOrderStatus,
+  FulfillmentStatus,
+} from "@prisma/client";
 import { z } from "zod";
 import { logSupplierEvent } from "@/lib/dropshipping/supplier-events";
+import Stripe from "stripe";
+import { restoreStockForOrder } from "@/lib/orders/inventory";
 
 const updateOrderSchema = z.object({
   status: z.nativeEnum(OrderStatus).optional(), // Deprecated, kept for backward compatibility
   fulfillmentStatus: z.nativeEnum(FulfillmentStatus).optional(), // Single source of truth
   paymentStatus: z.nativeEnum(PaymentStatus).optional(),
-  trackingNumber: z.string().optional(),
-  trackingUrl: z.string().optional(),
-  shippingCarrier: z.string().optional(),
-  supplierOrderStatus: z.nativeEnum(SupplierOrderStatus).optional(), // Internal note only
-  notes: z.string().optional(),
+  trackingNumber: z.string().optional().nullable(),
+  trackingUrl: z.string().optional().nullable(),
+  shippingCarrier: z.string().optional().nullable(),
+  supplierOrderStatus: z.nativeEnum(SupplierOrderStatus).optional(),
+  notes: z.string().optional().nullable(),
+  internalNotes: z.string().optional().nullable(),
 });
 
 // GET: Hent ordre detaljer
@@ -52,10 +61,10 @@ export async function GET(
     }
 
     // Parse items fra JSON hvis det finnes
-    let items: any[] = [];
+    let items: unknown[] = [];
     try {
       if (typeof order.items === "string") {
-        const parsed = JSON.parse(order.items);
+        const parsed: unknown = JSON.parse(order.items);
         items = Array.isArray(parsed) ? parsed : [];
       } else if (order.items && Array.isArray(order.items)) {
         items = order.items;
@@ -71,21 +80,37 @@ export async function GET(
     }
 
     // Parse shipping address
-    let shippingAddress = {};
+    let shippingAddress: Record<string, unknown> = {};
     try {
       if (typeof order.shippingAddress === "string") {
-        shippingAddress = JSON.parse(order.shippingAddress);
-      } else if (order.shippingAddress) {
-        shippingAddress = order.shippingAddress;
+        const parsed: unknown = JSON.parse(order.shippingAddress);
+        shippingAddress =
+          typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
+            ? (parsed as Record<string, unknown>)
+            : {};
+      } else if (order.shippingAddress && typeof order.shippingAddress === "object") {
+        shippingAddress = order.shippingAddress as Record<string, unknown>;
       }
     } catch {
       shippingAddress = {};
     }
 
+    const noteSetting = await prisma.setting.findUnique({
+      where: { key: `order_internal_notes:${orderId.trim()}` },
+    });
+    const resolvedNotes =
+      typeof noteSetting?.value === "string"
+        ? noteSetting.value
+        : noteSetting?.value != null
+          ? String(noteSetting.value)
+          : order.internalNotes || null;
+
     return NextResponse.json({
       ...order,
       items,
       shippingAddress,
+      internalNotes: resolvedNotes,
+      notes: resolvedNotes,
     });
   } catch (error) {
     console.error("Error fetching order:", error);
@@ -129,9 +154,55 @@ export async function PATCH(
     const wasShippedBefore = existingOrder.fulfillmentStatus === "SHIPPED";
     const oldFulfillmentStatus = existingOrder.fulfillmentStatus;
     const oldSupplierStatus = existingOrder.supplierOrderStatus;
+    const oldPaymentStatus = existingOrder.paymentStatus;
+
+    // Real Stripe refund when marking as refunded
+    if (
+      validatedData.paymentStatus === "refunded" &&
+      oldPaymentStatus !== "refunded" &&
+      existingOrder.paymentIntentId
+    ) {
+      let stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim() || "";
+      stripeSecretKey = stripeSecretKey.replace(/^["']+|["']+$/g, "").trim();
+      if (!stripeSecretKey) {
+        return NextResponse.json(
+          { error: "Kan ikke refundere: Stripe er ikke konfigurert" },
+          { status: 500 }
+        );
+      }
+      const stripe = new Stripe(stripeSecretKey, {
+        apiVersion: "2025-02-24.acacia",
+      });
+      try {
+        await stripe.refunds.create({
+          payment_intent: existingOrder.paymentIntentId,
+          reason: "requested_by_customer",
+          metadata: {
+            orderId: existingOrder.id,
+            orderNumber: existingOrder.orderNumber,
+          },
+        });
+        const { trackServerRefund } = await import("@/lib/analytics/meta-capi");
+        trackServerRefund({
+          transactionId: existingOrder.orderNumber,
+          value: Number(existingOrder.total) || 0,
+          email: existingOrder.customerEmail,
+        }).catch(() => {});
+      } catch (refundErr: unknown) {
+        console.error("Stripe refund failed:", refundErr);
+        const message = refundErr instanceof Error ? refundErr.message : String(refundErr);
+        return NextResponse.json(
+          {
+            error: `Stripe-refusjon feilet: ${message || "ukjent feil"}`,
+          },
+          { status: 502 }
+        );
+      }
+    }
 
     // Map fulfillmentStatus to legacy status for backward compatibility
-    const updateData: any = { ...validatedData };
+    const { notes, internalNotes, ...rest } = validatedData;
+    const updateData: Prisma.OrderUpdateInput = { ...rest };
     if (validatedData.fulfillmentStatus) {
       // Map fulfillmentStatus to legacy status
       const statusMap: Record<FulfillmentStatus, OrderStatus> = {
@@ -142,6 +213,29 @@ export async function PATCH(
         CANCELLED: "cancelled",
       };
       updateData.status = statusMap[validatedData.fulfillmentStatus];
+    }
+    const noteValue = internalNotes !== undefined ? internalNotes : notes;
+    // Persist notes (Setting key until Prisma client regen picks up Order.internalNotes)
+    if (noteValue !== undefined) {
+      const settingValue: Prisma.InputJsonValue | typeof Prisma.JsonNull =
+        noteValue === null ? Prisma.JsonNull : noteValue;
+      await prisma.setting.upsert({
+        where: { key: `order_internal_notes:${orderId.trim()}` },
+        create: {
+          key: `order_internal_notes:${orderId.trim()}`,
+          value: settingValue,
+        },
+        update: { value: settingValue },
+      });
+      try {
+        await prisma.$executeRawUnsafe(
+          `UPDATE "Order" SET "internalNotes" = $1 WHERE id = $2`,
+          noteValue,
+          orderId.trim()
+        );
+      } catch {
+        /* column may lag in some envs — Setting is source of truth for UI */
+      }
     }
 
     // Oppdater ordre
@@ -157,6 +251,26 @@ export async function PATCH(
         },
       },
     });
+
+    const noteSetting = await prisma.setting.findUnique({
+      where: { key: `order_internal_notes:${orderId.trim()}` },
+    });
+    const resolvedNotes =
+      typeof noteSetting?.value === "string"
+        ? noteSetting.value
+        : noteSetting?.value != null
+          ? String(noteSetting.value)
+          : null;
+
+    // Restore inventory when refunding a previously paid order
+    if (
+      validatedData.paymentStatus === "refunded" &&
+      oldPaymentStatus === "paid"
+    ) {
+      await restoreStockForOrder(updatedOrder.id).catch((err) =>
+        console.error("Stock restore after refund failed:", err)
+      );
+    }
 
     // Hvis fulfillmentStatus endres til SHIPPED -> send shipping email
     const isNowShipped = updatedOrder.fulfillmentStatus === "SHIPPED";
@@ -200,10 +314,10 @@ export async function PATCH(
     }
 
     // Parse items for response
-    let items: any[] = [];
+    let items: unknown[] = [];
     try {
       if (typeof updatedOrder.items === "string") {
-        const parsed = JSON.parse(updatedOrder.items);
+        const parsed: unknown = JSON.parse(updatedOrder.items);
         items = Array.isArray(parsed) ? parsed : [];
       } else if (updatedOrder.items && Array.isArray(updatedOrder.items)) {
         items = updatedOrder.items;
@@ -233,6 +347,8 @@ export async function PATCH(
       ...updatedOrder,
       items,
       shippingAddress,
+      internalNotes: resolvedNotes,
+      notes: resolvedNotes,
       message: "Order updated successfully",
     });
   } catch (error) {

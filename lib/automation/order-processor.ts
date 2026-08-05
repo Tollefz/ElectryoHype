@@ -1,13 +1,39 @@
-import { OrderStatus, SupplierOrderStatus } from "@prisma/client";
+import { OrderStatus, SupplierOrderStatus, type Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSupplierAdapter } from "@/lib/suppliers";
-import type { Supplier } from "@/lib/suppliers/types";
+import type { Supplier, SupplierAdapter } from "@/lib/suppliers/types";
 
 interface ProcessOptions {
   isRetry?: boolean;
 }
 
+type ShippingAddress = {
+  name: string;
+  line1: string;
+  line2: string | null;
+  city: string;
+  postalCode: string;
+  country: string;
+  region: string | null;
+};
+
+type PlaceOrderCapable = SupplierAdapter & {
+  placeOrder: (params: {
+    orderId: string;
+    productId: string;
+    supplierProductId: string | null;
+    quantity: number;
+    customer: {
+      name: string;
+      email?: string | null;
+      phone?: string | null;
+    };
+    shippingAddress: ShippingAddress;
+  }) => Promise<{ supplierOrderId: string }>;
+};
+
 export async function processOrderAutomation(orderId: string, options?: ProcessOptions) {
+  void options;
   const order = await prisma.order.findUnique({
     where: { id: orderId },
     include: {
@@ -29,7 +55,7 @@ export async function processOrderAutomation(orderId: string, options?: ProcessO
   }
 
   // Parse shipping address - can be Json (object) or string
-  let shippingAddressData: any = order.shippingAddress;
+  let shippingAddressData: Prisma.JsonValue | Record<string, unknown> = order.shippingAddress;
   if (typeof order.shippingAddress === 'string') {
     try {
       shippingAddressData = JSON.parse(order.shippingAddress);
@@ -54,7 +80,7 @@ export async function processOrderAutomation(orderId: string, options?: ProcessO
     const supplier = item.product.supplierName.toLowerCase() as Supplier;
     const adapter = await getSupplierAdapter(supplier);
 
-    const result = await (adapter as any).placeOrder({
+    const result = await (adapter as PlaceOrderCapable).placeOrder({
       orderId: order.id,
       productId: item.productId,
       supplierProductId: item.product.supplierProductId,
@@ -103,15 +129,7 @@ export async function processOrderAutomation(orderId: string, options?: ProcessO
   return updated;
 }
 
-function parseAddressFromObject(address: any): {
-  name: string;
-  line1: string;
-  line2: string | null;
-  city: string;
-  postalCode: string;
-  country: string;
-  region: string | null;
-} | null {
+function parseAddressFromObject(address: unknown): ShippingAddress | null {
   if (!address || typeof address !== 'object') return null;
   
   const parsed = address as {

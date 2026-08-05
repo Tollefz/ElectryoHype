@@ -1,0 +1,522 @@
+{
+  "now": "2026-08-02T08:59:14.662Z",
+  "jobs24h": 27,
+  "gaps": [
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:720",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:05:53.779Z",
+      "startedAt": "2026-08-01T09:13:55.127Z",
+      "finishedAt": "2026-08-01T09:14:10.280Z",
+      "waitSec": 481,
+      "runSec": 15,
+      "gapFromPrevFinishToCreateSec": null,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:760",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:14:10.057Z",
+      "startedAt": "2026-08-01T09:15:07.383Z",
+      "finishedAt": "2026-08-01T09:15:22.824Z",
+      "waitSec": 57,
+      "runSec": 15,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:800",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:15:22.582Z",
+      "startedAt": "2026-08-01T09:15:24.552Z",
+      "finishedAt": "2026-08-01T09:15:43.323Z",
+      "waitSec": 2,
+      "runSec": 19,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:840",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:15:43.201Z",
+      "startedAt": "2026-08-01T09:24:53.838Z",
+      "finishedAt": "2026-08-01T09:25:11.979Z",
+      "waitSec": 551,
+      "runSec": 18,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:880",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:25:11.767Z",
+      "startedAt": "2026-08-01T09:26:06.273Z",
+      "finishedAt": "2026-08-01T09:26:25.174Z",
+      "waitSec": 55,
+      "runSec": 19,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:920",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:26:25.070Z",
+      "startedAt": "2026-08-01T09:34:49.306Z",
+      "finishedAt": "2026-08-01T09:35:03.139Z",
+      "waitSec": 504,
+      "runSec": 14,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:960",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:35:02.930Z",
+      "startedAt": "2026-08-01T09:58:29.378Z",
+      "finishedAt": "2026-08-01T09:58:41.472Z",
+      "waitSec": 1406,
+      "runSec": 12,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1000",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T09:58:41.262Z",
+      "startedAt": "2026-08-01T12:15:56.495Z",
+      "finishedAt": "2026-08-01T12:16:10.390Z",
+      "waitSec": 8235,
+      "runSec": 14,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1040",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T12:16:10.141Z",
+      "startedAt": "2026-08-01T12:30:07.092Z",
+      "finishedAt": "2026-08-01T12:30:21.363Z",
+      "waitSec": 837,
+      "runSec": 14,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1080",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T12:30:21.140Z",
+      "startedAt": "2026-08-01T12:58:15.877Z",
+      "finishedAt": "2026-08-01T12:58:29.731Z",
+      "waitSec": 1675,
+      "runSec": 14,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1120",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T12:58:29.502Z",
+      "startedAt": "2026-08-01T12:59:07.818Z",
+      "finishedAt": "2026-08-01T12:59:24.959Z",
+      "waitSec": 38,
+      "runSec": 17,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1160",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T12:59:24.732Z",
+      "startedAt": "2026-08-01T13:07:06.726Z",
+      "finishedAt": "2026-08-01T13:11:50.141Z",
+      "waitSec": 462,
+      "runSec": 283,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1200",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T13:11:49.806Z",
+      "startedAt": "2026-08-01T13:16:35.211Z",
+      "finishedAt": "2026-08-01T13:17:57.269Z",
+      "waitSec": 285,
+      "runSec": 82,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1240",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T13:17:57.060Z",
+      "startedAt": "2026-08-01T13:26:34.312Z",
+      "finishedAt": "2026-08-01T13:27:25.590Z",
+      "waitSec": 517,
+      "runSec": 51,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1280",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T13:27:25.381Z",
+      "startedAt": "2026-08-01T13:33:51.446Z",
+      "finishedAt": "2026-08-01T13:34:46.176Z",
+      "waitSec": 386,
+      "runSec": 55,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1320",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T13:34:45.968Z",
+      "startedAt": "2026-08-01T13:37:57.005Z",
+      "finishedAt": "2026-08-01T13:38:12.172Z",
+      "waitSec": 191,
+      "runSec": 15,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1360",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T13:38:11.925Z",
+      "startedAt": "2026-08-01T15:40:07.600Z",
+      "finishedAt": "2026-08-01T15:40:21.713Z",
+      "waitSec": 7316,
+      "runSec": 14,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1400",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T15:40:21.504Z",
+      "startedAt": "2026-08-01T17:11:37.630Z",
+      "finishedAt": "2026-08-01T17:24:45.553Z",
+      "waitSec": 5476,
+      "runSec": 788,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1440",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T17:24:45.224Z",
+      "startedAt": "2026-08-01T18:26:52.449Z",
+      "finishedAt": "2026-08-01T18:27:04.832Z",
+      "waitSec": 3727,
+      "runSec": 12,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1480",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T18:27:04.610Z",
+      "startedAt": "2026-08-01T18:56:33.807Z",
+      "finishedAt": "2026-08-01T18:56:45.553Z",
+      "waitSec": 1769,
+      "runSec": 12,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1520",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T18:56:45.331Z",
+      "startedAt": "2026-08-01T19:25:33.380Z",
+      "finishedAt": "2026-08-01T19:25:46.722Z",
+      "waitSec": 1728,
+      "runSec": 13,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1560",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T19:25:46.513Z",
+      "startedAt": "2026-08-01T19:43:32.679Z",
+      "finishedAt": "2026-08-01T19:44:52.319Z",
+      "waitSec": 1066,
+      "runSec": 80,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1600",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T19:44:52.077Z",
+      "startedAt": "2026-08-01T21:43:08.462Z",
+      "finishedAt": "2026-08-01T21:43:21.347Z",
+      "waitSec": 7096,
+      "runSec": 13,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1640",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T21:43:21.109Z",
+      "startedAt": "2026-08-01T22:41:09.288Z",
+      "finishedAt": "2026-08-01T23:18:39.365Z",
+      "waitSec": 3468,
+      "runSec": 2250,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1680",
+      "status": "succeeded",
+      "createdAt": "2026-08-01T23:18:38.381Z",
+      "startedAt": "2026-08-02T00:15:44.013Z",
+      "finishedAt": "2026-08-02T00:29:47.542Z",
+      "waitSec": 3426,
+      "runSec": 844,
+      "gapFromPrevFinishToCreateSec": -1,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1720",
+      "status": "succeeded",
+      "createdAt": "2026-08-02T00:29:47.332Z",
+      "startedAt": "2026-08-02T08:40:03.654Z",
+      "finishedAt": "2026-08-02T08:41:24.091Z",
+      "waitSec": 29416,
+      "runSec": 80,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Done"
+    },
+    {
+      "key": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1760",
+      "status": "pending",
+      "createdAt": "2026-08-02T08:41:23.882Z",
+      "startedAt": null,
+      "finishedAt": null,
+      "waitSec": null,
+      "runSec": null,
+      "gapFromPrevFinishToCreateSec": 0,
+      "attempts": 0,
+      "lastError": null,
+      "progressMessage": null
+    }
+  ],
+  "pendingOpen": [
+    {
+      "id": "cmsbjwqsp00ofvf9kud0c7l7a",
+      "status": "pending",
+      "attempts": 0,
+      "lastError": null,
+      "progressMessage": null,
+      "createdAt": "2026-08-02T08:41:23.882Z",
+      "runAfter": "2026-08-02T08:41:23.880Z",
+      "startedAt": null,
+      "lockedBy": null,
+      "lockExpiresAt": null,
+      "idempotencyKey": "buyer_scan_batch:cms9g1qzh00f4vf80v7ufeq6b:1760"
+    },
+    {
+      "id": "cms7etlmp161xvf7klak5m0rb",
+      "status": "running",
+      "attempts": 1,
+      "lastError": null,
+      "progressMessage": "Digital Buyer batch",
+      "createdAt": "2026-07-30T11:07:54.433Z",
+      "runAfter": "2026-07-30T11:07:54.434Z",
+      "startedAt": "2026-07-30T11:08:18.734Z",
+      "lockedBy": "worker-bb1f4668",
+      "lockExpiresAt": "2026-07-30T11:13:18.175Z",
+      "idempotencyKey": "buyer_scan_batch:cms7c836d0k6yvf7kre8s0hsa:9960"
+    }
+  ],
+  "scannedMarks": [
+    {
+      "at": "2026-08-01T09:14:10.280Z",
+      "scannedMark": 720,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T09:15:22.824Z",
+      "scannedMark": 760,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T09:15:43.323Z",
+      "scannedMark": 800,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T09:25:11.979Z",
+      "scannedMark": 840,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T09:26:25.174Z",
+      "scannedMark": 880,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T09:35:03.139Z",
+      "scannedMark": 920,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T09:58:41.472Z",
+      "scannedMark": 960,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T12:16:10.390Z",
+      "scannedMark": 1000,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T12:30:21.363Z",
+      "scannedMark": 1040,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T12:58:29.731Z",
+      "scannedMark": 1080,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T12:59:24.959Z",
+      "scannedMark": 1120,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T13:11:50.141Z",
+      "scannedMark": 1160,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T13:17:57.269Z",
+      "scannedMark": 1200,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T13:27:25.590Z",
+      "scannedMark": 1240,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T13:34:46.176Z",
+      "scannedMark": 1280,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T13:38:12.172Z",
+      "scannedMark": 1320,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T15:40:21.713Z",
+      "scannedMark": 1360,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T17:24:45.553Z",
+      "scannedMark": 1400,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T18:27:04.832Z",
+      "scannedMark": 1440,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T18:56:45.553Z",
+      "scannedMark": 1480,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T19:25:46.722Z",
+      "scannedMark": 1520,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T19:44:52.319Z",
+      "scannedMark": 1560,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T21:43:21.347Z",
+      "scannedMark": 1600,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-01T23:18:39.365Z",
+      "scannedMark": 1640,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-02T00:29:47.542Z",
+      "scannedMark": 1680,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-02T08:41:24.091Z",
+      "scannedMark": 1720,
+      "status": "succeeded"
+    },
+    {
+      "at": "2026-08-02T08:41:23.882Z",
+      "scannedMark": 1760,
+      "status": "pending"
+    }
+  ]
+}

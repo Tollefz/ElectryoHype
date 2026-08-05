@@ -25,9 +25,10 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ id: cart.id, token: cart.token });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("abandoned-cart capture error", error);
-    return NextResponse.json({ error: error.message || "capture failed" }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message || "capture failed" }, { status: 500 });
   }
 }
 

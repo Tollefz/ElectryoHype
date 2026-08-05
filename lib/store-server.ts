@@ -1,12 +1,6 @@
 import { headers } from "next/headers";
 import { getStoreIdFromHost, DEFAULT_STORE_ID } from "./store";
 
-type HeaderLike =
-  | Headers
-  | Record<string, string | string[] | undefined>
-  | undefined
-  | null;
-
 /**
  * Server-side only function to get storeId from headers.
  * Use this in Server Components and API routes.
@@ -18,7 +12,7 @@ export async function getStoreIdFromHeadersServer(): Promise<string> {
     let host: string | null = null;
 
     // Try Header-like first
-    if (h && typeof (h as any).get === "function") {
+    if (h && typeof h.get === "function") {
       try {
         host = h.get("host");
       } catch {
@@ -30,8 +24,8 @@ export async function getStoreIdFromHeadersServer(): Promise<string> {
     if (!host) {
       try {
         // Try as ReadonlyHeaders (Next.js 16)
-        if (h && typeof (h as any).get === "function") {
-          host = (h as any).get("host") || null;
+        if (h && typeof h.get === "function") {
+          host = h.get("host") || null;
         }
       } catch {
         // Ignore
@@ -44,4 +38,3 @@ export async function getStoreIdFromHeadersServer(): Promise<string> {
     return DEFAULT_STORE_ID;
   }
 }
-

@@ -6,6 +6,11 @@ import { Trash2, Plus, Minus, ShoppingBag, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import { SITE_CONFIG } from "@/lib/site";
+import {
+  cartItemToAnalyticsItem,
+  itemsValue,
+  trackEcommerce,
+} from "@/lib/analytics/ecommerce";
 
 export default function CartPage() {
   const { items, total, updateQuantity, removeFromCart } = useCart();
@@ -16,103 +21,101 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto min-h-screen max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
-        <ShoppingBag className="mx-auto mb-4 h-16 w-16 sm:h-24 sm:w-24 text-gray-300" />
-        <h1 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900">Handlekurven er tom</h1>
-        <p className="mb-6 text-sm sm:text-base text-gray-600">
-          Du har ingen produkter i handlekurven ennå.
-        </p>
-        <Link
-          href="/products"
-          className="inline-block rounded-lg bg-green-600 px-6 py-3 text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors"
-        >
-          Start shopping
-        </Link>
+      <div className="ehx-page-bg min-h-screen">
+        <div className="ehx-container py-16 text-center sm:py-20">
+          <ShoppingBag className="mx-auto mb-5 h-14 w-14 text-[var(--text-muted)] sm:h-16 sm:w-16" />
+          <h1 className="ehx-heading-2 mb-2">Handlekurven er tom</h1>
+          <p className="ehx-body mb-8">
+            Du har ingen produkter i handlekurven ennå.
+          </p>
+          <Link href="/products" className="ehx-btn ehx-btn-primary px-7 py-3.5">
+            Start shopping
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-      <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Handlekurv</h1>
+    <div className="ehx-page-bg min-h-screen">
+      <div className="ehx-container py-8 sm:py-10 lg:py-12">
+        <h1 className="ehx-heading-2 mb-8 sm:mb-10">Handlekurv</h1>
 
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-[2fr,1fr]">
-        {/* Venstre - Produktliste */}
-        <div>
-          <div className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm">
-            <div className="space-y-3 sm:space-y-4">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:gap-10">
+          <div className="rounded-[var(--ehx-radius-lg)] border border-[var(--border)] bg-white p-5 shadow-[var(--ehx-shadow-sm)] sm:p-6 lg:p-8">
+            <div className="space-y-5">
               {items.map((item) => {
                 const itemKey = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
                 return (
                   <div
                     key={itemKey}
-                    className="flex gap-3 sm:gap-4 border-b border-gray-200 pb-3 sm:pb-4 last:border-0"
+                    className="flex gap-4 border-b border-[var(--border)] pb-5 last:border-0 last:pb-0"
                   >
-                    {/* Produktbilde */}
-                    <Link href={`/products/${item.slug || item.productId}`} className="relative h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50">
+                    <Link
+                      href={`/products/${item.slug || item.productId}`}
+                      className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[var(--ehx-radius-md)] sm:h-28 sm:w-28"
+                      style={{ background: "var(--ehx-image-bg)" }}
+                    >
                       <Image
-                        src={item.image || 'https://placehold.co/100x100'}
+                        src={item.image || "https://placehold.co/100x100"}
                         alt={item.name}
                         fill
-                        className="object-contain"
+                        className="object-contain p-2"
                       />
                     </Link>
 
-                    {/* Produktinfo */}
-                    <div className="flex flex-1 flex-col justify-between min-w-0">
+                    <div className="flex min-w-0 flex-1 flex-col justify-between">
                       <div className="min-w-0">
-                        <Link href={`/products/${item.slug || item.productId}`} className="block text-sm sm:text-base font-semibold text-gray-900 hover:text-green-600 transition-colors line-clamp-2">
+                        <Link
+                          href={`/products/${item.slug || item.productId}`}
+                          className="block text-sm font-semibold text-[var(--text)] transition hover:text-[var(--brand-dark)] line-clamp-2 sm:text-base"
+                        >
                           {item.name}
                         </Link>
-                        {item.variantName && (
-                          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Variant: {item.variantName}</p>
-                        )}
-                        <p className="text-sm sm:text-base font-semibold text-gray-900 mt-1">
-                          {item.price.toLocaleString('no-NO')},-
+                        {item.variantName ? (
+                          <p className="mt-0.5 text-xs text-[var(--text-muted)] sm:text-sm">
+                            Variant: {item.variantName}
+                          </p>
+                        ) : null}
+                        <p className="mt-1.5 text-sm font-semibold text-[var(--text)] sm:text-base">
+                          {item.price.toLocaleString("no-NO")},-
                         </p>
                       </div>
 
-                      {/* Antall og fjern */}
-                      <div className="flex items-center justify-between mt-2 sm:mt-3">
-                        <div className="flex items-center rounded-lg border border-gray-300">
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center rounded-[var(--ehx-radius-sm)] border border-[var(--border-strong)]">
                           <button
-                            onClick={() => {
-                              const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
-                              updateQuantity(key, item.quantity - 1);
-                            }}
-                            className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-50 transition-colors"
+                            type="button"
+                            onClick={() => updateQuantity(itemKey, item.quantity - 1)}
+                            className="px-2.5 py-2 transition hover:bg-[var(--surface-muted)]"
                             aria-label="Reduser antall"
                           >
-                            <Minus size={14} className="sm:w-4 sm:h-4" />
+                            <Minus size={14} />
                           </button>
-                          <span className="w-8 sm:w-12 text-center text-sm sm:text-base font-semibold">
+                          <span className="w-10 text-center text-sm font-semibold">
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => {
-                              const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
-                              updateQuantity(key, item.quantity + 1);
-                            }}
-                            className="px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-50 transition-colors"
+                            type="button"
+                            onClick={() => updateQuantity(itemKey, item.quantity + 1)}
+                            className="px-2.5 py-2 transition hover:bg-[var(--surface-muted)]"
                             aria-label="Øk antall"
                           >
-                            <Plus size={14} className="sm:w-4 sm:h-4" />
+                            <Plus size={14} />
                           </button>
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <p className="text-sm sm:text-base font-bold text-gray-900">
-                            {(item.price * item.quantity).toLocaleString('no-NO')},-
+                          <p className="text-sm font-bold text-[var(--text)] sm:text-base">
+                            {(item.price * item.quantity).toLocaleString("no-NO")},-
                           </p>
                           <button
-                            onClick={() => {
-                              const key = `${item.productId}${item.variantId ? `-${item.variantId}` : ""}`;
-                              removeFromCart(key);
-                            }}
-                            className="text-gray-500 hover:text-red-600 transition-colors p-1"
+                            type="button"
+                            onClick={() => removeFromCart(itemKey)}
+                            className="p-1.5 text-[var(--text-muted)] transition hover:text-[var(--danger)]"
                             aria-label="Fjern produkt"
                           >
-                            <Trash2 size={18} className="sm:w-5 sm:h-5" />
+                            <Trash2 size={18} />
                           </button>
                         </div>
                       </div>
@@ -122,101 +125,138 @@ export default function CartPage() {
               })}
             </div>
           </div>
-        </div>
 
-        {/* Høyre - Sammendrag (Desktop) / Nederst (Mobil) */}
-        <div className="lg:col-span-1">
-          <div className="lg:sticky lg:top-24 rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-            <h2 className="mb-3 sm:mb-4 text-lg sm:text-xl font-bold text-gray-900">Sammendrag</h2>
+          <div>
+            <div className="rounded-[var(--ehx-radius-lg)] border border-[var(--border)] bg-white p-5 shadow-[var(--ehx-shadow-sm)] sm:p-6 lg:sticky lg:top-28">
+              <h2 className="mb-4 text-lg font-bold tracking-tight text-[var(--text)]">
+                Sammendrag
+              </h2>
 
-            <div className="space-y-2 sm:space-y-3 border-b border-gray-200 pb-3 sm:pb-4">
-              <div className="flex justify-between text-sm sm:text-base text-gray-600">
-                <span>Subtotal</span>
-                <span className="font-medium">{total.toLocaleString('no-NO')},-</span>
+              <div className="space-y-3 border-b border-[var(--border)] pb-4">
+                <div className="flex justify-between text-sm text-[var(--text-secondary)]">
+                  <span>Subtotal</span>
+                  <span className="font-medium text-[var(--text)]">
+                    {total.toLocaleString("no-NO")},-
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm text-[var(--text-secondary)]">
+                  <span>Frakt</span>
+                  <span
+                    className={`font-medium ${
+                      shippingCost === 0
+                        ? "text-[var(--brand-dark)]"
+                        : "text-[var(--text)]"
+                    }`}
+                  >
+                    {shippingCost === 0 ? "Gratis" : `${shippingCost},-`}
+                  </span>
+                </div>
+                {total < SITE_CONFIG.freeShippingThreshold ? (
+                  <p className="text-xs text-[var(--brand-dark)]">
+                    Handle for{" "}
+                    {(SITE_CONFIG.freeShippingThreshold - total).toLocaleString(
+                      "no-NO"
+                    )}
+                    ,- mer og få gratis frakt.
+                  </p>
+                ) : (
+                  <p className="text-xs font-medium text-[var(--brand-dark)]">
+                    Gratis frakt inkludert
+                  </p>
+                )}
               </div>
-              <div className="flex justify-between text-sm sm:text-base text-gray-600">
-                <span>Frakt</span>
-                <span className={`font-medium ${shippingCost === 0 ? 'text-green-600' : ''}`}>
-                  {shippingCost === 0 ? 'Gratis!' : `${shippingCost},-`}
-                </span>
-              </div>
-              {total < SITE_CONFIG.freeShippingThreshold && (
-                <p className="text-xs sm:text-sm text-green-600 mt-2">
-                  ✨ Kjøp for {(SITE_CONFIG.freeShippingThreshold - total).toLocaleString('no-NO')},- mer og få gratis frakt!
-                </p>
-              )}
-              {total >= SITE_CONFIG.freeShippingThreshold && (
-                <p className="text-xs sm:text-sm text-green-600 mt-2 font-medium">
-                  ✓ Gratis frakt!
-                </p>
-              )}
-            </div>
 
-            <div className="mt-4 flex justify-between text-lg sm:text-xl font-bold text-gray-900">
-              <span>Total</span>
-              <span>{totalWithShipping.toLocaleString('no-NO')},-</span>
-            </div>
-
-            {checkoutError && (
-              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                {checkoutError}
+              <div className="mt-4 flex justify-between text-lg font-bold text-[var(--text)]">
+                <span>Total</span>
+                <span>{totalWithShipping.toLocaleString("no-NO")},-</span>
               </div>
-            )}
-            <button
-              onClick={async () => {
-                setIsCheckingOut(true);
-                setCheckoutError(null);
-                try {
-                  const response = await fetch("/api/checkout", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      items: items.map((item) => ({
-                        productId: item.productId,
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity,
-                        image: item.image,
-                        variantId: item.variantId,
-                        variantName: item.variantName,
-                      })),
-                    }),
-                  });
-                  const data = await response.json();
-                  if (data.ok && data.url) {
-                    window.location.href = data.url;
-                  } else {
-                    setCheckoutError(data.error || "Noe gikk galt med kassen. Prøv igjen senere.");
+
+              {checkoutError ? (
+                <div className="mt-4 rounded-[var(--ehx-radius-md)] border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  {checkoutError}
+                </div>
+              ) : null}
+
+              <button
+                type="button"
+                onClick={async () => {
+                  setIsCheckingOut(true);
+                  setCheckoutError(null);
+                  try {
+                    const analyticsItems = items.map((item, index) =>
+                      cartItemToAnalyticsItem(
+                        {
+                          productId: item.productId,
+                          name: item.name,
+                          price: item.price,
+                          quantity: item.quantity,
+                          variantName: item.variantName,
+                          category: item.category,
+                        },
+                        index
+                      )
+                    );
+                    trackEcommerce("begin_checkout", {
+                      currency: "NOK",
+                      value: itemsValue(analyticsItems),
+                      items: analyticsItems,
+                    });
+
+                    const response = await fetch("/api/checkout", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        items: items.map((item) => ({
+                          productId: item.productId,
+                          name: item.name,
+                          price: item.price,
+                          quantity: item.quantity,
+                          image: item.image,
+                          variantId: item.variantId,
+                          variantName: item.variantName,
+                        })),
+                      }),
+                    });
+                    const data = await response.json();
+                    if (data.ok && data.url) {
+                      window.location.href = data.url;
+                    } else {
+                      setCheckoutError(
+                        data.error ||
+                          "Noe gikk galt med kassen. Prøv igjen senere."
+                      );
+                      setIsCheckingOut(false);
+                    }
+                  } catch {
+                    setCheckoutError(
+                      "Noe gikk galt med kassen. Prøv igjen senere."
+                    );
                     setIsCheckingOut(false);
                   }
-                } catch (error) {
-                  setCheckoutError("Noe gikk galt med kassen. Prøv igjen senere.");
-                  setIsCheckingOut(false);
-                }
-              }}
-              disabled={isCheckingOut}
-              className="mt-4 sm:mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-3 sm:py-4 text-center text-sm sm:text-base font-semibold text-white hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isCheckingOut ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  <span>Behandler...</span>
-                </>
-              ) : (
-                "Gå til kassen"
-              )}
-            </button>
+                }}
+                disabled={isCheckingOut}
+                className="ehx-btn ehx-btn-primary mt-5 w-full py-3.5 text-base disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isCheckingOut ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span>Behandler…</span>
+                  </>
+                ) : (
+                  "Til kassen"
+                )}
+              </button>
 
-            <Link
-              href="/products"
-              className="mt-3 block text-center text-xs sm:text-sm text-green-600 hover:text-green-700 hover:underline"
-            >
-              ← Fortsett å handle
-            </Link>
+              <Link
+                href="/products"
+                className="mt-4 block text-center text-sm font-medium text-[var(--brand-dark)] transition hover:underline"
+              >
+                ← Fortsett å handle
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

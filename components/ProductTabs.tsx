@@ -1,34 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { prepareDescriptionHtml } from '@/lib/sanitize-html';
+import {
+  groupCustomerSpecs,
+  toCustomerSpecs,
+  type CustomerSpec,
+} from '@/lib/products/customer-specs';
 
 interface ProductTabsProps {
   description: string;
-  specifications?: Record<string, string>;
+  specifications?: Record<string, string> | CustomerSpec[];
 }
 
 export default function ProductTabs({ description, specifications }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
+  const safeDescription = useMemo(() => prepareDescriptionHtml(description), [description]);
+
+  const customerSpecs = useMemo(() => {
+    if (Array.isArray(specifications)) return specifications;
+    return toCustomerSpecs(specifications);
+  }, [specifications]);
+
+  const grouped = useMemo(() => groupCustomerSpecs(customerSpecs), [customerSpecs]);
 
   const tabs = [
-    { id: 'description', label: 'Beskrivelse' },
-    { id: 'specs', label: 'Spesifikasjoner' },
-    { id: 'reviews', label: 'Anmeldelser' },
-  ] as const;
+    { id: 'description' as const, label: 'Oversikt' },
+    { id: 'specs' as const, label: 'Spesifikasjoner' },
+    { id: 'reviews' as const, label: 'Anmeldelser' },
+  ];
 
   return (
-    <div className="mt-8 rounded-xl bg-white p-6">
-      {/* Tab headers */}
-      <div className="border-b border-gray-border">
-        <div className="flex gap-2">
+    <div className="rounded-[1rem] border border-[var(--border)] bg-white p-4 shadow-[var(--ehx-shadow-sm)] sm:p-6">
+      <div className="border-b border-[var(--border)]">
+        <div className="flex gap-1 overflow-x-auto sm:gap-2">
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 font-semibold transition-colors ${
+              className={`whitespace-nowrap px-3 py-2.5 text-sm font-semibold transition-colors sm:px-5 sm:py-3 ${
                 activeTab === tab.id
-                  ? 'border-b-2 border-brand text-brand'
-                  : 'text-gray-medium hover:text-dark'
+                  ? 'border-b-2 border-[var(--brand)] text-[var(--brand-dark)]'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text)]'
               }`}
             >
               {tab.label}
@@ -37,106 +51,92 @@ export default function ProductTabs({ description, specifications }: ProductTabs
         </div>
       </div>
 
-      {/* Tab content */}
-      <div className="py-6">
+      <div className="py-5 sm:py-6">
         {activeTab === 'description' && (
-          <div className="prose max-w-none">
+          <div className="prose prose-sm max-w-none sm:prose-base prose-headings:text-base prose-headings:font-semibold prose-headings:text-[var(--text)] prose-p:text-[var(--text-secondary)] prose-li:text-[var(--text-secondary)]">
             {description && description !== 'Ingen beskrivelse tilgjengelig.' ? (
-              <div 
-                className="text-gray-medium leading-relaxed whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ __html: description }}
+              <div
+                className="leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: safeDescription }}
               />
             ) : (
-              <div className="text-gray-medium leading-relaxed">
-                <p className="mb-4">
-                  Dette produktet er en del av vårt utvalg av elektronikk og tilbehør. 
-                  Vi leverer kvalitetsprodukter med fokus på funksjonalitet og verdi.
-                </p>
-                <p className="mb-4">
-                  Produktet leveres med full garanti og støtte fra vårt team. 
-                  Hvis du har spørsmål om produktet, kan du kontakte vår kundeservice.
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Levering:</strong> 5–12 virkedager etter ordrebehandling.
-                </p>
-              </div>
+              <p className="text-[var(--text-secondary)]">
+                Se spesifikasjoner og bilder for produktdetaljer.
+              </p>
             )}
+            <p className="mt-8 border-t border-[var(--border)] pt-4 text-xs text-[var(--text-muted)]">
+              Reklamasjonsrett følger norsk forbrukerkjøpslov. Se{' '}
+              <a href="/retur" className="underline hover:text-[var(--text)]">
+                retur og reklamasjon
+              </a>{' '}
+              for detaljer.
+            </p>
           </div>
         )}
 
         {activeTab === 'specs' && (
-          <div className="space-y-3">
-            {specifications && Object.keys(specifications).length > 0 ? (
-              Object.entries(specifications).map(([key, value]) => (
-                <div key={key} className="flex border-b border-gray-border py-2">
-                  <span className="w-1/3 font-semibold text-dark">{key}</span>
-                  <span className="w-2/3 text-gray-medium">{value}</span>
+          <div className="space-y-6">
+            {grouped.length > 0 ? (
+              grouped.map(({ group, items }) => (
+                <div key={group}>
+                  {grouped.length > 1 ? (
+                    <h3 className="mb-2.5 text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">
+                      {group}
+                    </h3>
+                  ) : null}
+                  <table className="w-full border-collapse text-sm">
+                    <tbody>
+                      {items.map((row, i) => (
+                        <tr
+                          key={`${row.key}-${i}`}
+                          className="border-b border-[var(--border)] last:border-0"
+                        >
+                          <th
+                            scope="row"
+                            className="w-[42%] py-2.5 pr-4 text-left align-top font-medium text-[var(--text-secondary)]"
+                          >
+                            {row.key}
+                          </th>
+                          <td className="py-2.5 align-top text-[var(--text)]">{row.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               ))
             ) : (
-              <div>
-                <h3 className="mb-4 text-lg font-semibold">Generelle spesifikasjoner</h3>
-                <div className="space-y-2">
-                  <div className="flex border-b py-2">
-                    <span className="w-1/3 font-semibold">Merke</span>
-                    <span className="w-2/3 text-gray-medium">ElectroHypeX</span>
-                  </div>
-                  <div className="flex border-b py-2">
-                    <span className="w-1/3 font-semibold">Garanti</span>
-                    <span className="w-2/3 text-gray-medium">2 år</span>
-                  </div>
-                  <div className="flex border-b py-2">
-                    <span className="w-1/3 font-semibold">Leveringstid</span>
-                    <span className="w-2/3 text-gray-medium">5–12 virkedager</span>
-                  </div>
-                </div>
-              </div>
+              <table className="w-full text-sm">
+                <tbody>
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="w-[42%] py-2.5 text-left font-medium text-[var(--text-secondary)]">
+                      Garanti
+                    </th>
+                    <td className="py-2.5 text-[var(--text)]">2 år</td>
+                  </tr>
+                  <tr>
+                    <th className="w-[42%] py-2.5 text-left font-medium text-[var(--text-secondary)]">
+                      Leveringstid
+                    </th>
+                    <td className="py-2.5 text-[var(--text)]">5–12 virkedager</td>
+                  </tr>
+                </tbody>
+              </table>
             )}
           </div>
         )}
 
         {activeTab === 'reviews' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-2xl font-bold text-dark">4.2 av 5</h3>
-                <div className="flex items-center gap-2">
-                  <div className="flex text-xl text-brand">
-                    {'★★★★☆'.split('').map((star, i) => (
-                      <span key={i}>{star}</span>
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-medium">(24 anmeldelser)</span>
-                </div>
-              </div>
-              <button className="rounded-lg border border-brand px-6 py-2 font-semibold text-brand hover:bg-brand hover:text-white transition-colors">
-                Skriv anmeldelse
-              </button>
-            </div>
-
-            {/* Review list (dummy data) */}
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="border-b border-gray-border pb-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-dark">Ola Nordmann</p>
-                    <div className="flex text-brand">
-                      {'★★★★★'.split('').map((star, idx) => (
-                        <span key={idx}>{star}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <span className="text-sm text-gray-medium">2 dager siden</span>
-                </div>
-                <p className="text-gray-medium">
-                  Veldig fornøyd med produktet! God kvalitet og rask levering.
-                </p>
-              </div>
-            ))}
+          <div className="rounded-[0.75rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
+            <h3 className="text-base font-semibold text-[var(--text)]">Kundeanmeldelser</h3>
+            <p className="mt-2 text-sm text-[var(--text-secondary)]">
+              Ingen kundeanmeldelser ennå.
+            </p>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
+              Bli den første som vurderer produktet.
+            </p>
           </div>
         )}
       </div>
     </div>
   );
 }
-

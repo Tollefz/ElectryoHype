@@ -1,0 +1,371 @@
+{
+  "generatedAt": "2026-07-28T11:07:57.132Z",
+  "totalCandidates": 50,
+  "freshCandidates": 39,
+  "alreadyInStore": 11,
+  "existingStoreCount": 37,
+  "note": "Temu search UI is CAPTCHA-gated. Candidate pool is curated from verified goods IDs (web + prior Temu product pages) matching ElectroHypeX focus. No products saved.",
+  "candidates": [
+    {
+      "goodsId": "601101636313907",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601101636313907.html",
+      "whySelected": "4-port USB-C/A vegglader",
+      "searchTheme": "Charging",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601104193433667",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601104193433667.html",
+      "whySelected": "PD 140W desktop ladestasjon",
+      "searchTheme": "Charging",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601102619850574",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102619850574.html",
+      "whySelected": "USB-C PD hurtigladekabel 240W",
+      "searchTheme": "Cables",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601101965846820",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601101965846820.html",
+      "whySelected": "Flettet USB-C kabel flere lengder",
+      "searchTheme": "Cables",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100157791290",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100157791290.html",
+      "whySelected": "60W USB-C kabel",
+      "searchTheme": "Cables",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601102390732554",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102390732554.html",
+      "whySelected": "Trådløs ladestasjon 15W",
+      "searchTheme": "Charging",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "602285593748050",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-602285593748050.html",
+      "whySelected": "8-i-1 USB-C dock 4K",
+      "searchTheme": "USB-C",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099596864808",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099596864808.html",
+      "whySelected": "11-i-1 USB-C hub Ethernet",
+      "searchTheme": "USB-C",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099766228450",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099766228450.html",
+      "whySelected": "5-i-1 USB-C hub",
+      "searchTheme": "USB-C",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "602868098688372",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-602868098688372.html",
+      "whySelected": "10-i-1 USB-C dock PD",
+      "searchTheme": "USB-C",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100744160847",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100744160847.html",
+      "whySelected": "HDMI-kabel",
+      "searchTheme": "Cables",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099531902938",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099531902938.html",
+      "whySelected": "HDMI 2.1 8K kabel",
+      "searchTheme": "Cables",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601104447441391",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601104447441391.html",
+      "whySelected": "USB-C til HDMI",
+      "searchTheme": "Cables",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099518830175",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099518830175.html",
+      "whySelected": "Lang Lightning-kabel",
+      "searchTheme": "Mobile",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099618751962",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099618751962.html",
+      "whySelected": "3-i-1 universalkabel",
+      "searchTheme": "Mobile",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601102190375992",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102190375992.html",
+      "whySelected": "USB-C til Lightning",
+      "searchTheme": "Mobile",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099843686736",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099843686736.html",
+      "whySelected": "Skjermbeskytter 4-pack iPhone",
+      "searchTheme": "Mobile",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099622391523",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099622391523.html",
+      "whySelected": "9H skjermbeskytter",
+      "searchTheme": "Mobile",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099896391113",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099896391113.html",
+      "whySelected": "Trådløs gamingmus",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601101562224534",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601101562224534.html",
+      "whySelected": "Ergonomisk trådløs mus",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099517437326",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099517437326.html",
+      "whySelected": "RGB mini-tastatur 60%",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099513599425",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099513599425.html",
+      "whySelected": "Bakgrunnsbelyst spilltastatur",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099519046574",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099519046574.html",
+      "whySelected": "Trådløst tastatur+mus",
+      "searchTheme": "Home office",
+      "alreadyInStore": true,
+      "storeProductName": "Trådløst Tastatur og Mus"
+    },
+    {
+      "goodsId": "601099600944889",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099600944889.html",
+      "whySelected": "Mekanisk 68-taster RGB",
+      "searchTheme": "Gaming",
+      "alreadyInStore": true,
+      "storeProductName": "Mekanisk tastatur"
+    },
+    {
+      "goodsId": "601102593657943",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102593657943.html",
+      "whySelected": "Ultratyndt trådløst sett",
+      "searchTheme": "Home office",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099831500598",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099831500598.html",
+      "whySelected": "RGB tastatur+mus combo",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099595291172",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099595291172.html",
+      "whySelected": "Mekanisk tastatur + RGB mus",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100230500275",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100230500275.html",
+      "whySelected": "LED lampe med trådløs lading",
+      "searchTheme": "LED / Desk",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099954506804",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099954506804.html",
+      "whySelected": "Magnetisk biltelefonholder",
+      "searchTheme": "Car",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099934999711",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099934999711.html",
+      "whySelected": "66W billader uttrekkbar",
+      "searchTheme": "Car",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100812495288",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100812495288.html",
+      "whySelected": "4-port USB-C ladehub",
+      "searchTheme": "Charging",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099761443343",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099761443343.html",
+      "whySelected": "USB-C hub + SD-kortleser",
+      "searchTheme": "USB-C",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100866631815",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100866631815.html",
+      "whySelected": "Kompakt 5000mAh powerbank",
+      "searchTheme": "Charging",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601105649923103",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601105649923103.html",
+      "whySelected": "10-i-1 USB hub",
+      "searchTheme": "USB-C",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100900273162",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100900273162.html",
+      "whySelected": "Ultratynn powerbank USB-C",
+      "searchTheme": "Charging",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099581366881",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099581366881.html",
+      "whySelected": "Justerbar aluminium laptopstativ",
+      "searchTheme": "Desk setup",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099554592743",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099554592743.html",
+      "whySelected": "Laptopstativ med USB-hub",
+      "searchTheme": "Desk setup",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100477127043",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100477127043.html",
+      "whySelected": "Laptopstativ med vifte",
+      "searchTheme": "Desk setup",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601099615511955",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099615511955.html",
+      "whySelected": "Trådløse ørepropper 40t",
+      "searchTheme": "Mobile",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601100264547785",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100264547785.html",
+      "whySelected": "SMD loddestasjon DIY elektronikk",
+      "searchTheme": "Tools",
+      "alreadyInStore": false
+    },
+    {
+      "goodsId": "601104643296853",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601104643296853.html",
+      "whySelected": "USB-C flettet ladekabel 60W",
+      "searchTheme": "Cables",
+      "alreadyInStore": true,
+      "storeProductName": "USB Flettet Ladekabel 60W"
+    },
+    {
+      "goodsId": "601100534954380",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601100534954380.html",
+      "whySelected": "Nylonflettet USB-C kabel",
+      "searchTheme": "Cables",
+      "alreadyInStore": true,
+      "storeProductName": "USB Flettet Ladekabel"
+    },
+    {
+      "goodsId": "601099648852953",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099648852953.html",
+      "whySelected": "HDMI 2.1 8K HDR kabel",
+      "searchTheme": "Cables",
+      "alreadyInStore": true,
+      "storeProductName": "HDMI kabel"
+    },
+    {
+      "goodsId": "601102368543576",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102368543576.html",
+      "whySelected": "Trådløst berøringstastatur",
+      "searchTheme": "Home office",
+      "alreadyInStore": true,
+      "storeProductName": "Trådløst tastatur"
+    },
+    {
+      "goodsId": "601099580848565",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099580848565.html",
+      "whySelected": "120W USB-C hurtigladekabel",
+      "searchTheme": "Cables",
+      "alreadyInStore": true,
+      "storeProductName": "USB-C Hurtiglader 120W"
+    },
+    {
+      "goodsId": "601102447327489",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102447327489.html",
+      "whySelected": "25-i-1 presisjonsskrutrekkersett",
+      "searchTheme": "Tools",
+      "alreadyInStore": true,
+      "storeProductName": "I Mini Skrutrekkersett Flat Phillips Liten"
+    },
+    {
+      "goodsId": "601099516389038",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099516389038.html",
+      "whySelected": "USB-C endoskop inspeksjonskamera",
+      "searchTheme": "Tools",
+      "alreadyInStore": true,
+      "storeProductName": "1m 2m Endoskop Boreskop Justerbar Myk Ledning"
+    },
+    {
+      "goodsId": "601103385787132",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601103385787132.html",
+      "whySelected": "Oppladbar LED boklampe",
+      "searchTheme": "LED / Desk",
+      "alreadyInStore": true,
+      "storeProductName": "LED Lampe"
+    },
+    {
+      "goodsId": "601099641721500",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601099641721500.html",
+      "whySelected": "Digital termometer/hygrometer smart home-adjacent",
+      "searchTheme": "Smart Home",
+      "alreadyInStore": true,
+      "storeProductName": "Elektronisk Innendørs Termometer Hygrometer Husholdningsbruk Digital Temperatur Fuktighetsmåler"
+    },
+    {
+      "goodsId": "606178612509812",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-606178612509812.html",
+      "whySelected": "Gaming tastatur+mus metallpanel",
+      "searchTheme": "Gaming",
+      "alreadyInStore": false
+    }
+  ]
+}

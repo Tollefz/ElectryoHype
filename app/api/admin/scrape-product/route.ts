@@ -3,6 +3,11 @@ import "server-only";
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
 import { scrapeProduct as scrapeProductServer } from "@/lib/server/scrape-product";
+import {
+  calculateCompareAtPrice,
+  calculateSuggestedRetailPrice,
+  convertPriceToNOK,
+} from "@/lib/import/pricing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -57,14 +62,12 @@ export async function POST(req: Request) {
 
     const data = result.data!;
 
-    // Konverter valuta til NOK (forenklet - burde bruke faktisk valuta-konvertering)
-    const priceInNOK = data.price.currency === "USD" 
-      ? data.price.amount * 10.5  // Omtrentlig USD til NOK kurs
-      : data.price.amount;
+    // Konverter valuta til NOK
+    const priceInNOK = convertPriceToNOK(data.price.amount, data.price.currency || "USD");
 
-    // Beregn foreslått salgspris (50% fortjeneste)
-    const suggestedPrice = Math.round(priceInNOK * 1.5);
-    const compareAtPrice = Math.round(suggestedPrice * 1.15);
+    // Beregn foreslått salgspris via den dynamiske priskurven
+    const suggestedPrice = calculateSuggestedRetailPrice(priceInNOK);
+    const compareAtPrice = calculateCompareAtPrice(suggestedPrice);
 
     // Formater beskrivelse
     const description = data.description || "";
@@ -113,6 +116,24 @@ export async function POST(req: Request) {
     const { improveTitle } = await import("@/lib/utils/improve-product-title");
     const improvedTitle = improveTitle(data.title);
 
+    const { categorizeForSave } = await import("@/lib/categories/apply-on-save");
+    const categoryPersist = await categorizeForSave({
+      title: improvedTitle,
+      description,
+      shortDescription,
+      specs: data.specs
+        ? Object.fromEntries(
+            Object.entries(data.specs as Record<string, unknown>).map(([k, v]) => [
+              k,
+              String(v ?? ""),
+            ])
+          )
+        : {},
+      images,
+      variants: variants.map((v: { name?: string }) => String(v.name || "")),
+      supplierCategory: null,
+    });
+
     const responseData = {
       name: improvedTitle,
       price: Math.round(priceInNOK),
@@ -120,13 +141,15 @@ export async function POST(req: Request) {
       compareAtPrice,
       description,
       shortDescription,
-      category: "Elektronikk", // Default - kan forbedres senere
+      category: categoryPersist.category,
+      subcategory: categoryPersist.subcategory,
       images,
-      tags,
+      tags: JSON.parse(categoryPersist.tags) as string[],
       supplier,
       specs: data.specs || {},
       shippingEstimate: data.shippingEstimate,
       variants: variants, // Always include variants (at least one)
+      aiCategoryConfidence: categoryPersist.aiCategoryConfidence,
     };
 
     console.log(`[Scrape Product] Response data - variants: ${responseData.variants.length}`);

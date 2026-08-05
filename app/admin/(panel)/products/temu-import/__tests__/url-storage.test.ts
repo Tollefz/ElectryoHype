@@ -126,8 +126,14 @@ https://www.alibaba.com/product-detail/333.html`;
 };
 
 // Make functions available globally for manual testing
+declare global {
+  interface Window {
+    testUrlStorage?: typeof testUrlStorage;
+  }
+}
+
 if (typeof window !== 'undefined') {
-  (window as any).testUrlStorage = testUrlStorage;
+  window.testUrlStorage = testUrlStorage;
   console.log('🧪 URL Storage test functions available. Use testUrlStorage.* in console.');
 }
 

@@ -1,0 +1,17 @@
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\server-only\index.js:1
+throw new Error(
+      ^
+
+Error: This module cannot be imported from a Client Component module. It should only be used from a Server Component.
+    at Object.<anonymous> (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\node_modules\server-only\index.js:1:7)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object.transformer (C:\Users\robto\AppData\Local\npm-cache\_npx\fd45a72a545557e9\node_modules\tsx\dist\register-BoI6-WNn.cjs:9:3252)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1504:12)
+    at require (node:internal/modules/helpers:152:16)
+    at <anonymous> (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\buyer\supplier-risk.ts:6:8)
+
+Node.js v24.11.1

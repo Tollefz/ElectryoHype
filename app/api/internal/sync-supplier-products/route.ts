@@ -17,9 +17,10 @@ export async function POST(req: Request) {
   try {
     const result = await syncRunner(storeId, dryRun);
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[sync-supplier-products] error", error);
-    return NextResponse.json({ error: error.message || "failed" }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message || "failed" }, { status: 500 });
   }
 }
 

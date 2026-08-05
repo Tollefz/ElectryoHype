@@ -24,8 +24,9 @@ export async function POST(req: Request) {
       percentOff: dc.percentOff,
       amountOff: dc.amountOff,
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "failed" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message || "failed" }, { status: 500 });
   }
 }
 

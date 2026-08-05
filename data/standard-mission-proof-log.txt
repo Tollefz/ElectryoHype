@@ -1,0 +1,31 @@
+=== START STANDARD MISSION ===
+{
+  "scanId": "cms6mljv00000vff4n3a0ngin",
+  "target": 10000,
+  "status": "running",
+  "missionSize": "standard"
+}
+{"batch":5,"ms":9910,"done":false,"status":"running","scanned":200,"kept":96,"filtered":104,"page":11,"seedIdx":0,"supplierIdx":0,"seen":200,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":10,"ms":10376,"done":false,"status":"running","scanned":400,"kept":201,"filtered":199,"page":22,"seedIdx":0,"supplierIdx":0,"seen":400,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":15,"ms":11538,"done":false,"status":"running","scanned":600,"kept":310,"filtered":290,"page":32,"seedIdx":0,"supplierIdx":0,"seen":600,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":20,"ms":11103,"done":false,"status":"running","scanned":800,"kept":415,"filtered":385,"page":42,"seedIdx":0,"supplierIdx":0,"seen":800,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":25,"ms":10909,"done":false,"status":"running","scanned":1000,"kept":524,"filtered":476,"page":52,"seedIdx":0,"supplierIdx":0,"seen":1000,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":30,"ms":11086,"done":false,"status":"running","scanned":1200,"kept":629,"filtered":571,"page":62,"seedIdx":0,"supplierIdx":0,"seen":1200,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":35,"ms":10700,"done":false,"status":"running","scanned":1400,"kept":732,"filtered":668,"page":72,"seedIdx":0,"supplierIdx":0,"seen":1400,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":40,"ms":10805,"done":false,"status":"running","scanned":1600,"kept":839,"filtered":761,"page":82,"seedIdx":0,"supplierIdx":0,"seen":1600,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":45,"ms":12022,"done":false,"status":"running","scanned":1800,"kept":959,"filtered":841,"page":92,"seedIdx":0,"supplierIdx":0,"seen":1800,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":50,"ms":11710,"done":false,"status":"running","scanned":2000,"kept":1081,"filtered":919,"page":102,"seedIdx":0,"supplierIdx":0,"seen":2000,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":55,"ms":12073,"done":false,"status":"running","scanned":2200,"kept":1204,"filtered":996,"page":112,"seedIdx":0,"supplierIdx":0,"seen":2200,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":60,"ms":12975,"done":false,"status":"running","scanned":2400,"kept":1340,"filtered":1060,"page":122,"seedIdx":0,"supplierIdx":0,"seen":2400,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":65,"ms":13706,"done":false,"status":"running","scanned":2600,"kept":1466,"filtered":1134,"page":132,"seedIdx":0,"supplierIdx":0,"seen":2500,"stage":"analyzing","scannedDelta":40,"error":null}
+{"batch":70,"ms":10044,"done":false,"status":"running","scanned":2800,"kept":1578,"filtered":1222,"page":12,"seedIdx":1,"supplierIdx":0,"seen":2500,"stage":"analyzing","scannedDelta":40,"error":null}
+­ƒöÑ ERROR: [buyer/scan] Too Many Requests, QPS limit is 1 time/1second
+PROOF_FAILED CjApiError: Too Many Requests, QPS limit is 1 time/1second
+    at cjRequest (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\suppliers\cj\api.ts:309:21)
+    at async searchCjProducts (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\suppliers\cj\search.ts:107:16)
+    at async processBuyerScanBatch (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\buyer\scan.ts:382:22)
+    at async main (C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\scripts\_run-standard-mission-proof.ts:46:17) {
+  statusCode: 429,
+  code: 1600200,
+  requestId: '733e6a5763e844d3b6cbbb062b16096a'
+}

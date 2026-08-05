@@ -1,22 +1,31 @@
 import {
   Body,
+  Button,
   Container,
-  Head,
   Heading,
   Html,
   Preview,
-  Text,
   Section,
-  Button,
-} from '@react-email/components';
+  Text,
+} from "@react-email/components";
+import type { EmailOrderItem } from "@/lib/email-items";
+import {
+  EmailFooter,
+  EmailHeadStyles,
+  EmailLogoHeader,
+  EmailProductRows,
+  brand,
+} from "./shared";
 
 interface OrderShippedEmailProps {
   orderNumber: string;
   customerName: string;
   trackingNumber?: string;
   trackingUrl?: string;
-  items?: Array<{ name: string; quantity: number }>;
+  items?: EmailOrderItem[];
   isDropship?: boolean;
+  logoUrl: string;
+  siteUrl?: string;
 }
 
 export default function OrderShippedEmail({
@@ -26,62 +35,62 @@ export default function OrderShippedEmail({
   trackingUrl,
   items = [],
   isDropship = true,
+  logoUrl,
+  siteUrl,
 }: OrderShippedEmailProps) {
   return (
     <Html>
-      <Head />
-      <Preview>Din pakke er sendt! 📦</Preview>
-      <Body style={styles.body}>
-        <Container style={styles.container}>
-          <Heading style={styles.h1}>Din pakke er sendt! 📦</Heading>
-          
-          <Text style={styles.text}>Hei {customerName},</Text>
-          
-          <Text style={styles.text}>
-            Gode nyheter! Din ordre <strong>{orderNumber}</strong> er nå sendt og er på vei til deg.
+      <EmailHeadStyles />
+      <Preview>Ordre {orderNumber} er sendt</Preview>
+      <Body style={styles.body} className="ehx-body">
+        <Container style={styles.container} className="ehx-container">
+          <EmailLogoHeader logoUrl={logoUrl} />
+
+          <Heading style={styles.h1} className="ehx-h1 ehx-pad ehx-text">
+            Pakken er på vei
+          </Heading>
+
+          <Text style={styles.text} className="ehx-pad ehx-text">
+            Hei {customerName},
+          </Text>
+          <Text style={styles.text} className="ehx-pad ehx-text">
+            Ordre <strong>{orderNumber}</strong> er sendt
+            {isDropship ? " fra vår leverandør" : ""}. Forventet levering er vanligvis
+            2–5 virkedager.
           </Text>
 
           {items.length > 0 && (
-            <Section style={styles.itemsSection}>
-              <Text style={styles.trackingLabel}>Produkter:</Text>
-              {items.map((item, idx) => (
-                <Text key={idx} style={styles.itemLine}>
-                  • {item.name} × {item.quantity}
-                </Text>
-              ))}
+            <Section style={styles.card} className="ehx-card">
+              <Heading as="h2" style={styles.h2} className="ehx-h2">
+                Innhold
+              </Heading>
+              <EmailProductRows items={items} />
             </Section>
           )}
 
           {(trackingNumber || trackingUrl) && (
-            <Section style={styles.trackingSection}>
+            <Section style={styles.tracking} className="ehx-info ehx-card">
               {trackingNumber && (
                 <>
-                  <Text style={styles.trackingLabel}>Sporingsnummer:</Text>
-                  <Text style={styles.trackingNumber}>{trackingNumber}</Text>
+                  <Text style={styles.trackingLabel} className="ehx-info-title">
+                    Sporingsnummer
+                  </Text>
+                  <Text style={styles.trackingNumber} className="ehx-text">
+                    {trackingNumber}
+                  </Text>
                 </>
               )}
-
               {trackingUrl && (
-                <Section style={styles.buttonSection}>
+                <Section style={{ marginTop: "16px" }}>
                   <Button style={styles.button} href={trackingUrl}>
-                    Spor pakken din
+                    Spor pakken
                   </Button>
                 </Section>
               )}
             </Section>
           )}
 
-          <Text style={styles.text}>
-            Forventet leveringstid: 2-5 virkedager.
-            {isDropship
-              ? " Varene sendes direkte fra vår leverandør (dropshipping)."
-              : ""}
-          </Text>
-
-          <Text style={styles.footer}>
-            Med vennlig hilsen,<br />
-            <strong>ElectroHypeX</strong>
-          </Text>
+          <EmailFooter siteUrl={siteUrl} />
         </Container>
       </Body>
     </Html>
@@ -90,82 +99,82 @@ export default function OrderShippedEmail({
 
 const styles = {
   body: {
-    backgroundColor: '#f6f9fc',
-    fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+    backgroundColor: brand.body,
+    fontFamily: brand.font,
+    margin: "0",
+    padding: "24px 0",
   },
   container: {
-    backgroundColor: '#ffffff',
-    margin: '0 auto',
-    padding: '20px 0 48px',
-    maxWidth: '600px',
+    backgroundColor: brand.white,
+    margin: "0 auto",
+    padding: "0 0 36px",
+    maxWidth: "600px",
+    borderRadius: "12px",
+    border: `1px solid ${brand.border}`,
   },
   h1: {
-    color: '#1f2937',
-    fontSize: '24px',
-    fontWeight: 'bold',
-    margin: '40px 0',
-    padding: '0 40px',
+    color: brand.dark,
+    fontSize: "26px",
+    fontWeight: 700,
+    margin: "8px 0 16px",
+    padding: "0 32px",
+    letterSpacing: "-0.02em",
+    lineHeight: "32px",
+  },
+  h2: {
+    color: brand.dark,
+    fontSize: "13px",
+    fontWeight: 700,
+    margin: "0 0 14px",
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.04em",
   },
   text: {
-    color: '#4b5563',
-    fontSize: '14px',
-    lineHeight: '24px',
-    margin: '16px 0',
-    padding: '0 40px',
+    color: "#374151",
+    fontSize: "15px",
+    lineHeight: "24px",
+    margin: "0 0 12px",
+    padding: "0 32px",
   },
-  trackingSection: {
-    backgroundColor: '#f3f4f6',
-    borderRadius: '8px',
-    padding: '24px',
-    margin: '24px 40px',
-    textAlign: 'center' as const,
+  card: {
+    margin: "18px 24px",
+    padding: "18px",
+    backgroundColor: brand.card,
+    borderRadius: "10px",
+    border: `1px solid ${brand.border}`,
   },
-  itemsSection: {
-    backgroundColor: '#f3f4f6',
-    borderRadius: '8px',
-    padding: '16px 24px',
-    margin: '16px 40px',
+  tracking: {
+    backgroundColor: "#ecfdf5",
+    borderRadius: "10px",
+    border: "1px solid #a7f3d0",
+    padding: "22px",
+    margin: "8px 24px 0",
+    textAlign: "center" as const,
   },
   trackingLabel: {
-    color: '#6b7280',
-    fontSize: '12px',
-    fontWeight: '600',
-    textTransform: 'uppercase' as const,
-    margin: '0 0 8px',
-  },
-  itemLine: {
-    color: '#1f2937',
-    fontSize: '14px',
-    margin: '4px 0',
+    color: brand.muted,
+    fontSize: "12px",
+    fontWeight: 700,
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.04em",
+    margin: "0 0 8px",
   },
   trackingNumber: {
-    color: '#1f2937',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    fontFamily: 'monospace',
-    margin: '0',
-  },
-  buttonSection: {
-    padding: '0 40px',
-    margin: '32px 0',
+    color: brand.dark,
+    fontSize: "18px",
+    fontWeight: 700,
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+    margin: "0",
   },
   button: {
-    backgroundColor: '#3b82f6',
-    borderRadius: '8px',
-    color: '#ffffff',
-    fontSize: '14px',
-    fontWeight: '600',
-    textDecoration: 'none',
-    textAlign: 'center' as const,
-    display: 'block',
-    padding: '12px 24px',
-  },
-  footer: {
-    color: '#6b7280',
-    fontSize: '14px',
-    lineHeight: '24px',
-    margin: '32px 0 0',
-    padding: '0 40px',
+    backgroundColor: brand.green,
+    borderRadius: "8px",
+    color: "#ffffff",
+    fontSize: "14px",
+    fontWeight: 600,
+    textDecoration: "none",
+    textAlign: "center" as const,
+    display: "inline-block",
+    padding: "12px 24px",
   },
 };
-

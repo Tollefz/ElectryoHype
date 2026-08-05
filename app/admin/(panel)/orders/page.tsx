@@ -1,249 +1,407 @@
 import { prisma } from "@/lib/prisma";
-import { formatCurrency } from "@/lib/format";
 import Link from "next/link";
-import { Suspense } from "react";
-import { OrderStatus, FulfillmentStatus } from "@prisma/client";
-import { safeQuery } from "@/lib/safeQuery";
+import { safeQueryResult } from "@/lib/safeQuery";
+import {
+  buildOrderListWhere,
+  type OrderStatusChip,
+} from "@/lib/ops/order-list-where";
+import OrdersBulkClient, {
+  type AdminOrderRow,
+} from "@/components/admin/OrdersBulkClient";
+import { DataState } from "@/components/admin/DataState";
+import type { AdminDataError } from "@/lib/admin/data-errors";
+import { runAdminPage } from "@/lib/admin/run-admin-page";
+import { countryFromShipping } from "@/components/admin/orders/order-ui";
 
-async function getOrders(filter?: string, search?: string) {
-  const where: any = {};
-
-  if (filter && filter !== "alle") {
-    // Use fulfillmentStatus as single source of truth
-    where.fulfillmentStatus = filter as FulfillmentStatus;
-  }
-
-  if (search && search.trim()) {
-    where.OR = [
-      { orderNumber: { contains: search.trim() } },
-      { customer: { name: { contains: search.trim() } } },
-      { customer: { email: { contains: search.trim() } } },
-    ];
-  }
-
-  return await safeQuery(
-    () =>
-      prisma.order.findMany({
-        where,
-        include: {
-          customer: true,
-        },
-        orderBy: { createdAt: "desc" },
-      }),
-    [],
-    "orders:list"
-  );
+interface OrderListItem {
+  quantity?: number;
 }
 
-function getFulfillmentStatusBadge(fulfillmentStatus: string) {
-  const statusMap: Record<string, { label: string; className: string }> = {
-    NEW: { label: "NY", className: "bg-yellow-100 text-yellow-800" },
-    ORDERED_FROM_SUPPLIER: { label: "Bestilt hos leverandør", className: "bg-blue-100 text-blue-800" },
-    SHIPPED: { label: "Sendt", className: "bg-indigo-100 text-indigo-800" },
-    DELIVERED: { label: "Fullført", className: "bg-green-100 text-green-800" },
-    CANCELLED: { label: "Kansellert", className: "bg-red-100 text-red-800" },
-  };
-
-  const config = statusMap[fulfillmentStatus] || {
-    label: fulfillmentStatus,
-    className: "bg-gray-100 text-gray-800",
-  };
-
-  return (
-    <span className={`rounded-full px-3 py-1 text-sm font-medium ${config.className}`}>
-      {config.label}
-    </span>
-  );
-}
-
-function parseItems(items: any) {
+function parseItems(items: unknown): OrderListItem[] {
   try {
     if (typeof items === "string") {
-      return JSON.parse(items);
+      const parsed: unknown = JSON.parse(items);
+      return Array.isArray(parsed) ? (parsed as OrderListItem[]) : [];
     }
-    return items || [];
+    return Array.isArray(items) ? (items as OrderListItem[]) : [];
   } catch {
     return [];
   }
 }
 
-function formatDate(date: Date) {
-  return new Date(date).toLocaleDateString("no-NO", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+const STATUS_CHIPS: { id: OrderStatusChip; label: string }[] = [
+  { id: "alle", label: "Alle" },
+  { id: "ny", label: "Ny" },
+  { id: "bekreftet", label: "Bekreftet" },
+  { id: "behandles", label: "Behandles" },
+  { id: "sendt", label: "Sendt" },
+  { id: "levert", label: "Levert" },
+  { id: "retur", label: "Retur" },
+  { id: "kansellert", label: "Kansellert" },
+];
+
+async function getOrders(opts: {
+  statusChip?: string;
+  payment?: string;
+  emailStatus?: string;
+  search?: string;
+  archived?: boolean;
+  page: number;
+  limit: number;
+}) {
+  const where = buildOrderListWhere({
+    statusChip: opts.statusChip,
+    payment: opts.payment,
+    emailStatus: opts.emailStatus,
+    search: opts.search,
+    archived: opts.archived,
   });
+  const skip = (opts.page - 1) * opts.limit;
+  const [ordersRes, totalRes] = await Promise.all([
+    safeQueryResult(
+      () =>
+        prisma.order.findMany({
+          where,
+          include: { customer: true },
+          orderBy: { createdAt: "desc" },
+          skip,
+          take: opts.limit,
+        }),
+      "orders:list"
+    ),
+    safeQueryResult(() => prisma.order.count({ where }), "orders:count"),
+  ]);
+
+  if (!ordersRes.ok || !totalRes.ok) {
+    return {
+      ok: false as const,
+      error: ordersRes.error || totalRes.error,
+      orders: [],
+      total: 0,
+    };
+  }
+
+  return {
+    ok: true as const,
+    error: null as AdminDataError | null,
+    orders: ordersRes.data,
+    total: totalRes.data,
+  };
+}
+
+async function getChipCounts(archived: boolean) {
+  const base = { archived };
+  const chips = STATUS_CHIPS.map((c) => c.id);
+  const results = await Promise.all(
+    chips.map(async (chip) => {
+      if (chip === "retur") return [chip, 0] as const;
+      const res = await safeQueryResult(
+        () =>
+          prisma.order.count({
+            where: buildOrderListWhere({ ...base, statusChip: chip }),
+          }),
+        `orders:chip:${chip}`
+      );
+      return [chip, res.ok ? res.data : 0] as const;
+    })
+  );
+  return Object.fromEntries(results) as Record<OrderStatusChip, number>;
 }
 
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: { filter?: string; search?: string } | Promise<{ filter?: string; search?: string }>;
+  searchParams: Promise<{
+    filter?: string;
+    chip?: string;
+    payment?: string;
+    email?: string;
+    search?: string;
+    page?: string;
+    archived?: string;
+    sort?: string;
+  }>;
 }) {
-  // Håndter både sync og async searchParams (Next.js 14 vs 15)
-  const params = searchParams instanceof Promise ? await searchParams : searchParams;
-  const filter = params.filter || "alle";
-  const search = params.search || "";
-  const orders = await getOrders(filter, search);
+  return runAdminPage("orders", "/admin/orders", async () => {
+    const params = await searchParams;
+    // Back-compat: ?filter=NEW → chip
+    const legacyFilter = params.filter || "";
+    const statusChip =
+      params.chip ||
+      (legacyFilter === "NEW"
+        ? "ny"
+        : legacyFilter === "ORDERED_FROM_SUPPLIER"
+          ? "behandles"
+          : legacyFilter === "SHIPPED"
+            ? "sendt"
+            : legacyFilter === "DELIVERED"
+              ? "levert"
+              : legacyFilter === "CANCELLED"
+                ? "kansellert"
+                : "alle");
+    const payment = params.payment || "alle";
+    const emailStatus = params.email || "";
+    const search = params.search || "";
+    const showArchived = params.archived === "1";
+    const page = Math.max(1, parseInt(params.page || "1", 10) || 1);
+    const limit = 25;
+    const sort = params.sort || "";
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Ordrer</h1>
-          <p className="mt-1 text-sm text-gray-600">Administrer alle ordrer</p>
-        </div>
-        <div className="text-sm font-medium text-gray-700">
-          {orders.length} {orders.length === 1 ? "ordre" : "ordrer"}
-        </div>
-      </div>
+    const [result, chipCounts] = await Promise.all([
+      getOrders({
+        statusChip,
+        payment,
+        emailStatus,
+        search,
+        archived: showArchived,
+        page,
+        limit,
+      }),
+      getChipCounts(showArchived),
+    ]);
 
-      {/* Filter og søk */}
-      <div className="rounded-lg bg-white border border-gray-200 p-4 sm:p-6 shadow-sm">
-        <form method="GET" className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:gap-4">
-          {/* Status filter */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="filter" className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">
-              Status:
-            </label>
-            <select
-              id="filter"
-              name="filter"
-              defaultValue={filter}
-              className="flex-1 sm:flex-none rounded-lg border border-gray-300 px-3 py-2 text-xs sm:text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200 bg-white"
-            >
-              <option value="alle">Alle</option>
-              <option value="NEW">NY</option>
-              <option value="ORDERED_FROM_SUPPLIER">Bestilt hos leverandør</option>
-              <option value="SHIPPED">Sendt</option>
-              <option value="DELIVERED">Fullført</option>
-              <option value="CANCELLED">Kansellert</option>
-            </select>
+    if (!result.ok) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+              Ordrer
+            </h1>
+            <p className="mt-1 text-sm text-slate-600">
+              Administrer, spor og oppfyll kundeordrer
+            </p>
           </div>
+          <DataState state="error" surface="orders" error={result.error} />
+        </div>
+      );
+    }
 
-          {/* Søk */}
-          <div className="flex-1 min-w-0">
+    const { orders, total } = result;
+    const pages = Math.max(1, Math.ceil(total / limit));
+
+    const qs = (overrides: Record<string, string>) => {
+      const merged = {
+        chip: statusChip,
+        payment,
+        email: emailStatus,
+        search,
+        page: String(page),
+        archived: showArchived ? "1" : "",
+        sort,
+        ...overrides,
+      };
+      const clean = new URLSearchParams();
+      if (merged.chip && merged.chip !== "alle") clean.set("chip", merged.chip);
+      if (merged.payment && merged.payment !== "alle")
+        clean.set("payment", merged.payment);
+      if (merged.email) clean.set("email", merged.email);
+      if (merged.search) clean.set("search", merged.search);
+      if (merged.archived === "1") clean.set("archived", "1");
+      if (merged.sort) clean.set("sort", merged.sort);
+      if (merged.page && merged.page !== "1") clean.set("page", merged.page);
+      const s = clean.toString();
+      return s ? `/admin/orders?${s}` : "/admin/orders";
+    };
+
+    const rows: AdminOrderRow[] = orders.map((order) => {
+      const items = parseItems(order.items);
+      const itemCount = items.reduce(
+        (sum: number, item: OrderListItem) => sum + (item.quantity || 1),
+        0
+      );
+      return {
+        id: order.id,
+        orderNumber: order.orderNumber,
+        total: order.total,
+        paymentStatus: order.paymentStatus,
+        fulfillmentStatus: order.fulfillmentStatus,
+        paymentMethod: order.paymentMethod,
+        isTestOrder: order.isTestOrder,
+        archivedAt: order.archivedAt ? order.archivedAt.toISOString() : null,
+        createdAt: order.createdAt.toISOString(),
+        customerEmail: order.customer?.email || order.customerEmail || null,
+        customerName: order.customer?.name || null,
+        itemCount,
+        country: countryFromShipping(order.shippingAddress),
+        carrier: order.shippingCarrier,
+        trackingNumber: order.trackingNumber,
+      };
+    });
+
+    return (
+      <div className="space-y-6 pb-10">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              {showArchived ? "Arkiverte ordrer" : "Ordrer"}
+            </h1>
+            <p className="mt-1.5 text-sm text-slate-600">
+              {showArchived
+                ? "Skjult fra standardlister — kan gjenopprettes fra ordredetaljer"
+                : "Administrer, spor og oppfyll kundeordrer"}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href={showArchived ? "/admin/orders" : "/admin/orders?archived=1"}
+              className="inline-flex items-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50"
+            >
+              {showArchived ? "Aktive ordrer" : "Arkiv"}
+            </Link>
+            <button
+              type="button"
+              disabled
+              title="Kommer snart"
+              className="inline-flex items-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-500 shadow-sm"
+            >
+              Eksporter
+            </button>
+            <button
+              type="button"
+              disabled
+              title="Kommer snart"
+              className="inline-flex items-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-500 shadow-sm"
+            >
+              Importer
+            </button>
+            <button
+              type="button"
+              disabled
+              title="Kommer snart"
+              className="inline-flex items-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm opacity-80"
+            >
+              + Ny manuell ordre
+            </button>
+          </div>
+        </div>
+
+        {/* Status chips */}
+        <div className="flex gap-1 overflow-x-auto border-b border-slate-200 pb-px">
+          {STATUS_CHIPS.map((chip) => {
+            const active = statusChip === chip.id;
+            const count = chipCounts[chip.id] ?? 0;
+            return (
+              <Link
+                key={chip.id}
+                href={qs({ chip: chip.id, page: "1" })}
+                className={`relative whitespace-nowrap px-4 py-3 text-sm font-semibold transition-colors ${
+                  active
+                    ? "text-emerald-700"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                {chip.label}{" "}
+                <span
+                  className={`text-xs font-medium ${
+                    active ? "text-emerald-600" : "text-slate-400"
+                  }`}
+                >{`(${count})`}</span>
+                {active && (
+                  <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-emerald-600" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Sticky filter bar */}
+        <form
+          method="GET"
+          className="sticky top-0 z-10 flex flex-wrap items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white/95 p-3.5 shadow-sm backdrop-blur"
+        >
+          {showArchived && <input type="hidden" name="archived" value="1" />}
+          {statusChip !== "alle" && (
+            <input type="hidden" name="chip" value={statusChip} />
+          )}
+          <div className="min-w-[200px] flex-1 basis-56">
             <input
               type="text"
               name="search"
-              placeholder="Søk på ordrenummer, kunde navn eller e-post..."
               defaultValue={search}
-              className="w-full rounded-lg border border-gray-300 px-3 sm:px-4 py-2 text-xs sm:text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+              placeholder="Søk ordre…"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
-
+          <select
+            disabled
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-500"
+            aria-label="Land"
+          >
+            <option>Alle land</option>
+          </select>
+          <select
+            disabled
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-500"
+            aria-label="Periode"
+          >
+            <option>Velg periode</option>
+          </select>
+          <select
+            name="payment"
+            defaultValue={payment}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800"
+          >
+            <option value="alle">Betaling</option>
+            <option value="pending">Ubetalt</option>
+            <option value="paid">Betalt</option>
+            <option value="failed">Feilet</option>
+            <option value="refunded">Refundert</option>
+          </select>
+          <select
+            disabled
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-500"
+            aria-label="Oppfyllelse"
+          >
+            <option>Oppfyllelse</option>
+          </select>
+          <select
+            disabled
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-500"
+            aria-label="Fraktleverandør"
+          >
+            <option>Fraktleverandør</option>
+          </select>
+          <select
+            name="email"
+            defaultValue={emailStatus}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800"
+            aria-label="Flere filtre"
+          >
+            <option value="">Flere filtre</option>
+            <option value="FAILED">E-post feilet</option>
+          </select>
+          <select
+            name="sort"
+            defaultValue={sort}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800"
+          >
+            <option value="">Sorter etter</option>
+            <option value="newest">Nyeste først</option>
+            <option value="oldest">Eldste først</option>
+          </select>
           <button
             type="submit"
-            className="rounded-lg bg-green-600 px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors whitespace-nowrap"
+            className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
           >
-            Søk
+            Filtrer
           </button>
-
-          {search && (
-            <Link
-              href="/admin/orders"
-              className="rounded-lg border border-gray-300 px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap text-center"
-            >
-              Nullstill
-            </Link>
-          )}
         </form>
-      </div>
 
-      {/* Ordre tabell */}
-      <div className="overflow-hidden rounded-lg bg-white border border-gray-200 shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Ordrenummer</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Kunde</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Produkter</th>
-                <th className="px-4 sm:px-6 py-3 text-right text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Total</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Dato</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">Handlinger</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 sm:py-16 text-center">
-                    {search || filter !== "alle" ? (
-                      <div>
-                        <p className="text-base sm:text-lg font-semibold text-gray-900">Ingen ordrer funnet</p>
-                        <p className="mt-1 text-xs sm:text-sm text-gray-600">Prøv å endre søk eller filter</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-base sm:text-lg font-semibold text-gray-900">Ingen ordrer ennå</p>
-                        <p className="mt-1 text-xs sm:text-sm text-gray-600">Når kunder bestiller, vil ordrene vises her</p>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ) : (
-                orders.map((order) => {
-                  const items = parseItems(order.items);
-                  const itemCount = items.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
-
-                  return (
-                    <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">
-                        <Link
-                          href={`/admin/orders/${order.id}`}
-                          className="text-xs sm:text-sm font-semibold text-green-600 hover:text-green-700 hover:underline"
-                        >
-                          {order.orderNumber}
-                        </Link>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <div>
-                          <div className="text-xs sm:text-sm font-medium text-gray-900">{order.customer?.name || "-"}</div>
-                          <div className="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-none">{order.customer?.email || "-"}</div>
-                        </div>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {itemCount} {itemCount === 1 ? "produkt" : "produkter"}
-                        </div>
-                        <div className="text-xs text-gray-500 truncate max-w-[120px] sm:max-w-none">
-                          {items.length === 1 && items[0]?.name
-                            ? items[0].name
-                            : `${items.length} forskjellige produkter`}
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4 text-right">
-                        <div className="text-xs sm:text-sm font-semibold text-gray-900">
-                          {formatCurrency(Number(order.total))}
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">
-                        {getFulfillmentStatusBadge(order.fulfillmentStatus || "NEW")}
-                      </td>
-                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">
-                        <div className="text-xs sm:text-sm text-gray-600">
-                          {formatDate(order.createdAt)}
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap px-4 sm:px-6 py-3 sm:py-4">
-                        <Link
-                          href={`/admin/orders/${order.id}`}
-                          className="text-xs sm:text-sm font-medium text-green-600 hover:text-green-700 hover:underline"
-                        >
-                          Se detaljer →
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <OrdersBulkClient
+          orders={rows}
+          filters={{
+            statusChip,
+            payment,
+            emailStatus,
+            search,
+            showArchived,
+            page,
+            pages,
+            total,
+            sort,
+          }}
+        />
       </div>
-    </div>
-  );
+    );
+  });
 }

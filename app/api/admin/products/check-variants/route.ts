@@ -92,20 +92,6 @@ export async function POST(req: Request) {
           )
         );
 
-    const hasSizeVariants = hasVariants
-      ? product.variants.some(v => {
-          const attrs = (v.attributes as Record<string, string>) || {};
-          return Object.keys(attrs).some(k => 
-            k.toLowerCase().includes('size') || 
-            k.toLowerCase().includes('størrelse')
-          );
-        })
-      : tags.some((tag: string) =>
-          ['xs', 's', 'm', 'l', 'xl', 'xxl', 'small', 'medium', 'large'].some(size =>
-            tag.toLowerCase() === size
-          )
-        );
-
     // Check 4: Color variants should have images
     if (hasColorVariants && images.length < 2) {
       issues.push({
@@ -183,10 +169,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ issues });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error checking variants:', error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error.message || 'Error checking variants' },
+      { error: message || 'Error checking variants' },
       { status: 500 }
     );
   }

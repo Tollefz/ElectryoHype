@@ -1,0 +1,38 @@
+---
+description: AI-first UX — coworker tone on Rob's Desk, not ERP dashboards
+alwaysApply: true
+---
+
+# AI-first brukeropplevelse
+
+ElectroHypeX skal føles som å jobbe med en intelligent medarbeider — ikke et ERP.
+
+## Rob's Desk først
+
+- Administrator skal bruke ~90 % av tiden på Rob's Desk.
+- Spesialsider kun ved fordypning.
+- Ingen nye admin-menyer for AI-funksjoner.
+
+## Tone
+
+AI snakker naturlig: «God morgen. Jeg analyserte … Fant … Importerte … Trenger godkjenning.»
+
+Vis alltid: hva AI gjorde, fant, anbefaler, trenger hjelp til.
+
+## Beslutninger
+
+Hver AI-beslutning viser: hvorfor, confidence, fordeler, risiko, hva som skjer ved godkjenning.
+
+Fortell historie (fant → byttet ikke → du må godkjenne). Ikke rådata først.
+
+## Tomme tilstander
+
+Forklar alltid: hva AI gjør, hvorfor, neste steg. Aldri blank «ingen data».
+
+## Design
+
+Ingen tekniske paneler først. Tall og køer under fordypning.
+
+## Stabilitet
+
+Rob's Desk skal aldri kunne krasje. Hver widget i `DeskWidgetBoundary`. Defensive defaults for null/undefined/tomme arrays.

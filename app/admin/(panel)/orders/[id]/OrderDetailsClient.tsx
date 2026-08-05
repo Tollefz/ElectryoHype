@@ -2,13 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { OrderStatus, PaymentStatus, FulfillmentStatus, EmailStatus } from "@prisma/client";
+import Link from "next/link";
+import { PaymentStatus, FulfillmentStatus, OrderStatus, EmailStatus } from "@prisma/client";
+import { SUPPLIER_STATUS_LABELS } from "@/lib/order-labels";
 
-interface Order {
+interface SupplierEvent {
+  id: string;
+  oldStatus: string | null;
+  newStatus: string;
+  createdAt: string;
+}
+
+interface OrderDetails {
   id: string;
   orderNumber: string;
-  status: OrderStatus; // Deprecated, kept for backward compatibility
-  fulfillmentStatus: FulfillmentStatus; // Single source of truth
+  status: OrderStatus;
+  fulfillmentStatus: FulfillmentStatus;
   paymentStatus: PaymentStatus;
   trackingNumber?: string | null;
   trackingUrl?: string | null;
@@ -20,15 +29,12 @@ interface Order {
   autoOrderError?: string | null;
   customerEmailStatus?: EmailStatus;
   customerEmailLastError?: string | null;
-  customerEmailSentAt?: Date | null;
-  supplierEvents?: Array<{
-    id: string;
-    oldStatus: string | null;
-    newStatus: string;
-    createdAt: string;
-  }>;
-  createdAt: Date;
-  updatedAt: Date;
+  customerEmailSentAt?: Date | string | null;
+  supplierEvents?: SupplierEvent[];
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  internalNotes?: string | null;
+  notes?: string | null;
   customer?: {
     name?: string | null;
     email?: string | null;
@@ -36,16 +42,16 @@ interface Order {
 }
 
 interface OrderDetailsClientProps {
-  order: any; // TODO: narrow type later
+  order: OrderDetails;
 }
 
 export default function OrderDetailsClient({ order: initialOrder }: OrderDetailsClientProps) {
   const router = useRouter();
-  const [order, setOrder] = useState(initialOrder);
+  const [order, setOrder] = useState<OrderDetails>(initialOrder);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState(initialOrder.internalNotes || initialOrder.notes || "");
 
   const [fulfillmentStatus, setFulfillmentStatus] = useState<FulfillmentStatus>(
     order.fulfillmentStatus || "NEW"
@@ -114,14 +120,21 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
 
       // Reset success message after 3 seconds
       setTimeout(() => setSuccess(null), 3000);
-    } catch (err: any) {
-      setError(err.message || "Noe gikk galt");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Noe gikk galt");
     } finally {
       setLoading(false);
     }
   };
 
   const handleSendToSupplier = async () => {
+    if (
+      !confirm(
+        "Registrere leverandør-ordre lokalt (stub)?\n\nDette kjører mock-adapteren: ingen ekte leverandør kontaktes, ingen e-post sendes, og ingen penger brukes. Databasen får et lokalt supplierOrderId (f.eks. TEMU-…). Kan kjøres flere ganger og overskriver forrige ID."
+      )
+    ) {
+      return;
+    }
     setSendingSupplier(true);
     setError(null);
     setSuccess(null);
@@ -131,12 +144,12 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Kunne ikke sende til leverandør");
+        throw new Error(data.error || "Kunne ikke registrere leverandør-ordre");
       }
-      setSuccess("Ordre sendt til leverandør (igangsatt)");
+      setSuccess("Leverandør-ordre registrert lokalt (stub — ingen ekstern kontakt)");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Kunne ikke sende til leverandør");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Kunne ikke registrere leverandør-ordre");
     } finally {
       setSendingSupplier(false);
     }
@@ -157,23 +170,33 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
         method: "POST",
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Kunne ikke sende e-post");
+        const hint =
+          data.diagnostics?.apiKeyDetected === false
+            ? " Sett RESEND_API_KEY i .env og restart serveren."
+            : "";
+        throw new Error((data.error || data.message || "Kunne ikke sende e-post") + hint);
       }
 
-      const data = await response.json();
       setSuccess(data.message || "E-post sendt til kunde!");
-      router.refresh(); // Refresh to get updated email status
+      if (data.diagnostics?.finalDatabaseStatus) {
+        setOrder((prev) => ({
+          ...prev,
+          customerEmailStatus: data.diagnostics.finalDatabaseStatus,
+          customerEmailLastError: null,
+          customerEmailSentAt: new Date(),
+        }));
+      }
+      router.refresh();
       setTimeout(() => setSuccess(null), 3000);
-    } catch (err: any) {
-      setError(err.message || "Kunne ikke sende e-post");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Kunne ikke sende e-post");
+      router.refresh();
     } finally {
       setRetryingEmail(false);
     }
   };
-
-  const handleSendEmail = handleRetryEmail; // Alias for backward compatibility
 
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString("no-NO", {
@@ -188,8 +211,9 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
   return (
     <div className="space-y-6">
       {/* Admin handlinger */}
-      <div className="rounded-xl bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Admin handlinger</h2>
+      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 className="mb-1 text-lg font-semibold text-gray-900">Behandling</h2>
+        <p className="mb-4 text-sm text-gray-500">Oppdater status, sporingsinfo og e-post</p>
 
         {error && (
           <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800">
@@ -270,43 +294,44 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
           </div>
 
           {/* Leverandørstatus */}
-          <div className="rounded-lg border border-gray-200 p-3 bg-slate-50">
+          <div className="rounded-lg border border-gray-200 bg-slate-50 p-3">
             <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Leverandørstatus</p>
+                  <p className="text-sm font-medium text-gray-700">Leverandør</p>
                   <p className="text-sm text-gray-600">
-                    {order.supplierOrderStatus || "PENDING"}{" "}
-                    {order.supplierOrderId ? `• ${order.supplierOrderId}` : ""}
+                    {SUPPLIER_STATUS_LABELS[order.supplierOrderStatus || "PENDING"] ||
+                      order.supplierOrderStatus ||
+                      "Venter"}
+                    {order.supplierOrderId ? ` · ${order.supplierOrderId}` : ""}
                   </p>
                   {order.autoOrderError && (
-                    <p className="text-xs text-red-600 mt-1">Feil: {order.autoOrderError}</p>
+                    <p className="mt-1 text-xs text-red-600">Feil: {order.autoOrderError}</p>
                   )}
                 </div>
                 <button
                   onClick={handleSendToSupplier}
                   disabled={sendingSupplier}
-                  className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {sendingSupplier ? "Sender..." : "Send ordre til leverandør"}
+                  {sendingSupplier ? "Registrerer…" : "Registrer leverandør-ordre (stub)"}
                 </button>
               </div>
               <div>
-                <label htmlFor="supplierStatus" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="supplierStatus" className="mb-1 block text-sm font-medium text-gray-700">
                   Sett leverandørstatus
                 </label>
                 <select
                   id="supplierStatus"
                   value={supplierStatus}
                   onChange={(e) => setSupplierStatus(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
                 >
-                  <option value="PENDING">PENDING</option>
-                  <option value="SENT_TO_SUPPLIER">SENT_TO_SUPPLIER</option>
-                  <option value="ACCEPTED_BY_SUPPLIER">ACCEPTED_BY_SUPPLIER</option>
-                  <option value="SHIPPED">SHIPPED</option>
-                  <option value="DELIVERED">DELIVERED</option>
-                  <option value="CANCELLED">CANCELLED</option>
+                  {Object.entries(SUPPLIER_STATUS_LABELS).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -400,8 +425,7 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
               )}
               {order.customerEmailLastError && (
                 <p className="text-xs text-red-600 mb-2 break-words">
-                  Feil: {order.customerEmailLastError.substring(0, 100)}
-                  {order.customerEmailLastError.length > 100 ? "..." : ""}
+                  Feil: {order.customerEmailLastError}
                 </p>
               )}
               <button
@@ -428,20 +452,24 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
       </div>
 
       {/* Leverandørhistorikk */}
-      <div className="rounded-xl bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Leverandørhistorikk</h2>
+      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Leverandørhistorikk</h2>
         {order.supplierEvents && order.supplierEvents.length > 0 ? (
           <div className="space-y-4">
-            {order.supplierEvents.map((ev: any) => (
+            {order.supplierEvents.map((ev) => (
               <div key={ev.id} className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <div className="h-3 w-3 rounded-full bg-blue-500"></div>
                   <div className="h-full w-0.5 bg-gray-200"></div>
                 </div>
                 <div className="flex-1 pb-4">
-                  <div className="font-medium text-gray-900">{ev.newStatus}</div>
+                  <div className="font-medium text-gray-900">
+                    {SUPPLIER_STATUS_LABELS[ev.newStatus] || ev.newStatus}
+                  </div>
                   {ev.oldStatus && (
-                    <div className="text-xs text-gray-500">Fra: {ev.oldStatus}</div>
+                    <div className="text-xs text-gray-500">
+                      Fra: {SUPPLIER_STATUS_LABELS[ev.oldStatus] || ev.oldStatus}
+                    </div>
                   )}
                   <div className="text-sm text-gray-500">
                     {new Date(ev.createdAt).toLocaleString("no-NO")}
@@ -456,8 +484,8 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
       </div>
 
       {/* Tidslinje */}
-      <div className="rounded-xl bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Tidslinje</h2>
+      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Tidslinje</h2>
         <div className="space-y-4">
           {/* Ordre opprettet */}
           <div className="flex gap-4">
@@ -527,6 +555,13 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
 
       {/* Print knapp */}
       <div className="rounded-xl bg-white p-6 shadow-sm print:hidden">
+        <Link
+          href={`/admin/orders/${order.id}/print`}
+          target="_blank"
+          className="mb-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Pakkseddel (utskrift)
+        </Link>
         <button
           onClick={() => window.print()}
           className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -537,4 +572,3 @@ export default function OrderDetailsClient({ order: initialOrder }: OrderDetails
     </div>
   );
 }
-

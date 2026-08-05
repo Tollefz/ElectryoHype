@@ -51,7 +51,7 @@ export default function FraktPage() {
                 <h3 className="font-semibold text-dark">Standard frakt</h3>
                 <p className="text-sm text-gray-medium">For ordre under {SITE_CONFIG.freeShippingThreshold},-</p>
               </div>
-              <span className="text-2xl font-bold text-dark">79 kr</span>
+              <span className="text-2xl font-bold text-dark">99 kr</span>
             </div>
           </div>
         </section>

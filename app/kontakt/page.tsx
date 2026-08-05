@@ -153,7 +153,7 @@ export default function KontaktPage() {
               </button>
             </form>
             <p className="mt-4 text-xs text-gray-medium">
-              Ved å klikke "Åpne e-postklient" åpnes din standard e-postklient med en forhåndsutfylt melding.
+              Ved å klikke &quot;Åpne e-postklient&quot; åpnes din standard e-postklient med en forhåndsutfylt melding.
             </p>
           </div>
         </div>

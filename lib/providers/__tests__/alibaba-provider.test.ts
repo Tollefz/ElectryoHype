@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, type Mocked } from "vitest";
 import { AlibabaProvider } from "../alibaba-provider";
 import * as cheerio from "cheerio";
 import { readFileSync } from "fs";
@@ -7,7 +7,22 @@ import axios from "axios";
 
 // Mock axios
 vi.mock("axios");
-const mockedAxios = axios as any;
+const mockedAxios = axios as Mocked<typeof axios>;
+
+type AlibabaInternals = {
+  extractFromJsonLd: ($: cheerio.CheerioAPI) => Record<string, unknown> | null;
+  parsePriceRange: (text: string) => { fromPrice?: number; toPrice?: number; amount?: number; currency?: string } | null;
+  extractMoq: (text: string) => number | null;
+  extractFromHtml: ($: cheerio.CheerioAPI, url: string) => Record<string, unknown> | null;
+  extractTitle: ($: cheerio.CheerioAPI) => string;
+  extractImages: ($: cheerio.CheerioAPI, baseUrl: string) => string[];
+  extractPrice: ($: cheerio.CheerioAPI) => { fromPrice?: number; toPrice?: number; amount?: number; currency?: string } | null;
+};
+
+function internals(p: AlibabaProvider): AlibabaInternals {
+  return p as unknown as AlibabaInternals;
+}
+
 
 // Helper to load HTML fixture
 function loadFixture(filename: string): string {
@@ -112,7 +127,7 @@ describe("AlibabaProvider", () => {
       `;
 
       const $ = cheerio.load(html);
-      const productData = (provider as any).extractFromJsonLd($);
+      const productData = internals(provider).extractFromJsonLd($);
 
       expect(productData).toBeTruthy();
       expect(productData.title).toBe("Test Product");
@@ -127,7 +142,7 @@ describe("AlibabaProvider", () => {
     it("should extract product data from HTML fixture", () => {
       const html = loadFixture("alibaba-product-sample.html");
       const $ = cheerio.load(html);
-      const productData = (provider as any).extractFromJsonLd($);
+      const productData = internals(provider).extractFromJsonLd($);
 
       expect(productData).toBeTruthy();
       expect(productData.title).toBe("Wireless Bluetooth Headphones");
@@ -170,7 +185,7 @@ describe("AlibabaProvider", () => {
       `;
 
       const $ = cheerio.load(html);
-      const productData = (provider as any).extractFromJsonLd($);
+      const productData = internals(provider).extractFromJsonLd($);
 
       expect(productData).toBeTruthy();
       expect(productData.price.amount).toBe(10.00);
@@ -182,7 +197,7 @@ describe("AlibabaProvider", () => {
   describe("parsePriceRange", () => {
     it("should parse price range", () => {
       const priceText = "$10.00 - $20.00";
-      const price = (provider as any).parsePriceRange(priceText);
+      const price = internals(provider).parsePriceRange(priceText);
 
       expect(price).toBeTruthy();
       expect(price.fromPrice).toBe(10);
@@ -192,7 +207,7 @@ describe("AlibabaProvider", () => {
 
     it("should parse single price", () => {
       const priceText = "USD 15.50";
-      const price = (provider as any).parsePriceRange(priceText);
+      const price = internals(provider).parsePriceRange(priceText);
 
       expect(price).toBeTruthy();
       expect(price.amount).toBe(15.50);
@@ -200,7 +215,7 @@ describe("AlibabaProvider", () => {
 
     it("should handle prices with commas", () => {
       const priceText = "$1,000.00 - $2,000.00";
-      const price = (provider as any).parsePriceRange(priceText);
+      const price = internals(provider).parsePriceRange(priceText);
 
       expect(price).toBeTruthy();
       expect(price.fromPrice).toBe(1000);
@@ -210,13 +225,13 @@ describe("AlibabaProvider", () => {
 
   describe("extractMoq", () => {
     it("should extract MOQ from text", () => {
-      expect((provider as any).extractMoq("MOQ: 100")).toBe(100);
-      expect((provider as any).extractMoq("Min. Order: 50")).toBe(50);
-      expect((provider as any).extractMoq("Minimum Order Quantity: 200")).toBe(200);
+      expect(internals(provider).extractMoq("MOQ: 100")).toBe(100);
+      expect(internals(provider).extractMoq("Min. Order: 50")).toBe(50);
+      expect(internals(provider).extractMoq("Minimum Order Quantity: 200")).toBe(200);
     });
 
     it("should return null if no MOQ found", () => {
-      expect((provider as any).extractMoq("No MOQ here")).toBeNull();
+      expect(internals(provider).extractMoq("No MOQ here")).toBeNull();
     });
   });
 
@@ -224,7 +239,7 @@ describe("AlibabaProvider", () => {
     it("should extract product data from HTML when JSON-LD is missing", () => {
       const html = loadFixture("alibaba-product-html-only.html");
       const $ = cheerio.load(html);
-      const productData = (provider as any).extractFromHtml($, "https://example.com/product.html");
+      const productData = internals(provider).extractFromHtml($, "https://example.com/product.html");
 
       expect(productData).toBeTruthy();
       expect(productData.title).toBe("Wireless Bluetooth Headphones Pro");
@@ -246,7 +261,7 @@ describe("AlibabaProvider", () => {
         </html>
       `;
       const $ = cheerio.load(html);
-      const title = (provider as any).extractTitle($);
+      const title = internals(provider).extractTitle($);
       expect(title).toBe("Test Product Title");
     });
 
@@ -262,7 +277,7 @@ describe("AlibabaProvider", () => {
         </html>
       `;
       const $ = cheerio.load(html);
-      const images = (provider as any).extractImages($, "https://example.com/");
+      const images = internals(provider).extractImages($, "https://example.com/");
       expect(images.length).toBeGreaterThan(0);
       expect(images.some((img: string) => img.includes("img1.jpg"))).toBe(true);
     });
@@ -276,7 +291,7 @@ describe("AlibabaProvider", () => {
         </html>
       `;
       const $ = cheerio.load(html);
-      const price = (provider as any).extractPrice($);
+      const price = internals(provider).extractPrice($);
       expect(price).toBeTruthy();
       expect(price.fromPrice).toBe(15.50);
       expect(price.toPrice).toBe(25.00);
@@ -294,7 +309,7 @@ describe("AlibabaProvider", () => {
         moq: 10,
       };
 
-      const mapped = provider.mapToProduct(rawProduct as any, "https://example.com/product.html");
+      const mapped = provider.mapToProduct(rawProduct as Record<string, unknown>, "https://example.com/product.html");
 
       expect(mapped.supplier).toBe("alibaba");
       expect(mapped.title).toBe("Test Product");
@@ -313,7 +328,7 @@ describe("AlibabaProvider", () => {
         metadata: { priceRange: { fromPrice: 10, toPrice: 20 } },
       };
 
-      const mapped = provider.mapToProduct(rawProduct as any, "https://example.com/product.html");
+      const mapped = provider.mapToProduct(rawProduct as Record<string, unknown>, "https://example.com/product.html");
 
       expect(mapped.price.amount).toBe(10);
       expect(mapped.specs.Prisintervall).toBe("10 - 20 USD");
@@ -404,7 +419,7 @@ describe("AlibabaProvider", () => {
         price: { amount: 19.99, currency: "USD" },
       };
 
-      const mapped = provider.mapToProduct(rawProduct as any, "https://example.com/product.html");
+      const mapped = provider.mapToProduct(rawProduct as Record<string, unknown>, "https://example.com/product.html");
 
       expect(mapped.variants).toHaveLength(1);
       expect(mapped.variants[0].name).toBe("Standard");

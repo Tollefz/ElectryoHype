@@ -7,18 +7,27 @@ import { safeQuery } from "@/lib/safeQuery";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getProviderRegistry } from "@/lib/providers/server-only";
 import type { BulkImportResult } from "@/lib/providers";
-import { SupplierName } from "@prisma/client";
+import { SupplierName, Prisma } from "@prisma/client";
 import { sanitizeDescriptionWithFallback } from "@/lib/import/sanitizeDescription";
+import {
+  calculateCompareAtPrice,
+  calculateSuggestedRetailPrice,
+  convertPriceToNOK,
+} from "@/lib/import/pricing";
+import { categorizeForSave } from "@/lib/categories/apply-on-save";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const USD_TO_NOK_RATE = 10.5;
-const PROFIT_MARGIN = 2.0; // 100% margin
-const COMPARE_AT_PRICE_MULTIPLIER = 1.3;
-
 function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(2, 6);
+}
+
+interface ImportVariant {
+  image?: string | null;
+  name?: string;
+  price?: number;
+  [key: string]: unknown;
 }
 
 /**
@@ -37,6 +46,12 @@ function mapProviderToSupplierName(providerName: string): SupplierName | null {
   }
   if (normalized === "temu") {
     return SupplierName.temu;
+  }
+  if (normalized === "cj" || normalized === "cjdropshipping") {
+    return SupplierName.cj;
+  }
+  if (normalized === "aliexpress") {
+    return SupplierName.aliexpress;
   }
   
   // Unknown provider
@@ -152,7 +167,7 @@ async function importProduct(
     });
     
     // Add variant images
-    variants.forEach((variant: any) => {
+    variants.forEach((variant: ImportVariant) => {
       if (variant.image && 
           variant.image.startsWith('http') && 
           !variant.image.includes('placeholder') &&
@@ -163,8 +178,8 @@ async function importProduct(
     
     // Convert to array, ensuring variant images are first (they're usually more specific)
     const variantImages = variants
-      .map((v: any) => v.image)
-      .filter((img: string) => img && img.startsWith('http') && !img.includes('placeholder'));
+      .map((v: ImportVariant) => v.image)
+      .filter((img): img is string => !!img && img.startsWith('http') && !img.includes('placeholder'));
     
     const images = [
       ...variantImages.filter((img: string, idx: number, arr: string[]) => arr.indexOf(img) === idx), // Unique variant images first
@@ -173,47 +188,50 @@ async function importProduct(
     
     console.log(`[Bulk Import] Collected ${images.length} total images (${baseImages.length} base + ${variantImages.length} variant images)`);
 
-    // Bestem kategori
-    let category = "Elektronikk";
-    const titleLower = data.title.toLowerCase();
-    if (titleLower.includes("phone") || titleLower.includes("iphone") || titleLower.includes("mobil")) {
-      category = "Mobil & Tilbehør";
-    } else if (
-      titleLower.includes("computer") ||
-      titleLower.includes("laptop") ||
-      titleLower.includes("pc") ||
-      titleLower.includes("tastatur") ||
-      titleLower.includes("keyboard")
-    ) {
-      category = "Datamaskiner";
-    } else if (titleLower.includes("tv") || titleLower.includes("speaker") || titleLower.includes("høyttaler")) {
-      category = "TV & Lyd";
-    } else if (titleLower.includes("game") || titleLower.includes("gaming")) {
-      category = "Gaming";
-    } else if (titleLower.includes("home") || titleLower.includes("hjem")) {
-      category = "Hjem & Fritid";
+    // Base price — keep supplier currency from scrape (NOK for Temu /no). Never invent 9.99 USD.
+    const currency = (data.price.currency || "NOK").toUpperCase();
+    const positiveVariantPrices = variants.map((v) => v.price).filter((p) => p > 0);
+    let basePrice =
+      positiveVariantPrices.length > 0
+        ? Math.min(...positiveVariantPrices)
+        : data.price.amount;
+
+    if (!Number.isFinite(basePrice) || basePrice <= 0) {
+      basePrice = data.price.amount > 0 ? data.price.amount : 0;
     }
 
-    // Base price (laveste variant pris eller hovedpris)
-    let basePrice = variants.length > 0 ? Math.min(...variants.map((v) => v.price)) : data.price.amount;
-
-    // If price is 0 or missing, use a default estimated price
-    if (!basePrice || basePrice === 0) {
-      basePrice = 9.99; // Default estimated price in USD for Temu products
+    const baseSupplierPriceNok = Math.round(convertPriceToNOK(basePrice, currency) * 100) / 100;
+    if (baseSupplierPriceNok <= 0) {
+      throw new Error(
+        "Kunne ikke hente Temu/leverandørpris. Import avvist — ingen USD-plassholder brukes."
+      );
     }
+    const baseSellingPriceNok = calculateSuggestedRetailPrice(baseSupplierPriceNok);
+    const baseCompareAtPriceNok = calculateCompareAtPrice(baseSellingPriceNok);
 
-    // Konverter pris til NOK
-    const baseSupplierPriceNok = Math.round(basePrice * USD_TO_NOK_RATE);
-    const baseSellingPriceNok = Math.round(baseSupplierPriceNok * PROFIT_MARGIN);
-    const baseCompareAtPriceNok = Math.round(baseSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
-
-    // Forbedre produkt-tittel automatisk
     const improvedTitle = improveTitle(data.title);
-    
-    // Generer unik SKU og slug basert på forbedret tittel
     const sku = `${providerUsed.toUpperCase()}-${generateId().toUpperCase()}`;
     const slugBase = slugify(improvedTitle, { lower: true, strict: true });
     const slug = `${slugBase}-${generateId().substring(0, 4)}`;
+
+    // Category Engine — never trust legacy keyword maps / Elektronikk
+    const categoryPersist = await categorizeForSave({
+      title: improvedTitle,
+      description: description || shortDescription,
+      shortDescription,
+      specs: data.specs
+        ? Object.fromEntries(
+            Object.entries(data.specs as Record<string, unknown>).map(([k, v]) => [
+              k,
+              String(v ?? ""),
+            ])
+          )
+        : {},
+      images,
+      variants: variants.map((v) => String((v as { name?: string }).name || "")),
+      supplierCategory: null,
+      existingSpecs: data.specs || {},
+    });
 
     // Opprett produkt med varianter
     // CRITICAL: Set storeId to DEFAULT_STORE_ID so products appear in frontend
@@ -229,21 +247,26 @@ async function importProduct(
           compareAtPrice: baseCompareAtPriceNok,
           supplierPrice: baseSupplierPriceNok,
           images: JSON.stringify(images),
-          tags: data.specs ? JSON.stringify(Object.keys(data.specs).slice(0, 10)) : JSON.stringify([]),
-          category,
+          tags: categoryPersist.tags,
+          category: categoryPersist.category,
+          subcategory: categoryPersist.subcategory,
+          specs: categoryPersist.specsPatch as Prisma.InputJsonValue,
           sku,
           isActive: true,
           storeId: DEFAULT_STORE_ID, // Set storeId so products appear in frontend
           supplierUrl: normalizedUrl,
           supplierName: mapProviderToSupplierName(providerUsed),
+          aiCategorySuggested: categoryPersist.aiCategorySuggested,
+          aiCategoryConfidence: categoryPersist.aiCategoryConfidence,
+          aiCategoryReason: categoryPersist.aiCategoryReason,
+          aiCategoryStatus: categoryPersist.aiCategoryStatus,
+          aiCategoryAt: categoryPersist.aiCategoryAt,
         variants: hasVariants
           ? {
               create: variants.map((variant, index) => {
-                const variantSupplierPriceNok = Math.round(variant.price * USD_TO_NOK_RATE);
-                const variantSellingPriceNok = Math.round(variantSupplierPriceNok * PROFIT_MARGIN);
-                const variantCompareAtPriceNok = variant.compareAtPrice
-                  ? Math.round(variant.compareAtPrice * USD_TO_NOK_RATE * PROFIT_MARGIN)
-                  : Math.round(variantSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+                const variantSupplierPriceNok = Math.round(convertPriceToNOK(variant.price, "USD"));
+                const variantSellingPriceNok = calculateSuggestedRetailPrice(variantSupplierPriceNok);
+                const variantCompareAtPriceNok = calculateCompareAtPrice(variantSellingPriceNok);
 
                 return {
                   name: variant.name,

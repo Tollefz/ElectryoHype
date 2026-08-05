@@ -1,0 +1,4 @@
+
+> dropshipping-upgrade@0.1.0 lint
+> eslint . --ext .js,.ts,.tsx --max-warnings=0
+

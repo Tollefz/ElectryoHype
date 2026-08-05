@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logError } from "@/lib/utils/logger";
+import { requireDebugAccess } from "@/lib/api-auth";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireDebugAccess(req);
+  if (denied) return denied;
+
   try {
     const totalProducts = await prisma.product.count();
     const activeProducts = await prisma.product.count({ where: { isActive: true } });
@@ -38,12 +42,13 @@ export async function GET() {
       activeProducts,
       byStoreId,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logError(error, "[/api/debug/products]");
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       {
         ok: false,
-        error: error?.message ?? "Unknown error",
+        error: message || "Unknown error",
       },
       { status: 500 }
     );

@@ -1,0 +1,33 @@
+---
+description: REAL STORE mode — no new large modules; ops maturity only
+alwaysApply: true
+---
+
+# REAL STORE — utviklingsfilosofi
+
+Utviklingsfasen er i hovedsak ferdig. Fra nå: **produktmodning og drift**.
+
+Se også `ai-first-ux.mdc`: følelse av AI-medarbeider på Rob's Desk — ikke nye ERP-paneler.
+
+## Ikke bygg
+
+Ingen nye store moduler eller dashbord-sider.
+
+## Kun endre hvis minst ett gjelder
+
+- gjør AI mer treffsikker
+- sparer administrator tid
+- forbedrer katalogkvalitet
+- forbedrer kundeopplevelse
+- forbedrer ytelse/stabilitet
+- gjør Rob's Desk enklere
+
+Ellers: dokumenter som fremtidig arbeid.
+
+## Kontrollrom
+
+Daglig drift skjer via **Rob's Desk**. Unngå nye menyer.
+
+## Definisjon av ferdig
+
+AI bygger/vedlikeholder/forbedrer katalogen. Admin håndterer strategi, ordre og kunder — mål under **20 min/dag**.

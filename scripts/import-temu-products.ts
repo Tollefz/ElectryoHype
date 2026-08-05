@@ -1,6 +1,11 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import { getScraperForUrl } from "../lib/scrapers/server";
+import {
+  calculateCompareAtPrice,
+  calculateSuggestedRetailPrice,
+  convertPriceToNOK,
+} from "../lib/import/pricing";
 // Generate unique ID helper
 function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(2, 6);
@@ -15,10 +20,7 @@ function generateId(): string {
  * Eller rediger denne filen og legg til URL-er i TEMU_URLS arrayet nederst
  */
 
-// USD til NOK konvertering (kan oppdateres med ekte rate)
-const USD_TO_NOK_RATE = 10.5;
-const PROFIT_MARGIN = 2; // 100% margin (2x supplier price)
-const COMPARE_AT_PRICE_MULTIPLIER = 1.5; // 50% høyere enn salgspris
+// Prising skjer via den dynamiske priskurven i lib/import/pricing.ts
 
 interface ImportResult {
   success: boolean;
@@ -132,10 +134,10 @@ async function importTemuProduct(url: string): Promise<ImportResult> {
       basePrice = Math.min(...variants.map(v => v.price));
     }
 
-    // Konverter pris til NOK
-    const baseSupplierPriceNok = Math.round(basePrice * USD_TO_NOK_RATE);
-    const baseSellingPriceNok = Math.round(baseSupplierPriceNok * PROFIT_MARGIN);
-    const baseCompareAtPriceNok = Math.round(baseSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+    // Konverter pris til NOK og bruk den dynamiske priskurven
+    const baseSupplierPriceNok = Math.round(convertPriceToNOK(basePrice, "USD"));
+    const baseSellingPriceNok = calculateSuggestedRetailPrice(baseSupplierPriceNok);
+    const baseCompareAtPriceNok = calculateCompareAtPrice(baseSellingPriceNok);
 
     // Generer unik SKU
     const sku = `TEMU-${generateId().toUpperCase()}`;
@@ -271,11 +273,9 @@ async function importTemuProduct(url: string): Promise<ImportResult> {
           isActive: true,
           variants: hasVariants ? {
             create: variants.map((variant, index) => {
-              const variantSupplierPriceNok = Math.round(variant.price * USD_TO_NOK_RATE);
-              const variantSellingPriceNok = Math.round(variantSupplierPriceNok * PROFIT_MARGIN);
-              const variantCompareAtPriceNok = variant.compareAtPrice 
-                ? Math.round(variant.compareAtPrice * USD_TO_NOK_RATE * PROFIT_MARGIN)
-                : Math.round(variantSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+              const variantSupplierPriceNok = Math.round(convertPriceToNOK(variant.price, "USD"));
+              const variantSellingPriceNok = calculateSuggestedRetailPrice(variantSupplierPriceNok);
+              const variantCompareAtPriceNok = calculateCompareAtPrice(variantSellingPriceNok);
               
               return {
                 name: variant.name,
@@ -334,11 +334,9 @@ async function importTemuProduct(url: string): Promise<ImportResult> {
         supplierName: "temu",
         variants: hasVariants ? {
           create: variants.map((variant, index) => {
-            const variantSupplierPriceNok = Math.round(variant.price * USD_TO_NOK_RATE);
-            const variantSellingPriceNok = Math.round(variantSupplierPriceNok * PROFIT_MARGIN);
-            const variantCompareAtPriceNok = variant.compareAtPrice 
-              ? Math.round(variant.compareAtPrice * USD_TO_NOK_RATE * PROFIT_MARGIN)
-              : Math.round(variantSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+            const variantSupplierPriceNok = Math.round(convertPriceToNOK(variant.price, "USD"));
+            const variantSellingPriceNok = calculateSuggestedRetailPrice(variantSupplierPriceNok);
+            const variantCompareAtPriceNok = calculateCompareAtPrice(variantSellingPriceNok);
             
             return {
               name: variant.name,

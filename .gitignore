@@ -17,6 +17,8 @@ tsconfig.tsbuildinfo
 .env.development.local
 .env.production.local
 .env.test.local
+data/temu-session-cookies.txt
+data/playwright-temu-profile/
 
 # Prisma
 prisma/dev.db
@@ -31,3 +33,7 @@ logs
 Thumbs.db
 .vscode/
 .idea/
+
+# Lighthouse local reports
+.lighthouse-*.json
+

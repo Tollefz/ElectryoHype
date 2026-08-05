@@ -1,34 +1,29 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useCart } from '@/lib/cart-context';
-import { LogoV5 } from '@/components/Logo';
-import { CATEGORY_DEFINITIONS, getAllCategorySlugs } from '@/lib/categories';
-import { SITE_CONFIG } from '@/lib/site';
+import Link from "next/link";
+import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCart } from "@/lib/cart-context";
+import { LogoV5 } from "@/components/Logo";
+import { CATEGORY_DEFINITIONS, getAllCategorySlugs } from "@/lib/categories";
+import { SITE_CONFIG } from "@/lib/site";
 
 export function Header() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const { itemCount } = useCart();
 
-  // Fix hydration error: only render cart count after mount
   useEffect(() => {
     setMounted(true);
   }, []);
-  
-  // Get active category from URL
-  const activeCategory = searchParams.get('category');
 
-  // Build categories from definitions
+  const activeCategory = searchParams.get("category");
+
   const categories = getAllCategorySlugs().map((slug) => ({
     name: CATEGORY_DEFINITIONS[slug].label,
     href: `/products?category=${slug}`,
@@ -36,179 +31,191 @@ export function Header() {
   }));
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
-      {/* Øverste linje - grønn */}
-      <div className="bg-green-600">
-        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-1.5 text-[10px] sm:text-xs text-white">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <span className="whitespace-nowrap">Fri frakt over {SITE_CONFIG.freeShippingThreshold},-</span>
-              <span className="hidden sm:inline">|</span>
-              <span className="hidden sm:inline whitespace-nowrap">{SITE_CONFIG.deliveryPromise}</span>
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md">
+      <div className="bg-[var(--brand)]">
+        <div className="ehx-container">
+          <div className="flex items-center justify-between gap-4 py-1.5 text-[11px] text-white sm:text-xs">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span className="whitespace-nowrap">
+                Fri frakt over {SITE_CONFIG.freeShippingThreshold},-
+              </span>
+              <span className="hidden text-white/80 sm:inline">·</span>
+              <span className="hidden whitespace-nowrap sm:inline">
+                {SITE_CONFIG.deliveryPromise}
+              </span>
+              <span className="hidden text-white/80 md:inline">·</span>
+              <span className="hidden whitespace-nowrap md:inline">
+                30 dagers åpent kjøp
+              </span>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link href="/kundeservice" className="hover:underline whitespace-nowrap text-[10px] sm:text-xs">Kundeservice</Link>
-              <Link href="/admin/login" className="hover:underline whitespace-nowrap text-[10px] sm:text-xs">For bedrift</Link>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Link
+                href="/kundeservice"
+                className="whitespace-nowrap text-white transition hover:underline"
+              >
+                Kundeservice
+              </Link>
+              <Link
+                href="/om-oss"
+                className="hidden whitespace-nowrap text-white transition hover:underline sm:inline"
+              >
+                Om oss
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Hovedheader - hvit */}
-      <div className="border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-          {/* Mobile: Top row med logo, søkeknapp, handlekurv */}
-          <div className="flex items-center justify-between gap-3 py-3 lg:hidden">
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
+      <div className="border-b border-[var(--border)] bg-white">
+        <div className="ehx-container">
+          <div className="flex items-center justify-between gap-3 py-3.5 lg:hidden">
+            <Link href="/" className="shrink-0">
               <LogoV5 />
             </Link>
-
-            {/* Søkeknapp på mobil */}
             <button
+              type="button"
               onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-              className="flex-1 flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex flex-1 items-center gap-2 rounded-[var(--ehx-radius-md)] border border-[var(--border-strong)] bg-[var(--surface-muted)] px-3.5 py-2.5 text-sm text-[var(--text-muted)]"
             >
-              <Search size={18} />
-              <span className="text-gray-500">Søk...</span>
+              <Search size={17} />
+              <span>Søk produkter…</span>
             </button>
-
-            {/* Handlekurv på mobil */}
             <Link
               href="/cart"
-              className="relative flex items-center justify-center rounded-lg p-2.5 hover:bg-gray-50 transition-colors"
+              className="relative flex items-center justify-center rounded-[var(--ehx-radius-md)] p-2.5 transition hover:bg-slate-50"
+              aria-label="Handlekurv"
             >
-              <ShoppingCart size={22} className="text-gray-700" />
-              {mounted && itemCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
+              <ShoppingCart size={22} className="text-[var(--text)]" />
+              {mounted && itemCount > 0 ? (
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[10px] font-bold text-white">
                   {itemCount}
                 </span>
-              )}
+              ) : null}
             </Link>
           </div>
 
-          {/* Mobile: Søkefelt (vises når mobileSearchOpen) */}
-          {mobileSearchOpen && (
-            <div className="border-t border-gray-200 bg-white py-3 lg:hidden">
+          {mobileSearchOpen ? (
+            <div className="border-t border-[var(--border)] py-3 lg:hidden">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (searchQuery.trim()) {
-                    router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
+                    router.push(
+                      `/products?q=${encodeURIComponent(searchQuery.trim())}`
+                    );
                     setMobileSearchOpen(false);
                   }
                 }}
                 className="relative"
               >
                 <input
-                  type="text"
-                  placeholder="Søk blant produkter..."
+                  type="search"
+                  placeholder="Søk blant produkter…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border-2 border-gray-300 bg-white py-2.5 pl-4 pr-12 text-sm focus:border-brand focus:outline-none"
+                  className="w-full rounded-[var(--ehx-radius-md)] border border-[var(--border-strong)] bg-white py-3 pl-4 pr-14 text-sm outline-none transition focus:border-[var(--brand)]"
                   autoFocus
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-brand p-2 text-white hover:bg-brand-dark transition-colors"
+                  className="ehx-btn ehx-btn-primary absolute right-1.5 top-1/2 -translate-y-1/2 p-2.5"
+                  aria-label="Søk"
                 >
                   <Search size={18} />
                 </button>
               </form>
             </div>
-          )}
+          ) : null}
 
-          {/* Desktop: Full layout */}
-          <div className="hidden lg:flex items-center gap-6 py-4">
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
+          <div className="hidden items-center gap-8 py-5 lg:flex">
+            <Link href="/" className="shrink-0">
               <LogoV5 />
             </Link>
 
-            {/* Søkefelt - stort og sentrert */}
-            <div className="flex-1 max-w-2xl">
+            <div className="mx-auto w-full max-w-2xl flex-1">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (searchQuery.trim()) {
-                    router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
+                    router.push(
+                      `/products?q=${encodeURIComponent(searchQuery.trim())}`
+                    );
                   }
                 }}
                 className="relative"
               >
                 <input
-                  type="text"
-                  placeholder="Søk blant produkter..."
+                  type="search"
+                  placeholder="Søk blant produkter…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border-2 border-gray-300 bg-white py-2.5 pl-5 pr-14 text-sm focus:border-brand focus:outline-none transition-colors"
+                  className="w-full rounded-[var(--ehx-radius-md)] border border-[var(--border-strong)] bg-[var(--surface-muted)] py-3.5 pl-5 pr-16 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--brand)] focus:bg-white focus:shadow-[var(--ehx-shadow-sm)]"
                 />
                 <button
                   type="submit"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-brand p-2.5 text-white hover:bg-brand-dark transition-colors"
+                  className="ehx-btn ehx-btn-primary absolute right-1.5 top-1/2 h-[calc(100%-0.75rem)] -translate-y-1/2 rounded-[var(--ehx-radius-sm)] px-4"
+                  aria-label="Søk"
                 >
                   <Search size={18} />
                 </button>
               </form>
             </div>
 
-            {/* Høyre side - ikoner */}
-            <div className="flex items-center gap-1">
-              {/* Min konto */}
+            <div className="flex shrink-0 items-center gap-1">
               <Link
-                href="/admin/login"
-                className="flex flex-col items-center rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors"
+                href="/kundeservice"
+                className="flex flex-col items-center rounded-[var(--ehx-radius-md)] px-3 py-2 transition hover:bg-slate-50"
               >
-                <User size={20} className="text-gray-700" />
-                <span className="mt-1 text-xs text-gray-600">Min konto</span>
+                <User size={20} className="text-[var(--text)]" />
+                <span className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                  Kundeservice
+                </span>
               </Link>
-
-              {/* Handlekurv */}
               <Link
                 href="/cart"
-                className="relative flex flex-col items-center rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors"
+                className="relative flex flex-col items-center rounded-[var(--ehx-radius-md)] px-3 py-2 transition hover:bg-slate-50"
               >
                 <div className="relative">
-                  <ShoppingCart size={20} className="text-gray-700" />
-                  {mounted && itemCount > 0 && (
-                    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
+                  <ShoppingCart size={20} className="text-[var(--text)]" />
+                  {mounted && itemCount > 0 ? (
+                    <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[10px] font-bold text-white">
                       {itemCount}
                     </span>
-                  )}
+                  ) : null}
                 </div>
-                <span className="mt-1 text-xs text-gray-600">Handlekurv</span>
+                <span className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                  Handlekurv
+                </span>
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Kategorinavigasjon - mørk */}
-      <div className="bg-gray-900">
-        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center">
-            {/* Mobile menu button */}
+      <div className="bg-[var(--navy)]">
+        <div className="ehx-container">
+          <nav className="flex items-center" aria-label="Hovedkategorier">
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden mr-2 p-2.5 text-white hover:bg-gray-800 rounded-lg transition-colors"
-              aria-label="Toggle menu"
+              className="mr-2 rounded-[var(--ehx-radius-sm)] p-2.5 text-white transition hover:bg-white/10 lg:hidden"
+              aria-label={mobileMenuOpen ? "Lukk meny" : "Åpne meny"}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
 
-            {/* Kategori-lenker - Desktop */}
-            <div className="hidden lg:flex items-center overflow-x-auto">
+            <div className="hidden items-center gap-0.5 overflow-x-auto py-1.5 lg:flex">
               {categories.map((category) => {
                 const isActive = activeCategory === category.slug;
-                
                 return (
                   <Link
                     key={category.slug}
                     href={category.href}
-                    className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition-all rounded-md ${
+                    className={`whitespace-nowrap rounded-[var(--ehx-radius-sm)] px-3.5 py-2 text-sm font-medium transition ${
                       isActive
-                        ? 'text-white bg-green-600 shadow-md'
-                        : 'text-gray-200 hover:text-white hover:bg-gray-800'
+                        ? "bg-[var(--brand)] text-white"
+                        : "text-white hover:bg-white/10"
                     }`}
                   >
                     {category.name}
@@ -217,46 +224,42 @@ export function Header() {
               })}
             </div>
 
-            {/* Kampanje-lenke */}
             <Link
               href="/tilbud"
-              className="ml-auto flex items-center gap-1.5 px-4 py-3.5 text-sm font-bold text-orange-400 hover:text-orange-300 hover:bg-gray-800 transition-colors"
+            className="ml-auto whitespace-nowrap px-3.5 py-3 text-sm font-bold text-red-300 transition hover:text-red-200"
             >
-              🔥 Ukens tilbud
+              Tilbud
             </Link>
           </nav>
 
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-gray-800 bg-gray-900">
-              <div className="py-2">
-                {categories.map((category) => {
-                  const isActive = activeCategory === category.slug;
-                  return (
-                    <Link
-                      key={category.slug}
-                      href={category.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`block px-4 py-3 text-sm font-medium transition-colors ${
-                        isActive
-                          ? 'text-white bg-green-500'
-                          : 'text-white hover:bg-gray-800'
-                      }`}
-                    >
-                      {category.name}
-                    </Link>
-                  );
-                })}
-                <Link
-                  href="/tilbud"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-sm font-bold text-orange-400 hover:bg-gray-800 transition-colors"
-                >
-                  🔥 Ukens tilbud
-                </Link>
-              </div>
+          {mobileMenuOpen ? (
+            <div className="border-t border-white/10 py-2 lg:hidden">
+              {categories.map((category) => {
+                const isActive = activeCategory === category.slug;
+                return (
+                  <Link
+                    key={category.slug}
+                    href={category.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block rounded-[var(--ehx-radius-sm)] px-3 py-3 text-sm font-medium ${
+                      isActive
+                        ? "bg-[var(--brand)] text-white"
+                        : "text-white hover:bg-white/10"
+                    }`}
+                  >
+                    {category.name}
+                  </Link>
+                );
+              })}
+              <Link
+                href="/tilbud"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-3 text-sm font-bold text-red-400"
+              >
+                Tilbud
+              </Link>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </header>

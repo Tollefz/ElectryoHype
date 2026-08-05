@@ -1,13 +1,15 @@
 /**
- * Utility functions for consistent product counting
- * 
- * Ensures product counts always match what users can actually see
+ * Utility functions for consistent product counting.
+ * Counts are always live (noStore) and only for allowlisted mains.
  */
 
-import { Prisma } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
-import { safeQuery } from '../safeQuery';
-import { shouldUseDevFallback, isDatabaseConfigured } from './database-check';
+import { unstable_noStore as noStore } from "next/cache";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { safeQuery } from "../safeQuery";
+import { shouldUseDevFallback } from "./database-check";
+import { getAllDbValues, getCategoryByDbValue } from "@/lib/categories";
+import { normalizeLegacyCategory } from "@/lib/categories/tree";
 
 /**
  * Get count of active products matching filters
@@ -23,7 +25,7 @@ export async function getProductCount(
     storeId?: string;
   }
 ): Promise<number> {
-  // In dev, if DB is not configured, return 0 silently
+  noStore();
   if (shouldUseDevFallback()) {
     return 0;
   }
@@ -51,25 +53,29 @@ export async function getProductCount(
     }
   }
 
-  return await safeQuery(() => prisma.product.count({ where }), 0, 'product-count');
+  return await safeQuery(() => prisma.product.count({ where }), 0, "product-count");
 }
 
 /**
- * Get count of products per category
- * Returns a map of category name to product count
+ * Live counts per allowlist main category.
+ * Legacy names are folded into allowlist via normalizeLegacyCategory during transition.
  */
 export async function getCategoryCounts(storeId?: string): Promise<Record<string, number>> {
-  // In dev, if DB is not configured, return empty object silently
+  noStore();
   if (shouldUseDevFallback()) {
     return {};
   }
+
+  const allowlist = getAllDbValues();
+  const counts: Record<string, number> = Object.fromEntries(
+    allowlist.map((c) => [c, 0])
+  );
 
   const products = await safeQuery(
     () =>
       prisma.product.findMany({
         where: {
           isActive: true,
-          category: { not: null },
           ...(storeId ? { storeId } : {}),
         },
         select: {
@@ -77,32 +83,46 @@ export async function getCategoryCounts(storeId?: string): Promise<Record<string
         },
       }),
     [],
-    'product-category-counts'
+    "product-category-counts"
   );
 
-  const counts: Record<string, number> = {};
-  
-  products.forEach((product) => {
-    if (product.category) {
-      counts[product.category] = (counts[product.category] || 0) + 1;
+  for (const product of products) {
+    const raw = product.category?.trim() || null;
+    if (!raw) continue;
+    const main =
+      (allowlist.includes(raw) ? raw : null) || normalizeLegacyCategory(raw);
+    if (main && counts[main] !== undefined) {
+      counts[main] += 1;
     }
-  });
+  }
 
   return counts;
 }
 
 /**
- * Get all unique categories with their product counts
+ * Allowlist categories with live counts for frontpage / nav.
+ * Hides zero-count categories. Uses slug for hrefs.
  */
-export async function getCategoriesWithCounts(storeId?: string): Promise<Array<{
-  name: string;
-  count: number;
-}>> {
+export async function getCategoriesWithCounts(storeId?: string): Promise<
+  Array<{
+    name: string;
+    slug: string;
+    count: number;
+  }>
+> {
   const counts = await getCategoryCounts(storeId);
-  
-  return Object.entries(counts)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count); // Sort by count descending
+
+  return getAllDbValues()
+    .map((name) => {
+      const def = getCategoryByDbValue(name);
+      return {
+        name,
+        slug: def?.slug || name.toLowerCase(),
+        count: counts[name] || 0,
+      };
+    })
+    .filter((c) => c.count > 0)
+    .sort((a, b) => b.count - a.count);
 }
 
 /**
@@ -111,4 +131,3 @@ export async function getCategoriesWithCounts(storeId?: string): Promise<Array<{
 export async function getTotalProductCount(storeId?: string): Promise<number> {
   return getProductCount({ isActive: true, storeId });
 }
-

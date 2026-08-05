@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     }
 
     let prompt = "";
-    let systemPrompt = "Du er en ekspert på produktbeskrivelser og markedsføring for norske nettbutikker. Skriv alltid på norsk.";
+    const systemPrompt = "Du er en ekspert på produktbeskrivelser og markedsføring for norske nettbutikker. Skriv alltid på norsk.";
 
     switch (type) {
       case "productDescription": {
@@ -269,12 +269,13 @@ Formatér svaret som JSON:
       ok: true,
       result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logError(error, "[api/admin/ai]");
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       {
         ok: false,
-        error: error?.message || "Ukjent feil ved AI-generering",
+        error: message || "Ukjent feil ved AI-generering",
       },
       { status: 500 }
     );

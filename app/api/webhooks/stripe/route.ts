@@ -1,13 +1,22 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { headers } from "next/headers";
-import { inngest } from "@/inngest/client";
 import { sendOrderConfirmation, sendAdminNotification } from "@/lib/email";
-import { sendOrderToSupplier } from "@/lib/dropshipping/send-order-to-supplier";
 import { evaluateOrderRisk } from "@/lib/risk/evaluateOrderRisk";
-import { getDropshippingConfig } from "@/config/dropshipping";
 import { getStoreIdFromHeadersServer } from "@/lib/store-server";
+import { decrementStockForOrder } from "@/lib/orders/inventory";
+import { markOrderPaid } from "@/lib/orders/order-engine";
+import { firePurchaseAnalytics } from "@/lib/analytics/purchase-server";
+import { includedVatFromGross } from "@/lib/pricing/tax";
+
+/** Enqueue into Order Automation Engine (worker owns fulfillment). */
+function enqueueOrderAutomation(orderId: string) {
+  markOrderPaid(orderId).catch((err) =>
+    console.error("❌ markOrderPaid failed:", orderId, err)
+  );
+}
 
 // Stripe instance vil bli opprettet med validert key
 
@@ -69,9 +78,10 @@ export async function POST(req: Request) {
       signature,
       webhookSecret
     );
-  } catch (err: any) {
-    console.error("Webhook signature verification failed:", err.message);
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Webhook signature verification failed:", message);
+    return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 });
   }
 
   try {
@@ -86,6 +96,7 @@ export async function POST(req: Request) {
         });
 
         if (existingOrder) {
+          const wasUnpaid = existingOrder.paymentStatus !== "paid";
           // Order already exists, just update it
           await prisma.order.update({
             where: { id: existingOrder.id },
@@ -97,6 +108,12 @@ export async function POST(req: Request) {
               customerEmail: session.customer_email || undefined,
             },
           });
+          if (wasUnpaid) {
+            await decrementStockForOrder(existingOrder.id).catch((err) =>
+              console.error("❌ Stock decrement failed:", err)
+            );
+            enqueueOrderAutomation(existingOrder.id);
+          }
           console.log("✅ Checkout session completed - updated existing order:", existingOrder.id);
           
           // Send emails (non-blocking, updates status in DB)
@@ -115,6 +132,14 @@ export async function POST(req: Request) {
           }).catch((err) => {
             console.error("❌ Error in sendAdminNotification:", err);
           });
+          if (wasUnpaid) {
+            firePurchaseAnalytics({
+              orderNumber: existingOrder.orderNumber,
+              total: existingOrder.total,
+              customerEmail: session.customer_email || existingOrder.customerEmail,
+              items: existingOrder.items,
+            }).catch(() => {});
+          }
           break;
         }
 
@@ -125,6 +150,7 @@ export async function POST(req: Request) {
           });
 
           if (existingOrder) {
+            const wasUnpaid = existingOrder.paymentStatus !== "paid";
             await prisma.order.update({
               where: { id: sessionOrderId },
               data: {
@@ -137,6 +163,13 @@ export async function POST(req: Request) {
               },
             });
 
+            if (wasUnpaid) {
+              await decrementStockForOrder(sessionOrderId).catch((err) =>
+                console.error("❌ Stock decrement failed:", err)
+              );
+              enqueueOrderAutomation(sessionOrderId);
+            }
+
             // Get order for risk evaluation
             const order = await prisma.order.findUnique({
               where: { id: sessionOrderId },
@@ -144,9 +177,6 @@ export async function POST(req: Request) {
             });
 
             if (order) {
-              const dropshipCfg = getDropshippingConfig();
-              const sendAnywayOnHighRisk = dropshipCfg.sendAnywayOnHighRisk ?? false;
-
               // Risk evaluation
               const risk = await evaluateOrderRisk(sessionOrderId);
               await prisma.order.update({
@@ -154,7 +184,7 @@ export async function POST(req: Request) {
                 data: {
                   riskScore: risk.riskScore,
                   isFlaggedForReview: risk.isFlagged,
-                } as any,
+                } as Prisma.OrderUpdateInput,
               });
 
               // Send emails (non-blocking, updates status in DB)
@@ -174,9 +204,17 @@ export async function POST(req: Request) {
                 console.error("❌ Error in sendAdminNotification:", err);
               });
 
-              // Manual fulfillment: DO NOT automatically send to supplier
-              // Admin will manually process orders
-              console.log("✅ Checkout session completed for order (manual fulfillment):", sessionOrderId);
+              if (wasUnpaid) {
+                firePurchaseAnalytics({
+                  orderNumber: order.orderNumber,
+                  total: order.total,
+                  customerEmail: order.customerEmail || order.customer?.email,
+                  items: order.items,
+                }).catch(() => {});
+              }
+
+              // Order Worker advances PAID → validate → CJ (UI observes only)
+              console.log("✅ Checkout session completed — queued for Order Automation:", sessionOrderId);
             }
           }
         } else {
@@ -228,8 +266,19 @@ export async function POST(req: Request) {
             }
 
             // Build order items from line items
-            const orderItemsData: any[] = [];
-            const orderItemsCreate: any[] = [];
+            interface OrderItemSnapshot {
+              productId: string;
+              name: string;
+              quantity: number;
+              price: number;
+            }
+            interface OrderItemCreate {
+              productId: string;
+              quantity: number;
+              price: number;
+            }
+            const orderItemsData: OrderItemSnapshot[] = [];
+            const orderItemsCreate: OrderItemCreate[] = [];
             let subtotal = 0;
 
             for (const lineItem of fullSession.line_items.data) {
@@ -265,6 +314,7 @@ export async function POST(req: Request) {
 
             const shippingCost = (fullSession.shipping_cost?.amount_total || 0) / 100;
             const total = (fullSession.amount_total || 0) / 100;
+            const tax = includedVatFromGross(total);
 
             // Create order
             const { nanoid } = await import("nanoid");
@@ -276,7 +326,7 @@ export async function POST(req: Request) {
                 items: JSON.stringify(orderItemsData),
                 subtotal: subtotal,
                 shippingCost: shippingCost,
-                tax: 0,
+                tax,
                 total: total,
                 shippingAddress: shippingAddress ? JSON.stringify({
                   name: customerName,
@@ -300,7 +350,12 @@ export async function POST(req: Request) {
               },
             });
 
-            console.log("✅ Created order from checkout session (manual fulfillment):", newOrder.id);
+            console.log("✅ Created order from checkout session — queued for Order Automation:", newOrder.id);
+
+            await decrementStockForOrder(newOrder.id).catch((err) =>
+              console.error("❌ Stock decrement failed:", err)
+            );
+            enqueueOrderAutomation(newOrder.id);
 
             // Send emails (non-blocking, updates status in DB)
             // IMPORTANT: Order creation succeeded, so we return 200 even if emails fail
@@ -319,7 +374,14 @@ export async function POST(req: Request) {
             }).catch((err) => {
               console.error("❌ Error in sendAdminNotification:", err);
             });
-          } catch (createError: any) {
+
+            firePurchaseAnalytics({
+              orderNumber: newOrder.orderNumber,
+              total: newOrder.total,
+              customerEmail: newOrder.customerEmail,
+              items: newOrder.items,
+            }).catch(() => {});
+          } catch (createError: unknown) {
             console.error("❌ Error creating order from checkout session:", createError);
             // Don't throw - webhook should still return success to Stripe
           }
@@ -331,8 +393,9 @@ export async function POST(req: Request) {
         const orderId = paymentIntent.metadata.orderId;
 
         if (orderId) {
-          const dropshipCfg = getDropshippingConfig();
-          const sendAnywayOnHighRisk = dropshipCfg.sendAnywayOnHighRisk ?? false;
+          const prior = await prisma.order.findUnique({ where: { id: orderId } });
+          const wasUnpaid = prior?.paymentStatus !== "paid";
+
           // Oppdater ordre status
           await prisma.order.update({
             where: { id: orderId },
@@ -343,14 +406,21 @@ export async function POST(req: Request) {
             },
           });
 
-          // Risk-evaluering før vi sender til leverandør
+          if (wasUnpaid) {
+            await decrementStockForOrder(orderId).catch((err) =>
+              console.error("❌ Stock decrement failed:", err)
+            );
+            enqueueOrderAutomation(orderId);
+          }
+
+          // Risk-evaluering (Order Worker eier CJ-sending)
           const risk = await evaluateOrderRisk(orderId);
           await prisma.order.update({
             where: { id: orderId },
             data: {
               riskScore: risk.riskScore,
               isFlaggedForReview: risk.isFlagged,
-            } as any,
+            } as Prisma.OrderUpdateInput,
           });
 
           // Send e-poster (non-blocking, updates status in DB)
@@ -369,6 +439,15 @@ export async function POST(req: Request) {
           }).catch((err) => {
             console.error("❌ Error in sendAdminNotification:", err);
           });
+
+          if (wasUnpaid && prior) {
+            firePurchaseAnalytics({
+              orderNumber: prior.orderNumber,
+              total: prior.total,
+              customerEmail: prior.customerEmail,
+              items: prior.items,
+            }).catch(() => {});
+          }
 
           // Manual fulfillment: DO NOT automatically send to supplier
           // Admin will manually process orders
@@ -406,9 +485,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ received: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error processing webhook:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

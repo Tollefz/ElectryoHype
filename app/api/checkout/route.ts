@@ -3,26 +3,23 @@ import Stripe from "stripe";
 import { logError, logInfo } from "@/lib/utils/logger";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getStoreIdFromHeadersServer } from "@/lib/store-server";
+import { prisma } from "@/lib/prisma";
+import { nanoid } from "nanoid";
+import { includedVatFromGross } from "@/lib/pricing/tax";
+import { computeShippingCost } from "@/lib/checkout/shipping";
+import { canPurchaseQuantity } from "@/lib/checkout/stock-policy";
 
 /**
  * Stripe Checkout Session API endpoint.
- * 
- * Creates a Stripe Checkout Session and returns the checkout URL.
- * 
- * Environment variables required:
- * - STRIPE_SECRET_KEY (sk_test_... or sk_live_...)
- * - NEXTAUTH_URL (for success/cancel URLs)
+ * Prices are always recomputed from the database — never trust client amounts.
  */
 export async function POST(req: Request) {
   try {
     const storeId = await getStoreIdFromHeadersServer();
-    
-    // Validate and clean Stripe secret key
+
     let stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim() || "";
-    
-    // Remove extra quotes if present
     stripeSecretKey = stripeSecretKey.replace(/^["']+|["']+$/g, "").trim();
-    
+
     if (!stripeSecretKey) {
       logError(new Error("STRIPE_SECRET_KEY not set"), "[api/checkout]");
       return NextResponse.json(
@@ -32,7 +29,10 @@ export async function POST(req: Request) {
     }
 
     if (!stripeSecretKey.startsWith("sk_test_") && !stripeSecretKey.startsWith("sk_live_")) {
-      logError(new Error(`Invalid Stripe key format: ${stripeSecretKey.substring(0, 10)}...`), "[api/checkout]");
+      logError(
+        new Error(`Invalid Stripe key format: ${stripeSecretKey.substring(0, 10)}...`),
+        "[api/checkout]"
+      );
       return NextResponse.json(
         { ok: false, error: "Betalingssystemet er ikke konfigurert. Kontakt kundeservice." },
         { status: 500 }
@@ -46,46 +46,110 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { items, customerEmail, shippingAddress } = body;
 
-    // Validate input
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json(
-        { ok: false, error: "Handlekurven er tom" },
-        { status: 400 }
-      );
+      return NextResponse.json({ ok: false, error: "Handlekurven er tom" }, { status: 400 });
     }
 
-    // Validate each item
+    if (items.length > 50) {
+      return NextResponse.json({ ok: false, error: "For mange produkter i handlekurven" }, { status: 400 });
+    }
+
+    const verifiedItems: Array<{
+      productId: string;
+      variantId?: string | null;
+      name: string;
+      price: number;
+      quantity: number;
+      image?: string | null;
+    }> = [];
+
     for (const item of items) {
-      if (!item.productId || !item.name || !item.price || !item.quantity) {
+      const productId = String(item.productId || "");
+      const quantity = Math.floor(Number(item.quantity) || 0);
+      if (!productId || quantity < 1 || quantity > 99) {
+        return NextResponse.json({ ok: false, error: "Ugyldig produktdata" }, { status: 400 });
+      }
+
+      const product = await prisma.product.findFirst({
+        where: { id: productId, storeId, isActive: true },
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          stock: true,
+          images: true,
+          variants: item.variantId
+            ? {
+                where: { id: String(item.variantId), isActive: true },
+                select: { id: true, name: true, price: true, stock: true, image: true },
+                take: 1,
+              }
+            : false,
+        },
+      });
+
+      if (!product) {
         return NextResponse.json(
-          { ok: false, error: "Ugyldig produktdata" },
+          { ok: false, error: "Et produkt i handlekurven er ikke lenger tilgjengelig" },
           { status: 400 }
         );
       }
+
+      const variant =
+        item.variantId && Array.isArray(product.variants) ? product.variants[0] : null;
+      if (item.variantId && !variant) {
+        return NextResponse.json(
+          { ok: false, error: "En produktvariant er ikke lenger tilgjengelig" },
+          { status: 400 }
+        );
+      }
+
+      const unitPrice = variant ? Number(variant.price) : Number(product.price);
+      const stock = variant ? variant.stock : product.stock;
+      const purchase = canPurchaseQuantity({
+        isActive: true,
+        stock,
+        quantity,
+      });
+      if (!purchase.ok) {
+        return NextResponse.json(
+          { ok: false, error: `${purchase.error} for «${product.name}»` },
+          { status: 400 }
+        );
+      }
+
+      let image: string | null = variant?.image || null;
+      if (!image) {
+        try {
+          const imgs = typeof product.images === "string" ? JSON.parse(product.images) : product.images;
+          image = Array.isArray(imgs) && imgs[0] ? String(imgs[0]) : null;
+        } catch {
+          image = null;
+        }
+      }
+
+      verifiedItems.push({
+        productId: product.id,
+        variantId: variant?.id ?? null,
+        name: variant ? `${product.name} – ${variant.name}` : product.name,
+        price: unitPrice,
+        quantity,
+        image,
+      });
     }
 
-    logInfo(`Checkout initiated with ${items.length} items`, "[api/checkout]");
+    const subtotal = verifiedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const shippingCost = computeShippingCost(subtotal, "standard");
+    const total = subtotal + shippingCost;
+    const tax = includedVatFromGross(total);
 
-    // Calculate totals
-    const subtotal = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
-    const shippingCost = subtotal >= 500 ? 0 : 99;
-    const tax = 0; // MVA kan legges til senere
-    const total = subtotal + shippingCost + tax;
-
-    // Create order in database first (pending status)
-    const { prisma } = await import("@/lib/prisma");
-    const { nanoid } = await import("nanoid");
-    
-    // Generate order number
     const orderNumber = `ORD-${Date.now()}-${nanoid(6).toUpperCase()}`;
 
-    // Create or find customer if email provided
     let customerId: string | undefined;
     if (customerEmail) {
       const existingCustomer = await prisma.customer.findFirst({
         where: { email: customerEmail, storeId },
       });
-      
       if (existingCustomer) {
         customerId = existingCustomer.id;
       } else {
@@ -100,7 +164,6 @@ export async function POST(req: Request) {
       }
     }
 
-    // Create order
     const order = await prisma.order.create({
       data: {
         orderNumber,
@@ -109,7 +172,7 @@ export async function POST(req: Request) {
         status: "pending",
         paymentStatus: "pending",
         paymentMethod: "stripe",
-        items: JSON.stringify(items),
+        items: JSON.stringify(verifiedItems),
         subtotal,
         shippingCost,
         tax,
@@ -121,38 +184,52 @@ export async function POST(req: Request) {
 
     logInfo(`Order created: ${order.id} (${orderNumber})`, "[api/checkout]");
 
-    // Create Stripe Checkout Session
     const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
-    
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: items.map((item: any) => ({
+
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = verifiedItems.map(
+      (item) => ({
         price_data: {
           currency: "nok",
           product_data: {
             name: item.name,
             images: item.image ? [item.image] : undefined,
           },
-          unit_amount: Math.round(item.price * 100), // Convert to øre
+          unit_amount: Math.round(item.price * 100),
         },
         quantity: item.quantity,
-      })),
+      })
+    );
+
+    if (shippingCost > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "nok",
+          product_data: { name: "Frakt" },
+          unit_amount: Math.round(shippingCost * 100),
+        },
+        quantity: 1,
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
       mode: "payment",
       success_url: `${baseUrl}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/cart`,
       customer_email: customerEmail || undefined,
       shipping_address_collection: {
-        allowed_countries: ["NO", "SE", "DK"], // Norway, Sweden, Denmark
+        allowed_countries: ["NO", "SE", "DK"],
       },
       metadata: {
         orderId: order.id,
         orderNumber: order.orderNumber,
         storeId: storeId || DEFAULT_STORE_ID,
-        itemCount: items.length.toString(),
+        itemCount: verifiedItems.length.toString(),
+        shippingCost: String(shippingCost),
       },
     });
 
-    // Update order with Stripe session ID
     await prisma.order.update({
       where: { id: order.id },
       data: { stripeSessionId: session.id },
@@ -175,4 +252,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

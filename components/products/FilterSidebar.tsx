@@ -2,9 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { getCategoryBySlug, CATEGORY_DEFINITIONS, type CategorySlug } from "@/lib/categories";
+import { CATEGORY_DEFINITIONS, type CategorySlug } from "@/lib/categories";
 
 interface FilterSidebarProps {
   categories: CategorySlug[];
@@ -32,17 +30,19 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
   };
 
   return (
-    <aside className="space-y-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <aside className="space-y-6 rounded-[var(--ehx-radius-md)] border border-[var(--border)] bg-white p-5 shadow-[var(--ehx-shadow-sm)]">
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Kategorier</h3>
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+        <h3 className="mb-3.5 text-xs font-semibold uppercase tracking-wide text-[var(--text)]">
+          Kategorier
+        </h3>
+        <div className="space-y-2">
+          <label className="flex cursor-pointer items-center gap-2.5 text-sm text-[var(--text-secondary)] transition hover:text-[var(--text)]">
             <input
               type="radio"
               name="category"
               checked={!activeCategory}
               onChange={() => updateParams({ category: null })}
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+              className="h-4 w-4 border-[var(--border-strong)] text-[var(--brand)] focus:ring-[var(--brand)]"
             />
             Alle kategorier
           </label>
@@ -50,13 +50,16 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
             const categoryDef = CATEGORY_DEFINITIONS[categorySlug];
             if (!categoryDef) return null;
             return (
-              <label key={categorySlug} className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+              <label
+                key={categorySlug}
+                className="flex cursor-pointer items-center gap-2.5 text-sm text-[var(--text-secondary)] transition hover:text-[var(--text)]"
+              >
                 <input
                   type="radio"
                   name="category"
                   checked={activeCategory === categorySlug}
                   onChange={() => updateParams({ category: categorySlug })}
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                  className="h-4 w-4 border-[var(--border-strong)] text-[var(--brand)] focus:ring-[var(--brand)]"
                 />
                 {categoryDef.label}
               </label>
@@ -65,65 +68,74 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
         </div>
       </div>
 
-      <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Pris</h3>
+      <div className="border-t border-[var(--border)] pt-6">
+        <h3 className="mb-3.5 text-xs font-semibold uppercase tracking-wide text-[var(--text)]">
+          Pris
+        </h3>
         <div className="space-y-3">
-          <div className="flex gap-2">
+          <div className="flex gap-2.5">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Fra (kr)</label>
-              <Input
+              <label className="mb-1.5 block text-[11px] font-medium text-[var(--text-muted)]">
+                Fra (kr)
+              </label>
+              <input
                 type="number"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 placeholder="0"
-                className="w-full text-sm"
                 min="0"
+                className="w-full rounded-[var(--ehx-radius-sm)] border border-[var(--border-strong)] bg-[var(--surface-muted)] px-3 py-2 text-sm outline-none transition focus:border-[var(--brand)] focus:bg-white"
               />
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Til (kr)</label>
-              <Input
+              <label className="mb-1.5 block text-[11px] font-medium text-[var(--text-muted)]">
+                Til (kr)
+              </label>
+              <input
                 type="number"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 placeholder="5000"
-                className="w-full text-sm"
                 min="0"
+                className="w-full rounded-[var(--ehx-radius-sm)] border border-[var(--border-strong)] bg-[var(--surface-muted)] px-3 py-2 text-sm outline-none transition focus:border-[var(--brand)] focus:bg-white"
               />
             </div>
           </div>
           <div className="flex gap-2">
-            <Button 
-              onClick={() => updateParams({ minPrice, maxPrice })} 
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-2"
-              size="sm"
+            <button
+              type="button"
+              onClick={() => updateParams({ minPrice, maxPrice })}
+              className="ehx-btn ehx-btn-primary flex-1 py-2 text-sm"
             >
               Bruk filter
-            </Button>
-            <Button
-              variant="ghost"
+            </button>
+            <button
+              type="button"
               onClick={() => {
                 setMinPrice("");
                 setMaxPrice("");
                 updateParams({ minPrice: null, maxPrice: null });
               }}
-              className="border border-gray-300 hover:bg-gray-50 text-sm py-2"
-              size="sm"
+              className="ehx-btn ehx-btn-secondary flex-1 py-2 text-sm"
             >
               Nullstill
-            </Button>
+            </button>
           </div>
         </div>
       </div>
 
-      <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Lagerstatus</h3>
-        <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+      <div className="border-t border-[var(--border)] pt-6">
+        <h3 className="mb-3.5 text-xs font-semibold uppercase tracking-wide text-[var(--text)]">
+          Lagerstatus
+        </h3>
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-[var(--text-secondary)] transition hover:text-[var(--text)]">
           <input
             type="checkbox"
             checked={inStockOnly}
-            onChange={(e) => updateParams({ inStock: e.target.checked ? "true" : null })}
-            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+            onChange={(e) =>
+              updateParams({ inStock: e.target.checked ? "true" : null })
+            }
+            className="h-4 w-4 rounded border-[var(--border-strong)] text-[var(--brand)] focus:ring-[var(--brand)]"
           />
           Kun produkter på lager
         </label>
@@ -131,4 +143,3 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
     </aside>
   );
 }
-

@@ -1,8 +1,11 @@
 import { Resend } from "resend";
 import { NormalizedOrder, SupplierCreateResponse } from "./types";
 
-const isTestMode = !process.env.RESEND_API_KEY || process.env.RESEND_API_KEY.trim() === "";
-const resend = isTestMode ? null : new Resend(process.env.RESEND_API_KEY);
+function getResendClient(): Resend | null {
+  const key = (process.env.RESEND_API_KEY || "").trim();
+  if (!key) return null;
+  return new Resend(key);
+}
 
 export async function sendEmailOrder(
   input: NormalizedOrder & { supplierOrderEmail: string }
@@ -10,7 +13,7 @@ export async function sendEmailOrder(
   const subject = `Ny ordre ${input.orderId}`;
   const items = input.items
     .map(
-      (item: any) =>
+      (item) =>
         `- ${item.name} x${item.quantity} (supplierSku: ${item.supplierSku ?? "N/A"})`
     )
     .join("\n");
@@ -33,8 +36,15 @@ Items:
 ${items}
 `;
 
-  if (isTestMode || !resend) {
-    console.log("📧 [TEST MODE] Ville sendt leverandør-ordre til:", input.supplierOrderEmail);
+  const resend = getResendClient();
+  if (!resend) {
+    console.log("[email]", JSON.stringify({
+      kind: "supplier_order",
+      apiKeyDetected: "no",
+      to: input.supplierOrderEmail,
+      error: "RESEND_API_KEY mangler i .env",
+      finalStatus: "FAILED",
+    }));
     console.log(body);
     return {
       supplierOrderId: `EMAIL-${input.orderId}`,
@@ -42,12 +52,21 @@ ${items}
     };
   }
 
+  const from = process.env.EMAIL_FROM || "ElectroHypeX <noreply@vitamiro.com>";
   const { error } = await resend.emails.send({
-    from: process.env.EMAIL_FROM || "ElectroHypeX <noreply@electrohypex.com>",
+    from,
     to: input.supplierOrderEmail,
     subject,
     text: body,
   });
+  console.log("[email]", JSON.stringify({
+    kind: "supplier_order",
+    apiKeyDetected: "yes",
+    from,
+    to: input.supplierOrderEmail,
+    error: error?.message ?? null,
+    finalStatus: error ? "FAILED" : "SENT",
+  }));
 
   if (error) {
     throw error;

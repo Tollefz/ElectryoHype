@@ -10,8 +10,9 @@ export const SHIPPING_MESSAGES = {
   // Processing message
   MANUAL_PROCESSING: "Vi behandler bestillingen manuelt etter betaling.",
   
-  // Stock availability (neutral phrasing)
-  IN_STOCK: "Tilgjengelig – leveringstid 5–12 virkedager",
+  // Stock availability (honest dropship phrasing)
+  IN_STOCK: "Tilgjengelig",
+  IN_STOCK_WITH_LEAD: "Tilgjengelig · 5–12 virkedager",
   OUT_OF_STOCK: "Ikke på lager",
   LOW_STOCK: (count: number) => `Bare ${count} på lager`,
   

@@ -1,10 +1,23 @@
 import { prisma } from "@/lib/prisma";
-import { getDropshippingConfig } from "@/config/dropshipping";
 import { SupplierOrderStatus } from "@prisma/client";
 import { getSupplierAdapter } from "@/lib/suppliers";
 import type { NormalizedOrder } from "@/lib/suppliers/types";
 import type { Supplier } from "@/lib/suppliers/types";
 import { logSupplierEvent } from "@/lib/dropshipping/supplier-events";
+
+type ShippingAddressFields = {
+  name?: string;
+  address?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  address2?: string;
+  city?: string;
+  zip?: string;
+  zipCode?: string;
+  country?: string;
+  region?: string;
+  state?: string;
+};
 
 export async function sendOrderToSupplier(orderId: string) {
   const order = await prisma.order.findUnique({
@@ -41,12 +54,12 @@ export async function sendOrderToSupplier(orderId: string) {
   });
 
   // Parse shipping address
-  let shippingAddress: any = {};
+  let shippingAddress: ShippingAddressFields = {};
   try {
     shippingAddress =
       typeof order.shippingAddress === "string"
-        ? JSON.parse(order.shippingAddress)
-        : order.shippingAddress || {};
+        ? (JSON.parse(order.shippingAddress) as ShippingAddressFields)
+        : ((order.shippingAddress as ShippingAddressFields | null) || {});
   } catch {
     shippingAddress = {};
   }
@@ -101,13 +114,14 @@ export async function sendOrderToSupplier(orderId: string) {
       orderId,
       supplierOrderId: result.supplierOrderId,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[Dropshipping] Feil ved sending til leverandør", error);
+    const message = error instanceof Error ? error.message : "Kunne ikke sende til leverandør";
     await prisma.order.update({
       where: { id: order.id },
       data: {
         supplierOrderStatus: SupplierOrderStatus.PENDING,
-        autoOrderError: error?.message || "Kunne ikke sende til leverandør",
+        autoOrderError: message,
         autoOrderAttempts: { increment: 1 },
       },
     });
@@ -116,7 +130,7 @@ export async function sendOrderToSupplier(orderId: string) {
       orderId: order.id,
       oldStatus: order.supplierOrderStatus || SupplierOrderStatus.PENDING,
       newStatus: SupplierOrderStatus.PENDING,
-      metadata: { error: error?.message || "send failed" },
+      metadata: { error: error instanceof Error ? error.message : "send failed" },
     });
   }
 }

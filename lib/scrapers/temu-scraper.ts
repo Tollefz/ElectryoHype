@@ -1,8 +1,14 @@
-// Note: We don't import Page or use Puppeteer for Temu anymore
-// We use axios + cheerio for HTML scraping instead
+// Note: Temu scraping is primarily axios + cheerio based.
+// Puppeteer is only loaded lazily (dynamic import) as a fallback to collect
+// the full image gallery, since Temu renders the gallery client-side behind
+// an anti-bot challenge that plain HTTP requests cannot pass.
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { upgradeImageUrl } from "@/lib/import/image-quality";
 import type { ScraperResult, ProductVariant, ScrapedProductData, Scraper } from "./types";
+import { extractTemuPriceNOKFromUrl } from "./temu-price";
+
+type JsonRecord = Record<string, unknown>;
 
 export class TemuScraper implements Scraper<ScrapedProductData> {
   // Don't extend BaseScraper - this avoids loading Puppeteer entirely
@@ -27,25 +33,52 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
       
       // Combine URL data with HTML data
       // Prefer images from URL (guaranteed to work), then add any additional ones from HTML
-      const allImages = [
+      let allImages = [
         ...urlData.images,
         ...(htmlData.images || [])
       ].filter((img, index, self) => self.indexOf(img) === index); // Remove duplicates
       
       console.log(`[TemuScraper] Combined ${urlData.images.length} URL images + ${htmlData.images?.length || 0} HTML images = ${allImages.length} total`);
+
+      // Temu renders the full gallery client-side behind an anti-bot challenge,
+      // so URL/HTML extraction usually only yields the single top_gallery_url
+      // image. When that happens, collect the full gallery with a headless
+      // stealth browser before returning.
+      if (allImages.length <= 1) {
+        try {
+          const galleryImages = await this.fetchGalleryWithBrowser(url);
+          if (galleryImages.length >= 2) {
+            // Gallery is authoritative: full set, original order, deduped,
+            // best resolution. Keep any previously found image that is not
+            // already in the gallery (by filename) at the end.
+            const galleryFilenames = new Set(
+              galleryImages.map((img) => img.split("/").pop() || img)
+            );
+            const extras = allImages
+              .map((img) => upgradeImageUrl(img))
+              .filter((img) => !galleryFilenames.has(img.split("/").pop() || img));
+            allImages = [...galleryImages, ...extras];
+            console.log(`[TemuScraper] ✅ Browser gallery collected ${galleryImages.length} images (${allImages.length} total)`);
+          } else {
+            console.log(`[TemuScraper] Browser gallery returned ${galleryImages.length} image(s), keeping URL/HTML images`);
+          }
+        } catch (error) {
+          console.warn(`[TemuScraper] ⚠️ Browser gallery collection failed:`, error instanceof Error ? error.message : String(error));
+        }
+      }
       
       // Prioritize HTML variants, fall back to URL variants, or create default variant
       let variants = htmlData.variants && htmlData.variants.length > 0 
         ? htmlData.variants 
         : urlData.variants;
       
-      // CRITICAL: If no variants found, create at least one default variant
-      // This ensures the product always has at least one variant for proper saving
+      // CRITICAL: If no variants found, create at least one default variant.
+      // Price must stay in NOK — never invent 9.99 USD.
       if (!variants || variants.length === 0) {
         console.log(`[TemuScraper] ⚠️ No variants found, creating default variant`);
         variants = [{
           name: "Standard",
-          price: urlData.price.amount > 0 ? urlData.price.amount : 9.99,
+          price: urlData.price.amount > 0 ? urlData.price.amount : 0,
           attributes: {},
           image: allImages.length > 0 ? allImages[0] : undefined,
         }];
@@ -71,9 +104,14 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           
           return {
             name: v.name || "Standard",
-            price: typeof v.price === 'number' && v.price > 0 ? v.price : (urlData.price.amount > 0 ? urlData.price.amount : 9.99),
+            price: typeof v.price === 'number' && v.price > 0 ? v.price : (urlData.price.amount > 0 ? urlData.price.amount : 0),
             attributes: v.attributes || {},
             image: variantImage,
+            // Preserve supplier-provided fields when available
+            sku: v.sku,
+            stock: typeof v.stock === 'number' ? v.stock : undefined,
+            supplierPrice: v.supplierPrice,
+            compareAtPrice: v.compareAtPrice,
           };
         });
       }
@@ -89,9 +127,12 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
         url,
         images: allImages.length > 0 ? allImages : urlData.images,
         title: urlData.title || this.decodeTitleFromUrl(url) || "Temu Produkt",
-        price: urlData.price.amount > 0 ? urlData.price : { amount: 9.99, currency: "USD" as const },
+        price:
+          urlData.price.amount > 0
+            ? urlData.price
+            : { amount: 0, currency: "NOK" as const },
         description: htmlData.description || urlData.description || "",
-        variants: variants, // Always include variants (at least one default)
+        variants: variants,
         specs: {},
         availability: true,
       };
@@ -123,7 +164,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           ? urlData.variants 
           : [{
               name: "Standard",
-              price: urlData.price.amount > 0 ? urlData.price.amount : 9.99,
+              price: urlData.price.amount > 0 ? urlData.price.amount : 0,
               attributes: {},
               image: urlData.images.length > 0 ? urlData.images[0] : undefined,
             }];
@@ -133,30 +174,202 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           url,
           title: this.decodeTitleFromUrl(url) || "Temu Produkt",
           description: urlData.description || "",
-          price: urlData.price.amount > 0 ? urlData.price : { amount: 9.99, currency: "USD" },
+          price:
+            urlData.price.amount > 0
+              ? urlData.price
+              : { amount: 0, currency: "NOK" },
           images: urlData.images,
           variants: fallbackVariants,
           specs: {},
           availability: true,
         });
       } catch (fallbackError) {
-        // Last resort: return minimal product with default variant
+        // Last resort: return structure without inventing a USD placeholder price
         return this.toResult({
           supplier: "temu",
           url,
           title: this.decodeTitleFromUrl(url) || "Temu Produkt",
           description: "",
-          price: { amount: 9.99, currency: "USD" },
+          price: { amount: 0, currency: "NOK" },
           images: [],
           variants: [{
             name: "Standard",
-            price: 9.99,
+            price: 0,
             attributes: {},
           }],
           specs: {},
           availability: true,
         });
       }
+    }
+  }
+
+  /**
+   * Collect the full product image gallery with a headless stealth browser.
+   *
+   * Temu only ships the gallery to real browsers: plain HTTP requests get an
+   * obfuscated anti-bot challenge page with no product data, so URL/HTML
+   * extraction can never see more than the single top_gallery_url image.
+   *
+   * Strategy:
+   * - Load the bare product URL (tracking params trigger a login redirect).
+   * - Accept the cookie banner when shown.
+   * - Poll until gallery images render, then collect them from
+   *   window.rawData and the DOM in original document order.
+   * - Skip recommendation images (inside links to other products), icons
+   *   and non-product CDN assets.
+   * - Upgrade every URL to full resolution and dedupe, preserving order.
+   *
+   * Returns [] when Temu serves a CAPTCHA/login wall or Puppeteer is
+   * unavailable – callers keep their existing single-image fallback.
+   */
+  private async fetchGalleryWithBrowser(url: string): Promise<string[]> {
+    // Bare URL: query params (refer_page_*, _oak_*, ads ids) make Temu
+    // redirect headless sessions straight to login.html
+    const bareUrl = url.split("?")[0];
+    const productIdMatch = bareUrl.match(/-g-(\d+)/);
+    const productId = productIdMatch ? productIdMatch[1] : "";
+
+    type PuppeteerExtraLike = {
+      use: (plugin: unknown) => void;
+      launch: (options: Record<string, unknown>) => Promise<{
+        newPage: () => Promise<import("puppeteer").Page>;
+        close: () => Promise<void>;
+      }>;
+    };
+    let puppeteerExtra: PuppeteerExtraLike;
+    try {
+      const puppeteerExtraMod = await import("puppeteer-extra");
+      const stealthMod = await import("puppeteer-extra-plugin-stealth");
+      const extraMod = puppeteerExtraMod as { default?: PuppeteerExtraLike } & PuppeteerExtraLike;
+      puppeteerExtra = extraMod.default ?? extraMod;
+      const stealth = stealthMod as { default?: () => unknown } & (() => unknown);
+      const StealthPlugin = stealth.default ?? stealth;
+      puppeteerExtra.use(StealthPlugin());
+    } catch (error) {
+      console.warn("[TemuScraper] Puppeteer not available for gallery collection:", error instanceof Error ? error.message : String(error));
+      return [];
+    }
+
+    console.log(`[TemuScraper] 🖼️ Collecting full gallery with headless browser...`);
+    const browser = await puppeteerExtra.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-blink-features=AutomationControlled",
+        "--window-size=1920,1080",
+        "--lang=no,en-US,en",
+      ],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    });
+
+    try {
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1920, height: 1080 });
+      await page.goto(bareUrl, { waitUntil: "networkidle2", timeout: 45000 });
+
+      // Snippets are passed as strings: bundlers inject helpers (__name etc.)
+      // into serialized functions, which breaks page.evaluate.
+      const acceptCookiesSnippet = `(() => {
+        const btns = Array.from(document.querySelectorAll('div[role="button"], button'));
+        const accept = btns.find(b => (b.innerText || '').trim() === 'Godta alle' || (b.innerText || '').trim() === 'Accept all');
+        if (accept) { accept.click(); return true; }
+        return false;
+      })()`;
+
+      const collectSnippet = `(() => {
+        const txt = document.body ? document.body.innerText : '';
+        const captcha = txt.includes('Sikkerhetsverifisering') || txt.includes('pusle') || txt.toLowerCase().includes('security verification');
+        const login = location.href.includes('login.html');
+        const images = [];
+        const push = (u) => {
+          if (typeof u === 'string' && u.indexOf('http') === 0 && u.indexOf('img.kwcdn.com') !== -1) images.push(u);
+        };
+
+        // Source 1: window.rawData gallery arrays (authoritative order)
+        try {
+          const seen = new Set();
+          const visit = (obj, depth) => {
+            if (!obj || typeof obj !== 'object' || depth > 8 || seen.has(obj)) return;
+            seen.add(obj);
+            if (Array.isArray(obj)) { for (const v of obj) visit(v, depth + 1); return; }
+            for (const k in obj) {
+              const v = obj[k];
+              if (/gallery|carousel/i.test(k) && Array.isArray(v)) {
+                for (const item of v) {
+                  if (typeof item === 'string') push(item);
+                  else if (item && typeof item === 'object') push(item.url || item.imgUrl || item.image);
+                }
+              }
+              visit(v, depth + 1);
+            }
+          };
+          visit(window.rawData && window.rawData.store, 0);
+        } catch (e) {}
+
+        // Source 2: DOM images in document order (fallback)
+        if (images.length < 2) {
+          const currentId = ${JSON.stringify(productId)};
+          for (const img of document.querySelectorAll('img')) {
+            const src = img.currentSrc || img.src || img.getAttribute('data-src') || '';
+            if (!src || src.indexOf('img.kwcdn.com') === -1) continue;
+            if (!/product|open|goods/.test(src)) continue;
+            // Skip small icons/thumbnails that have rendered
+            if (img.naturalWidth > 0 && img.naturalWidth < 200) continue;
+            // Skip recommendation images: they sit inside links to other products
+            const link = img.closest('a[href]');
+            if (link) {
+              const href = link.getAttribute('href') || '';
+              if (/-g-\\d+/.test(href) && (!currentId || href.indexOf(currentId) === -1)) continue;
+            }
+            push(src);
+          }
+        }
+        return JSON.stringify({ captcha, login, images });
+      })()`;
+
+      // Poll for the gallery: challenge/render timing varies
+      const deadline = Date.now() + 18000;
+      let lastState: { captcha: boolean; login: boolean; images: string[] } = { captcha: false, login: false, images: [] };
+      let cookiesHandled = false;
+      while (Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+
+        if (page.url().includes("login.html")) {
+          console.log("[TemuScraper] Gallery collection blocked by login wall");
+          return [];
+        }
+        if (!cookiesHandled) {
+          cookiesHandled = Boolean(await page.evaluate(acceptCookiesSnippet));
+        }
+
+        lastState = JSON.parse(await page.evaluate(collectSnippet));
+        if (lastState.login) {
+          console.log("[TemuScraper] Gallery collection blocked by login wall");
+          return [];
+        }
+        if (lastState.captcha && lastState.images.length === 0) {
+          console.log("[TemuScraper] Gallery collection blocked by CAPTCHA");
+          return [];
+        }
+        if (lastState.images.length >= 2) break;
+      }
+
+      // Best resolution + dedupe, preserving original order
+      const seen = new Set<string>();
+      const gallery: string[] = [];
+      for (const raw of lastState.images) {
+        const upgraded = upgradeImageUrl(raw);
+        if (!seen.has(upgraded)) {
+          seen.add(upgraded);
+          gallery.push(upgraded);
+        }
+      }
+      return gallery;
+    } finally {
+      await browser.close();
     }
   }
 
@@ -212,10 +425,9 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           decoded = decoded.split('-g-')[0];
         }
         
-        // Format title
+        // Format title (keep numbers: pack counts and model numbers are meaningful)
         const formatted = decoded
           .split('-')
-          .filter(word => !word.match(/^\d+$/)) // Remove pure numbers
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' ')
           .trim();
@@ -243,7 +455,8 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
     // Extract product ID from URL
     const pathParts = urlObj.pathname.split('/');
     const lastPart = pathParts[pathParts.length - 1] || '';
-    const productIdMatch = lastPart.match(/g-(\d+)/);
+    // Require the "-g-" delimiter: a bare /g-\d+/ also matches slug text like "awg-0"
+    const productIdMatch = lastPart.match(/-g-(\d+)/);
     const productId = productIdMatch ? productIdMatch[1] : null;
     
     // Extract main image from URL parameter
@@ -300,15 +513,20 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
     
     // Images array will be used directly - it will be combined with HTML images later
     
-    // Try to extract price from URL (sometimes in referral parameters)
-    // Default to a reasonable price if not found
-    let price = { amount: 9.99, currency: "USD" as const };
-    const priceMatch = url.match(/[_\-](\d+)[\-_]kr/i) || url.match(/price[=_](\d+)/i);
-    if (priceMatch) {
-      const priceAmount = parseFloat(priceMatch[1]);
-      if (priceAmount > 0 && priceAmount < 10000) {
-        price.amount = priceAmount / 10.5; // Convert NOK to USD estimate
-      }
+    // Extract real Temu page price in NOK. Never invent 9.99 USD.
+    const extracted = extractTemuPriceNOKFromUrl(url);
+    const price =
+      extracted.amountNOK > 0
+        ? { amount: extracted.amountNOK, currency: "NOK" as const }
+        : { amount: 0, currency: "NOK" as const };
+    if (extracted.amountNOK > 0) {
+      console.log(
+        `[TemuScraper] Price from ${extracted.source}: ${extracted.amountNOK} NOK`
+      );
+    } else {
+      console.warn(
+        `[TemuScraper] ⚠️ Could not extract Temu page price from URL — leaving amount 0 NOK (no USD placeholder)`
+      );
     }
     
     // Extract variants - try API first, then fallback to URL parsing
@@ -317,6 +535,10 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
       price: number;
       attributes: Record<string, string>;
       image?: string;
+      sku?: string;
+      stock?: number;
+      supplierPrice?: number;
+      compareAtPrice?: number;
     }> = [];
     
     // Try to fetch variant data from Temu API if we have product ID
@@ -377,146 +599,45 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
         }
       }
       
-      // ELECTROHYPEX POLICY: Only create BLACK/SVART variants
-      // Filter to only black colors
-      const blackColors = foundColors.filter(color => {
-        const normalized = color.toLowerCase();
-        return normalized === 'svart' || normalized === 'black' || normalized === 'sort';
-      });
-      
-      // If we found black color keywords, create only black variant
-      if (blackColors.length > 0) {
-        console.log(`[TemuScraper] Detected black color from text: ${blackColors.join(', ')}`);
-        const color = 'Svart'; // Always use "Svart" as the standard black color name
-        
-        // Try to find image that matches black keyword
-        let variantImage: string | undefined = undefined;
-        
-        if (images.length > 0) {
-          const blackKeywords = ['black', 'svart', 'dark', 'sort'];
-          const matchingImage = images.find(img => {
-            const imgLower = img.toLowerCase();
-            return blackKeywords.some(keyword => imgLower.includes(keyword));
-          });
-          
-          variantImage = matchingImage || images[0]; // Use first image if no black-specific image found
-        }
-        
-        variants.push({
-          name: color,
-          price: price.amount,
-          attributes: { color: color, farge: color },
-          image: variantImage,
-        });
-        
-        console.log(`[TemuScraper] Created BLACK variant "${color}" with image: ${variantImage ? variantImage.substring(0, 60) + '...' : 'none'}`);
-      } else if (foundColors.length > 0) {
-        // Found colors but none are black - create a single black variant anyway
-        // This ensures products always have at least one variant
-        console.log(`[TemuScraper] Detected colors but none are black: ${foundColors.join(', ')}. Creating single black variant instead.`);
-        const color = 'Svart';
-        
-        let variantImage: string | undefined = undefined;
-        if (images.length > 0) {
-          variantImage = images[0];
-        }
-        
-        variants.push({
-          name: color,
-          price: price.amount,
-          attributes: { color: color, farge: color },
-          image: variantImage,
-        });
-        
-        console.log(`[TemuScraper] Created BLACK variant "${color}" (default) with image: ${variantImage ? variantImage.substring(0, 60) + '...' : 'none'}`);
-      } else {
-        // Even if no colors detected, check if this looks like it should have variants
-        // Many Temu products have variants even if not mentioned in URL/title
-        // Check for bundle mentions or other indicators
-        const bundleMatch = allText.match(/bundle|pakke|sett|multi|universal/i);
-        const hasNumbers = allText.match(/\d+\s*(pack|stk|stykker|pieces|pcs)/i);
-        const isBracket = allText.includes('bracket') || allText.includes('brakett') || allText.includes('stand') || allText.includes('stativ');
-        const isHolder = allText.includes('holder') || allText.includes('holder');
-        
-        // If product seems like it could have variants, create some common ones
-        // For phone/tablet brackets/holders, common variants are different colors
-        if (bundleMatch || hasNumbers || isBracket || isHolder) {
-          console.log(`[TemuScraper] Product seems to support variants (${isBracket ? 'bracket' : bundleMatch ? 'bundle' : 'has numbers'}), creating common color options`);
-          
-          // For brackets/holders, common variants include more colors
-          // Check if product might have additional variants based on URL/title hints
-          const hasMultipleColors = allText.match(/multi.*color|several.*color|various.*color|3.*color|4.*color|5.*color/i);
-          const hasSizeMention = allText.match(/small|medium|large|xl|xs|size/i);
-          
-          // ELECTROHYPEX POLICY: Only create BLACK variant
-          // Regardless of product type, we only create a single black variant
-          let commonColors = ['Svart'];
-          
-          console.log(`[TemuScraper] Creating single BLACK variant (ElectroHypeX policy: only black colors)`);
-          
-          // Map colors to numbers for variant image generation (used in multiple strategies)
-          const colorIndexMap: Record<string, number> = {
-            'Svart': 1,
-            'Hvit': 2,
-            'Grå': 3,
-            'Rød': 4,
-            'Blå': 5,
-            'Grønn': 6,
-            'Gul': 7,
-            'Rosa': 8,
-            'Lilla': 9,
-            'Sølv': 10,
-          };
-          
-          // ELECTROHYPEX: Only create one black variant
-          // Generate variant image - use first available image
-          const color = 'Svart';
+      // Create one variant per detected color – no color filtering.
+      // Variants are imported exactly as the supplier text indicates.
+      if (foundColors.length > 0) {
+        console.log(`[TemuScraper] Detected colors from text: ${foundColors.join(', ')}`);
+
+        for (const color of foundColors) {
+          // Try to find an image that matches the color keyword
           let variantImage: string | undefined = undefined;
-          
-          // Use first available image
           if (images.length > 0) {
-            variantImage = images[0];
+            const colorLower = color.toLowerCase();
+            const englishKeys = Object.entries(colorKeywords)
+              .filter(([, value]) => value === color)
+              .map(([key]) => key);
+            const matchingImage = images.find(img => {
+              const imgLower = img.toLowerCase();
+              return englishKeys.some(keyword => imgLower.includes(keyword)) || imgLower.includes(colorLower);
+            });
+            variantImage = matchingImage || images[0];
           }
-          
-          // Try to generate variant-specific image if productId and spec_gallery_id exist
-          if (variantImage && productId && specGalleryId) {
-            const colorIndex = colorIndexMap[color] || 1;
-            const variantGalleryId = parseInt(specGalleryId) + colorIndex - 1;
-            
-            if (images.length > 0) {
-              const baseImage = images[0];
-              // Try to extract the base path and construct variant URL
-              const variantImageUrl = baseImage.replace(
-                /\/spec_gallery_id=\d+/,
-                `/spec_gallery_id=${variantGalleryId}`
-              ).replace(
-                /g-(\d+)/,
-                `g-${productId}`
-              );
-              
-              variantImage = variantImageUrl;
-              console.log(`[TemuScraper] Generated variant image URL for ${color} (gallery ${variantGalleryId}): ${variantImageUrl.substring(0, 80)}...`);
-            }
-          }
-          
+
           variants.push({
             name: color,
             price: price.amount,
             attributes: { color: color, farge: color },
             image: variantImage,
           });
-          
-          console.log(`[TemuScraper] Created BLACK variant "${color}" with image: ${variantImage ? 'Yes' : 'No'}`);
-        } else {
-          // Default: create at least one BLACK variant (ElectroHypeX policy)
-          variants.push({
-            name: "Svart",
-            price: price.amount,
-            attributes: { color: 'Svart', farge: 'Svart' },
-            image: images.length > 0 ? images[0] : undefined,
-          });
-          console.log(`[TemuScraper] Created default BLACK variant "Svart"`);
+
+          console.log(`[TemuScraper] Created variant "${color}" with image: ${variantImage ? variantImage.substring(0, 60) + '...' : 'none'}`);
         }
+      } else {
+        // No colors detected in URL/title – create a single neutral variant
+        // without inventing a color the supplier never specified
+        variants.push({
+          name: "Standard",
+          price: price.amount,
+          attributes: {},
+          image: images.length > 0 ? images[0] : undefined,
+        });
+        console.log(`[TemuScraper] No colors detected, created default variant "Standard"`);
       }
     }
     
@@ -538,6 +659,8 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
     price: number;
     attributes: Record<string, string>;
     image?: string;
+    sku?: string;
+    stock?: number;
   }> | null> {
     try {
       // Try different API endpoints that Temu might use
@@ -590,13 +713,13 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             if (skuList && Array.isArray(skuList) && skuList.length > 0) {
               console.log(`[TemuScraper] ✅ Found ${skuList.length} SKUs from API`);
               
-              const variants = skuList.map((sku: any) => {
+              const variants = skuList.map((sku: JsonRecord) => {
                 // Extract variant name from specList
                 let variantName = 'Standard';
                 const attributes: Record<string, string> = {};
                 
                 if (sku.specList && Array.isArray(sku.specList)) {
-                  sku.specList.forEach((spec: any) => {
+                  (sku.specList as JsonRecord[]).forEach((spec: JsonRecord) => {
                     const specName = (spec.specName || spec.name || spec.specKey || '').toLowerCase();
                     const specValue = spec.specValue || spec.value || spec.specVal || '';
                     if (specName && specValue) {
@@ -616,15 +739,22 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                                    (sku.gallery && sku.gallery[0]) ||
                                    (sku.images && sku.images[0]);
                 
-                const price = parseFloat(sku.goodsPrice || sku.salePrice || sku.price || sku.minPrice || '9.99');
+                const price = parseFloat(sku.goodsPrice || sku.salePrice || sku.price || sku.minPrice || '0');
                 
-                console.log(`[TemuScraper] Variant: ${variantName}, Price: ${price}, Image: ${variantImage ? 'Yes' : 'No'}`);
+                // Preserve supplier SKU and stock when the API provides them
+                const skuId = sku.skuId || sku.sku_id || sku.sku || sku.id;
+                const stockRaw = sku.stock ?? sku.quantity ?? sku.stockQuantity ?? sku.inventory;
+                const stock = typeof stockRaw === 'number' ? stockRaw : (typeof stockRaw === 'string' && stockRaw !== '' ? parseInt(stockRaw, 10) : undefined);
+                
+                console.log(`[TemuScraper] Variant: ${variantName}, Price: ${price}, Image: ${variantImage ? 'Yes' : 'No'}, SKU: ${skuId || '-'}, Stock: ${stock ?? '-'}`);
                 
                 return {
                   name: variantName,
-                  price: price > 0 ? price : 9.99,
+                  price: price > 0 ? price : 0,
                   attributes,
                   image: variantImage && variantImage.startsWith('http') ? variantImage : undefined,
+                  sku: skuId ? String(skuId) : undefined,
+                  stock: Number.isFinite(stock) ? stock : undefined,
                 };
               });
               
@@ -687,9 +817,9 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             .replace(/%20/g, ' ')
             .replace(/\+/g, ' ');
           
+          // Keep numbers: pack counts ("3 stk") and model numbers ("iphone 16") are meaningful
           return decoded
             .split("-")
-            .filter(word => !word.match(/^\d+$/)) // Remove pure numbers
             .map(word => {
               // Capitalize first letter
               return word.charAt(0).toUpperCase() + word.slice(1);
@@ -754,7 +884,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
       const $ = cheerio.load(response.data);
       
       // First, try to find product data in script tags (most reliable)
-      let productData: any = null;
+      let productData: JsonRecord | null = null;
       const scriptTags = $('script');
       
       scriptTags.each((_, el) => {
@@ -835,7 +965,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                             (productData.productInfo?.skus ? productData.productInfo.skus : null);
           
           // If variantList is not an array but an object, try to convert it
-          let variantsArray: any[] = [];
+          let variantsArray: JsonRecord[] = [];
           if (variantList) {
             if (Array.isArray(variantList)) {
               variantsArray = variantList;
@@ -852,14 +982,14 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           if (variantsArray.length > 0) {
             console.log(`✅ Found ${variantsArray.length} variants in product data`);
             
-            variantsArray.forEach((variant: any, index: number) => {
+            variantsArray.forEach((variant: JsonRecord, index: number) => {
               // Extract variant name (usually in specList or name property)
               let variantName = variant.name || variant.title || '';
               const attributes: Record<string, string> = {};
               
               // Extract attributes from specList or similar
               if (variant.specList && Array.isArray(variant.specList)) {
-                variant.specList.forEach((spec: any) => {
+                (variant.specList as JsonRecord[]).forEach((spec: JsonRecord) => {
                   const specName = spec.specName || spec.name || '';
                   const specValue = spec.specValue || spec.value || '';
                   if (specName && specValue) {
@@ -878,16 +1008,16 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                 variantName = Object.values(attributes).join(' ') || `Variant ${index + 1}`;
               }
               
-              // Extract price
-              const price = variant.salePrice || variant.price || variant.goodsPrice || 9.99;
-              const priceAmount = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : parseFloat(price);
+              // Extract price — never invent 9.99 USD placeholder
+              const price = variant.salePrice || variant.price || variant.goodsPrice || 0;
+              const priceAmount = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : parseFloat(String(price));
               
               // Extract image
               const variantImage = variant.thumbUrl || variant.image || variant.imgUrl || variant.goodsImg || undefined;
               
               variants.push({
                 name: variantName,
-                price: priceAmount > 0 ? priceAmount : 9.99,
+                price: priceAmount > 0 ? priceAmount : 0,
                 attributes: attributes,
                 image: variantImage && variantImage.startsWith('http') ? variantImage : undefined,
               });
@@ -895,7 +1025,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           }
           
           // Extract images from product data - try multiple sources
-          const imageSources: any[] = [];
+          const imageSources: unknown[] = [];
           
           // Try various image array properties
           if (productData.gallery) imageSources.push(productData.gallery);
@@ -913,7 +1043,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           
           // Extract images from variant data
           if (variantsArray && variantsArray.length > 0) {
-            variantsArray.forEach((variant: any) => {
+            variantsArray.forEach((variant: JsonRecord) => {
               const variantImg = variant.thumbUrl || 
                                variant.image || 
                                variant.imgUrl || 
@@ -932,12 +1062,13 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           }
           
           // Process all image sources
-          imageSources.forEach((imageList: any) => {
+          imageSources.forEach((imageList: unknown) => {
             if (Array.isArray(imageList)) {
-              imageList.forEach((img: any) => {
+              imageList.forEach((img: unknown) => {
+                const imgObj = typeof img === 'string' ? null : (img as JsonRecord | null);
                 const imgUrl = typeof img === 'string' 
                   ? img 
-                  : (img.url || img.src || img.thumbUrl || img.imageUrl || img.original || '');
+                  : String(imgObj?.url || imgObj?.src || imgObj?.thumbUrl || imgObj?.imageUrl || imgObj?.original || '');
                 if (imgUrl && typeof imgUrl === 'string' && imgUrl.startsWith('http') && imgUrl.includes('img.kwcdn.com')) {
                   const normalized = imgUrl.split('?')[0];
                   if (!images.includes(normalized)) {
@@ -968,11 +1099,11 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             if (json['@type'] === 'Product' || json['@type'] === 'ProductGroup') {
               // Extract variants from offers or variantGroup
               if (json.offers && Array.isArray(json.offers)) {
-                json.offers.forEach((offer: any, index: number) => {
+                json.offers.forEach((offer: JsonRecord, index: number) => {
                   if (offer.availability === 'https://schema.org/InStock' || offer.availability === 'InStock') {
                     variants.push({
                       name: offer.name || `Variant ${index + 1}`,
-                      price: offer.price ? parseFloat(offer.price) : 9.99,
+                      price: offer.price ? parseFloat(offer.price) : 0,
                       attributes: {
                         color: offer.color || '',
                         size: offer.size || '',
@@ -986,7 +1117,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
               // Extract images
               if (json.image) {
                 const productImages = Array.isArray(json.image) ? json.image : [json.image];
-                productImages.forEach((img: any) => {
+                productImages.forEach((img: unknown) => {
                   const imgUrl = typeof img === 'string' ? img : (img.url || img['@id'] || '');
                   if (imgUrl && imgUrl.startsWith('http')) {
                     images.push(imgUrl);
@@ -1032,18 +1163,18 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                   try {
                     const parsed = JSON.parse(jsonStr);
                     // Search recursively for variant data
-                    const searchForVariants = (obj: any, depth = 0): any[] => {
+                    const searchForVariants = (obj: unknown, depth = 0): JsonRecord[] => {
                       if (depth > 5) return []; // Limit recursion
-                      const found: any[] = [];
+                      const found: JsonRecord[] = [];
                       
                       if (obj && typeof obj === 'object') {
                         if (Array.isArray(obj)) {
                           obj.forEach(item => found.push(...searchForVariants(item, depth + 1)));
                         } else {
-                          for (const [key, value] of Object.entries(obj)) {
+                          for (const [key, value] of Object.entries(obj as JsonRecord)) {
                             const keyLower = key.toLowerCase();
                             if ((keyLower.includes('sku') || keyLower.includes('variant')) && Array.isArray(value)) {
-                              found.push(...value);
+                              found.push(...(value as JsonRecord[]));
                             } else {
                               found.push(...searchForVariants(value, depth + 1));
                             }
@@ -1056,15 +1187,15 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                     const foundVariants = searchForVariants(parsed);
                     if (foundVariants.length > 0) {
                       console.log(`✅ Found ${foundVariants.length} potential variants in script JSON`);
-                      foundVariants.forEach((v: any, idx: number) => {
+                      foundVariants.forEach((v: JsonRecord, idx: number) => {
                         if (v && typeof v === 'object') {
                           const name = v.name || v.title || v.specValue || v.color || `Variant ${idx + 1}`;
-                          const price = parseFloat(v.price || v.salePrice || v.goodsPrice || '9.99');
+                          const price = parseFloat(v.price || v.salePrice || v.goodsPrice || '0');
                           variants.push({
                             name: String(name),
-                            price: price > 0 ? price : 9.99,
+                            price: price > 0 ? price : 0,
                             attributes: v.specList ? Object.fromEntries(
-                              (Array.isArray(v.specList) ? v.specList : []).map((s: any) => [
+                              (Array.isArray(v.specList) ? v.specList as JsonRecord[] : []).map((s: JsonRecord) => [
                                 String(s.specName || s.name || '').toLowerCase(),
                                 String(s.specValue || s.value || '')
                               ])
@@ -1110,7 +1241,9 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           console.log('🔍 Checking', colorSelectors.length, 'selectors...');
           
           const seenVariants = new Set<string>();
-          const basePrice = 9.99;
+          // Prefer Temu URL page price (NOK). Never invent 9.99 USD.
+          const urlPrice = extractTemuPriceNOKFromUrl(url);
+          const basePrice = urlPrice.amountNOK > 0 ? urlPrice.amountNOK : 0;
           let totalElementsFound = 0;
           
           colorSelectors.forEach((selector) => {
@@ -1125,7 +1258,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
               const $el = $(el);
               
               // Try to find variant name/text
-              let variantText = $el.text().trim() || 
+              const variantText = $el.text().trim() || 
                                $el.attr('title') || 
                                $el.attr('aria-label') ||
                                $el.find('[class*="name"]').text().trim() ||
@@ -1241,7 +1374,6 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             console.log('🔍 No variants found, checking data attributes...');
             $('[data-sku], [data-variant], [data-color]').each((_, el) => {
               const $el = $(el);
-              const sku = $el.attr('data-sku') || $el.attr('data-variant');
               const color = $el.attr('data-color') || $el.text().trim();
               const img = $el.find('img').attr('src') || $el.find('img').attr('data-src');
               
@@ -1338,7 +1470,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                 const jsonData = JSON.parse(jsonMatch[0]);
                 
                 // Recursively search for image URLs
-                const findImages = (obj: any): string[] => {
+                const findImages = (obj: unknown): string[] => {
                   const found: string[] = [];
                   if (typeof obj === 'string' && obj.includes('img.kwcdn.com') && obj.includes('product')) {
                     found.push(obj.split('?')[0]);

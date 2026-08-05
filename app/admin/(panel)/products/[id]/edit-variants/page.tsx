@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Image as ImageIcon, ExternalLink, Copy, Check } from 'lucide-react';
 import Image from 'next/image';
@@ -9,7 +9,14 @@ interface Variant {
   id: string;
   name: string;
   image: string | null;
-  attributes: any;
+  attributes: Record<string, string> | null;
+}
+
+interface ProductData {
+  name?: string;
+  images?: string;
+  supplierUrl?: string | null;
+  variants?: Variant[];
 }
 
 export default function EditVariantsPage() {
@@ -17,17 +24,13 @@ export default function EditVariantsPage() {
   const router = useRouter();
   const productId = params.id as string;
   
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<ProductData | null>(null);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchProduct();
-  }, [productId]);
-
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/products/${productId}`);
       if (!res.ok) throw new Error('Failed to fetch product');
@@ -39,7 +42,11 @@ export default function EditVariantsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId]);
+
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]);
 
   const handleImageChange = (variantId: string, imageUrl: string) => {
     setVariants(prev => prev.map(v => 
@@ -73,12 +80,11 @@ export default function EditVariantsPage() {
         });
       }
       
-      // Update product images to include all variant images
       const variantImages = variants
         .map(v => v.image)
         .filter((img): img is string => !!img);
       
-      const productImages = product.images ? JSON.parse(product.images) : [];
+      const productImages = product?.images ? JSON.parse(product.images) : [];
       const allImages = [...new Set([...variantImages, ...productImages])];
       
       await fetch(`/api/admin/products/${productId}`, {
@@ -135,7 +141,6 @@ export default function EditVariantsPage() {
         </div>
       </div>
 
-      {/* Available images gallery */}
       {availableImages.length > 0 && (
         <div className="mb-8 bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-semibold mb-4">Tilgjengelige bilder</h2>
@@ -167,7 +172,7 @@ export default function EditVariantsPage() {
             ))}
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            Hover over bildene for å kopiere URL. Klikk på "Kopier" for å lime inn i variant-feltet.
+            Hover over bildene for å kopiere URL. Klikk på &quot;Kopier&quot; for å lime inn i variant-feltet.
           </p>
         </div>
       )}

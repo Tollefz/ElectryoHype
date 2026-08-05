@@ -1,7 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { TemuScraper } from '../lib/scrapers/temu-scraper';
 
 const prisma = new PrismaClient();
+
+type VariantCreateInput = Prisma.ProductVariantCreateManyInput;
 
 async function updateProduct(productName: string) {
   try {
@@ -69,7 +71,7 @@ async function updateProduct(productName: string) {
     }
 
     // Oppdater varianter
-    let variantsToCreate: any[] = [];
+    let variantsToCreate: VariantCreateInput[] = [];
     if (data.variants && data.variants.length > 0) {
       // Slett eksisterende varianter
       await prisma.productVariant.deleteMany({
@@ -92,7 +94,7 @@ async function updateProduct(productName: string) {
     }
 
     // Oppdater produktet
-    const updatedProduct = await prisma.product.update({
+    await prisma.product.update({
       where: { id: product.id },
       data: {
         images: JSON.stringify(updatedImages),

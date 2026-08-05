@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
 export interface RiskResult {
   riskScore: number;
@@ -33,8 +34,10 @@ export async function evaluateOrderRisk(orderId: string): Promise<RiskResult> {
   // Parse shipping country if present
   let country: string | undefined;
   try {
-    const addr = typeof order.shippingAddress === "string" ? JSON.parse(order.shippingAddress) : order.shippingAddress;
-    country = addr?.country || addr?.land || addr?.countryCode;
+    const addr = typeof order.shippingAddress === "string"
+      ? (JSON.parse(order.shippingAddress) as Record<string, unknown>)
+      : (order.shippingAddress as Record<string, unknown> | null);
+    country = (addr?.country || addr?.land || addr?.countryCode) as string | undefined;
   } catch {
     country = undefined;
   }
@@ -44,7 +47,7 @@ export async function evaluateOrderRisk(orderId: string): Promise<RiskResult> {
   }
 
   // Many orders recently for same customer/email (basic abuse heuristic)
-  const or: any[] = [];
+  const or: Prisma.OrderWhereInput[] = [];
   if (order.customerId) or.push({ customerId: order.customerId });
   if (order.customer?.email) or.push({ customer: { email: order.customer.email } });
 

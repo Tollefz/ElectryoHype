@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-07-28T11:08:47.483Z",
+  "savedToDatabase": false,
+  "summary": {
+    "processed": 3,
+    "queued": 0,
+    "approved": 0,
+    "review": 0,
+    "rejected": 3,
+    "errors": 0
+  },
+  "byCategory": {},
+  "queue": [],
+  "rejected": [
+    {
+      "goodsId": "601101636313907",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601101636313907.html",
+      "reason": "Produktscore 6.5/10 er under 7 – avvist."
+    },
+    {
+      "goodsId": "601104193433667",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601104193433667.html",
+      "reason": "Produktscore 6.5/10 er under 7 – avvist."
+    },
+    {
+      "goodsId": "601102619850574",
+      "url": "https://www.temu.com/no/electrohypex-candidate-g-601102619850574.html",
+      "reason": "Produktscore 6.5/10 er under 7 – avvist."
+    }
+  ],
+  "errors": []
+}

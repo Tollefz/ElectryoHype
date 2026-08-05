@@ -10,6 +10,7 @@ import { TemuScraper } from "@/lib/scrapers/temu-scraper";
 import { identifySupplier } from "@/lib/scrapers/supplier-identifier";
 import type { SupplierSource, Scraper, ScrapedProductData } from "@/lib/scrapers/types";
 import { safeQuery } from "../safeQuery";
+import { calculateCompareAtPrice, calculateSuggestedRetailPrice } from "@/lib/import/pricing";
 
 type ProfitMarginInput = number | string;
 
@@ -74,12 +75,28 @@ export async function importProductFromUrl(url: string, profitMargin: ProfitMarg
   // Oppdater slug basert på forbedret tittel
   const improvedSlug = generateSlug(improvedTitle);
 
+  const { categorizeForSave } = await import("@/lib/categories/apply-on-save");
+  const categoryPersist = await categorizeForSave({
+    title: improvedTitle,
+    description: data.description,
+    specs: data.specs
+      ? Object.fromEntries(
+          Object.entries(data.specs as Record<string, unknown>).map(([k, v]) => [
+            k,
+            String(v ?? ""),
+          ])
+        )
+      : {},
+    images: Array.isArray(data.images) ? data.images : [],
+    supplierCategory: null,
+  });
+
   const productData = {
     name: improvedTitle,
     slug: improvedSlug,
     description: data.description,
     price: salePrice,
-    compareAtPrice: Math.max(salePrice * 1.15, salePrice + 5),
+    compareAtPrice: Math.max(calculateCompareAtPrice(salePrice), salePrice + 5),
     images: typeof data.images === "string" ? data.images : JSON.stringify(data.images),
     supplierUrl: url,
     supplierName: supplier.toUpperCase() as SupplierName,
@@ -89,7 +106,14 @@ export async function importProductFromUrl(url: string, profitMargin: ProfitMarg
     lastSynced: new Date(),
     autoImport: true,
     isActive: true,
-    tags: data.specs ? JSON.stringify(Object.keys(data.specs)) : JSON.stringify([]),
+    tags: categoryPersist.tags,
+    category: categoryPersist.category,
+    subcategory: categoryPersist.subcategory,
+    aiCategorySuggested: categoryPersist.aiCategorySuggested,
+    aiCategoryConfidence: categoryPersist.aiCategoryConfidence,
+    aiCategoryReason: categoryPersist.aiCategoryReason,
+    aiCategoryStatus: categoryPersist.aiCategoryStatus,
+    aiCategoryAt: categoryPersist.aiCategoryAt,
   };
 
   const product = existing
@@ -280,6 +304,7 @@ function calculateSalePrice(cost: number, margin: ProfitMarginInput) {
     return cost + numeric;
   }
 
-  return cost * 1.5;
+  // Ugyldig margin-konfigurasjon: fall tilbake til den dynamiske priskurven
+  return calculateSuggestedRetailPrice(cost);
 }
 

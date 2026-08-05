@@ -36,7 +36,7 @@ export interface AIRequestPayload {
 
 export interface AIResponse {
   ok: boolean;
-  result?: any;
+  result?: unknown;
   error?: string;
 }
 

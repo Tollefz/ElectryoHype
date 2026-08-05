@@ -12,7 +12,6 @@ import "server-only";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import type { Browser, Page } from "puppeteer";
-import { randomUUID } from "crypto";
 import { ScraperOptions, ScrapedProductData, ScraperResult } from "./types";
 
 // Dynamic import function for puppeteer to avoid top-level imports
@@ -88,7 +87,7 @@ export abstract class BaseScraper {
       });
       
       // Mock Chrome
-      (window as any).chrome = {
+      (window as Window & { chrome?: { runtime: Record<string, unknown> } }).chrome = {
         runtime: {},
       };
     });

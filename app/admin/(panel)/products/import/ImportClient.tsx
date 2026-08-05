@@ -2,9 +2,13 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Download, Loader2, Check, AlertCircle, Save } from "lucide-react";
 import toast from "react-hot-toast";
 import { isValidTemuUrl, isValidAlibabaUrl } from "@/lib/utils/url-validation";
+import { getAllDbValues } from "@/lib/categories";
+
+const STORE_CATEGORIES = getAllDbValues();
 
 type Supplier = "Alibaba" | "eBay" | "Temu" | null;
 type Provider = "temu" | "alibaba" | null;
@@ -27,7 +31,7 @@ const DEFAULT_FORM = {
   compareAtPrice: 0,
   description: "",
   shortDescription: "",
-  category: "Elektronikk",
+  category: STORE_CATEGORIES[0] || "Hjem & Fritid",
   images: "[]",
   tags: "[]",
   supplierPrice: 0,
@@ -364,10 +368,13 @@ export default function ImportClient() {
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                   {JSON.parse(formData.images || "[]").slice(0, 8).map((img: string, idx: number) => (
                     <div key={idx} className="relative aspect-square overflow-hidden rounded-lg border border-slate-200">
-                      <img
+                      <Image
                         src={img}
                         alt={`Produktbilde ${idx + 1}`}
+                        width={300}
+                        height={300}
                         className="h-full w-full object-cover"
+                        unoptimized
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = "https://placehold.co/300x300?text=Bilde+feilet";
                         }}
@@ -396,10 +403,11 @@ export default function ImportClient() {
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   className="w-full rounded-lg border border-slate-300 p-3"
                 >
-                  <option>Elektronikk</option>
-                  <option>Klær</option>
-                  <option>Hjem</option>
-                  <option>Sport</option>
+                  {STORE_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
                 </select>
               </div>
 

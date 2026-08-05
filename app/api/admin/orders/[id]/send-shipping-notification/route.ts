@@ -40,10 +40,11 @@ export async function POST(
       success: true,
       message: "Forsendelse-notifikasjon sendt til kunde",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending shipping notification:", error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error.message || "Kunne ikke sende forsendelse-notifikasjon" },
+      { error: message || "Kunne ikke sende forsendelse-notifikasjon" },
       { status: 500 }
     );
   }

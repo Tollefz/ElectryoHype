@@ -54,7 +54,7 @@ export interface SupplierProduct {
   images: string[];
   inStock: boolean;
   shippingInfo?: string | null;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
 }
 
 export interface SupplierAdapter {

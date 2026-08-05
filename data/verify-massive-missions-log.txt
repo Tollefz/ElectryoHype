@@ -1,0 +1,875 @@
+
+=== CJ LIVE SEARCH ===
+{"cjConfigured":true}
+{
+  "ms": 2855,
+  "count": 20,
+  "totalPages": 134,
+  "sampleIds": [
+    "1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+    "1436966941628698624",
+    "1428189769438990336"
+  ],
+  "sampleTitles": [
+    "Computer Gaming Mouse",
+    "Wireless Charging Silent Gaming Mouse Machinery",
+    "Ergonomic Mouse Wrist Rest Mouse Pads Silicon Gel Non-Slip S"
+  ]
+}
+
+=== EXISTING SCAN RUNS (DB) ===
+[
+  {
+    "id": "cms6gyz2n002yvf7km60y61zy",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 49,
+    "filtered": 51,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T19:20:18.191Z"
+  },
+  {
+    "id": "cms6gyqzn0001vf7k40z2ag6r",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 49,
+    "filtered": 51,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T19:20:07.715Z"
+  },
+  {
+    "id": "cms6gypo30000vf7kpfg5kh8w",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 49,
+    "filtered": 51,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T19:20:06.004Z"
+  },
+  {
+    "id": "cms6dls6h002vvf2gmohqpa7e",
+    "status": "running",
+    "target": 10000,
+    "scanned": 0,
+    "kept": 0,
+    "filtered": 0,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T17:46:03.777Z"
+  },
+  {
+    "id": "cms6bca2r00hmvf0cwe1f1qf6",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 49,
+    "filtered": 51,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T16:42:41.178Z"
+  },
+  {
+    "id": "cms6bbkua00bovf0cr2w9hvwc",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 4,
+    "filtered": 96,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T16:42:08.474Z"
+  },
+  {
+    "id": "cms6b9wd0005uvf0cosuz913b",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 0,
+    "filtered": 100,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T16:40:50.085Z"
+  },
+  {
+    "id": "cms6b94ku0000vf0cctsz7y3n",
+    "status": "completed",
+    "target": 100,
+    "scanned": 100,
+    "kept": 0,
+    "filtered": 100,
+    "missionSize": null,
+    "hasResult": false,
+    "result": null,
+    "createdAt": "2026-07-29T16:40:14.190Z"
+  }
+]
+
+=== SUPPLIER JOBS ===
+[
+  {
+    "_count": 11,
+    "type": "import_item",
+    "status": "succeeded"
+  },
+  {
+    "_count": 1,
+    "type": "import_item",
+    "status": "failed"
+  },
+  {
+    "_count": 5,
+    "type": "buyer_scan_batch",
+    "status": "succeeded"
+  },
+  {
+    "_count": 10,
+    "type": "buyer_scan_batch",
+    "status": "pending"
+  }
+]
+
+=== IMPORT / PRODUCTS ===
+{
+  "importByStatus": [
+    {
+      "_count": 8,
+      "status": "approved"
+    },
+    {
+      "_count": 1,
+      "status": "failed"
+    }
+  ],
+  "cjProducts": 9,
+  "ranked": 49
+}
+
+=== TEST 1 QUICK START ===
+{
+  "label": "quick_after_start",
+  "id": "cms6krztf0001vfqkcohfemye",
+  "status": "running",
+  "target": 500,
+  "scanned": 0,
+  "kept": 0,
+  "filtered": 0,
+  "checkpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "stage": "scanning",
+  "stageLabel": "Scanner produkterÔÇª",
+  "missionSize": "quick",
+  "result": null,
+  "error": null,
+  "startedAt": "2026-07-29T21:06:51.026Z",
+  "finishedAt": null
+}
+{"batch":1,"drained":{"workerId":"worker-f850d585","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":1,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1828,"mem":{"rssMb":108,"heapUsedMb":19}}
+{"batch":2,"drained":{"workerId":"worker-0d889fae","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":2,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1163,"mem":{"rssMb":109,"heapUsedMb":19}}
+{"batch":3,"drained":{"workerId":"worker-957e2ebb","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":3,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1166,"mem":{"rssMb":109,"heapUsedMb":19}}
+{"batch":4,"drained":{"workerId":"worker-b97f14b9","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":4,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":10392,"mem":{"rssMb":111,"heapUsedMb":20}}
+{"batch":5,"drained":{"workerId":"worker-e42824eb","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":5,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1168,"mem":{"rssMb":111,"heapUsedMb":20}}
+{"batch":6,"drained":{"workerId":"worker-c1ed2755","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":6,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1150,"mem":{"rssMb":111,"heapUsedMb":20}}
+{"batch":7,"drained":{"workerId":"worker-4954bce3","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":7,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1158,"mem":{"rssMb":111,"heapUsedMb":21}}
+{"batch":8,"drained":{"workerId":"worker-b5b7ffd1","claimed":1,"succeeded":1,"failed":0,"dead":0},"n":8,"stage":"scanning","scanned":0,"kept":0,"filtered":0,"ms":1160,"mem":{"rssMb":111,"heapUsedMb":20}}
+{
+  "label": "quick_after_batches",
+  "id": "cms6krztf0001vfqkcohfemye",
+  "status": "running",
+  "target": 500,
+  "scanned": 0,
+  "kept": 0,
+  "filtered": 0,
+  "checkpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "stage": "scanning",
+  "stageLabel": "Scanner produkterÔÇª",
+  "missionSize": "quick",
+  "result": null,
+  "error": null,
+  "startedAt": "2026-07-29T21:06:51.026Z",
+  "finishedAt": null
+}
+
+=== TEST 2 STANDARD TARGET ===
+{
+  "label": "standard_after_2_batches",
+  "id": "cms6kshcx002xvfqkykjoz7g0",
+  "status": "running",
+  "target": 10000,
+  "scanned": 0,
+  "kept": 0,
+  "filtered": 0,
+  "checkpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "stage": "scanning",
+  "stageLabel": "Scanner produkterÔÇª",
+  "missionSize": "standard",
+  "result": null,
+  "error": null,
+  "startedAt": "2026-07-29T21:07:13.759Z",
+  "finishedAt": null
+}
+
+=== TEST 3 DEEP TARGET ===
+{"scanId":"cms6kslb20030vfqkhfc0rfhs","targetIs100000":true,"target":100000,"status":"running"}
+
+=== TEST 4 NIGHT ===
+{
+  "label": "night_after_1_batch",
+  "id": "cms6ksmgd0033vfqkprxqlkwl",
+  "status": "running",
+  "target": 1000000,
+  "scanned": 0,
+  "kept": 0,
+  "filtered": 0,
+  "checkpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "stage": "scanning",
+  "stageLabel": "Scanner produkterÔÇª",
+  "missionSize": "night",
+  "result": null,
+  "error": null,
+  "startedAt": "2026-07-29T21:07:20.363Z",
+  "finishedAt": null
+}
+
+=== TEST 5 HISTORY ===
+[
+  {
+    "id": "cms6ksmgd0033vfqkprxqlkwl",
+    "date": "2026-07-29T21:07:20.363Z",
+    "category": "Bygg Gaming",
+    "missionSize": "night",
+    "status": "running",
+    "durationSec": 12,
+    "analyzed": 0,
+    "discarded": 0,
+    "candidates": 0,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6kslb20030vfqkhfc0rfhs",
+    "date": "2026-07-29T21:07:18.877Z",
+    "category": "Bygg Mobil",
+    "missionSize": "deep",
+    "status": "running",
+    "durationSec": 14,
+    "analyzed": 0,
+    "discarded": 0,
+    "candidates": 0,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6kshcx002xvfqkykjoz7g0",
+    "date": "2026-07-29T21:07:13.759Z",
+    "category": "Bygg Gaming",
+    "missionSize": "standard",
+    "status": "running",
+    "durationSec": 19,
+    "analyzed": 0,
+    "discarded": 0,
+    "candidates": 0,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6krztf0001vfqkcohfemye",
+    "date": "2026-07-29T21:06:51.026Z",
+    "category": "Bygg Gaming",
+    "missionSize": "quick",
+    "status": "running",
+    "durationSec": 41,
+    "analyzed": 40,
+    "discarded": 22,
+    "candidates": 18,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6gyz2n002yvf7km60y61zy",
+    "date": "2026-07-29T19:20:43.397Z",
+    "category": "Full katalog",
+    "missionSize": "quick",
+    "status": "completed",
+    "durationSec": 25,
+    "analyzed": 100,
+    "discarded": 51,
+    "candidates": 49,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6gyqzn0001vf7k40z2ag6r",
+    "date": "2026-07-29T19:20:40.051Z",
+    "category": "Full katalog",
+    "missionSize": "quick",
+    "status": "completed",
+    "durationSec": 32,
+    "analyzed": 100,
+    "discarded": 51,
+    "candidates": 49,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6gypo30000vf7kpfg5kh8w",
+    "date": "2026-07-29T19:20:43.355Z",
+    "category": "Full katalog",
+    "missionSize": "quick",
+    "status": "completed",
+    "durationSec": 37,
+    "analyzed": 100,
+    "discarded": 51,
+    "candidates": 49,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  },
+  {
+    "id": "cms6dls6h002vvf2gmohqpa7e",
+    "date": "2026-07-29T17:46:03.776Z",
+    "category": "Full katalog",
+    "missionSize": "standard",
+    "status": "running",
+    "durationSec": 12089,
+    "analyzed": 40,
+    "discarded": 22,
+    "candidates": 18,
+    "imported": 0,
+    "published": 0,
+    "approved": 0,
+    "rejected": 0
+  }
+]
+
+=== TEST 8 RECOVERY (continue standard checkpoint) ===
+{
+  "scanId": "cms6kshcx002xvfqkykjoz7g0",
+  "beforeCheckpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "afterCheckpoint": {
+    "page": 1,
+    "seedIdx": 0,
+    "seenKeys": [],
+    "supplierIdx": 0
+  },
+  "scannedBefore": 0,
+  "scannedAfter": 0,
+  "advanced": false
+}
+
+=== DUPLICATES ===
+[]
+
+=== REPORT SUMMARY JSON ===
+{
+  "at": "2026-07-29T21:06:46.997Z",
+  "hourLocal": 23,
+  "targets": {
+    "quick": 500,
+    "standard": 10000,
+    "deep": 100000,
+    "night": 1000000
+  },
+  "memStart": {
+    "rssMb": 103,
+    "heapUsedMb": 21
+  },
+  "cjConfigured": true,
+  "cjSearch": {
+    "ms": 2855,
+    "count": 20,
+    "totalPages": 134,
+    "sampleIds": [
+      "1FFD9CDB-FBAA-4C21-8AB6-27DE62DD2ECF",
+      "1436966941628698624",
+      "1428189769438990336"
+    ],
+    "sampleTitles": [
+      "Computer Gaming Mouse",
+      "Wireless Charging Silent Gaming Mouse Machinery",
+      "Ergonomic Mouse Wrist Rest Mouse Pads Silicon Gel Non-Slip S"
+    ]
+  },
+  "existingRuns": [
+    {
+      "id": "cms6gyz2n002yvf7km60y61zy",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 49,
+      "filtered": 51,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T19:20:18.191Z"
+    },
+    {
+      "id": "cms6gyqzn0001vf7k40z2ag6r",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 49,
+      "filtered": 51,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T19:20:07.715Z"
+    },
+    {
+      "id": "cms6gypo30000vf7kpfg5kh8w",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 49,
+      "filtered": 51,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T19:20:06.004Z"
+    },
+    {
+      "id": "cms6dls6h002vvf2gmohqpa7e",
+      "status": "running",
+      "target": 10000,
+      "scanned": 0,
+      "kept": 0,
+      "filtered": 0,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T17:46:03.777Z"
+    },
+    {
+      "id": "cms6bca2r00hmvf0cwe1f1qf6",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 49,
+      "filtered": 51,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T16:42:41.178Z"
+    },
+    {
+      "id": "cms6bbkua00bovf0cr2w9hvwc",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 4,
+      "filtered": 96,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T16:42:08.474Z"
+    },
+    {
+      "id": "cms6b9wd0005uvf0cosuz913b",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 0,
+      "filtered": 100,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T16:40:50.085Z"
+    },
+    {
+      "id": "cms6b94ku0000vf0cctsz7y3n",
+      "status": "completed",
+      "target": 100,
+      "scanned": 100,
+      "kept": 0,
+      "filtered": 100,
+      "missionSize": null,
+      "hasResult": false,
+      "result": null,
+      "createdAt": "2026-07-29T16:40:14.190Z"
+    }
+  ],
+  "supplierJobs": [
+    {
+      "_count": 11,
+      "type": "import_item",
+      "status": "succeeded"
+    },
+    {
+      "_count": 1,
+      "type": "import_item",
+      "status": "failed"
+    },
+    {
+      "_count": 5,
+      "type": "buyer_scan_batch",
+      "status": "succeeded"
+    },
+    {
+      "_count": 10,
+      "type": "buyer_scan_batch",
+      "status": "pending"
+    }
+  ],
+  "importQueue": [
+    {
+      "_count": 8,
+      "status": "approved"
+    },
+    {
+      "_count": 1,
+      "status": "failed"
+    }
+  ],
+  "cjProducts": 9,
+  "rankedCandidates": 49,
+  "quick": {
+    "scanId": "cms6krztf0001vfqkcohfemye",
+    "batches": 8,
+    "stages": [
+      {
+        "n": 1,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1828,
+        "mem": {
+          "rssMb": 108,
+          "heapUsedMb": 19
+        }
+      },
+      {
+        "n": 2,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1163,
+        "mem": {
+          "rssMb": 109,
+          "heapUsedMb": 19
+        }
+      },
+      {
+        "n": 3,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1166,
+        "mem": {
+          "rssMb": 109,
+          "heapUsedMb": 19
+        }
+      },
+      {
+        "n": 4,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 10392,
+        "mem": {
+          "rssMb": 111,
+          "heapUsedMb": 20
+        }
+      },
+      {
+        "n": 5,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1168,
+        "mem": {
+          "rssMb": 111,
+          "heapUsedMb": 20
+        }
+      },
+      {
+        "n": 6,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1150,
+        "mem": {
+          "rssMb": 111,
+          "heapUsedMb": 20
+        }
+      },
+      {
+        "n": 7,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1158,
+        "mem": {
+          "rssMb": 111,
+          "heapUsedMb": 21
+        }
+      },
+      {
+        "n": 8,
+        "stage": "scanning",
+        "scanned": 0,
+        "kept": 0,
+        "filtered": 0,
+        "ms": 1160,
+        "mem": {
+          "rssMb": 111,
+          "heapUsedMb": 20
+        }
+      }
+    ],
+    "elapsedMs": 22734,
+    "final": {
+      "status": "running",
+      "scanned": 0,
+      "kept": 0,
+      "filtered": 0,
+      "target": 500,
+      "checkpoint": {
+        "page": 1,
+        "seedIdx": 0,
+        "seenKeys": [],
+        "supplierIdx": 0
+      }
+    }
+  },
+  "standard": {
+    "scanId": "cms6kshcx002xvfqkykjoz7g0",
+    "targetIs10000": true,
+    "target": 10000,
+    "after": {
+      "status": "running",
+      "scanned": 0,
+      "kept": 0,
+      "filtered": 0,
+      "checkpoint": {
+        "page": 1,
+        "seedIdx": 0,
+        "seenKeys": [],
+        "supplierIdx": 0
+      }
+    }
+  },
+  "deep": {
+    "scanId": "cms6kslb20030vfqkhfc0rfhs",
+    "targetIs100000": true,
+    "target": 100000,
+    "status": "running"
+  },
+  "night": {
+    "scanId": "cms6ksmgd0033vfqkprxqlkwl",
+    "target": 1000000,
+    "hourLocal": 23,
+    "expectPausedIfDaytime": false,
+    "after": {
+      "status": "running",
+      "scanned": 0,
+      "checkpoint": {
+        "page": 1,
+        "seedIdx": 0,
+        "seenKeys": [],
+        "supplierIdx": 0
+      },
+      "stage": "scanning"
+    }
+  },
+  "history": [
+    {
+      "id": "cms6ksmgd0033vfqkprxqlkwl",
+      "date": "2026-07-29T21:07:20.363Z",
+      "category": "Bygg Gaming",
+      "missionSize": "night",
+      "status": "running",
+      "durationSec": 12,
+      "analyzed": 0,
+      "discarded": 0,
+      "candidates": 0,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6kslb20030vfqkhfc0rfhs",
+      "date": "2026-07-29T21:07:18.877Z",
+      "category": "Bygg Mobil",
+      "missionSize": "deep",
+      "status": "running",
+      "durationSec": 14,
+      "analyzed": 0,
+      "discarded": 0,
+      "candidates": 0,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6kshcx002xvfqkykjoz7g0",
+      "date": "2026-07-29T21:07:13.759Z",
+      "category": "Bygg Gaming",
+      "missionSize": "standard",
+      "status": "running",
+      "durationSec": 19,
+      "analyzed": 0,
+      "discarded": 0,
+      "candidates": 0,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6krztf0001vfqkcohfemye",
+      "date": "2026-07-29T21:06:51.026Z",
+      "category": "Bygg Gaming",
+      "missionSize": "quick",
+      "status": "running",
+      "durationSec": 41,
+      "analyzed": 40,
+      "discarded": 22,
+      "candidates": 18,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6gyz2n002yvf7km60y61zy",
+      "date": "2026-07-29T19:20:43.397Z",
+      "category": "Full katalog",
+      "missionSize": "quick",
+      "status": "completed",
+      "durationSec": 25,
+      "analyzed": 100,
+      "discarded": 51,
+      "candidates": 49,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6gyqzn0001vf7k40z2ag6r",
+      "date": "2026-07-29T19:20:40.051Z",
+      "category": "Full katalog",
+      "missionSize": "quick",
+      "status": "completed",
+      "durationSec": 32,
+      "analyzed": 100,
+      "discarded": 51,
+      "candidates": 49,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6gypo30000vf7kpfg5kh8w",
+      "date": "2026-07-29T19:20:43.355Z",
+      "category": "Full katalog",
+      "missionSize": "quick",
+      "status": "completed",
+      "durationSec": 37,
+      "analyzed": 100,
+      "discarded": 51,
+      "candidates": 49,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    },
+    {
+      "id": "cms6dls6h002vvf2gmohqpa7e",
+      "date": "2026-07-29T17:46:03.776Z",
+      "category": "Full katalog",
+      "missionSize": "standard",
+      "status": "running",
+      "durationSec": 12089,
+      "analyzed": 40,
+      "discarded": 22,
+      "candidates": 18,
+      "imported": 0,
+      "published": 0,
+      "approved": 0,
+      "rejected": 0
+    }
+  ],
+  "recovery": {
+    "scanId": "cms6kshcx002xvfqkykjoz7g0",
+    "beforeCheckpoint": {
+      "page": 1,
+      "seedIdx": 0,
+      "seenKeys": [],
+      "supplierIdx": 0
+    },
+    "afterCheckpoint": {
+      "page": 1,
+      "seedIdx": 0,
+      "seenKeys": [],
+      "supplierIdx": 0
+    },
+    "scannedBefore": 0,
+    "scannedAfter": 0,
+    "advanced": false
+  },
+  "duplicateFingerprints": [],
+  "memEnd": {
+    "rssMb": 112,
+    "heapUsedMb": 22
+  }
+}

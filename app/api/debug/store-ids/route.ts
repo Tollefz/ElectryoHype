@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logError, logInfo } from "@/lib/utils/logger";
+import { requireDebugAccess } from "@/lib/api-auth";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireDebugAccess(req);
+  if (denied) return denied;
+
   try {
     // Get all products grouped by storeId
     let byStoreId: Array<{ storeId: string | null; _count: { _all: number } }> = [];
@@ -80,12 +84,13 @@ export async function GET() {
         )
       )?.storeId || storeDetails[0]?.storeId || "electrohype",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logError(error, "[/api/debug/store-ids] error");
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       {
         ok: false,
-        error: error?.message ?? "Unknown error",
+        error: message || "Unknown error",
       },
       { status: 500 }
     );

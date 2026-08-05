@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { shouldUnoptimizeRemoteImage } from "@/lib/utils/supplier-image";
 
 interface ImageGalleryProps {
   images: string[];
@@ -9,7 +10,9 @@ interface ImageGalleryProps {
 
 export function ImageGallery({ images }: ImageGalleryProps) {
   const [active, setActive] = useState(0);
-  const display = images.length ? images : ["https://placehold.co/600x600?text=Ingen+bilde"];
+  const display = images.length
+    ? images
+    : ["https://placehold.co/600x600?text=Ingen+bilde"];
 
   return (
     <div className="space-y-4">
@@ -21,6 +24,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           sizes="(max-width: 768px) 100vw, 600px"
           className="object-cover transition duration-500 hover:scale-105"
           priority
+          unoptimized={shouldUnoptimizeRemoteImage(display[active])}
         />
       </div>
       <div className="flex gap-3">
@@ -32,11 +36,17 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               active === index ? "border-primary" : "border-transparent"
             }`}
           >
-            <Image src={image} alt="mini" fill className="object-cover" sizes="80px" />
+            <Image
+              src={image}
+              alt="mini"
+              fill
+              className="object-cover"
+              sizes="80px"
+              unoptimized={shouldUnoptimizeRemoteImage(image)}
+            />
           </button>
         ))}
       </div>
     </div>
   );
 }
-

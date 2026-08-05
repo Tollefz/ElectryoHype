@@ -2,13 +2,13 @@
  * Global minimal logger for consistent error logging across the application.
  * Use this instead of console.error directly for better error tracking.
  */
-export function logError(err: any, ctx: string) {
-  const message = err?.message || String(err);
-  const stack = err?.stack;
-  
-  console.error("🔥 ERROR:", ctx, message);
-  if (stack && process.env.NODE_ENV === "development") {
-    console.error("Stack:", stack);
+export function logError(err: unknown, ctx: string) {
+  const error = err as { message?: string; stack?: string };
+  const message = error?.message || String(err);
+  // String-only — Error objects in console.error open Next Dev Issues
+  console.warn(`🔥 ERROR: ${ctx} ${message}`);
+  if (error?.stack && process.env.NEXT_PUBLIC_DEBUG === "true") {
+    console.warn(`Stack: ${error.stack.slice(0, 2000)}`);
   }
 }
 

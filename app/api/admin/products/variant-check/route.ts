@@ -141,10 +141,11 @@ export async function GET() {
     });
 
     return NextResponse.json({ products: formattedProducts });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error loading products:', error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error.message || 'Error loading products' },
+      { error: message || 'Error loading products' },
       { status: 500 }
     );
   }

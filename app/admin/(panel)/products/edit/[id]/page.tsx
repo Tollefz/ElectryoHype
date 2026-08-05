@@ -15,6 +15,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { getAllDbValues } from "@/lib/categories";
+
+const STORE_CATEGORIES = getAllDbValues();
 
 interface ProductVariant {
   id?: string;
@@ -28,6 +31,21 @@ interface ProductVariant {
   isActive: boolean;
 }
 
+/**
+ * Safe numeric parsing: empty, missing or non-numeric values become 0.
+ * Guarantees a finite number so NaN never reaches React inputs or math.
+ */
+const toNumber = (value: unknown): number => {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+  if (value === null || value === undefined || value === "") {
+    return 0;
+  }
+  const parsed = parseFloat(String(value));
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
 const DEFAULT_FORM = {
   name: "",
   price: 0,
@@ -37,7 +55,7 @@ const DEFAULT_FORM = {
   supplierName: "",
   description: "",
   shortDescription: "",
-  category: "Elektronikk",
+  category: STORE_CATEGORIES[0] || "Hjem & Fritid",
   images: "[]",
   tags: "[]",
   isActive: true,
@@ -100,7 +118,9 @@ export default function EditProduct() {
           throw new Error("Produkt ikke funnet");
         }
 
-        const product = await response.json();
+        const payload = await response.json();
+        // API returns { ok, data }; unwrap the envelope
+        const product = payload?.data ?? payload;
 
         const productImages =
           typeof product.images === "string" ? product.images : JSON.stringify(product.images ?? []);
@@ -108,9 +128,9 @@ export default function EditProduct() {
 
         setFormData({
           name: product.name ?? "",
-          price: Number(product.price) ?? 0,
-          compareAtPrice: Number(product.compareAtPrice) ?? 0,
-          supplierPrice: Number(product.supplierPrice) ?? 0,
+          price: toNumber(product.price),
+          compareAtPrice: toNumber(product.compareAtPrice),
+          supplierPrice: toNumber(product.supplierPrice),
           supplierUrl: product.supplierUrl ?? "",
           supplierName: product.supplierName ?? "",
           description: product.description ?? "",
@@ -126,7 +146,18 @@ export default function EditProduct() {
         const variantsResponse = await fetch(`/api/admin/products/${productId}/variants`);
         if (variantsResponse.ok) {
           const variantsData = await variantsResponse.json();
-          setVariants(variantsData.variants || []);
+          const safeVariants: ProductVariant[] = (variantsData.variants || []).map(
+            (variant: ProductVariant) => ({
+              ...variant,
+              price: toNumber(variant.price),
+              compareAtPrice:
+                variant.compareAtPrice != null ? toNumber(variant.compareAtPrice) : undefined,
+              supplierPrice:
+                variant.supplierPrice != null ? toNumber(variant.supplierPrice) : undefined,
+              stock: toNumber(variant.stock),
+            })
+          );
+          setVariants(safeVariants);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Feil ved lasting av produkt");
@@ -195,9 +226,13 @@ export default function EditProduct() {
 
   const handleUseScrapedPrice = () => {
     if (scrapeResult?.price) {
-      setFormData({ ...formData, price: scrapeResult.price });
+      setFormData({ ...formData, price: toNumber(scrapeResult.price) });
       if (scrapeResult.supplierPrice) {
-        setFormData({ ...formData, price: scrapeResult.price, supplierPrice: scrapeResult.supplierPrice });
+        setFormData({
+          ...formData,
+          price: toNumber(scrapeResult.price),
+          supplierPrice: toNumber(scrapeResult.supplierPrice),
+        });
       }
     }
   };
@@ -325,7 +360,7 @@ export default function EditProduct() {
     if (scrapeResult?.variants && scrapeResult.variants.length > 0) {
       const newVariants: ProductVariant[] = scrapeResult.variants.map((v) => ({
         name: v.name,
-        price: v.price,
+        price: toNumber(v.price),
         compareAtPrice: formData.compareAtPrice,
         supplierPrice: formData.supplierPrice,
         image: v.image || images[0] || "",
@@ -337,8 +372,10 @@ export default function EditProduct() {
     }
   };
 
-  const profit = formData.price - formData.supplierPrice;
-  const profitPercentage = formData.supplierPrice > 0 ? (profit / formData.supplierPrice) * 100 : 0;
+  const sellingPrice = toNumber(formData.price);
+  const supplierPrice = toNumber(formData.supplierPrice);
+  const profit = sellingPrice - supplierPrice;
+  const profitPercentage = supplierPrice > 0 ? (profit / supplierPrice) * 100 : 0;
 
   if (loading) {
     return (
@@ -350,14 +387,50 @@ export default function EditProduct() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Rediger Produkt</h1>
-        <Link
-          href="/admin/products"
-          className="rounded-lg border border-slate-300 px-4 py-2 hover:bg-slate-50"
-        >
-          Avbryt
-        </Link>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <nav className="text-sm text-gray-500">
+            <Link href="/admin/products" className="hover:text-green-700">
+              Produkter
+            </Link>
+            {" / "}
+            <span className="text-gray-800">Rediger</span>
+          </nav>
+          <h1 className="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">Rediger produkt</h1>
+          {formData.name ? (
+            <p className="mt-1 text-sm text-gray-600 line-clamp-1">{formData.name}</p>
+          ) : null}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {(formData.supplierName || formData.supplierUrl) && (
+            <Link
+              href={`/admin/products/${productId}/supplier-raw`}
+              className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-900 hover:bg-indigo-100"
+            >
+              Leverandørdata
+            </Link>
+          )}
+          <Link
+            href={`/admin/products/${productId}/edit-variants`}
+            className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-100"
+          >
+            Variant-bilder
+          </Link>
+          {formData.supplierName ? (
+            <Link
+              href="/admin/suppliers/sync"
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Synkronisering
+            </Link>
+          ) : null}
+          <Link
+            href="/admin/products"
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50"
+          >
+            Tilbake
+          </Link>
+        </div>
       </div>
 
       {error && (
@@ -387,10 +460,11 @@ export default function EditProduct() {
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="w-full rounded-lg border border-slate-300 p-3"
             >
-              <option>Elektronikk</option>
-              <option>Klær</option>
-              <option>Hjem</option>
-              <option>Sport</option>
+              {STORE_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -399,7 +473,7 @@ export default function EditProduct() {
             <input
               type="number"
               value={formData.supplierPrice}
-              onChange={(e) => setFormData({ ...formData, supplierPrice: parseFloat(e.target.value) || 0 })}
+              onChange={(e) => setFormData({ ...formData, supplierPrice: toNumber(e.target.value) })}
               className="w-full rounded-lg border border-slate-300 p-3"
             />
           </div>
@@ -409,7 +483,7 @@ export default function EditProduct() {
             <input
               type="number"
               value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+              onChange={(e) => setFormData({ ...formData, price: toNumber(e.target.value) })}
               className="w-full rounded-lg border border-slate-300 p-3"
               required
             />
@@ -420,7 +494,7 @@ export default function EditProduct() {
             <input
               type="number"
               value={formData.compareAtPrice}
-              onChange={(e) => setFormData({ ...formData, compareAtPrice: parseFloat(e.target.value) || 0 })}
+              onChange={(e) => setFormData({ ...formData, compareAtPrice: toNumber(e.target.value) })}
               className="w-full rounded-lg border border-slate-300 p-3"
             />
           </div>
@@ -883,7 +957,7 @@ export default function EditProduct() {
                   <input
                     type="number"
                     value={variantForm.price}
-                    onChange={(e) => setVariantForm({ ...variantForm, price: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) => setVariantForm({ ...variantForm, price: toNumber(e.target.value) })}
                     className="w-full rounded-lg border border-slate-300 p-2"
                   />
                 </div>
@@ -892,7 +966,12 @@ export default function EditProduct() {
                   <input
                     type="number"
                     value={variantForm.compareAtPrice || ""}
-                    onChange={(e) => setVariantForm({ ...variantForm, compareAtPrice: parseFloat(e.target.value) || undefined })}
+                    onChange={(e) =>
+                      setVariantForm({
+                        ...variantForm,
+                        compareAtPrice: e.target.value === "" ? undefined : toNumber(e.target.value),
+                      })
+                    }
                     className="w-full rounded-lg border border-slate-300 p-2"
                   />
                 </div>
@@ -901,7 +980,7 @@ export default function EditProduct() {
                   <input
                     type="number"
                     value={variantForm.stock}
-                    onChange={(e) => setVariantForm({ ...variantForm, stock: parseInt(e.target.value) || 0 })}
+                    onChange={(e) => setVariantForm({ ...variantForm, stock: Math.trunc(toNumber(e.target.value)) })}
                     className="w-full rounded-lg border border-slate-300 p-2"
                   />
                 </div>
@@ -1003,7 +1082,7 @@ export default function EditProduct() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">Ingen varianter lagt til ennå. Klikk på "Legg til variant" for å legge til.</p>
+            <p className="text-sm text-gray-500">Ingen varianter lagt til ennå. Klikk på &quot;Legg til variant&quot; for å legge til.</p>
           )}
         </div>
 

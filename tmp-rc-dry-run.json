@@ -1,0 +1,257 @@
+{
+  "at": "2026-08-03T16:46:10.753Z",
+  "sampled": 1047,
+  "total": 1047,
+  "boardReady": 1047,
+  "wouldPublish": 923,
+  "wouldStop": 124,
+  "rateWouldPublish": 88.2,
+  "buckets": {
+    "would_publish": 923,
+    "Frakt større enn produktpris": 65,
+    "Innkjøpspris endret +3% hos leverandør": 3,
+    "Innkjøpspris endret +7% hos leverandør": 3,
+    "Innkjøpspris endret +6% hos leverandør": 1,
+    "Innkjøpspris endret +5% hos leverandør": 2,
+    "Innkjøpspris endret +2% hos leverandør": 1,
+    "Innkjøpspris endret -3% hos leverandør": 3,
+    "Ny margin: 19.9% (minimum 25%)": 1,
+    "Innkjøpspris endret +19% hos leverandør": 1,
+    "Innkjøpspris endret -2% hos leverandør": 2,
+    "Innkjøpspris endret -1% hos leverandør": 1,
+    "Innkjøpspris endret +1% hos leverandør": 7,
+    "Innkjøpspris endret +4% hos leverandør": 1,
+    "Ny margin: 22.1% (minimum 25%)": 3,
+    "Ny margin: 21.6% (minimum 25%)": 1,
+    "Innkjøpspris endret -21% hos leverandør": 1,
+    "Innkjøpspris endret +20% hos leverandør": 1,
+    "Ny margin: 23.9% (minimum 25%)": 1,
+    "Innkjøpspris endret +25% hos leverandør": 2,
+    "Innkjøpspris endret +11% hos leverandør": 1,
+    "Ny margin: 18.7% (minimum 25%)": 1,
+    "Ny margin: 24.4% (minimum 25%)": 1,
+    "Innkjøpspris endret -80% hos leverandør": 1,
+    "Variantpris usikker — dyreste variant ikke priset": 1,
+    "Ny margin: 21.7% (minimum 25%)": 1,
+    "Ny margin: 19.3% (minimum 25%)": 1,
+    "Ny margin: 18.2% (minimum 25%)": 1,
+    "Ny margin: 22.7% (minimum 25%)": 1,
+    "Ny margin: 21.4% (minimum 25%)": 2,
+    "Innkjøpspris endret +27% hos leverandør": 1,
+    "Ny margin: 20.3% (minimum 25%)": 1,
+    "Innkjøpspris endret -18% hos leverandør": 1,
+    "Ny margin: 21.5% (minimum 25%)": 1,
+    "Ny margin: 10.4% (minimum 25%)": 2,
+    "Ny margin: 19.2% (minimum 25%)": 1,
+    "Ny margin: 0.2% (minimum 25%)": 1,
+    "Ny margin: 21.3% (minimum 25%)": 1,
+    "Ny margin: 16.8% (minimum 25%)": 1,
+    "Ny margin: 22.5% (minimum 25%)": 1,
+    "Innkjøpspris endret +63% hos leverandør": 1,
+    "Innkjøpspris endret +9% hos leverandør": 1
+  },
+  "stoppedSample": [
+    {
+      "id": "cms6b9e9p002lvf0cq3efoccz",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6b9i69004gvf0czppifc9m",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6kvu5t008ivfysn89tljsz",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mmlzv00cfvff4662i1bez",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mmxhl00gpvff460lzrvee",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mn5bn00jivff4imzyby5c",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mnfdb00n5vff4b8c04hyq",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mnh5o00nbvff4vhrp0xb8",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mnt5300rbvff4i302d0oc",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6kvucb008lvfysttx2pqml",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mnrer00qfvff4k7nxy3oi",
+      "reason": "Innkjøpspris endret +3% hos leverandør"
+    },
+    {
+      "id": "cms6mns1r00qqvff4b0vepkgd",
+      "reason": "Innkjøpspris endret +3% hos leverandør"
+    },
+    {
+      "id": "cms6mo0kw00tnvff41hz7wyfc",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mo3wz00uuvff4zt22n79x",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mo4d100v2vff40b5po0hf",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6moae300x4vff4k3vqkk5f",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mof5300yxvff4rzyc75de",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6moiyk00zkvff4o6dyva11",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6monsc011bvff4lzqs3z01",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mp01m0151vff4cfcckcxx",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mp4zg016wvff4anllxqk5",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mp66g017ivff4e4gok9wi",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mo9r400wtvff4uqeiplfp",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6nj6rs03idvfh4t7c2m5ng",
+      "reason": "Innkjøpspris endret +7% hos leverandør"
+    },
+    {
+      "id": "cms6n8kpa0036vfh4570jt38n",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cmsbvy3s602tivf6syl77vkju",
+      "reason": "Innkjøpspris endret +6% hos leverandør"
+    },
+    {
+      "id": "cms6mnn8r00p5vff42twf3vy4",
+      "reason": "Innkjøpspris endret +5% hos leverandør"
+    },
+    {
+      "id": "cms6nht3h031svfh4s6gje6lc",
+      "reason": "Innkjøpspris endret +2% hos leverandør"
+    },
+    {
+      "id": "cms6ni3d40358vfh4733mmz2m",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6nigo603a5vfh4xlas6ivw",
+      "reason": "Innkjøpspris endret -3% hos leverandør"
+    },
+    {
+      "id": "cms6niom703czvfh4gsnxgpud",
+      "reason": "Innkjøpspris endret +7% hos leverandør"
+    },
+    {
+      "id": "cmsbnoseg007evf2k2ivfzg5l",
+      "reason": "Ny margin: 19.9% (minimum 25%)"
+    },
+    {
+      "id": "cms6mpk0k01bwvff42tddyxnb",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mr87101wfvff4f1tf0abq",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6mzhf304m4vff4scs8nf28",
+      "reason": "Innkjøpspris endret +19% hos leverandør"
+    },
+    {
+      "id": "cms6nhfr102xsvfh48k04prql",
+      "reason": "Innkjøpspris endret -3% hos leverandør"
+    },
+    {
+      "id": "cms6nhm1k02znvfh4c6quo0tl",
+      "reason": "Innkjøpspris endret -2% hos leverandør"
+    },
+    {
+      "id": "cmsaeoo8501q3vfg0ybc8xi54",
+      "reason": "Innkjøpspris endret -1% hos leverandør"
+    },
+    {
+      "id": "cms6nivvi03envfh412nc2nbz",
+      "reason": "Innkjøpspris endret +1% hos leverandør"
+    },
+    {
+      "id": "cms6ni0b5034avfh4gvx1iwyp",
+      "reason": "Innkjøpspris endret +4% hos leverandør"
+    },
+    {
+      "id": "cms6nig66039wvfh4hg5ucb0g",
+      "reason": "Innkjøpspris endret -3% hos leverandør"
+    },
+    {
+      "id": "cms6nilfu03bmvfh4efx3iy4t",
+      "reason": "Innkjøpspris endret +1% hos leverandør"
+    },
+    {
+      "id": "cms6nizmt03gcvfh4etxsm1x0",
+      "reason": "Innkjøpspris endret +1% hos leverandør"
+    },
+    {
+      "id": "cms6nj69q03i4vfh4n4chtf1k",
+      "reason": "Innkjøpspris endret +7% hos leverandør"
+    },
+    {
+      "id": "cmsbvye9d02wjvf6s6elgnebm",
+      "reason": "Ny margin: 22.1% (minimum 25%)"
+    },
+    {
+      "id": "cms6mpces01x4vf7kd0x2ksfa",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6ngy0602rkvfh40yxf2a9l",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6nk6l80aaxvf7kusk6awf6",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6nkaj30ac9vf7ka5147cw9",
+      "reason": "Frakt større enn produktpris"
+    },
+    {
+      "id": "cms6o9lyr0c0cvfh4uhxvut18",
+      "reason": "Frakt større enn produktpris"
+    }
+  ],
+  "elapsedSec": 2638,
+  "ppm": 23.8
+}

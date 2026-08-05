@@ -1,0 +1,18 @@
+{
+  "at": "2026-08-03T19:42:58.917Z",
+  "status": "done",
+  "total": 930,
+  "cursor": 930,
+  "published": 806,
+  "skipped": 124,
+  "failed": 0,
+  "processed": 930,
+  "remaining": 0,
+  "elapsedMin": 133.6,
+  "ppm": 7,
+  "stopReason": null,
+  "lastError": null,
+  "workerStatus": "stopped",
+  "busy": false,
+  "stalled": false
+}

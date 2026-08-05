@@ -1,17 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logError, logInfo } from "@/lib/utils/logger";
+import { requireDebugAccess } from "@/lib/api-auth";
 
 /**
  * Debug route to inspect ALL products in database
- * 
- * This helps identify:
- * - Total product count
- * - Products per storeId
- * - Products per isActive status
- * - Sample products with their properties
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireDebugAccess(req);
+  if (denied) return denied;
+
   try {
     // Total count
     const total = await prisma.product.count();
@@ -75,7 +73,17 @@ export async function GET() {
     }
 
     // Get sample products from each storeId
-    const samplesByStore: Record<string, any[]> = {};
+    type ProductSample = {
+      id: string;
+      name: string;
+      category: string | null;
+      storeId: string | null;
+      isActive: boolean;
+      supplierName: string | null;
+      supplierUrl: string | null;
+      createdAt: Date;
+    };
+    const samplesByStore: Record<string, ProductSample[]> = {};
     for (const store of byStoreId) {
       const storeId = store.storeId ?? "null";
       const samples = await prisma.product.findMany({
@@ -149,12 +157,13 @@ export async function GET() {
         ? "Many products found but no Temu products. Check supplierName field."
         : "Products found. Check samplesByStore to see distribution.",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logError(error, "[api/debug/products-all]");
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       {
         ok: false,
-        error: error?.message ?? "Unknown error",
+        error: message || "Unknown error",
       },
       { status: 500 }
     );

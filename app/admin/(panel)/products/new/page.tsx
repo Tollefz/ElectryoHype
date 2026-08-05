@@ -38,10 +38,9 @@ const CATEGORIES = [
   "Data & IT",
   "Gaming",
   "Mobil & Tilbehør",
-  "TV & Lyd",
+  "TV, Lyd & Bilde",
   "Hvitevarer",
-  "Smart Home",
-  "Elektronikk",
+  "Hjem & Fritid",
 ];
 
 export default function NewProductPage() {

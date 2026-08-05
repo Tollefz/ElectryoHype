@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, X } from 'lucide-react';
+import { shouldUnoptimizeRemoteImage } from '@/lib/utils/supplier-image';
 
 interface ProductImageGalleryProps {
   images: string[] | string;
@@ -12,79 +13,51 @@ interface ProductImageGalleryProps {
 
 export default function ProductImageGallery({ images, productName, variantImage }: ProductImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+
+  const imagesKey = typeof images === 'string' ? images : JSON.stringify(images);
 
   // Parse images and combine with variant image
   // CRITICAL: This must recalculate when variantImage or images change
   const allImages = useMemo(() => {
     let parsedImages: string[] = [];
     try {
-      if (typeof images === 'string') {
-        parsedImages = JSON.parse(images);
-      } else if (Array.isArray(images)) {
-        parsedImages = images;
-      }
+      const parsed = JSON.parse(imagesKey);
+      parsedImages = Array.isArray(parsed) ? parsed : [];
     } catch {
       parsedImages = [];
     }
 
-    console.log(`[ProductImageGallery] 🔄 Recalculating allImages, variantImage: ${variantImage?.substring(0, 60)}...`);
-    console.log(`[ProductImageGallery] Parsed images count: ${parsedImages.length}`);
-
-    // If variantImage is available, add it as first image
     if (variantImage) {
       if (!parsedImages.includes(variantImage)) {
-        const withVariant = [variantImage, ...parsedImages];
-        console.log(`[ProductImageGallery] ✅ Added variant image to front, new first: ${withVariant[0]?.substring(0, 60)}...`);
-        return withVariant;
-      } else {
-        // Variant image exists in array - move it to front
-        const variantIndex = parsedImages.indexOf(variantImage);
-        const reordered = [
-          variantImage,
-          ...parsedImages.filter((img, idx) => idx !== variantIndex)
-        ];
-        console.log(`[ProductImageGallery] ✅ Moved variant image to front, new first: ${reordered[0]?.substring(0, 60)}...`);
-        return reordered;
+        return [variantImage, ...parsedImages];
       }
+      const variantIndex = parsedImages.indexOf(variantImage);
+      return [
+        variantImage,
+        ...parsedImages.filter((_, idx) => idx !== variantIndex),
+      ];
     }
-    console.log(`[ProductImageGallery] No variant image, returning original images`);
     return parsedImages;
-  }, [variantImage, typeof images === 'string' ? images : JSON.stringify(images)]);
+  }, [variantImage, imagesKey]);
 
   const validImages = allImages.length > 0 
     ? allImages 
     : ['https://placehold.co/600x600/f5f5f5/666666?text=Produkt'];
 
-  // Reset til første bilde når variantImage endres - THIS IS CRITICAL FOR VARIANT SWITCHING
-  // Create stable string keys that will never change size
-  const variantImageKey = variantImage || '';
-  const allImagesKey = allImages.length > 0 ? allImages.join('|') : '';
-  
   useEffect(() => {
-    console.log(`[ProductImageGallery] 🔄 useEffect triggered, variantImage: ${variantImageKey?.substring(0, 60)}..., allImages.length: ${allImages.length}`);
-    
     if (variantImage && allImages.length > 0) {
       const variantIndex = allImages.indexOf(variantImage);
-      console.log(`[ProductImageGallery] Variant image index in allImages: ${variantIndex}`);
-      
       if (variantIndex !== -1 && variantIndex >= 0) {
-        // Variant image found in array - switch to it immediately
-        console.log(`[ProductImageGallery] ✅ Switching to variant index ${variantIndex}`);
         setActiveIndex(variantIndex);
       } else if (allImages.length > 0) {
-        // Variant image should be first (was added by useMemo) - switch to first image
-        console.log(`[ProductImageGallery] ✅ Switching to first image (variant should be at front)`);
         setActiveIndex(0);
       }
     } else if (!variantImage && allImages.length > 0) {
-      // Reset to first image if no variant
-      console.log(`[ProductImageGallery] No variant image, resetting to first image`);
       setActiveIndex(0);
     }
-  }, [variantImageKey, allImagesKey]); // ALWAYS exactly 2 dependencies - never changes size
+  }, [variantImage, allImages]);
 
   const goToPrevious = () => {
     setActiveIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
@@ -95,7 +68,6 @@ export default function ProductImageGallery({ images, productName, variantImage 
   };
 
   const handleImageError = (index: number) => {
-    console.error(`[ProductImageGallery] ❌ Failed to load image at index ${index}: ${validImages[index]}`);
     setImageErrors(prev => new Set(prev).add(index));
     
     // If this is a generated/modified URL that doesn't exist, try to find the original base image
@@ -135,16 +107,16 @@ export default function ProductImageGallery({ images, productName, variantImage 
   return (
     <div>
       {/* Hovedbilde */}
-      <div className="relative mb-4 aspect-square overflow-hidden rounded-lg bg-gray-light">
+      <div className="relative mb-3 aspect-square overflow-hidden rounded-lg bg-gray-50 transition-colors">
         {currentImage && !hasError ? (
           <Image
             src={currentImage}
             alt={`${productName} - Bilde ${activeIndex + 1}`}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain p-4"
+            className="object-contain p-3 transition-opacity duration-300 sm:p-4"
             onError={() => handleImageError(activeIndex)}
-            unoptimized={currentImage.includes('img.kwcdn.com') || currentImage.includes('temu.com')}
+            unoptimized={shouldUnoptimizeRemoteImage(currentImage)}
             priority={activeIndex === 0}
           />
         ) : (
@@ -233,10 +205,11 @@ export default function ProductImageGallery({ images, productName, variantImage 
 
       {/* Miniatyrbilder */}
       {validImages.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {validImages.map((image, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => {
                 setImageErrors(prev => {
                   const newSet = new Set(prev);
@@ -245,10 +218,10 @@ export default function ProductImageGallery({ images, productName, variantImage 
                 });
                 setActiveIndex(index);
               }}
-              className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+              className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all duration-200 sm:h-20 sm:w-20 ${
                 index === activeIndex 
-                  ? 'border-brand ring-2 ring-brand/20' 
-                  : 'border-gray-border hover:border-gray-medium'
+                  ? 'border-green-600 ring-2 ring-green-600/20' 
+                  : 'border-gray-200 hover:border-gray-400'
               }`}
             >
               {!imageErrors.has(index) ? (
@@ -259,10 +232,9 @@ export default function ProductImageGallery({ images, productName, variantImage 
                   sizes="80px"
                   className="object-contain p-1"
                   onError={() => {
-                    console.error(`[ProductImageGallery] ❌ Failed to load thumbnail ${index}: ${image}`);
                     setImageErrors(prev => new Set(prev).add(index));
                   }}
-                  unoptimized={image.includes('img.kwcdn.com') || image.includes('temu.com')}
+                  unoptimized={shouldUnoptimizeRemoteImage(image)}
                 />
               ) : (
                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">

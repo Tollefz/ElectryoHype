@@ -11,8 +11,8 @@ export const SITE_CONFIG = {
   supportPhoneTel: "+4741299063",
   deliveryPromise: "Levering 5–12 virkedager",
   freeShippingThreshold: 500,
-  // Company info - set via env or leave empty to hide
-  orgNumber: process.env.ORG_NUMBER || "", // Empty string hides it
-  companyAddress: process.env.COMPANY_ADDRESS || "", // Empty string hides it
+  // Company info — set via env for legal footer on site + emails
+  orgNumber: process.env.ORG_NUMBER || "",
+  companyAddress: process.env.COMPANY_ADDRESS || "",
 } as const;
 

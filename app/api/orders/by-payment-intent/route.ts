@@ -37,17 +37,45 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    interface ShippingAddressParsed {
+      name?: string | null;
+      city?: string | null;
+      postalCode?: string | null;
+      country?: string | null;
+      [key: string]: unknown;
+    }
+
+    let shippingAddress: ShippingAddressParsed = {};
+    try {
+      if (typeof order.shippingAddress === "string") {
+        const parsed: unknown = JSON.parse(order.shippingAddress);
+        shippingAddress =
+          typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
+            ? (parsed as ShippingAddressParsed)
+            : {};
+      } else if (order.shippingAddress && typeof order.shippingAddress === "object") {
+        shippingAddress = order.shippingAddress as ShippingAddressParsed;
+      }
+    } catch {
+      shippingAddress = {};
+    }
+
     return NextResponse.json({
       id: order.id,
       orderId: order.id,
       orderNumber: order.orderNumber,
       status: order.status,
       paymentStatus: order.paymentStatus,
+      fulfillmentStatus: order.fulfillmentStatus,
       customer: order.customer,
       items: order.items,
       total: order.total,
-      shippingAddress: order.shippingAddress,
-      supplierOrderStatus: order.supplierOrderStatus,
+      shippingAddress: {
+        city: shippingAddress.city ?? null,
+        postalCode: shippingAddress.postalCode ?? null,
+        country: shippingAddress.country ?? "NO",
+        name: shippingAddress.name ?? order.customer?.name ?? null,
+      },
       trackingNumber: order.trackingNumber,
       trackingUrl: order.trackingUrl,
       createdAt: order.createdAt,

@@ -36,7 +36,7 @@ export function setupSourceMapWarningSuppression() {
   const originalError = console.error;
 
   // Override console.error to filter source map warnings
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     // Check if any argument contains source map warning
     const hasSourceMapWarning = args.some((arg) => {
       if (typeof arg === "string") {

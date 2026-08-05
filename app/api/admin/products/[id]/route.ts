@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getAuthSession } from '@/lib/auth';
+import { Prisma } from '@prisma/client';
+import { requireAdminSession } from '@/lib/api-auth';
 import { improveTitle } from '@/lib/utils/improve-product-title';
 import { safeQuery } from '@/lib/safeQuery';
 import { logError } from '@/lib/utils/logger';
+import { bulkDeleteProducts } from '@/lib/admin/bulk-product-cleanup';
 
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdminSession();
+  if (!auth.ok) return auth.response;
 
   try {
     const { id } = await context.params;
@@ -46,24 +46,76 @@ export async function PATCH(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdminSession();
+  if (!auth.ok) return auth.response;
 
   try {
     const { id } = await context.params;
     const body = await req.json();
-    const { images, name, ...otherFields } = body;
+    const { images, name, skipTitleImprovement, ...otherFields } = body;
 
-    const updateData: any = { ...otherFields };
+    const existing = await prisma.product.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        subcategory: true,
+        aiCategorySuggested: true,
+      },
+    });
+    if (!existing) {
+      return NextResponse.json({ ok: false, error: "Product not found" }, { status: 404 });
+    }
+
+    const updateData: Prisma.ProductUpdateInput = { ...otherFields };
     if (images) {
       updateData.images = images;
     }
-    
-    // Forbedre produkt-tittel automatisk hvis name oppdateres
+
+    // Inline admin edits can skip auto-title cleanup
     if (name) {
-      updateData.name = improveTitle(name);
+      updateData.name = skipTitleImprovement ? String(name).trim() : improveTitle(name);
+    }
+
+    const nextCategory =
+      typeof otherFields.category === "string" ? otherFields.category : undefined;
+    const nextSubcategory =
+      typeof otherFields.subcategory === "string" ? otherFields.subcategory : undefined;
+
+    if (nextCategory !== undefined) {
+      const { assertMainCategory, normalizeSubcategory } = await import(
+        "@/lib/categories/tree"
+      );
+      const valid = assertMainCategory(nextCategory);
+      if (!valid) {
+        return NextResponse.json(
+          { ok: false, error: "Ugyldig hovedkategori" },
+          { status: 400 }
+        );
+      }
+      updateData.category = valid;
+      if (nextSubcategory !== undefined) {
+        updateData.subcategory = normalizeSubcategory(valid, nextSubcategory);
+      }
+    }
+
+    if (
+      nextCategory !== undefined &&
+      nextCategory !== existing.category
+    ) {
+      updateData.aiCategoryStatus = "corrected";
+      updateData.aiCategoryAt = new Date();
+      const { recordCategoryCorrection } = await import("@/lib/ops/category-learning");
+      await recordCategoryCorrection({
+        productId: existing.id,
+        productName: typeof updateData.name === "string" ? updateData.name : existing.name,
+        fromCategory: existing.category,
+        toCategory: nextCategory,
+        fromSubcategory: existing.subcategory,
+        toSubcategory: nextSubcategory ?? existing.subcategory,
+        reason: "Manuell kategoriendring i admin",
+      });
     }
 
     const product = await prisma.product.update({
@@ -85,10 +137,8 @@ export async function DELETE(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdminSession();
+  if (!auth.ok) return auth.response;
 
   try {
     const { id } = await context.params;
@@ -122,17 +172,13 @@ export async function DELETE(
       );
     }
 
-    // Delete variants first (cascade)
-    if (product.variants.length > 0) {
-      await prisma.productVariant.deleteMany({
-        where: { productId: id },
-      });
+    const result = await bulkDeleteProducts([id]);
+    if (result.updated !== 1) {
+      return NextResponse.json(
+        { ok: false, error: result.results[0]?.error || 'Kunne ikke slette produkt' },
+        { status: 400 }
+      );
     }
-
-    // Delete the product
-    await prisma.product.delete({
-      where: { id },
-    });
 
     return NextResponse.json(
       { ok: true, message: 'Produkt slettet' },

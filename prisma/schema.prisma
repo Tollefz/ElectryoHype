@@ -55,6 +55,86 @@ enum SupplierName {
   alibaba
   ebay
   temu
+  cj
+  aliexpress
+  banggood
+  onesixeight // 1688
+  csv
+}
+
+enum ImportQueueStatus {
+  queued
+  processing
+  validating
+  normalizing
+  enriching
+  quality_check
+  preview
+  ai // legacy alias path — prefer enriching
+  review
+  approved
+  published
+  failed
+}
+
+enum SupplierChangeType {
+  price
+  stock
+  images_added
+  images_removed
+  variants_added
+  variants_removed
+  specs
+  attributes
+  videos
+  unavailable
+  available
+  other
+}
+
+enum SupplierProductStatus {
+  available
+  out_of_stock
+  unavailable
+  unknown
+}
+
+/** Per-field sync apply policy for a SupplierAccount. */
+enum SyncFieldPolicy {
+  auto
+  auto_if_new
+  manual
+  never
+  regenerate_if_changed
+}
+
+enum CatalogVersionKind {
+  price
+  stock
+  specs
+  images
+  attributes
+  videos
+  snapshot
+  full
+}
+
+enum SupplierJobType {
+  import_item
+  sync_product
+  sync_account
+  enrich_item
+  buyer_scan_batch
+}
+
+enum SupplierJobStatus {
+  pending
+  locked
+  running
+  succeeded
+  failed
+  cancelled
+  dead
 }
 
 enum FulfillmentStatus {
@@ -63,6 +143,29 @@ enum FulfillmentStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+/**
+ * Order Automation Engine phases — worker-owned state machine.
+ * Orthogonal to legacy OrderStatus; maps into fulfillmentStatus on transitions.
+ */
+enum OrderAutomationPhase {
+  NEW
+  PAID
+  VALIDATING
+  READY_FOR_CJ
+  SENT_TO_CJ
+  ORDERED
+  TRACKING_RECEIVED
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  PAYMENT_FAILED
+  ADDRESS_ERROR
+  CJ_ERROR
+  WAITING_FOR_STOCK
+  WAITING_FOR_RETRY
+  MANUAL_REVIEW
 }
 
 enum EmailStatus {
@@ -88,6 +191,8 @@ model Customer {
   name      String?
   phone     String?
   storeId   String?
+  /** BCP 47 locale for Communication Engine, e.g. nb-NO, en-US, de-DE */
+  locale    String?
   addresses Json?
   orders    Order[]
   createdAt DateTime @default(now())
@@ -96,12 +201,62 @@ model Customer {
   @@index([email])
 }
 
+/** Connection to a supplier (supports multiple accounts per supplier type). */
+model SupplierAccount {
+  id                       String       @id @default(cuid())
+  supplierType             SupplierName
+  accountName              String
+  /** Env var / secrets-manager key — never store secrets inline. */
+  apiCredentialsReference  String?
+  enabled                  Boolean      @default(true)
+  defaultCurrency          String       @default("USD")
+  defaultWarehouse         String?
+  /** Cadence / batch size / warehouses — operational settings. */
+  syncSettings             Json?
+  createdAt                DateTime     @default(now())
+  updatedAt                DateTime     @updatedAt
+
+  syncPolicy               SyncPolicy?
+  products                 Product[]
+  importQueueItems         ImportQueueItem[]
+  syncRuns                 SupplierSyncRun[]
+  changeEvents             SupplierChangeEvent[]
+  rawArtifacts             SupplierRawArtifact[]
+  jobs                     SupplierJob[]
+  healthSnapshots          SupplierHealthSnapshot[]
+
+  @@unique([supplierType, accountName])
+  @@index([supplierType, enabled])
+}
+
+/** Field-level change apply policy — one per SupplierAccount. */
+model SyncPolicy {
+  id                   String          @id @default(cuid())
+  supplierAccountId    String          @unique
+  supplierAccount      SupplierAccount @relation(fields: [supplierAccountId], references: [id], onDelete: Cascade)
+  stock                SyncFieldPolicy @default(auto)
+  supplierPrice        SyncFieldPolicy @default(auto)
+  retailPrice          SyncFieldPolicy @default(manual)
+  seo                  SyncFieldPolicy @default(never)
+  ai                   SyncFieldPolicy @default(regenerate_if_changed)
+  images               SyncFieldPolicy @default(auto_if_new)
+  videos               SyncFieldPolicy @default(auto)
+  specs                SyncFieldPolicy @default(auto)
+  attributes           SyncFieldPolicy @default(auto)
+  variants             SyncFieldPolicy @default(manual)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+}
+
 model Product {
   id                String           @id @default(cuid())
   name              String
   slug              String           @unique
   storeId           String?
+  /** @deprecated Use supplierAccountId — kept for transition. */
   supplierId        String?
+  supplierAccountId String?
+  supplierAccount   SupplierAccount? @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
   supplierSku       String?
   shortDescription  String?
   description       String?
@@ -110,28 +265,314 @@ model Product {
   supplierPrice     Float? // Base supplier price
   images            String
   supplierUrl       String?
+  /** Denormalized supplier type for indexing (source of truth is supplierAccount). */
   supplierName      SupplierName?
   supplierProductId String?
+  /** Warehouse / shipping origin at supplier (e.g. CN, US, DE). */
+  warehouse         String?
+  supplierStatus    SupplierProductStatus @default(unknown)
+  supplierLastSync  DateTime?
+  supplierCurrency  String?
+  supplierShipping  Float?
+  supplierInventory Int?
+  lastInventoryCheck DateTime?
   profitMargin      String?
   autoImport        Boolean          @default(false)
   lastSynced        DateTime?
   category          String?
+  /** Store subcategory under allowlist main (see lib/categories/tree). */
+  subcategory       String?
   tags              String
   sku               String?          @unique
   stock             Int              @default(0)
+  /** Draft imports stay inactive until review → publish. */
   isActive          Boolean          @default(true)
+  /** Storefront / display specs (supplier source of truth + optional AI labels). */
   specs             Json?
+  /** Immutable structured specs copied from supplier — AI must not overwrite. */
+  supplierSpecs     Json?
+  /** Product-level attributes from supplier (Color, Size, options…). */
+  attributes        Json?
+  /** Product videos from supplier [{id,url,name,type,…}]. */
+  videos            Json?
+  /** Import completeness score snapshot. */
+  importCompleteness Json?
+  /**
+   * Legacy inline raw payload. Prefer supplierRawArtifactId + StorageProvider.
+   * Kept nullable for migration; new writes should not grow this field.
+   */
+  supplierRaw        Json?
+  /** Pointer to durable raw artifact (DB / filesystem / object storage). */
+  supplierRawArtifactId String?      @unique
+  supplierRawArtifact   SupplierRawArtifact? @relation("ProductRawArtifact", fields: [supplierRawArtifactId], references: [id], onDelete: SetNull)
+  /** Last normalized SupplierProductDetail snapshot for diff/sync. */
+  supplierSnapshot   Json?
+  catalogVersion     Int             @default(1)
   metaTitle         String?
   metaDescription   String?
+  /** AI categorization suggestion (store allowlist category) */
+  aiCategorySuggested  String?
+  /** 0–100 */
+  aiCategoryConfidence Int?
+  aiCategoryReason     String?
+  /** pending | needs_review | applied | corrected | dismissed */
+  aiCategoryStatus     String?
+  aiCategoryAt         DateTime?
+  /**
+   * Digital Buyer lifecycle:
+   * new_active | active | declining | discontinued | replace_candidate
+   */
+  buyerLifecycle       String           @default("active")
+  /** Living product quality score 0–100 (Self-Improving Store). */
+  qualityScore         Float?
+  qualityBreakdown     Json?
+  qualityScoredAt      DateTime?
   variants          ProductVariant[]
   orderItems        OrderItem[]
+  supplierChanges   SupplierChangeEvent[]
+  catalogVersions   ProductCatalogVersion[]
+  buyerAltOffers    BuyerAltOffer[]
+  storeImprovements StoreImprovement[]
+  marketingScores   MarketingProductScore[]
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
   @@index([category])
+  @@index([subcategory])
+  @@index([category, subcategory])
   @@index([supplierName])
+  @@index([supplierProductId])
+  @@index([supplierAccountId])
+  @@index([supplierStatus])
+  @@index([buyerLifecycle])
+  @@index([qualityScore])
   @@index([isActive])
   @@index([storeId])
+  @@index([aiCategoryStatus])
+  @@index([supplierLastSync])
+  /** Catalog identity per account — supports multiple accounts of same type. */
+  @@unique([supplierAccountId, supplierProductId])
+  /** Legacy unique — kept while supplierAccountId is backfilled. */
+  @@unique([supplierName, supplierProductId])
+}
+
+/** Catalog import queue — search → queue → AI → review → publish. */
+model ImportQueueItem {
+  id                String            @id @default(cuid())
+  storeId           String?
+  supplier          SupplierName
+  supplierAccountId String?
+  supplierAccount   SupplierAccount?  @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
+  supplierProductId String
+  supplierSku       String?
+  title             String?
+  imageUrl          String?
+  supplierPrice     Float?
+  supplierCurrency  String?           @default("USD")
+  status            ImportQueueStatus @default(queued)
+  rawPayload        Json?
+  /** Prefer rawArtifact over growing rawPayload. */
+  rawArtifactId     String?           @unique
+  rawArtifact       SupplierRawArtifact? @relation("QueueRawArtifact", fields: [rawArtifactId], references: [id], onDelete: SetNull)
+  mappedDraft       Json?
+  enrichment        Json?
+  pricing           Json?
+  completeness      Json?
+  imageReport       Json?
+  /** Explicit pipeline stage for V2 engine (mirrors status for UI). */
+  pipelineStage     String?           @default("queued")
+  validationReport  Json?
+  productId         String?
+  error             String?
+  attempts          Int               @default(0)
+  /** Linked worker job for parallel processing. */
+  jobId             String?
+  autoApproved      Boolean           @default(false)
+  reviewReason      String?
+  createdById       String?
+  createdByEmail    String?
+  processedAt       DateTime?
+  publishedAt       DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@unique([supplier, supplierProductId])
+  @@index([status, createdAt])
+  @@index([supplier, status])
+  @@index([supplierAccountId, status])
+  @@index([productId])
+  @@index([storeId])
+  @@index([jobId])
+}
+
+/** Structured log of supplier catalog/API calls for admin diagnostics. */
+model SupplierApiLog {
+  id           String   @id @default(cuid())
+  supplier     String
+  operation    String
+  method       String
+  path         String
+  statusCode   Int?
+  ok           Boolean  @default(false)
+  durationMs   Int?
+  error        String?
+  requestMeta  Json?
+  responseMeta Json?
+  createdAt    DateTime @default(now())
+
+  @@index([supplier, createdAt])
+  @@index([ok, createdAt])
+  @@index([operation, createdAt])
+}
+
+/** Inventory / price sync run summary. */
+model SupplierSyncRun {
+  id               String    @id @default(cuid())
+  supplier         SupplierName
+  supplierAccountId String?
+  supplierAccount  SupplierAccount? @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
+  status           String    @default("running") // running | success | failed
+  productsChecked  Int       @default(0)
+  priceChanges     Int       @default(0)
+  outOfStock       Int       @default(0)
+  unavailable      Int       @default(0)
+  changeEvents     Int       @default(0)
+  errors           Json?
+  startedAt        DateTime  @default(now())
+  finishedAt       DateTime?
+  nextScheduledAt  DateTime?
+
+  @@index([supplier, startedAt])
+  @@index([supplierAccountId, startedAt])
+  @@index([status, startedAt])
+}
+
+/** Detected supplier catalog changes — never overwrite retail blindly. */
+model SupplierChangeEvent {
+  id                String             @id @default(cuid())
+  productId         String?
+  product           Product?           @relation(fields: [productId], references: [id], onDelete: SetNull)
+  supplier          SupplierName
+  supplierAccountId String?
+  supplierAccount   SupplierAccount?   @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
+  supplierProductId String
+  changeType        SupplierChangeType
+  field             String?
+  before            Json?
+  after             Json?
+  summary           String?
+  applied           Boolean            @default(false)
+  dismissed         Boolean            @default(false)
+  policyDecision    String?
+  createdAt         DateTime           @default(now())
+
+  @@index([supplier, createdAt])
+  @@index([supplierAccountId, createdAt])
+  @@index([productId, createdAt])
+  @@index([applied, createdAt])
+  @@index([changeType, createdAt])
+}
+
+/** Periodic health snapshot for Supplier Engine dashboard. */
+model SupplierHealthSnapshot {
+  id             String       @id @default(cuid())
+  supplier       SupplierName
+  supplierAccountId String?
+  supplierAccount SupplierAccount? @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
+  configured     Boolean      @default(false)
+  apiOk          Boolean      @default(false)
+  lastError      String?
+  productsCount  Int          @default(0)
+  publishedCount Int          @default(0)
+  queueQueued    Int          @default(0)
+  queueReview    Int          @default(0)
+  queueFailed    Int          @default(0)
+  lastSyncAt     DateTime?
+  metrics        Json?
+  capturedAt     DateTime     @default(now())
+
+  @@index([supplier, capturedAt])
+  @@index([supplierAccountId, capturedAt])
+}
+
+/** Immutable catalog field versions — never overwrite without a trail. */
+model ProductCatalogVersion {
+  id        String             @id @default(cuid())
+  productId String
+  product   Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version   Int
+  kind      CatalogVersionKind
+  payload   Json
+  source    String             // import | sync | manual | ai | policy
+  summary   String?
+  createdBy String?
+  createdAt DateTime           @default(now())
+
+  @@unique([productId, version, kind])
+  @@index([productId, createdAt])
+  @@index([kind, createdAt])
+}
+
+/**
+ * Raw supplier payload metadata.
+ * Payload bytes live in StorageProvider (inline DB / filesystem / S3 later).
+ */
+model SupplierRawArtifact {
+  id                String           @id @default(cuid())
+  supplier          SupplierName
+  supplierAccountId String?
+  supplierAccount   SupplierAccount? @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
+  supplierProductId String
+  storageProvider   String           // db | filesystem | s3
+  storageKey        String
+  contentType       String           @default("application/json")
+  byteSize          Int              @default(0)
+  checksum          String?
+  meta              Json?
+  /** Only used when storageProvider = "db". */
+  inlineJson        Json?
+  createdAt         DateTime         @default(now())
+
+  product           Product?         @relation("ProductRawArtifact")
+  queueItem         ImportQueueItem? @relation("QueueRawArtifact")
+
+  @@index([supplier, supplierProductId])
+  @@index([supplierAccountId, createdAt])
+  @@index([storageKey])
+}
+
+/**
+ * Durable worker jobs — import / sync with lock, retry, DLQ, cancel.
+ */
+model SupplierJob {
+  id                String            @id @default(cuid())
+  type              SupplierJobType
+  status            SupplierJobStatus @default(pending)
+  idempotencyKey    String            @unique
+  supplierAccountId String?
+  supplierAccount   SupplierAccount?  @relation(fields: [supplierAccountId], references: [id], onDelete: SetNull)
+  payload           Json
+  progress          Float             @default(0)
+  progressMessage   String?
+  attempts          Int               @default(0)
+  maxAttempts       Int               @default(5)
+  lockedAt          DateTime?
+  lockedBy          String?
+  lockExpiresAt     DateTime?
+  runAfter          DateTime          @default(now())
+  lastError         String?
+  result            Json?
+  cancelledAt       DateTime?
+  deadAt            DateTime?
+  startedAt         DateTime?
+  finishedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([status, runAfter])
+  @@index([type, status])
+  @@index([supplierAccountId, status])
+  @@index([lockedBy, status])
 }
 
 model ProductVariant {
@@ -140,12 +581,16 @@ model ProductVariant {
   product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   name           String // E.g., "Rød - 2m" or "Large - Blå"
   sku            String?     @unique
+  /** Supplier variant id (e.g. CJ vid) for inventory sync. */
+  supplierVariantId String?
   price          Float // Variant-specific price
   compareAtPrice Float?
   supplierPrice  Float? // Variant-specific supplier price
   image          String? // Variant-specific image
   attributes     Json // E.g., {"color": "Rød", "length": "2m"}
   stock          Int         @default(0)
+  weightGrams    Float?
+  barcode        String?
   isActive       Boolean     @default(true)
   orderItems     OrderItem[]
   createdAt      DateTime    @default(now())
@@ -153,6 +598,7 @@ model ProductVariant {
 
   @@index([productId])
   @@index([sku])
+  @@index([supplierVariantId])
   @@index([isActive])
 }
 
@@ -189,10 +635,24 @@ model Order {
   autoOrderError         String?
   trackingNumber         String?
   trackingUrl            String?
-  shippingCarrier        String?
-  supplierEvents         SupplierOrderEvent[]
-  createdAt              DateTime             @default(now())
-  updatedAt              DateTime             @updatedAt
+  shippingCarrier         String?
+  /** Order Automation Engine — worker-owned phase (see lib/orders/). */
+  automationPhase         OrderAutomationPhase @default(NEW)
+  automationPhaseAt       DateTime?
+  automationRetryCount    Int                  @default(0)
+  automationNextRetryAt   DateTime?
+  automationLastError     String?
+  internalNotes           String?
+  /** Explicitly marked as a development/test order (safe to delete even if paid). */
+  isTestOrder             Boolean              @default(false)
+  /** Soft-hide from default admin lists; restore by clearing. */
+  archivedAt              DateTime?
+  archivedById            String?
+  archivedByEmail         String?
+  supplierEvents          SupplierOrderEvent[]
+  automationEvents        OrderAutomationEvent[]
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
 
   @@index([customerId])
   @@index([status, createdAt]) // Keep for backward compatibility
@@ -202,6 +662,45 @@ model Order {
   @@index([storeId])
   @@index([stripeSessionId])
   @@index([customerEmailStatus]) // For filtering orders with failed emails
+  @@index([archivedAt])
+  @@index([isTestOrder])
+  @@index([automationPhase, automationNextRetryAt])
+  @@index([automationPhase, createdAt])
+}
+
+/** Append-only event log for Order Automation Engine. */
+model OrderAutomationEvent {
+  id        String                @id @default(cuid())
+  orderId   String
+  order     Order                 @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  phase     OrderAutomationPhase?
+  type      String
+  message   String
+  meta      Json?
+  createdAt DateTime              @default(now())
+
+  @@index([orderId, createdAt])
+  @@index([type, createdAt])
+}
+
+/** Audit log for hard-deleted orders (row survives after Order is gone). */
+model OrderDeletionLog {
+  id             String   @id @default(cuid())
+  orderId        String
+  orderNumber    String
+  deletionType   String // "test" | "permanent" | "clean_test"
+  deletedById    String?
+  deletedByEmail String?
+  reason         String?
+  wasPaid        Boolean  @default(false)
+  wasTestOrder   Boolean  @default(false)
+  snapshot       Json?
+  createdAt      DateTime @default(now())
+
+  @@index([orderNumber])
+  @@index([createdAt])
+  @@index([deletedById])
+  @@index([deletionType])
 }
 
 model OrderItem {
@@ -322,4 +821,783 @@ model AffiliateOrder {
 
   @@index([affiliateId])
   @@index([orderId])
+}
+
+// ─── AI Merchandiser (Supplier Engine) ───────────────────────────────────────
+
+enum MerchandiserRecStatus {
+  suggested
+  accepted
+  rejected
+  queued
+  imported
+  dismissed
+}
+
+enum MerchandiserDecisionType {
+  accept
+  reject
+  dismiss
+  queue
+  publish
+  delete
+  compare_pick
+}
+
+enum MerchandiserScanStatus {
+  queued
+  running
+  completed
+  failed
+}
+
+/** Store merchandising profile — used in all AI Merchandiser prompts/scoring. */
+model ShopProfile {
+  id               String   @id @default(cuid())
+  storeId          String?  @unique
+  name             String   @default("ElectroHypeX")
+  /** Target audience description (Norwegian). */
+  audience         String   @db.Text
+  /** budget | mid | premium | mixed */
+  priceLevel       String   @default("mid")
+  designStyle      String?  @db.Text
+  productStrategy  String?  @db.Text
+  /** Preferred storefront categories (JSON string[]). */
+  categories       Json
+  /** expected quality bar for images/specs/brand feel */
+  qualityLevel     String   @default("high")
+  brandVoice       String?  @db.Text
+  avoidCategories  Json?
+  /**
+   * Merchandiser ops settings:
+   * { autoQueueEnabled, autoQueueMinScore, defaultBatchSize, shelves }
+   */
+  merchandiserSettings Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+/** One scan/recommend job — provider-agnostic. */
+model MerchandiserScanRun {
+  id            String                 @id @default(cuid())
+  storeId       String?
+  status        MerchandiserScanStatus @default(queued)
+  /** Seed queries / shelves requested. */
+  request       Json?
+  suppliers     Json?
+  scanned       Int                    @default(0)
+  recommended   Int                    @default(0)
+  autoQueued    Int                    @default(0)
+  error         String?
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  recommendations MerchandiserRecommendation[]
+
+  @@index([status, createdAt])
+  @@index([storeId, createdAt])
+}
+
+/**
+ * Scored catalog candidate from any SupplierProvider.
+ * Not an import — an advice card until admin queues it.
+ */
+model MerchandiserRecommendation {
+  id                 String                 @id @default(cuid())
+  storeId            String?
+  scanRunId          String?
+  scanRun            MerchandiserScanRun?   @relation(fields: [scanRunId], references: [id], onDelete: SetNull)
+  supplier           SupplierName
+  supplierAccountId  String?
+  supplierProductId  String
+  title              String?
+  imageUrl           String?
+  supplierPrice      Float?
+  supplierCurrency   String?
+  /** Shelf: today | gaming | mobil | kontor | hjem | elektronikk | trending | new */
+  shelf              String                 @default("today")
+  categoryHint       String?
+  overallScore       Float
+  /** Dimension scores 0–100 — see MerchandiserScoreBreakdown. */
+  scores             Json
+  /** Short explainability bullets. */
+  reasons            Json
+  risks              Json?
+  market             Json?
+  pricing            Json?
+  visual             Json?
+  explanation        String?                @db.Text
+  /** Minimal supplier snapshot for UI (search or detail). */
+  snapshot           Json?
+  status             MerchandiserRecStatus  @default(suggested)
+  importQueueItemId  String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+
+  decisions MerchandiserDecision[]
+
+  @@unique([supplier, supplierProductId])
+  @@index([status, overallScore])
+  @@index([shelf, status, overallScore])
+  @@index([storeId, status])
+  @@index([scanRunId])
+}
+
+/** Learning loop — admin accept/reject/publish decisions. */
+model MerchandiserDecision {
+  id                 String                    @id @default(cuid())
+  recommendationId   String?
+  recommendation     MerchandiserRecommendation? @relation(fields: [recommendationId], references: [id], onDelete: SetNull)
+  supplier           SupplierName
+  supplierProductId  String
+  decision           MerchandiserDecisionType
+  reason             String?
+  actorId            String?
+  actorEmail         String?
+  metadata           Json?
+  createdAt          DateTime                  @default(now())
+
+  @@index([decision, createdAt])
+  @@index([supplier, supplierProductId])
+  @@index([recommendationId])
+}
+
+// ─── Store Intelligence / AI Category Manager ────────────────────────────────
+
+enum CategoryManagerDecisionType {
+  accept_gap
+  dismiss_gap
+  accept_recommendation
+  dismiss_recommendation
+  publish
+  delete_product
+  edit_product
+  price_update
+  strategy_ack
+}
+
+/**
+ * Living shop identity — auto-refreshed from catalog + decisions.
+ * Extends (does not replace) editable ShopProfile fields.
+ */
+model StoreLivingProfile {
+  id               String   @id @default(cuid())
+  storeId          String?  @unique
+  /** Derived audience / focus narrative (Norwegian). */
+  identitySummary  String   @db.Text
+  audienceHint     String?
+  priceLevelHint   String?
+  qualityHint      String?
+  brandHint        String?
+  styleHint        String?
+  /** Top categories by active count [{category, share, count}]. */
+  categoryFocus    Json
+  /** Learned preference weights from admin decisions. */
+  preferenceModel  Json?
+  /** Signals used for this refresh. */
+  signalsUsed      Json?
+  refreshedAt      DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+/** Point-in-time Store Intelligence report. */
+model StoreIntelligenceSnapshot {
+  id               String   @id @default(cuid())
+  storeId          String?
+  /** Overall store health 0–100. */
+  storeHealthScore Float
+  strongestCategory String?
+  weakestCategory   String?
+  bestMarginCategory String?
+  lowestMarginCategory String?
+  categories       Json
+  gaps             Json
+  complements      Json
+  recommendations  Json
+  dailyTasks       Json
+  supplierMix      Json?
+  risks            Json?
+  generatedAt      DateTime @default(now())
+  createdAt        DateTime @default(now())
+
+  @@index([storeId, generatedAt])
+}
+
+/** Category Manager learning — gaps/recs accepted or dismissed. */
+model CategoryManagerDecision {
+  id            String                       @id @default(cuid())
+  storeId       String?
+  decision      CategoryManagerDecisionType
+  /** gap | complement | recommendation | product | strategy */
+  subjectType   String
+  subjectKey    String
+  reason        String?
+  actorId       String?
+  actorEmail    String?
+  metadata      Json?
+  createdAt     DateTime                     @default(now())
+
+  @@index([decision, createdAt])
+  @@index([subjectType, subjectKey])
+  @@index([storeId, createdAt])
+}
+
+// ─── Autonomous Commerce Engine (orchestration) ──────────────────────────────
+
+enum AutonomyMode {
+  off
+  semi
+  auto
+}
+
+enum AutonomyRunStatus {
+  running
+  completed
+  failed
+}
+
+enum AutonomyTaskStatus {
+  open
+  done
+  dismissed
+}
+
+/** Store-wide autonomy policy — never auto-publishes. */
+model AutonomyPolicy {
+  id                   String       @id @default(cuid())
+  storeId              String?      @unique
+  mode                 AutonomyMode @default(off)
+  /**
+   * Store goal weights 0–1:
+   * { quality, margin, customerExperience, minimizeManual }
+   */
+  storeGoal            Json
+  /** Quality gate thresholds — see AutonomyQualityThresholds. */
+  qualityGate          Json
+  scheduleEnabled      Boolean      @default(true)
+  maxImportsPerRun     Int          @default(10)
+  minMerchandiserScore Float        @default(80)
+  deepAnalyzeTop       Int          @default(8)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+/** One orchestrated cycle (nightly / hourly / manual / event). */
+model AutonomyRun {
+  id           String            @id @default(cuid())
+  storeId      String?
+  trigger      String
+  status       AutonomyRunStatus @default(running)
+  mode         AutonomyMode
+  steps        Json?
+  summary      Json?
+  morningBrief String?           @db.Text
+  error        String?
+  startedAt    DateTime          @default(now())
+  finishedAt   DateTime?
+  createdAt    DateTime          @default(now())
+
+  decisions AutonomyDecision[]
+
+  @@index([storeId, startedAt])
+  @@index([status, startedAt])
+}
+
+/** Traceable AI decision with confidence + explanation. */
+model AutonomyDecision {
+  id          String   @id @default(cuid())
+  runId       String?
+  run         AutonomyRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
+  stage       String
+  subjectKey  String
+  action      String
+  confidence  Float
+  why         Json
+  data        Json?
+  risks       Json?
+  createdAt   DateTime @default(now())
+
+  @@index([runId, createdAt])
+  @@index([stage, createdAt])
+  @@index([subjectKey])
+}
+
+/** Proactive ops tasks discovered by the orchestrator. */
+model AutonomyTask {
+  id          String             @id @default(cuid())
+  storeId     String?
+  kind        String
+  title       String
+  detail      String?
+  count       Int?
+  href        String?
+  severity    String             @default("medium")
+  status      AutonomyTaskStatus @default(open)
+  confidence  Float?
+  why         Json?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([status, severity, createdAt])
+  @@index([storeId, status])
+  @@index([kind, status])
+}
+
+/**
+ * Long-term store memory for preference learning.
+ * Complements MerchandiserDecision / CategoryManagerDecision.
+ */
+model StoreMemory {
+  id                  String   @id @default(cuid())
+  storeId             String?  @unique
+  likes               Json?
+  dislikes            Json?
+  priceBand           Json?
+  favoriteCategories  Json?
+  preferredSuppliers  Json?
+  brandProfile        Json?
+  imageStyle          Json?
+  seoStyle            Json?
+  productStructure    Json?
+  updatedAt           DateTime @updatedAt
+  createdAt           DateTime @default(now())
+}
+
+// ─── Digital Buyer — continuous product discovery ────────────────────────────
+
+enum BuyerScanStatus {
+  queued
+  running
+  paused
+  completed
+  failed
+}
+
+enum BuyerCandidateStatus {
+  ranked
+  filtered
+  rejected
+  queued
+  imported
+  dismissed
+}
+
+enum BuyerAltStatus {
+  open
+  accepted
+  dismissed
+}
+
+/** Checkpointed continuous scan across SupplierProviders. */
+model BuyerScanRun {
+  id              String          @id @default(cuid())
+  storeId         String?
+  status          BuyerScanStatus @default(queued)
+  /** Target products to evaluate: 100 | 1000 | 10000 */
+  targetScanCount Int             @default(100)
+  scanned         Int             @default(0)
+  kept            Int             @default(0)
+  filtered        Int             @default(0)
+  /**
+   * Resume cursor:
+   * { supplierIdx, seedIdx, page, seenKeys[] }
+   */
+  checkpoint      Json?
+  request         Json?
+  suppliers       Json?
+  discovery       Json?
+  error           String?
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  candidates BuyerCandidate[]
+
+  @@index([status, createdAt])
+  @@index([storeId, createdAt])
+}
+
+/** Ranked / filtered discovery candidate — shop match + explainability. */
+model BuyerCandidate {
+  id                 String               @id @default(cuid())
+  storeId            String?
+  scanRunId          String?
+  scanRun            BuyerScanRun?        @relation(fields: [scanRunId], references: [id], onDelete: SetNull)
+  supplier           SupplierName
+  supplierProductId  String
+  title              String?
+  imageUrl           String?
+  supplierPrice      Float?
+  supplierCurrency   String?
+  overallScore       Float
+  /** 0–100 shop profile match with explanation. */
+  shopMatchPct       Float
+  shopMatchWhy       Json?
+  scores             Json?
+  reasons            Json?
+  risks              Json?
+  pricing            Json?
+  /** niche | complementary | premium | budget | new_category | accessory */
+  discoveryTags      Json?
+  /** Normalized title fingerprint for multi-supplier grouping. */
+  fingerprint        String?
+  groupId            String?
+  isBestInGroup      Boolean              @default(true)
+  rank               Int?
+  status             BuyerCandidateStatus @default(ranked)
+  filterReasons      Json?
+  merchandiserRecId  String?
+  importQueueItemId  String?
+  snapshot           Json?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  @@unique([supplier, supplierProductId])
+  @@index([status, rank])
+  @@index([shopMatchPct])
+  @@index([fingerprint])
+  @@index([scanRunId])
+  @@index([storeId, status, rank])
+}
+
+/** Alternative supplier for an existing catalog product. */
+model BuyerAltOffer {
+  id                String         @id @default(cuid())
+  storeId           String?
+  productId         String
+  product           Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplier          SupplierName
+  supplierProductId String
+  title             String?
+  currentPrice      Float?
+  altPrice          Float?
+  priceDeltaPct     Float?
+  stockHint         String?
+  shippingHint      String?
+  imageScore        Float?
+  qualityScore      Float?
+  why               Json?
+  confidence        Float?
+  status            BuyerAltStatus @default(open)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@unique([productId, supplier, supplierProductId])
+  @@index([status, createdAt])
+  @@index([storeId, status])
+}
+
+// ─── AI Trust & Continuous Improvement ───────────────────────────────────────
+
+enum AiEngine {
+  supplier
+  merchandiser
+  digital_buyer
+  store_intelligence
+  pricing
+  seo
+  quality_gate
+  autonomy
+}
+
+enum AiFeedbackKind {
+  approve
+  reject
+  dismiss
+  edit
+  price_change
+  category_change
+  seo_change
+  publish
+  queue
+  override
+}
+
+/** Unified feedback event — learning loop input. */
+model AiFeedbackEvent {
+  id          String         @id @default(cuid())
+  storeId     String?
+  engine      AiEngine
+  kind        AiFeedbackKind
+  subjectType String
+  subjectKey  String
+  /** AI proposal snapshot (category, price, title…). */
+  aiProposal  Json?
+  /** Human outcome / edited values. */
+  humanResult Json?
+  confidence  Float?
+  why         Json?
+  risks       Json?
+  actorId     String?
+  actorEmail  String?
+  metadata    Json?
+  createdAt   DateTime       @default(now())
+
+  @@index([engine, createdAt])
+  @@index([kind, createdAt])
+  @@index([storeId, createdAt])
+  @@index([subjectType, subjectKey])
+}
+
+/** Explicit human override of an AI proposal. */
+model AiOverride {
+  id           String   @id @default(cuid())
+  storeId      String?
+  engine       AiEngine
+  field        String
+  subjectKey   String
+  aiValue      String
+  humanValue   String
+  reason       String?
+  actorId      String?
+  actorEmail   String?
+  learned      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([engine, createdAt])
+  @@index([field, createdAt])
+  @@index([storeId, createdAt])
+}
+
+/** Cached weekly (or on-demand) self-evaluation + scorecard. */
+model AiSelfEvalRun {
+  id            String   @id @default(cuid())
+  storeId       String?
+  periodStart   DateTime
+  periodEnd     DateTime
+  /** Narrative brief in Norwegian. */
+  summaryText   String   @db.Text
+  /** Per-engine scorecards. */
+  scorecards    Json
+  /** Store AI KPIs. */
+  kpis          Json
+  /** Extracted learning bullets. */
+  learnings     Json
+  /** Profile / memory updates applied. */
+  profileUpdates Json?
+  createdAt     DateTime @default(now())
+
+  @@index([storeId, createdAt])
+  @@index([periodEnd])
+}
+
+// ─── Self-Improving Store ────────────────────────────────────────────────────
+
+enum StoreImprovementStatus {
+  pending
+  approved
+  rejected
+  applied
+}
+
+enum StoreMissionStatus {
+  active
+  completed
+  cancelled
+}
+
+/**
+ * Measurable store objectives — all AI engines optimize toward these.
+ * Complements AutonomyPolicy.storeGoal weights.
+ */
+model StoreObjectives {
+  id        String   @id @default(cuid())
+  storeId   String?  @unique
+  /**
+   * {
+   *   increaseMargin, increaseQuality, increaseSeo, increaseCatalogQuality,
+   *   reduceLowQuality, reduceOutOfStock, reduceDuplicates, reduceMissingSpecs
+   * } each 0–1 weight
+   */
+  targets   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/** Nightly self-improve cycle summary. */
+model StoreImproveRun {
+  id          String    @id @default(cuid())
+  storeId     String?
+  status      String    @default("completed")
+  summaryText String?   @db.Text
+  stats       Json?
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([storeId, createdAt])
+}
+
+/**
+ * Proposed product refinement or retirement — admin approves on Rob's Desk.
+ * Never auto-applies to storefront.
+ */
+model StoreImprovement {
+  id          String                 @id @default(cuid())
+  storeId     String?
+  runId       String?
+  productId   String?
+  product     Product?               @relation(fields: [productId], references: [id], onDelete: SetNull)
+  /**
+   * seo | description | images | category | price | specs | tags |
+   * retire_unpublish | retire_replace | retire_archive | switch_supplier | update
+   */
+  kind        String
+  title       String
+  detail      String?                @db.Text
+  why         Json?
+  risks       Json?
+  confidence  Float?
+  before      Json?
+  proposed    Json?
+  /** Measured impact after apply: { field: { before, after } } */
+  impact      Json?
+  status      StoreImprovementStatus @default(pending)
+  missionId   String?
+  mission     StoreMission?          @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  decidedAt   DateTime?
+  appliedAt   DateTime?
+
+  @@index([status, createdAt])
+  @@index([productId, status])
+  @@index([kind, status])
+  @@index([storeId, status])
+  @@index([missionId])
+}
+
+/** Concrete AI missions — e.g. "Bygg Norges beste gamingkategori". */
+model StoreMission {
+  id           String             @id @default(cuid())
+  storeId      String?
+  title        String
+  brief        String?            @db.Text
+  targetCount  Int?
+  progressDone Int                @default(0)
+  status       StoreMissionStatus @default(active)
+  result       Json?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  completedAt  DateTime?
+
+  improvements StoreImprovement[]
+
+  @@index([status, createdAt])
+  @@index([storeId, status])
+}
+
+// ─── Marketing Mission Control (observation only — no ad automation) ─────────
+
+/**
+ * First-party marketing event stream (same event names as GA4 ecommerce).
+ * Channels (Meta/Google/TikTok/GA4/Clarity) receive the same events client-side;
+ * this table is ElectroHypeX's learning store.
+ */
+model MarketingEvent {
+  id            String   @id @default(cuid())
+  storeId       String?
+  sessionId     String?
+  event         String
+  path          String?
+  productId     String?
+  productName   String?
+  transactionId String?
+  value         Float?
+  currency      String?  @default("NOK")
+  source        String?
+  medium        String?
+  campaign      String?
+  meta          Json?
+  createdAt     DateTime @default(now())
+
+  @@index([storeId, event, createdAt])
+  @@index([productId, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([createdAt])
+  @@index([campaign, createdAt])
+}
+
+/** Daily funnel rollups for Dashboard / Mission Control. */
+model MarketingDailyStat {
+  id            String   @id @default(cuid())
+  storeId       String   @default("default-store")
+  day           DateTime
+  sessions      Int      @default(0)
+  pageViews     Int      @default(0)
+  viewItem      Int      @default(0)
+  addToCart     Int      @default(0)
+  beginCheckout Int      @default(0)
+  purchases     Int      @default(0)
+  revenue       Float    @default(0)
+  adSpend       Float    @default(0)
+  meta          Json?
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+
+  @@unique([storeId, day])
+  @@index([day])
+}
+
+/**
+ * Per-product Marketing Score — independent of Buyer / Merch Brain.
+ * Updated by Marketing Worker (analyse only).
+ */
+model MarketingProductScore {
+  id               String   @id @default(cuid())
+  storeId          String   @default("default-store")
+  productId        String
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  /** 0–100 overall marketing potential */
+  overallScore     Float    @default(0)
+  ctrScore         Float    @default(0)
+  conversionScore  Float    @default(0)
+  marginScore      Float    @default(0)
+  profitScore      Float    @default(0)
+  popularityScore  Float    @default(0)
+  storeFitScore    Float    @default(0)
+  inventoryScore   Float    @default(0)
+  returnRiskScore  Float    @default(0)
+  marketingPotential Float  @default(0)
+  scores           Json?
+  reasons          Json?
+  risks            Json?
+  views            Int      @default(0)
+  addToCarts       Int      @default(0)
+  beginCheckouts   Int      @default(0)
+  purchases        Int      @default(0)
+  revenue          Float    @default(0)
+  conversionPct    Float?
+  memoryNudge      Float?
+  rangeDays        Int      @default(7)
+  computedAt       DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([storeId, productId, rangeDays])
+  @@index([storeId, overallScore])
+  @@index([productId])
+  @@index([computedAt])
+}
+
+/**
+ * Store-level Marketing Memory — learned funnel patterns (not Buyer StoreMemory).
+ */
+model MarketingMemory {
+  id              String    @id @default(cuid())
+  storeId         String?   @unique
+  /** Snapshot of patterns / winners / weak products */
+  snapshot        Json?
+  highCtr         Json?
+  lowCtr          Json?
+  highCart        Json?
+  highConversion  Json?
+  neverBought     Json?
+  channelMix      Json?
+  rebuiltAt       DateTime?
+  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
 }

@@ -31,15 +31,6 @@ const TRACKING_PARAMS = [
 ] as const;
 
 /**
- * Essential parameters to keep for Temu (product identification)
- */
-const TEMU_ESSENTIAL_PARAMS = [
-  "goods_id",
-  "top_gallery_url",
-  "spec_gallery_id",
-] as const;
-
-/**
  * Normalize URL by:
  * - Trimming whitespace
  * - Removing tracking query parameters

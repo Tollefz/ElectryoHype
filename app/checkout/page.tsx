@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/cart-context";
+import {
+  cartItemToAnalyticsItem,
+  itemsValue,
+  trackEcommerce,
+} from "@/lib/analytics/ecommerce";
 import { formatCurrency } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,18 +46,11 @@ const addressSchema = z.object({
 });
 
 type InfoData = z.infer<typeof infoSchema>;
-type AddressData = {
-  address1: string;
-  address2?: string;
-  zipCode: string;
-  city: string;
-  country: string;
-};
+type AddressData = z.infer<typeof addressSchema>;
 
-function CheckoutForm({ clientSecret }: { clientSecret: string }) {
+function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -106,7 +104,6 @@ export default function CheckoutPage() {
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [orderId, setOrderId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [discountCode, setDiscountCode] = useState("");
@@ -116,6 +113,30 @@ export default function CheckoutPage() {
   const [stripeKeyStatus, setStripeKeyStatus] = useState<"checking" | "ok" | "missing">("checking");
   const router = useRouter();
   const { items, total, clearCart } = useCart();
+  const checkoutTracked = useRef(false);
+
+  useEffect(() => {
+    if (checkoutTracked.current || items.length === 0) return;
+    checkoutTracked.current = true;
+    const analyticsItems = items.map((item, index) =>
+      cartItemToAnalyticsItem(
+        {
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          variantName: item.variantName,
+          category: item.category,
+        },
+        index
+      )
+    );
+    trackEcommerce("begin_checkout", {
+      currency: "NOK",
+      value: itemsValue(analyticsItems),
+      items: analyticsItems,
+    });
+  }, [items]);
 
   // Verifiser Stripe keys ved mount
   useEffect(() => {
@@ -164,7 +185,7 @@ export default function CheckoutPage() {
     resolver: zodResolver(infoSchema),
   });
 
-  const addressForm = useForm({
+  const addressForm = useForm<AddressData>({
     resolver: zodResolver(addressSchema),
     defaultValues: { country: "NO" },
   });
@@ -179,22 +200,6 @@ export default function CheckoutPage() {
     }
   }, [items, router]);
 
-  // Show friendly error if cart is empty
-  if (items.length === 0) {
-    return (
-      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <h1 className="mb-4 text-2xl font-bold text-gray-900">Handlekurven er tom</h1>
-        <p className="mb-6 text-gray-600">Du må legge til produkter i handlekurven før du kan gå til kassen.</p>
-        <Link
-          href="/products"
-          className="inline-block rounded-lg bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 transition-colors"
-        >
-          Se produkter
-        </Link>
-      </div>
-    );
-  }
-
   // Hent affiliateCode fra cookie hvis satt
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -204,16 +209,28 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const handleInfoSubmit = async (data: InfoData) => {
+  // Show friendly error if cart is empty (after all hooks)
+  if (items.length === 0) {
+    return (
+      <div className="ehx-page-bg min-h-screen">
+        <div className="ehx-container py-16 text-center sm:py-20">
+          <h1 className="ehx-heading-2 mb-3">Handlekurven er tom</h1>
+          <p className="ehx-body mb-8">
+            Du må legge til produkter i handlekurven før du kan gå til kassen.
+          </p>
+          <Link href="/products" className="ehx-btn ehx-btn-primary px-7 py-3.5">
+            Se produkter
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const handleInfoSubmit = async () => {
     setStep(2);
   };
 
-  const handleAddressSubmit = async (data: any) => {
-    // Ensure country is set
-    const addressData: AddressData = {
-      ...data,
-      country: data.country || "NO",
-    };
+  const handleAddressSubmit = async () => {
     setStep(3);
   };
 
@@ -310,6 +327,7 @@ export default function CheckoutPage() {
           },
           total: grandTotal,
           shippingCost,
+          shippingMethod,
           discountCode: discountCode.trim() || undefined,
           affiliateCode: affiliateCode || undefined,
         }),
@@ -338,54 +356,51 @@ export default function CheckoutPage() {
 
 
       setClientSecret(data.clientSecret);
-      setOrderId(data.orderId);
       setStep(5); // Gå til Stripe PaymentElement
       setError(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       console.error("❌ Error creating payment intent:", {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
+        message,
+        stack: error instanceof Error ? error.stack : undefined,
+        name: error instanceof Error ? error.name : undefined,
       });
       setError(
-        `Feil ved opprettelse av betaling: ${error.message || "Noe gikk galt. Prøv igjen."}`
+        `Feil ved opprettelse av betaling: ${message || "Noe gikk galt. Prøv igjen."}`
       );
     } finally {
       setLoading(false);
     }
   };
 
-  if (items.length === 0) {
-    return null;
-  }
-
   return (
-    <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-      <h1 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900">Checkout</h1>
-      <div className="mb-8 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium">
+    <div className="ehx-page-bg min-h-screen">
+    <div className="ehx-container py-8 sm:py-10 lg:py-12">
+      <h1 className="ehx-heading-2 mb-8">Kasse</h1>
+      <div className="mb-10 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium">
         {["Informasjon", "Levering", "Leveringsmetode", "Betaling", "Bekreftelse"].map((label, index) => (
           <div key={label} className="flex items-center gap-2">
             <span
               className={`flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold transition-all ${
                 step > index + 1
-                  ? "border-green-600 bg-green-600 text-white"
+                  ? "border-[var(--brand)] bg-[var(--brand)] text-white"
                   : step === index + 1
-                    ? "border-green-600 bg-green-50 text-green-600"
-                    : "border-gray-300 bg-white text-gray-400"
+                    ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-dark)]"
+                    : "border-[var(--border-strong)] bg-white text-[var(--text-muted)]"
               }`}
             >
               {index + 1}
             </span>
-            <span className={`hidden sm:inline ${step === index + 1 ? "text-green-600 font-semibold" : step > index + 1 ? "text-gray-600" : "text-gray-400"}`}>{label}</span>
+            <span className={`hidden sm:inline ${step === index + 1 ? "text-[var(--brand-dark)] font-semibold" : step > index + 1 ? "text-[var(--text-secondary)]" : "text-[var(--text-muted)]"}`}>{label}</span>
           </div>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.2fr,0.8fr]">
+      <div className="grid gap-8 lg:grid-cols-[1.2fr,0.8fr] lg:gap-10">
         <div className="space-y-6">
           {/* Rabattkode */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-3">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Rabattkode</h2>
+          <div className="space-y-3 rounded-[var(--ehx-radius-lg)] border border-[var(--border)] bg-white p-5 shadow-[var(--ehx-shadow-sm)] sm:p-6">
+            <h2 className="text-lg font-semibold text-[var(--text)] sm:text-xl">Rabattkode</h2>
             <p className="text-sm text-gray-600">Har du en kode? Legg den inn her.</p>
             <div className="flex gap-2">
               <Input
@@ -602,11 +617,13 @@ export default function CheckoutPage() {
                     locale: "no",
                   }}
                 >
+                  {getStripeKey()?.startsWith("pk_test_") && (
                   <div className="mb-4 rounded-lg bg-green-900/20 border border-green-600 p-4 text-sm text-green-400">
-                    💡 <strong>Test kort:</strong> 4242 4242 4242 4242<br />
+                    <strong>Test kort:</strong> 4242 4242 4242 4242<br />
                     CVV: 123 | Utløpsdato: Hvilken som helst fremtidig dato
                   </div>
-                  <CheckoutForm clientSecret={clientSecret} />
+                  )}
+                  <CheckoutForm />
                 </Elements>
               )}
             </div>
@@ -664,12 +681,14 @@ export default function CheckoutPage() {
               <span>Total</span>
               <span>{formatCurrency(grandTotal)}</span>
             </div>
+            <p className="text-xs text-secondary">Alle priser er inkl. 25% mva</p>
               {discountMessage && (
                 <p className="text-xs text-green-700">{discountMessage}</p>
               )}
           </div>
         </aside>
       </div>
+    </div>
     </div>
   );
 }

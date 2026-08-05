@@ -9,7 +9,6 @@
 import "server-only";
 
 import { TemuScraper } from "./temu-scraper";
-import type { SupplierSource } from "./types";
 import { identifySupplier } from "./supplier-identifier";
 
 /**
@@ -35,7 +34,7 @@ export async function getScraperForUrl(url: string) {
       return new EbayScraper();
     }
     case "temu":
-      // TemuScraper doesn't use Puppeteer, so safe to import directly
+      // TemuScraper only loads Puppeteer lazily (gallery fallback), so safe to import directly
       return new TemuScraper();
     default:
       return null;

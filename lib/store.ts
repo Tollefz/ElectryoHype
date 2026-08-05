@@ -43,7 +43,7 @@ export function getStoreIdFromHeaders(hdrs?: HeaderLike): string {
   let host: string | null = null;
 
   // Try Header-like first
-  if (h && typeof (h as any).get === "function") {
+  if (h && typeof (h as Headers).get === "function") {
     try {
       host = (h as Headers).get("host");
     } catch {

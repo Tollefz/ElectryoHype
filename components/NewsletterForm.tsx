@@ -27,7 +27,7 @@ export function NewsletterForm() {
       const data = await res.json();
 
       if (data.ok) {
-        setMessage({ type: "success", text: "Takk! Du er nå meldt på nyhetsbrevet." });
+        setMessage({ type: "success", text: data.message || "Takk! Vi har lagret e-posten din." });
         setEmail("");
       } else {
         setMessage({ type: "error", text: data.error || "Noe gikk galt. Prøv igjen senere." });

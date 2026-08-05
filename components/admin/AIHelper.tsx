@@ -5,9 +5,23 @@ import { Sparkles, Loader2, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { callAdminAI } from "@/lib/admin-ai";
 
+type ToneOfVoice = "nøytral" | "entusiastisk" | "teknisk";
+
+interface ProductDescriptionResult {
+  description?: string;
+  bullets?: string[];
+}
+
+interface SeoResult {
+  title?: string;
+  description?: string;
+}
+
+type AIHelperResult = ProductDescriptionResult & SeoResult;
+
 interface AIHelperProps {
   type: "productDescription" | "seo";
-  onResult: (result: any) => void;
+  onResult: (result: AIHelperResult) => void;
   productData?: {
     name?: string;
     category?: string;
@@ -19,9 +33,9 @@ interface AIHelperProps {
 export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [toneOfVoice, setToneOfVoice] = useState<"nøytral" | "entusiastisk" | "teknisk">("nøytral");
+  const [toneOfVoice, setToneOfVoice] = useState<ToneOfVoice>("nøytral");
   const [useCase, setUseCase] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<AIHelperResult | null>(null);
   const [copied, setCopied] = useState(false);
 
   const handleGenerate = async () => {
@@ -46,8 +60,9 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
         throw new Error(response.error || "Kunne ikke generere innhold");
       }
 
-      setResult(response.result);
-      onResult(response.result);
+      const aiResult = (response.result ?? {}) as AIHelperResult;
+      setResult(aiResult);
+      onResult(aiResult);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ukjent feil");
     } finally {
@@ -74,7 +89,7 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
             <label className="mb-1 block text-xs font-medium text-gray-700">Tone</label>
             <select
               value={toneOfVoice}
-              onChange={(e) => setToneOfVoice(e.target.value as any)}
+              onChange={(e) => setToneOfVoice(e.target.value as ToneOfVoice)}
               className="w-full rounded border border-slate-300 bg-white px-3 py-1.5 text-sm"
             >
               <option value="nøytral">Nøytral</option>
@@ -128,7 +143,7 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
                 <div className="mb-1 flex items-center justify-between">
                   <label className="text-xs font-medium text-gray-700">Beskrivelse</label>
                   <button
-                    onClick={() => copyToClipboard(result.description)}
+                    onClick={() => copyToClipboard(result.description || "")}
                     className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -149,7 +164,7 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
                 <div className="mb-1 flex items-center justify-between">
                   <label className="text-xs font-medium text-gray-700">Nøkkelfordeler</label>
                   <button
-                    onClick={() => copyToClipboard(result.bullets.join("\n"))}
+                    onClick={() => copyToClipboard(result.bullets?.join("\n") || "")}
                     className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -210,7 +225,7 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
                 <div className="mb-1 flex items-center justify-between">
                   <label className="text-xs font-medium text-gray-700">SEO-tittel</label>
                   <button
-                    onClick={() => copyToClipboard(result.title)}
+                    onClick={() => copyToClipboard(result.title || "")}
                     className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -233,7 +248,7 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
                 <div className="mb-1 flex items-center justify-between">
                   <label className="text-xs font-medium text-gray-700">Meta-beskrivelse</label>
                   <button
-                    onClick={() => copyToClipboard(result.description)}
+                    onClick={() => copyToClipboard(result.description || "")}
                     className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -259,4 +274,3 @@ export function AIHelper({ type, onResult, productData = {} }: AIHelperProps) {
 
   return null;
 }
-

@@ -1,0 +1,10 @@
+app/api/admin/products/bulk-import/__tests__/bulk-import.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+lib/import/__tests__/pricing.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+lib/providers/__tests__/alibaba-provider.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+lib/providers/__tests__/alibaba-provider.test.ts(305,14): error TS18048: 'mapped.specs' is possibly 'undefined'.
+lib/providers/__tests__/alibaba-provider.test.ts(319,14): error TS18048: 'mapped.specs' is possibly 'undefined'.
+lib/providers/__tests__/alibaba-provider.test.ts(410,14): error TS18048: 'mapped.variants' is possibly 'undefined'.
+lib/providers/__tests__/alibaba-provider.test.ts(411,14): error TS18048: 'mapped.variants' is possibly 'undefined'.
+lib/providers/__tests__/provider-registry.test.ts(1,50): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+lib/providers/__tests__/temu-provider.test.ts(1,50): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+lib/utils/__tests__/url-validation.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.

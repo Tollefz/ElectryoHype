@@ -1,0 +1,495 @@
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\orders\[id]\OrderDetailsClient.tsx
+    9:11  error  'Order' is defined but never used                     @typescript-eslint/no-unused-vars
+   41:10  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  119:19  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  140:19  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  173:25  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  182:19  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  190:9   error  'handleSendEmail' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  450:44  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\orders\[id]\page.tsx
+   50:24  error    Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   76:21  error    Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  141:9   error    'totalItems' is assigned a value but never used                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  141:61  error    Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  211:55  error    Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  232:43  error    Unexpected any. Specify a different type                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  242:31  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\orders\[id]\print\page.tsx
+  58:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  74:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\orders\page.tsx
+   15:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   16:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  282:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\[id]\edit-variants\page.tsx
+   12:15  error    Unexpected any. Specify a different type                                                                         @typescript-eslint/no-explicit-any
+   20:42  error    Unexpected any. Specify a different type                                                                         @typescript-eslint/no-explicit-any
+   28:6   warning  React Hook useEffect has a missing dependency: 'fetchProduct'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  170:60  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                  react/no-unescaped-entities
+  170:67  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                  react/no-unescaped-entities
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\bulk-import\actions.ts
+  150:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\edit\[id]\page.tsx
+  1045:90   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  1045:107  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\import\ImportClient.tsx
+  367:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\temu-import\TemuImportClient.tsx
+  4:34  error  'X' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\temu-import\__tests__\url-storage.test.ts
+  130:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\admin\(panel)\products\variant-qa\VariantQAClient.tsx
+  179:13  error  'result' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\abandoned-cart\capture\route.ts
+  28:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\ai\route.ts
+   75:9   error  'systemPrompt' is never reassigned. Use 'const' instead  prefer-const
+  272:19  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\orders\[id]\retry-email\route.ts
+  68:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\orders\[id]\route.ts
+   64:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  181:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  306:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\orders\[id]\send-email\route.ts
+  60:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\orders\[id]\send-shipping-notification\route.ts
+  43:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\orders\[id]\send-to-supplier\route.ts
+  19:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\orders\bulk\route.ts
+  69:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\[id]\route.ts
+  55:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\[id]\variants\[variantId]\route.ts
+  29:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\[id]\variants\route.ts
+  110:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\auto-fix-variants\route.ts
+  40:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  88:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\bulk-import\route.ts
+  156:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  167:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\bulk\route.ts
+  381:13  error  'specs' is never reassigned. Use 'const' instead  prefer-const
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\check-variants\route.ts
+   95:11  error  'hasSizeVariants' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  186:19  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\fix-variants\route.ts
+  22:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\variant-check\route.ts
+  144:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\admin\products\variants\[id]\route.ts
+  19:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\affiliate\click\route.ts
+  22:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\affiliate\order\route.ts
+  38:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\checkout\create-payment-intent\route.ts
+   21:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  271:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  337:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\debug\products-all\route.ts
+   76:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\debug\products\route.ts
+  45:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\debug\store-ids\route.ts
+  87:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\debug\temu-products\route.ts
+  126:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\discounts\route.ts
+  26:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\discounts\validate\route.ts
+  27:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\inngest\route.ts
+   6:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   6:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   6:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:32  error  'req' is defined but never used           @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\internal\abandoned-cart\worker\route.ts
+   24:9   error  'reminded72' is never reassigned. Use 'const' instead  prefer-const
+   43:23  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   48:35  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   71:23  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   76:35  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   98:23  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  103:35  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  123:19  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\internal\poll-supplier-status\route.ts
+  17:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\internal\sync-supplier-products\route.ts
+  20:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\orders\by-payment-intent\route.ts
+  40:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\orders\by-session\route.ts
+  43:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  62:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\push\subscribe\route.ts
+  26:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\push\test\route.ts
+  17:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\api\webhooks\stripe\route.ts
+    5:10  error  'inngest' is defined but never used                        @typescript-eslint/no-unused-vars
+    7:10  error  'sendOrderToSupplier' is defined but never used            @typescript-eslint/no-unused-vars
+   74:17  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  163:21  error  'sendAnywayOnHighRisk' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  172:22  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  246:35  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  247:37  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  342:33  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  355:17  error  'sendAnywayOnHighRisk' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  382:18  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  438:19  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\checkout\page.tsx
+   52:25  error  'clientSecret' is defined but never used                                                                                      @typescript-eslint/no-unused-vars
+   55:9   error  'router' is assigned a value but never used                                                                                   @typescript-eslint/no-unused-vars
+  109:10  error  'orderId' is assigned a value but never used                                                                                  @typescript-eslint/no-unused-vars
+  199:3   error  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  207:35  error  'data' is defined but never used                                                                                              @typescript-eslint/no-unused-vars
+  211:44  error  Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+  213:11  error  'addressData' is assigned a value but never used                                                                              @typescript-eslint/no-unused-vars
+  345:21  error  Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\kontakt\page.tsx
+  156:28  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  156:46  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\order-confirmation\OrderConfirmationClient.tsx
+   16:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   18:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  180:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\page.tsx
+    9:10   error  'headers' is defined but never used                              @typescript-eslint/no-unused-vars
+   71:13   error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   79:7    error  'isDbConfigured' is never reassigned. Use 'const' instead        prefer-const
+  278:7    error  'usedStoreId' is assigned a value but never used                 @typescript-eslint/no-unused-vars
+  280:19   error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  348:88   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  348:145  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\products\[slug]\page.tsx
+  15:10  error  'SITE_CONFIG' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\products\page.tsx
+   12:50  error  'CATEGORY_DEFINITIONS' is defined but never used                 @typescript-eslint/no-unused-vars
+  142:13  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  246:7   error  'categoryRecords' is assigned a value but never used             @typescript-eslint/no-unused-vars
+  250:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  327:72  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  327:87  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\sourcemap-suppress.tsx
+  37:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\tilbud\page.tsx
+  79:7   error  'usedStoreId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  81:19  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\app\vilkar\page.tsx
+  2:20  error  'CheckCircle' is defined but never used  @typescript-eslint/no-unused-vars
+  2:33  error  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\AddToCartButton.tsx
+   5:8   error  'Image' is defined but never used                           @typescript-eslint/no-unused-vars
+  35:29  error  'setSelectedVariantId' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  44:9   error  'hasVariants' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  58:9   error  'displayCompareAtPrice' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\Footer.tsx
+  2:40  error  'Twitter' is defined but never used  @typescript-eslint/no-unused-vars
+  2:62  error  'MapPin' is defined but never used   @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\Header.tsx
+   4:8  error  'Image' is defined but never used              @typescript-eslint/no-unused-vars
+  19:9  error  'pathname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\ProductCard.tsx
+  14:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\ProductImageGallery.tsx
+  15:10  error    'isZoomed' is assigned a value but never used                                                                                           @typescript-eslint/no-unused-vars
+  15:20  error    'setIsZoomed' is assigned a value but never used                                                                                        @typescript-eslint/no-unused-vars
+  55:6   warning  React Hook useMemo has a missing dependency: 'images'. Either include it or remove the dependency array                                 react-hooks/exhaustive-deps
+  55:21  warning  React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+  87:6   warning  React Hook useEffect has missing dependencies: 'allImages' and 'variantImage'. Either include them or remove the dependency array       react-hooks/exhaustive-deps
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\ProductPageClientWrapper.tsx
+    5:8   error    'ProductVariantSelector' is defined but never used                                                                                                        @typescript-eslint/no-unused-vars
+   73:6   warning  React Hook useEffect has missing dependencies: 'selectedVariant' and 'selectedVariantImage'. Either include them or remove the dependency array           react-hooks/exhaustive-deps
+   88:6   warning  React Hook useEffect has missing dependencies: 'defaultImage', 'selectedVariant?.id', and 'variants'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  143:6   warning  React Hook useMemo has a missing dependency: 'images'. Either include it or remove the dependency array                                                   react-hooks/exhaustive-deps
+  143:29  warning  React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked                    react-hooks/exhaustive-deps
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\ProductVariantSelector.tsx
+   65:6  warning  React Hook useEffect has missing dependencies: 'initialVariant' and 'selectedVariantId'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  113:6  warning  React Hook useEffect has a missing dependency: 'selectedVariant'. Either include it or remove the dependency array                           react-hooks/exhaustive-deps
+  116:9  error    'variantGroups' is assigned a value but never used                                                                                           @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\admin\AIHelper.tsx
+  10:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  77:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\admin\GlobalAIAssistant.tsx
+   4:42  error  'X' is defined but never used             @typescript-eslint/no-unused-vars
+  15:28  error  'AIType' is defined but never used        @typescript-eslint/no-unused-vars
+  35:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  44:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\admin\RobsDeskActions.tsx
+  32:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\analytics\GoogleAnalytics.tsx
+   4:10  error  'useEffect' is defined but never used     @typescript-eslint/no-unused-vars
+  45:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\components\products\FilterSidebar.tsx
+  7:10  error  'getCategoryBySlug' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\admin-ai.ts
+  39:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\api-auth.ts
+  47:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\automation\order-processor.ts
+   10:63  error  'options' is defined but never used       @typescript-eslint/no-unused-vars
+   32:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   57:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  106:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\automation\tracking-updater.ts
+  28:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\dropshipping\send-order-to-supplier.ts
+    2:10  error  'getDropshippingConfig' is defined but never used  @typescript-eslint/no-unused-vars
+   44:24  error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  104:19  error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\dropshipping\supplier-events.ts
+  11:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  21:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\email-items.ts
+  21:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\email.ts
+    7:10  error  'emailLogoUrl' is defined but never used  @typescript-eslint/no-unused-vars
+  105:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  321:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\prisma.ts
+  78:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\providers\__tests__\alibaba-provider.test.ts
+   10:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  173:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  185:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  195:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  203:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  214:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  215:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  219:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  227:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  249:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  265:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  279:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  297:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  316:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  407:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\providers\alibaba-provider.ts
+     4:15  error  'ScrapedProductData' is defined but never used  @typescript-eslint/no-unused-vars
+   198:25  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   222:40  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   231:41  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   284:53  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   287:24  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   323:73  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   423:39  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   423:56  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   466:64  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   546:48  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   846:41  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   850:32  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   860:40  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   860:46  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   880:40  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   883:46  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   892:43  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   895:35  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   909:38  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   923:41  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   930:32  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   943:40  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   943:46  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   966:43  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   972:39  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   988:47  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  1025:31  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  1031:38  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  1031:52  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  1031:58  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\providers\types.ts
+  7:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\risk\evaluateOrderRisk.ts
+  47:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\safeQuery.ts
+  17:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\sanitize-html.ts
+  48:7  error  'html' is never reassigned. Use 'const' instead  prefer-const
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\scrapers\base-scraper.server.ts
+  15:10  error  'randomUUID' is defined but never used    @typescript-eslint/no-unused-vars
+  91:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\scrapers\server.ts
+  12:15  error  'SupplierSource' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\scrapers\temu-scraper-clean.ts
+    3:30  error  'ProductVariant' is defined but never used        @typescript-eslint/no-unused-vars
+  150:9   error  'price' is never reassigned. Use 'const' instead  prefer-const
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\scrapers\temu-scraper.ts
+   224:25  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   228:46  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   229:44  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   500:9   error  'price' is never reassigned. Use 'const' instead        prefer-const
+   693:50  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   699:47  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   864:24  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   945:30  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   962:45  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   969:49  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1005:31  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1023:45  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1042:44  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1044:39  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1078:45  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1096:45  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1142:53  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1142:70  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1144:36  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1166:49  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1174:85  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  1235:19  error  'variantText' is never reassigned. Use 'const' instead  prefer-const
+  1351:21  error  'sku' is assigned a value but never used                @typescript-eslint/no-unused-vars
+  1448:42  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\store-server.ts
+   4:6   error  'HeaderLike' is defined but never used    @typescript-eslint/no-unused-vars
+  21:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  34:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\store.ts
+  46:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\suppliers\apiSupplier.ts
+  10:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\suppliers\emailSupplier.ts
+  16:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\suppliers\types.ts
+  57:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\utils\__tests__\url-validation.test.ts
+  92:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  93:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\utils\logger.ts
+  5:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\utils\product-count.ts
+  10:32  error  'isDatabaseConfigured' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\utils\suppress-sourcemap-warnings.ts
+  39:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\utils\url-validation.ts
+  36:7  error  'TEMU_ESSENTIAL_PARAMS' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\robto\OneDrive\Documents\Projects\ElectryoHype\lib\validation\color-validation.ts
+  77:70  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  77:92  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Ô£û 295 problems (283 errors, 12 warnings)
+  8 errors and 0 warnings potentially fixable with the `--fix` option.
+

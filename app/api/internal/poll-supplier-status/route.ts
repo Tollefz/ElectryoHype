@@ -14,9 +14,10 @@ export async function POST(req: Request) {
     const storeId = overrideStore || await getStoreIdFromHeadersServer();
     const result = await pollSupplierStatus(storeId);
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[poll-supplier-status] error", error);
-    return NextResponse.json({ error: error.message || "failed" }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message || "failed" }, { status: 500 });
   }
 }
 

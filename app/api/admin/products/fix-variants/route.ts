@@ -19,7 +19,13 @@ export async function POST(req: Request) {
   try {
     const { action = 'both' } = await req.json();
 
-    const results: any = {
+    const results: {
+      success: boolean;
+      action: string;
+      timestamp: string;
+      imageMatching?: { completed: boolean };
+      fullFix?: { completed: boolean };
+    } = {
       success: true,
       action,
       timestamp: new Date().toISOString(),

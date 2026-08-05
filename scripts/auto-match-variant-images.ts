@@ -76,7 +76,7 @@ function findMatchingImage(
   
   // Find color mapping for this variant
   let colorMapping: ColorMapping | null = null;
-  for (const [color, mapping] of Object.entries(COLOR_MAPPINGS)) {
+  for (const [, mapping] of Object.entries(COLOR_MAPPINGS)) {
     if (mapping.variants.some(v => v.toLowerCase() === variantLower)) {
       colorMapping = mapping;
       break;
@@ -124,7 +124,15 @@ function findMatchingImage(
 /**
  * Update variant images for a single product
  */
-async function updateProductVariants(productId: string) {
+type VariantUpdateResult = {
+  updated: boolean;
+  reason?: string;
+  updatedCount?: number;
+  totalVariants?: number;
+  error?: unknown;
+};
+
+async function updateProductVariants(productId: string): Promise<VariantUpdateResult> {
   try {
     const product = await prisma.product.findUnique({
       where: { id: productId },
@@ -223,7 +231,7 @@ async function updateAllProducts() {
 
     let totalUpdated = 0;
     let totalVariantsUpdated = 0;
-    const results: Array<{ productId: string; name: string; result: any }> = [];
+    const results: Array<{ productId: string; name: string; result: VariantUpdateResult }> = [];
 
     for (const product of products) {
       console.log(`\n📦 Processing: ${product.name.substring(0, 60)}...`);

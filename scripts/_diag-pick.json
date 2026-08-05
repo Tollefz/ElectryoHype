@@ -1,0 +1,1334 @@
+{
+  "meta": {
+    "runId": "cms9g1qzh00f4vf80v7ufeq6b",
+    "status": "running",
+    "scanned": 1520,
+    "kept": 832,
+    "filtered": 688,
+    "startedAt": "2026-07-31T21:17:46.587Z",
+    "candidateRows": 832,
+    "rankedWithRank": 728,
+    "decisionsLogged": 2,
+    "currentDiscoveryFamily": "magsafe",
+    "currentQuery": "MagSafe Power Bank"
+  },
+  "discoveryAttribution": {
+    "familyScanCounts": {
+      "magsafe": 87,
+      "gaming_keyboard": 393
+    },
+    "groupScanCounts": {
+      "mobil": 87,
+      "pc_gaming": 393
+    },
+    "sumFamilyScan": 480,
+    "sumGroupScan": 480
+  },
+  "discoveryPlanNow": {
+    "label": "MagSafe",
+    "query": "MagSafe Power Bank",
+    "reason": "Familien mangler helt i butikken",
+    "groupId": "mobil",
+    "familyId": "magsafe",
+    "groupLabel": "Mobil"
+  },
+  "recentDecisionsCount": 2,
+  "recentDecisions": [
+    {
+      "at": "2026-08-01T17:19:59.564Z",
+      "familyId": "powerbank",
+      "label": "Powerbank",
+      "query": "Fast Charge Power Bank",
+      "needScore": 133.7
+    },
+    {
+      "at": "2026-08-01T17:19:59.566Z",
+      "familyId": "magsafe",
+      "label": "MagSafe",
+      "query": "MagSafe Power Bank",
+      "needScore": 133.7
+    }
+  ],
+  "top100ByFam": [
+    {
+      "id": "mouse",
+      "label": "Mus",
+      "n": 33
+    },
+    {
+      "id": "gaming_mouse",
+      "label": "Gamingmus",
+      "n": 28
+    },
+    {
+      "id": "keyboard",
+      "label": "Tastatur",
+      "n": 13
+    },
+    {
+      "id": "wireless_mouse",
+      "label": "Tr├Ñdl├©s mus",
+      "n": 7
+    },
+    {
+      "id": "mouse_pad",
+      "label": "Musematter",
+      "n": 5
+    },
+    {
+      "id": "qi_charger",
+      "label": "Qi-ladere",
+      "n": 5
+    },
+    {
+      "id": "gaming_keyboard",
+      "label": "Gamingtastatur",
+      "n": 3
+    },
+    {
+      "id": "ergonomic_mouse",
+      "label": "Ergonomisk mus",
+      "n": 1
+    },
+    {
+      "id": "mini_pc",
+      "label": "Mini-PC",
+      "n": 1
+    },
+    {
+      "id": "bluetooth_mouse",
+      "label": "Bluetooth-mus",
+      "n": 1
+    },
+    {
+      "id": "led_lighting",
+      "label": "LED / RGB-belysning",
+      "n": 1
+    },
+    {
+      "id": "travel_mouse",
+      "label": "Reisemus",
+      "n": 1
+    },
+    {
+      "id": "vertical_mouse",
+      "label": "Vertikal mus",
+      "n": 1
+    }
+  ],
+  "gaming": {
+    "count": 728,
+    "top100": 36,
+    "after100": 609,
+    "disc": 393,
+    "avgMerch": null,
+    "avgMatch": 85.5,
+    "avgAss": null,
+    "avgFocus": null,
+    "avgMargin": 61.7,
+    "rows": [
+      {
+        "id": "mouse",
+        "label": "Mus",
+        "group": "other",
+        "count": 241,
+        "top100": 10,
+        "after100": 222,
+        "unranked": 9,
+        "avgMatch": 84.4,
+        "avgOverall": 70.8,
+        "avgMerch": null,
+        "avgMargin": 64.8,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Wirelesspro Game Gaming Optical Mouse Pc Laptop",
+          "The Second Generation GPX Mouse Anti-skid Stickers",
+          "Product Keyboard Wrist Pad Custom - Made Sub - Cork Mouse"
+        ]
+      },
+      {
+        "id": "keyboard",
+        "label": "Tastatur",
+        "group": "other",
+        "count": 218,
+        "top100": 6,
+        "after100": 158,
+        "unranked": 54,
+        "avgMatch": 84.3,
+        "avgOverall": 69.3,
+        "avgMerch": null,
+        "avgMargin": 55.1,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Children's 61 Key Electronic Keyboard USB Power Cord With Microphone Black",
+          "Simple And Compact 61-key Film Keyboard Key Line Separation",
+          "One-handed Keyboard Left-handed Suit Compact Mini Portable Phone"
+        ]
+      },
+      {
+        "id": "gaming_mouse",
+        "label": "Gamingmus",
+        "group": "pc_gaming",
+        "count": 124,
+        "top100": 16,
+        "after100": 101,
+        "unranked": 7,
+        "avgMatch": 89.4,
+        "avgOverall": 72.4,
+        "avgMerch": null,
+        "avgMargin": 64,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Extended Gaming Mouse Pad Desk Keyboard Mat Large Size 800MM X 300MM 31x12",
+          "Thunder Wolf V9 gaming mouse gaming machine",
+          "Gaming gaming mouse seven-speed DPI adjustable RGB light"
+        ]
+      },
+      {
+        "id": "mouse_pad",
+        "label": "Musematter",
+        "group": "pc_gaming",
+        "count": 67,
+        "top100": 0,
+        "after100": 62,
+        "unranked": 5,
+        "avgMatch": 82.2,
+        "avgOverall": 70.7,
+        "avgMerch": null,
+        "avgMargin": 70.2,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Competitive Gaming Office Waterproof Mouse Pad",
+          "Office gaming waterproof oversized mouse pad",
+          "mouse pad"
+        ]
+      },
+      {
+        "id": "wireless_mouse",
+        "label": "Tr├Ñdl├©s mus",
+        "group": "other",
+        "count": 52,
+        "top100": 2,
+        "after100": 46,
+        "unranked": 4,
+        "avgMatch": 85.6,
+        "avgOverall": 71.6,
+        "avgMerch": null,
+        "avgMargin": 66.2,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "New Gaming Wireless Mouse 2.4G Wireless Mouse",
+          "HXSJ new wireless mouse 2.4GPI gaming mouse glowing mouse",
+          "Power-Saving Silent Luminous Wireless Mouse"
+        ]
+      },
+      {
+        "id": "gaming_keyboard",
+        "label": "Gamingtastatur",
+        "group": "pc_gaming",
+        "count": 17,
+        "top100": 2,
+        "after100": 12,
+        "unranked": 3,
+        "avgMatch": 87,
+        "avgOverall": 70.8,
+        "avgMerch": null,
+        "avgMargin": 54.1,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 393,
+        "sampleTitles": [
+          "Gaming Keyboard Throne One Mouse Set",
+          "Tablet Notebook RGB Gaming Keyboard And Mouse Set",
+          "UK Gaming Keyboard And Mouse Set RGB LED USB For PC Laptop Xbox One PS4 PS"
+        ]
+      },
+      {
+        "id": "mechanical_keyboard",
+        "label": "Mekanisk tastatur",
+        "group": "pc_gaming",
+        "count": 9,
+        "top100": 0,
+        "after100": 8,
+        "unranked": 1,
+        "avgMatch": 85.4,
+        "avgOverall": 70.6,
+        "avgMerch": null,
+        "avgMargin": 57.2,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "G21 Wired U U Mouse And Keyboard Set Suspended Lighting Mechanical Feel Game Mouse And Keyboard Set",
+          "Luminous Gaming Mechanical Keyboard Mouse Converter",
+          "Mouse Pad Ergonomic Memory Foam Mechanical Keyboard Palm Rest Computer"
+        ]
+      }
+    ]
+  },
+  "target": {
+    "count": 43,
+    "top100": 0,
+    "after100": 28,
+    "disc": 87,
+    "avgMerch": null,
+    "avgMatch": 83.2,
+    "avgAss": null,
+    "avgFocus": null,
+    "avgMargin": 57.2,
+    "rows": [
+      {
+        "id": "qi_charger",
+        "label": "Qi-ladere",
+        "group": "mobil",
+        "count": 25,
+        "top100": 0,
+        "after100": 21,
+        "unranked": 4,
+        "avgMatch": 83.5,
+        "avgOverall": 69.9,
+        "avgMerch": null,
+        "avgMargin": 62.2,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Mobile Phone Qi Wireless Charger Charging Mouse Pad Mat PU Leather Mousepad",
+          "Wireless Charger Mouse Pad is Suitable For Android Apple Mobile Phone Fast Charging Base Fast Charging Xiaomi Smart",
+          "Intelligent Voice Mouse Translation Voice Typing Search Wireless Charging"
+        ]
+      },
+      {
+        "id": "powerbank",
+        "label": "Powerbank",
+        "group": "mobil",
+        "count": 9,
+        "top100": 0,
+        "after100": 1,
+        "unranked": 8,
+        "avgMatch": 81,
+        "avgOverall": 68.7,
+        "avgMerch": null,
+        "avgMargin": 43.7,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "30000mAh ROMOSS Sense 8+ Power Bank Portable External Battery With QC Two-way Fast Charging Portable Charger For Phones Tablet",
+          "Mobile Wireless Magnetic Plastic Power Bank",
+          "Handbag Back Clip Battery Power Bank"
+        ]
+      },
+      {
+        "id": "usb_c_cable",
+        "label": "USB-C kabler",
+        "group": "mobil",
+        "count": 4,
+        "top100": 0,
+        "after100": 3,
+        "unranked": 1,
+        "avgMatch": 87,
+        "avgOverall": 70,
+        "avgMerch": null,
+        "avgMargin": 60.3,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Yellow  Type C Cable, Charging Cable, Data Transfer Cable For Mobile Phone, Keyboard",
+          "Purple  Type C Cable, Charging Cable, Data Transfer Cable For Mobile Phone, Keyboard",
+          "Type C Cable, Charging Cable, Data Transfer Cable For Mobile Phone, Keyboard"
+        ]
+      },
+      {
+        "id": "magsafe",
+        "label": "MagSafe-tilbeh├©r",
+        "group": "mobil",
+        "count": 4,
+        "top100": 0,
+        "after100": 2,
+        "unranked": 2,
+        "avgMatch": 83.5,
+        "avgOverall": 69,
+        "avgMerch": null,
+        "avgMargin": 46.3,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 87,
+        "sampleTitles": [
+          "2 In 1 5000mAh 8MM Slim MagSafe Wireless Power Bank PD20W Magnetic Fast Charger Portable Phone Charger Fit For IOS Phone 15 14 13 12 Series And More",
+          "1Pc 3 In 1 10000mAh MagSafe Fast Charging Power Bank PD20W Portable Charger With 2 Built In Cables Stand Fit For IOS Phone 16 15 13 Series And More",
+          "Compatible with Apple, Maiduo Magsafe Magnetic Wireless Charging 20w Super Fast Charging Power Bank Mini Portable Back Clip Power Bank"
+        ]
+      },
+      {
+        "id": "usb_c_hub",
+        "label": "USB-C hub",
+        "group": "pc_gaming",
+        "count": 1,
+        "top100": 0,
+        "after100": 1,
+        "unranked": 0,
+        "avgMatch": 81,
+        "avgOverall": 69,
+        "avgMerch": null,
+        "avgMargin": 73.7,
+        "avgAssortment": null,
+        "avgFocus": null,
+        "discoveryAttributed": 0,
+        "sampleTitles": [
+          "Computer Mouse Keyboard USB Drive Universal 4-port HUB Line Concentration 7-Port USB Deconcentrator"
+        ]
+      }
+    ]
+  },
+  "familyTop20": [
+    {
+      "id": "mouse",
+      "label": "Mus",
+      "count": 241,
+      "top100": 10,
+      "after100": 222,
+      "unranked": 9,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 84.4,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 64.8
+    },
+    {
+      "id": "keyboard",
+      "label": "Tastatur",
+      "count": 218,
+      "top100": 6,
+      "after100": 158,
+      "unranked": 54,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 84.3,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 55.1
+    },
+    {
+      "id": "gaming_mouse",
+      "label": "Gamingmus",
+      "count": 124,
+      "top100": 16,
+      "after100": 101,
+      "unranked": 7,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 89.4,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 64
+    },
+    {
+      "id": "mouse_pad",
+      "label": "Musematter",
+      "count": 67,
+      "top100": 0,
+      "after100": 62,
+      "unranked": 5,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 82.2,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 70.2
+    },
+    {
+      "id": "wireless_mouse",
+      "label": "Tr├Ñdl├©s mus",
+      "count": 52,
+      "top100": 2,
+      "after100": 46,
+      "unranked": 4,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 85.6,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 66.2
+    },
+    {
+      "id": "qi_charger",
+      "label": "Qi-ladere",
+      "count": 25,
+      "top100": 0,
+      "after100": 21,
+      "unranked": 4,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 83.5,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 62.2
+    },
+    {
+      "id": "gaming_keyboard",
+      "label": "Gamingtastatur",
+      "count": 17,
+      "top100": 2,
+      "after100": 12,
+      "unranked": 3,
+      "disc": 393,
+      "avgMerch": null,
+      "avgMatch": 87,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 54.1
+    },
+    {
+      "id": "bluetooth_mouse",
+      "label": "Bluetooth-mus",
+      "count": 13,
+      "top100": 1,
+      "after100": 12,
+      "unranked": 0,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 85.6,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 65
+    },
+    {
+      "id": "vertical_mouse",
+      "label": "Vertikal mus",
+      "count": 11,
+      "top100": 0,
+      "after100": 11,
+      "unranked": 0,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 85.6,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 60.6
+    },
+    {
+      "id": "led_lighting",
+      "label": "LED / RGB-belysning",
+      "count": 9,
+      "top100": 0,
+      "after100": 8,
+      "unranked": 1,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 84.4,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 56.2
+    },
+    {
+      "id": "mechanical_keyboard",
+      "label": "Mekanisk tastatur",
+      "count": 9,
+      "top100": 0,
+      "after100": 8,
+      "unranked": 1,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 85.4,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 57.2
+    },
+    {
+      "id": "powerbank",
+      "label": "Powerbank",
+      "count": 9,
+      "top100": 0,
+      "after100": 1,
+      "unranked": 8,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 81,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 43.7
+    },
+    {
+      "id": "travel_mouse",
+      "label": "Reisemus",
+      "count": 4,
+      "top100": 0,
+      "after100": 4,
+      "unranked": 0,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 85.8,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 69.2
+    },
+    {
+      "id": "office_mouse",
+      "label": "Kontormus",
+      "count": 4,
+      "top100": 0,
+      "after100": 4,
+      "unranked": 0,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 86,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 70.9
+    },
+    {
+      "id": "usb_c_cable",
+      "label": "USB-C kabler",
+      "count": 4,
+      "top100": 0,
+      "after100": 3,
+      "unranked": 1,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 87,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 60.3
+    },
+    {
+      "id": "office_keyboard",
+      "label": "Kontortastatur",
+      "count": 4,
+      "top100": 0,
+      "after100": 3,
+      "unranked": 1,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 88.3,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 56.7
+    },
+    {
+      "id": "magsafe",
+      "label": "MagSafe-tilbeh├©r",
+      "count": 4,
+      "top100": 0,
+      "after100": 2,
+      "unranked": 2,
+      "disc": 87,
+      "avgMerch": null,
+      "avgMatch": 83.5,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 46.3
+    },
+    {
+      "id": "ergonomic_mouse",
+      "label": "Ergonomisk mus",
+      "count": 3,
+      "top100": 1,
+      "after100": 2,
+      "unranked": 0,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 82,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 69.2
+    },
+    {
+      "id": "wrist_rest",
+      "label": "H├Ñndleddsst├©tter",
+      "count": 2,
+      "top100": 0,
+      "after100": 2,
+      "unranked": 0,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 88.5,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 55
+    },
+    {
+      "id": "phone_case",
+      "label": "Mobildeksler",
+      "count": 2,
+      "top100": 0,
+      "after100": 1,
+      "unranked": 1,
+      "disc": 0,
+      "avgMerch": null,
+      "avgMatch": 82,
+      "avgAss": null,
+      "avgFocus": null,
+      "avgMargin": 59
+    }
+  ],
+  "chronology": {
+    "first300": [
+      [
+        "gaming_mouse",
+        123
+      ],
+      [
+        "mouse",
+        77
+      ],
+      [
+        "wireless_mouse",
+        31
+      ],
+      [
+        "gaming_keyboard",
+        17
+      ],
+      [
+        "mouse_pad",
+        17
+      ],
+      [
+        "qi_charger",
+        8
+      ],
+      [
+        "bluetooth_mouse",
+        7
+      ],
+      [
+        "mechanical_keyboard",
+        5
+      ],
+      [
+        "led_lighting",
+        4
+      ],
+      [
+        "vertical_mouse",
+        3
+      ],
+      [
+        "travel_mouse",
+        3
+      ],
+      [
+        "office_mouse",
+        3
+      ]
+    ],
+    "mid300": [
+      [
+        "mouse",
+        174
+      ],
+      [
+        "mouse_pad",
+        55
+      ],
+      [
+        "wireless_mouse",
+        24
+      ],
+      [
+        "qi_charger",
+        15
+      ],
+      [
+        "vertical_mouse",
+        8
+      ],
+      [
+        "bluetooth_mouse",
+        7
+      ],
+      [
+        "mechanical_keyboard",
+        5
+      ],
+      [
+        "travel_mouse",
+        2
+      ],
+      [
+        "ergonomic_mouse",
+        2
+      ],
+      [
+        "mini_pc",
+        1
+      ],
+      [
+        "office_mouse",
+        1
+      ],
+      [
+        "trackball",
+        1
+      ]
+    ],
+    "last300": [
+      [
+        "keyboard",
+        218
+      ],
+      [
+        "mouse",
+        35
+      ],
+      [
+        "powerbank",
+        9
+      ],
+      [
+        "mouse_pad",
+        8
+      ],
+      [
+        "qi_charger",
+        4
+      ],
+      [
+        "usb_c_cable",
+        4
+      ],
+      [
+        "led_lighting",
+        4
+      ],
+      [
+        "magsafe",
+        4
+      ],
+      [
+        "office_keyboard",
+        3
+      ],
+      [
+        "wrist_rest",
+        2
+      ],
+      [
+        "phone_case",
+        2
+      ],
+      [
+        "monitor_stand",
+        2
+      ]
+    ]
+  },
+  "samples": {
+    "topGaming": [
+      {
+        "rank": 1,
+        "title": "Gaming Keyboard Throne One Mouse Set",
+        "family": "gaming_keyboard",
+        "shopMatchPct": 91,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.3
+      },
+      {
+        "rank": 2,
+        "title": "Wirelesspro Game Gaming Optical Mouse Pc Laptop",
+        "family": "mouse",
+        "shopMatchPct": 90,
+        "overallScore": 71,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 65.3
+      },
+      {
+        "rank": 3,
+        "title": "Tablet Notebook RGB Gaming Keyboard And Mouse Set",
+        "family": "gaming_keyboard",
+        "shopMatchPct": 88,
+        "overallScore": 71,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 52
+      },
+      {
+        "rank": 4,
+        "title": "Extended Gaming Mouse Pad Desk Keyboard Mat Large Size 800MM X 300MM 3",
+        "family": "gaming_mouse",
+        "shopMatchPct": 92,
+        "overallScore": 74,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 65.4
+      },
+      {
+        "rank": 4,
+        "title": "New Gaming Wireless Mouse 2.4G Wireless Mouse",
+        "family": "wireless_mouse",
+        "shopMatchPct": 87,
+        "overallScore": 73,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 71.7
+      },
+      {
+        "rank": 5,
+        "title": "Thunder Wolf V9 gaming mouse gaming machine",
+        "family": "gaming_mouse",
+        "shopMatchPct": 92,
+        "overallScore": 73,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 64.7
+      },
+      {
+        "rank": 6,
+        "title": "Gaming gaming mouse seven-speed DPI adjustable RGB light",
+        "family": "gaming_mouse",
+        "shopMatchPct": 92,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 61.2
+      },
+      {
+        "rank": 7,
+        "title": "Colorful luminous gaming mouse",
+        "family": "gaming_mouse",
+        "shopMatchPct": 91,
+        "overallScore": 73,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 70.8
+      }
+    ],
+    "buriedTargets": [
+      {
+        "rank": 158,
+        "title": "Mobile Phone Qi Wireless Charger Charging Mouse Pad Mat PU Leather Mou",
+        "family": "qi_charger",
+        "shopMatchPct": 89,
+        "overallScore": 73,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 65.5
+      },
+      {
+        "rank": 179,
+        "title": "Wireless Charger Mouse Pad is Suitable For Android Apple Mobile Phone ",
+        "family": "qi_charger",
+        "shopMatchPct": 82,
+        "overallScore": 68,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 62.7
+      },
+      {
+        "rank": 182,
+        "title": "Intelligent Voice Mouse Translation Voice Typing Search Wireless Charg",
+        "family": "qi_charger",
+        "shopMatchPct": 85,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 65.6
+      },
+      {
+        "rank": 191,
+        "title": "PU Leather Surface 15W Wireless Charging Mouse Pad Oversized Leather D",
+        "family": "qi_charger",
+        "shopMatchPct": 85,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 65.7
+      },
+      {
+        "rank": 260,
+        "title": "Colorful Wireless Charging Mouse Pad Fingerprint Touch Key Wireless Ch",
+        "family": "qi_charger",
+        "shopMatchPct": 89,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 61.1
+      },
+      {
+        "rank": 452,
+        "title": "Yellow  Type C Cable, Charging Cable, Data Transfer Cable For Mobile P",
+        "family": "usb_c_cable",
+        "shopMatchPct": 87,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.3
+      },
+      {
+        "rank": 456,
+        "title": "Purple  Type C Cable, Charging Cable, Data Transfer Cable For Mobile P",
+        "family": "usb_c_cable",
+        "shopMatchPct": 87,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.3
+      },
+      {
+        "rank": 510,
+        "title": "Type C Cable, Charging Cable, Data Transfer Cable For Mobile Phone, Ke",
+        "family": "usb_c_cable",
+        "shopMatchPct": 87,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.3
+      },
+      {
+        "rank": 536,
+        "title": "Wireless charging mouse pad",
+        "family": "qi_charger",
+        "shopMatchPct": 80,
+        "overallScore": 71,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 69.3
+      },
+      {
+        "rank": 778,
+        "title": "Silent optical mouse 2.4G wireless charging panda mouse cartoon animal",
+        "family": "qi_charger",
+        "shopMatchPct": 79,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 70.1
+      },
+      {
+        "rank": 874,
+        "title": "QI wireless charging mouse pad fast charging 5W",
+        "family": "qi_charger",
+        "shopMatchPct": 79,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 69.5
+      },
+      {
+        "rank": 925,
+        "title": "Mobile phone multi-function wireless charging mouseMobile phone multi-",
+        "family": "qi_charger",
+        "shopMatchPct": 79,
+        "overallScore": 68,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 64.2
+      },
+      {
+        "rank": 974,
+        "title": "Wireless charging game mouse",
+        "family": "qi_charger",
+        "shopMatchPct": 81,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 67.1
+      },
+      {
+        "rank": 990,
+        "title": "10W wireless charging mouse pad",
+        "family": "qi_charger",
+        "shopMatchPct": 81,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 67.4
+      },
+      {
+        "rank": 1044,
+        "title": "Wireless Charger LED Light Colorful RGB Glowing Mouse Pad",
+        "family": "qi_charger",
+        "shopMatchPct": 89,
+        "overallScore": 70,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 59.1
+      },
+      {
+        "rank": 1078,
+        "title": "Wireless Charger Rubber Mouse Pad",
+        "family": "qi_charger",
+        "shopMatchPct": 88,
+        "overallScore": 73,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 69.5
+      },
+      {
+        "rank": 1265,
+        "title": "Wireless Charging Mouse Pad Leather Case Mouse Pad Multifunctional",
+        "family": "qi_charger",
+        "shopMatchPct": 88,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.1
+      },
+      {
+        "rank": 1310,
+        "title": "Wireless Charging RGB Luminous Mouse Pad",
+        "family": "qi_charger",
+        "shopMatchPct": 91,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 59.5
+      },
+      {
+        "rank": 1311,
+        "title": "MIWU wireless charging mouse pad",
+        "family": "qi_charger",
+        "shopMatchPct": 88,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.4
+      },
+      {
+        "rank": 1358,
+        "title": "Mouse Pad Wireless Charger Fast Charge",
+        "family": "qi_charger",
+        "shopMatchPct": 88,
+        "overallScore": 72,
+        "merch": null,
+        "assortmentTotal": null,
+        "assortmentHave": null,
+        "assortmentTarget": null,
+        "focusScore": null,
+        "focusStars": null,
+        "margin": 60.8
+      }
+    ],
+    "topOverall": [
+      {
+        "rank": 1,
+        "family": "gaming_keyboard",
+        "title": "Gaming Keyboard Throne One Mouse Set",
+        "match": 91,
+        "merch": null
+      },
+      {
+        "rank": 2,
+        "family": "mouse",
+        "title": "Wirelesspro Game Gaming Optical Mouse Pc Laptop",
+        "match": 90,
+        "merch": null
+      },
+      {
+        "rank": 3,
+        "family": "gaming_keyboard",
+        "title": "Tablet Notebook RGB Gaming Keyboard And Mouse Set",
+        "match": 88,
+        "merch": null
+      },
+      {
+        "rank": 4,
+        "family": "gaming_mouse",
+        "title": "Extended Gaming Mouse Pad Desk Keyboard Mat Large Size 800MM",
+        "match": 92,
+        "merch": null
+      },
+      {
+        "rank": 4,
+        "family": "wireless_mouse",
+        "title": "New Gaming Wireless Mouse 2.4G Wireless Mouse",
+        "match": 87,
+        "merch": null
+      },
+      {
+        "rank": 5,
+        "family": "gaming_mouse",
+        "title": "Thunder Wolf V9 gaming mouse gaming machine",
+        "match": 92,
+        "merch": null
+      },
+      {
+        "rank": 6,
+        "family": "gaming_mouse",
+        "title": "Gaming gaming mouse seven-speed DPI adjustable RGB light",
+        "match": 92,
+        "merch": null
+      },
+      {
+        "rank": 7,
+        "family": "gaming_mouse",
+        "title": "Colorful luminous gaming mouse",
+        "match": 91,
+        "merch": null
+      },
+      {
+        "rank": 8,
+        "family": "gaming_mouse",
+        "title": "Professional Wired Gaming Mouse 5500DPI Adjustable 7 Buttons",
+        "match": 91,
+        "merch": null
+      },
+      {
+        "rank": 9,
+        "family": "gaming_mouse",
+        "title": "Computer Peripheral Accessories Mute Gaming Mouse",
+        "match": 91,
+        "merch": null
+      },
+      {
+        "rank": 9,
+        "family": "keyboard",
+        "title": "Children's 61 Key Electronic Keyboard USB Power Cord With Mi",
+        "match": 86,
+        "merch": null
+      },
+      {
+        "rank": 10,
+        "family": "wireless_mouse",
+        "title": "HXSJ new wireless mouse 2.4GPI gaming mouse glowing mouse",
+        "match": 91,
+        "merch": null
+      },
+      {
+        "rank": 10,
+        "family": "mouse",
+        "title": "The Second Generation GPX Mouse Anti-skid Stickers",
+        "match": 89,
+        "merch": null
+      },
+      {
+        "rank": 11,
+        "family": "gaming_mouse",
+        "title": "Wired Gaming Mouse",
+        "match": 91,
+        "merch": null
+      },
+      {
+        "rank": 12,
+        "family": "gaming_mouse",
+        "title": "Computer Gaming Mouse",
+        "match": 91,
+        "merch": null
+      }
+    ]
+  }
+}

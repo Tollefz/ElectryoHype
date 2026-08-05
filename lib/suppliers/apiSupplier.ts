@@ -7,7 +7,7 @@ export async function sendApiOrder(
   // For now, just log and return a fake ID
   console.log(`[API Supplier] Would send order to ${input.apiBaseUrl}`, {
     orderId: input.orderId,
-    items: input.items.map((i: any) => ({
+    items: input.items.map((i) => ({
       name: i.name,
       quantity: i.quantity,
       supplierSku: i.supplierSku,

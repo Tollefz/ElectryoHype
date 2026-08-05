@@ -3,17 +3,11 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { loginUiMessage } from "@/lib/auth/login-messages";
 
 /**
- * Admin login page - Public route (no auth required)
- * 
- * This page is in the (auth) route group, which means it will NOT
- * be protected by the auth guard in (panel)/layout.tsx.
- * 
- * This prevents redirect loops because:
- * - Middleware excludes /admin/login explicitly
- * - (panel)/layout.tsx only protects routes in the (panel) group
- * - This page is in (auth) group, so it's never checked by auth guard
+ * Admin login — public route (auth group, not panel layout).
+ * Distinguishes invalid credentials vs database unavailable (via authorize throw codes).
  */
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -27,18 +21,32 @@ export default function AdminLogin() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: email.trim(),
+        password,
+      });
 
-    if (result?.error) {
-      setError("Ugyldig e-post eller passord");
+      if (result?.error) {
+        setError(loginUiMessage(result.error));
+        setLoading(false);
+        return;
+      }
+
+      if (result?.ok) {
+        router.push("/admin/dashboard");
+        router.refresh();
+        return;
+      }
+
+      setError(loginUiMessage(result?.error));
       setLoading(false);
-    } else {
-      router.push("/admin/dashboard");
-      router.refresh();
+    } catch {
+      setError(
+        "Kan ikke logge inn akkurat nå. Sjekk nettverket og prøv igjen om litt."
+      );
+      setLoading(false);
     }
   };
 
@@ -50,29 +58,38 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-primary">E-post</label>
+            <label className="mb-1 block text-sm font-medium text-primary">
+              E-post
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
               className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none"
               required
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-primary">Passord</label>
+            <label className="mb-1 block text-sm font-medium text-primary">
+              Passord
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
               className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none"
               required
             />
           </div>
 
           {error && (
-            <div className="rounded-md bg-red-50 border border-red-200 p-3 text-sm text-accent-red">
+            <div
+              role="alert"
+              className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-accent-red"
+            >
               {error}
             </div>
           )}
@@ -80,7 +97,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-50 transition-colors"
+            className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:opacity-50"
           >
             {loading ? "Logger inn..." : "Logg inn"}
           </button>
@@ -89,4 +106,3 @@ export default function AdminLogin() {
     </div>
   );
 }
-

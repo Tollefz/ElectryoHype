@@ -5,8 +5,10 @@
  * Usage: npm run sanitize:descriptions
  */
 
-import { prisma } from '../lib/prisma';
+import { PrismaClient } from '@prisma/client';
 import { sanitizeDescriptionWithFallback } from '../lib/import/sanitizeDescription';
+
+const prisma = new PrismaClient();
 
 async function sanitizeProductDescriptions() {
   console.log('🧹 Starting product description sanitization...\n');

@@ -9,53 +9,61 @@ import { MobileFilterButton } from "@/components/products/MobileFilterButton";
 import { Pagination } from "@/components/products/Pagination";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getStoreIdFromHeadersServer } from "@/lib/store-server";
-import { getCategoryBySlug, getAllCategorySlugs, CATEGORY_DEFINITIONS } from "@/lib/categories";
+import { getCategoryBySlug, getAllCategorySlugs } from "@/lib/categories";
+import { ListingAnalytics } from "@/components/analytics/ListingAnalytics";
+import { generateSEOMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+import { withDatabaseCircuit } from "@/lib/ops/db-circuit";
 
-const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
+interface ProductsPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+function firstParam(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
+async function resolveSearchParams(searchParams: ProductsPageProps["searchParams"]) {
+  const raw = await searchParams;
+  return {
+    category: firstParam(raw.category),
+    page: firstParam(raw.page),
+    q: firstParam(raw.q),
+    query: firstParam(raw.query),
+    sort: firstParam(raw.sort),
+    minPrice: firstParam(raw.minPrice),
+    maxPrice: firstParam(raw.maxPrice),
+    inStock: firstParam(raw.inStock),
+  };
+}
 
 export async function generateMetadata({ searchParams }: ProductsPageProps): Promise<Metadata> {
-  const params = await getParams(searchParams);
-  const categorySlug = params.category ?? undefined;
+  const params = await resolveSearchParams(searchParams);
+  const categorySlug = params.category;
   const categoryDef = getCategoryBySlug(categorySlug);
   const categoryName = categoryDef?.label;
   const title = categoryName ? `${categoryName} - ElectroHypeX` : "Produkter - ElectroHypeX";
   const description = categoryName 
     ? `Utforsk vårt utvalg av ${categoryName.toLowerCase()}. Gratis frakt over 500 kr. Rask levering i hele Norge.`
     : "Utforsk vårt utvalg av elektronikk, gaming-utstyr, mobil og tilbehør. Gratis frakt over 500 kr.";
-  
-  return {
+  const path = `/products${categorySlug ? `?category=${categorySlug}` : ""}`;
+
+  return generateSEOMetadata({
     title,
     description,
-    keywords: categoryName 
+    url: path,
+    canonical: path,
+    keywords: categoryName
       ? [categoryName.toLowerCase(), "elektronikk", "gaming", "mobil", "tilbehør", "Norge"]
       : ["produkter", "elektronikk", "gaming", "mobil", "tilbehør", "Norge"],
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      url: `${baseUrl}/products${categorySlug ? `?category=${categorySlug}` : ''}`,
-      siteName: "ElectroHypeX",
-      locale: "nb_NO",
-    },
-    alternates: {
-      canonical: `${baseUrl}/products${categorySlug ? `?category=${categorySlug}` : ''}`,
-    },
-  };
-}
-
-interface ProductsPageProps {
-  searchParams: Promise<Record<string, string | undefined>> | Record<string, string | undefined>;
+  });
 }
 
 const PAGE_SIZE = 12;
 
-async function getParams(searchParams: ProductsPageProps["searchParams"]) {
-  return searchParams instanceof Promise ? await searchParams : searchParams;
-}
-
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const params = await getParams(searchParams);
+  const params = await resolveSearchParams(searchParams);
   const headerStoreId = await getStoreIdFromHeadersServer();
   const storeId = headerStoreId || DEFAULT_STORE_ID;
   const page = Math.max(1, Number(params.page ?? "1"));
@@ -124,26 +132,24 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     slug: string;
     price: number | Prisma.Decimal;
     compareAtPrice: number | Prisma.Decimal | null;
-    images: any;
+    images: string;
     category: string | null;
     isActive: boolean;
   }> = [];
   let total = 0;
-  let categoryRecords: Array<{ category: string | null }> = [];
   let loadError: string | null = null;
   let usedStoreId = storeId;
 
-  try {
-    const orderByMap: Record<string, Prisma.ProductOrderByWithRelationInput> = {
-      "price-asc": { price: "asc" },
-      "price-desc": { price: "desc" },
-      name: { name: "asc" },
-      newest: { createdAt: "desc" },
-    };
-    const orderBy = orderByMap[sort] ?? { createdAt: "desc" };
+  const orderByMap: Record<string, Prisma.ProductOrderByWithRelationInput> = {
+    "price-asc": { price: "asc" },
+    "price-desc": { price: "desc" },
+    name: { name: "asc" },
+    newest: { createdAt: "desc" },
+  };
+  const orderBy = orderByMap[sort] ?? { createdAt: "desc" };
 
-    // Primary query
-    const [primaryProducts, primaryTotal, primaryCategories] = await Promise.all([
+  const primary = await withDatabaseCircuit("products:list", async () => {
+    const [primaryProducts, primaryTotal] = await Promise.all([
       prisma.product.findMany({
         where,
         orderBy,
@@ -161,80 +167,55 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         },
       }),
       prisma.product.count({ where }),
-      prisma.product.findMany({
-        where: {
-          storeId: safeStoreId && safeStoreId !== "demo-store" ? safeStoreId : DEFAULT_STORE_ID,
-          category: { 
-            not: null,
-            // Exclude Sport and Klær from category list
-            notIn: ["Sport", "Klær", "Sport & Trening"],
-          },
-          isActive: true,
-        },
-        distinct: ["category"],
-        select: { category: true },
-      }),
     ]);
+    return { products: primaryProducts, total: primaryTotal, storeId: safeStoreId };
+  });
 
-    productsRaw = primaryProducts;
-    total = primaryTotal;
-    categoryRecords = primaryCategories;
-    usedStoreId = storeId;
+  if (!primary.ok) {
+    loadError = primary.error.reason || "Kunne ikke hente produkter.";
+  } else {
+    productsRaw = primary.data.products;
+    total = primary.data.total;
+    usedStoreId = primary.data.storeId;
 
-    // Fallback: if no products, try DEFAULT_STORE_ID (Electro Hype) but NOT demo-store
     if (productsRaw.length === 0 && safeStoreId !== DEFAULT_STORE_ID) {
-      const currentFallback = DEFAULT_STORE_ID;
-      
-      if (currentFallback) {
-        console.log(`[products page] no products for storeId="${safeStoreId}", trying fallback="${currentFallback}"`);
-        const fallbackWhere: Prisma.ProductWhereInput = {
-          ...where,
-          storeId: currentFallback,
-          // Keep category filter (excludes Sport and Klær unless explicitly requested)
-          category: categoryFilter,
-        };
-        
-      const [fallbackProducts, fallbackTotal, fallbackCategories] = await Promise.all([
-        prisma.product.findMany({
-          where: fallbackWhere,
-          orderBy,
-          skip: (page - 1) * PAGE_SIZE,
-          take: PAGE_SIZE,
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            compareAtPrice: true,
-            images: true,
-            category: true,
-            isActive: true,
-          },
-        }),
-        prisma.product.count({ where: fallbackWhere }),
-        prisma.product.findMany({
-          where: {
-            storeId: currentFallback,
-            category: { 
-              not: null,
-              notIn: ["Sport", "Klær"], // Exclude sport/clothing categories
+      const fallbackWhere: Prisma.ProductWhereInput = {
+        ...where,
+        storeId: DEFAULT_STORE_ID,
+        category: categoryFilter,
+      };
+      const fallback = await withDatabaseCircuit("products:fallback", async () => {
+        const [fallbackProducts, fallbackTotal] = await Promise.all([
+          prisma.product.findMany({
+            where: fallbackWhere,
+            orderBy,
+            skip: (page - 1) * PAGE_SIZE,
+            take: PAGE_SIZE,
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              price: true,
+              compareAtPrice: true,
+              images: true,
+              category: true,
+              isActive: true,
             },
-            isActive: true,
-          },
-          distinct: ["category"],
-          select: { category: true },
-        }),
-      ]);
-
-      productsRaw = fallbackProducts;
-      total = fallbackTotal;
-      categoryRecords = fallbackCategories;
-      usedStoreId = currentFallback;
+          }),
+          prisma.product.count({ where: fallbackWhere }),
+        ]);
+        return {
+          products: fallbackProducts,
+          total: fallbackTotal,
+          storeId: DEFAULT_STORE_ID,
+        };
+      });
+      if (fallback.ok) {
+        productsRaw = fallback.data.products;
+        total = fallback.data.total;
+        usedStoreId = fallback.data.storeId;
       }
     }
-  } catch (error: any) {
-    console.error("[products:list] Failed to load products", error);
-    loadError = error?.message ?? "Kunne ikke hente produkter.";
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -248,99 +229,107 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     price: Number(product.price),
     compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
     images: product.images,
+    category: product.category,
   }));
 
-  // Debug logging to inspect filters and result size (server-side)
-  console.log("[products page] final result count:", products.length, {
-    primaryStoreId: storeId,
-    actuallyUsedStoreId: usedStoreId,
-    hasCategoryFilter: Boolean(where.category),
-    search: query ?? null,
-    minPrice: typeof minPrice === "number" ? minPrice : null,
-    maxPrice: typeof maxPrice === "number" ? maxPrice : null,
-  });
+  // Quiet debug — strings only, no Error objects
+  if (process.env.NEXT_PUBLIC_DEBUG === "true") {
+    console.warn(
+      `[products page] count=${products.length} store=${usedStoreId}`
+    );
+  }
 
   // Get category name for display
   const resolvedCategoryName = categoryName || null;
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-        {/* Header section */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between mb-4">
+    <div className="ehx-page-bg min-h-screen">
+      <ListingAnalytics
+        listId={categorySlug || "all-products"}
+        listName={resolvedCategoryName || "Alle produkter"}
+        searchTerm={params.q || params.query}
+        items={products.map((product, index) => ({
+          item_id: product.id,
+          item_name: product.name,
+          item_brand: "ElectroHypeX",
+          item_category: product.category || undefined,
+          price: product.price,
+          quantity: 1,
+          index,
+        }))}
+      />
+      <div className="ehx-container py-8 sm:py-10 lg:py-12">
+        <div className="mb-8 sm:mb-10">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-gray-900">
+              <h1 className="ehx-heading-2">
                 {resolvedCategoryName ? resolvedCategoryName : "Alle produkter"}
               </h1>
-              {resolvedCategoryName && (
-                <p className="mt-2 text-sm sm:text-base text-slate-600">
-                  {total} {total === 1 ? "produkt" : "produkter"} i denne kategorien
-                </p>
-              )}
+              <p className="ehx-body mt-2">
+                {total} {total === 1 ? "produkt" : "produkter"}
+                {query ? ` for «${query}»` : ""}
+              </p>
             </div>
             <div className="hidden md:block">
-              <Suspense fallback={<div className="h-10 w-32 rounded-lg bg-gray-200 animate-pulse" />}>
+              <Suspense fallback={<div className="h-10 w-36 animate-pulse rounded-[var(--ehx-radius-md)] bg-[var(--ehx-image-bg)]" />}>
                 <SortDropdown />
               </Suspense>
             </div>
           </div>
         </div>
-        {/* Mobile: Filter/Sort buttons */}
-        <div className="mb-4 flex gap-2 md:hidden">
-          <Suspense fallback={<div className="h-10 flex-1 rounded-lg bg-gray-200 animate-pulse" />}>
+
+        <div className="mb-5 flex gap-2 md:hidden">
+          <Suspense fallback={<div className="h-10 flex-1 animate-pulse rounded-[var(--ehx-radius-md)] bg-[var(--ehx-image-bg)]" />}>
             <MobileFilterButton categories={sidebarCategories} />
           </Suspense>
-          <Suspense fallback={<div className="h-10 w-32 rounded-lg bg-gray-200 animate-pulse" />}>
+          <Suspense fallback={<div className="h-10 w-32 animate-pulse rounded-[var(--ehx-radius-md)] bg-[var(--ehx-image-bg)]" />}>
             <SortDropdown />
           </Suspense>
         </div>
 
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
-          {/* Desktop: Filter sidebar */}
-          <Suspense fallback={<div className="hidden lg:block h-96 w-64 rounded-lg bg-gray-200 animate-pulse" />}>
-            <aside className="hidden lg:block w-64 flex-shrink-0 lg:sticky lg:top-24 lg:self-start">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
+          <Suspense fallback={<div className="hidden h-96 w-72 shrink-0 animate-pulse rounded-[var(--ehx-radius-md)] bg-[var(--ehx-image-bg)] lg:block" />}>
+            <aside className="hidden w-72 shrink-0 lg:sticky lg:top-28 lg:block lg:self-start">
               <FilterSidebar categories={sidebarCategories} />
             </aside>
           </Suspense>
 
-          {/* Product grid */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1 pb-4">
             {isUnknownCategory && (
-              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 sm:p-6">
+              <div className="mb-6 rounded-[var(--ehx-radius-md)] border border-blue-200 bg-blue-50 p-4 sm:p-5">
                 <p className="text-sm text-blue-800">
-                  <span className="font-semibold">Fant ikke kategorien "{categorySlug}".</span> Viser alle produkter i stedet.
+                  <span className="font-semibold">Fant ikke kategorien &quot;{categorySlug}&quot;.</span> Viser alle produkter i stedet.
                 </p>
               </div>
             )}
             {loadError ? (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-4 sm:p-6 text-red-700">
+              <div className="rounded-[var(--ehx-radius-md)] border border-amber-200 bg-amber-50 p-5 text-amber-950">
                 <p className="font-semibold">Kunne ikke laste produkter</p>
-                <p className="text-sm">{loadError}</p>
+                <p className="text-sm text-amber-900/90">{loadError}</p>
               </div>
             ) : products.length === 0 ? (
-              <div className="rounded-lg border border-gray-200 bg-white p-8 sm:p-12 text-center">
-                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+              <div className="rounded-[var(--ehx-radius-md)] border border-[var(--border)] bg-white p-10 text-center sm:p-14">
+                <h2 className="ehx-heading-3 mb-3">
                   {resolvedCategoryName
                     ? `Ingen produkter i denne kategorien ennå`
                     : "Ingen produkter matcher filtrene dine"}
                 </h2>
-                <p className="text-sm sm:text-base text-gray-600 mb-6 max-w-md mx-auto">
+                <p className="ehx-body mx-auto mb-8 max-w-md">
                   {resolvedCategoryName
                     ? "Vi jobber med å utvide sortimentet. I mellomtiden kan du se andre kategorier."
                     : "Prøv å justere filtrene eller søk etter noe annet."}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <div className="flex flex-col justify-center gap-3 sm:flex-row">
                   <Link
                     href="/products"
-                    className="inline-block rounded-lg bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition-colors"
+                    className="ehx-btn ehx-btn-primary px-6 py-2.5"
                   >
                     Se alle produkter
                   </Link>
                   {resolvedCategoryName && (
                     <Link
                       href="/tilbud"
-                      className="inline-block rounded-lg border-2 border-green-600 px-6 py-2.5 text-sm font-semibold text-green-600 hover:bg-green-50 transition-colors"
+                      className="ehx-btn ehx-btn-secondary px-6 py-2.5"
                     >
                       Se tilbud
                     </Link>
@@ -348,13 +337,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+              <div className="ehx-product-grid-listing">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             )}
-            <Suspense fallback={<div className="h-10 w-full rounded-lg bg-gray-200 animate-pulse mt-4" />}>
+            <Suspense fallback={<div className="mt-8 h-10 w-full animate-pulse rounded-[var(--ehx-radius-md)] bg-[var(--ehx-image-bg)]" />}>
               <Pagination currentPage={page} totalPages={totalPages} />
             </Suspense>
           </div>

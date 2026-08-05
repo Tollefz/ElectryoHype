@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { SITE_CONFIG } from '@/lib/site';
 
 export default function VilkarPage() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Loader2, Copy, Check, X } from "lucide-react";
+import { Sparkles, Loader2, Copy, Check } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,9 +12,42 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { callAdminAI, type AIType } from "@/lib/admin-ai";
+import { callAdminAI, type AIRequestPayload } from "@/lib/admin-ai";
 
 type Mode = "productDescription" | "seo" | "categoryCopy" | "heroCopy" | "emailTemplate";
+
+interface AssistantFormData {
+  name?: string;
+  category?: string;
+  price?: string;
+  tone?: string;
+  notes?: string;
+  shortDescription?: string;
+  pageType?: string;
+  categoryName?: string;
+  productsHint?: string;
+  campaignName?: string;
+  focus?: string;
+  discountInfo?: string;
+  templateType?: string;
+  audienceDescription?: string;
+  offerDescription?: string;
+}
+
+interface AssistantResult {
+  description?: string;
+  bullets?: string[];
+  title?: string;
+  intro?: string;
+  shortBlurb?: string;
+  headline?: string;
+  subheadline?: string;
+  ctaPrimary?: string;
+  ctaSecondary?: string;
+  subject?: string;
+  preheader?: string;
+  bodyHtml?: string;
+}
 
 const MODES: { id: Mode; label: string }[] = [
   { id: "productDescription", label: "Produktbeskrivelse" },
@@ -32,8 +65,8 @@ export function GlobalAIAssistant() {
   const [copied, setCopied] = useState(false);
 
   // Form states
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  const [result, setResult] = useState<any>(null);
+  const [formData, setFormData] = useState<AssistantFormData>({});
+  const [result, setResult] = useState<AssistantResult | null>(null);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -41,7 +74,7 @@ export function GlobalAIAssistant() {
     setResult(null);
 
     try {
-      const payload: any = {};
+      const payload: AIRequestPayload = {};
 
       // Build payload based on mode
       switch (mode) {
@@ -49,19 +82,19 @@ export function GlobalAIAssistant() {
           payload.name = formData.name || "";
           payload.category = formData.category || "";
           payload.price = formData.price ? Number(formData.price) : undefined;
-          payload.tone = formData.tone || "nøytral";
+          payload.tone = (formData.tone as AIRequestPayload["tone"]) || "nøytral";
           payload.notes = formData.notes || "";
           break;
         case "seo":
           payload.name = formData.name || "";
           payload.category = formData.category || "";
           payload.shortDescription = formData.shortDescription || "";
-          payload.pageType = formData.pageType || "product";
+          payload.pageType = (formData.pageType as AIRequestPayload["pageType"]) || "product";
           break;
         case "categoryCopy":
           payload.categoryName = formData.categoryName || "";
           payload.productsHint = formData.productsHint || "";
-          payload.tone = formData.tone || "nøytral";
+          payload.tone = (formData.tone as AIRequestPayload["tone"]) || "nøytral";
           break;
         case "heroCopy":
           payload.campaignName = formData.campaignName || "";
@@ -69,7 +102,7 @@ export function GlobalAIAssistant() {
           payload.discountInfo = formData.discountInfo || "";
           break;
         case "emailTemplate":
-          payload.templateType = formData.templateType || "campaign";
+          payload.templateType = (formData.templateType as AIRequestPayload["templateType"]) || "campaign";
           payload.audienceDescription = formData.audienceDescription || "";
           payload.offerDescription = formData.offerDescription || "";
           break;
@@ -81,7 +114,7 @@ export function GlobalAIAssistant() {
         throw new Error(response.error || "Kunne ikke generere innhold");
       }
 
-      setResult(response.result);
+      setResult((response.result ?? {}) as AssistantResult);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ukjent feil");
     } finally {

@@ -1,15 +1,15 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import { getScraperForUrl } from "../lib/scrapers/server";
+import {
+  calculateCompareAtPrice,
+  calculateSuggestedRetailPrice,
+} from "../lib/import/pricing";
 
 /**
  * Script for å oppdatere spesifikke produkter med faktiske bilder og varianter
  * Basert på produkter vist på skjermbilde
  */
-
-const USD_TO_NOK_RATE = 10.5;
-const PROFIT_MARGIN = 2; // 100% margin
-const COMPARE_AT_PRICE_MULTIPLIER = 1.5;
 
 // Produkter som skal oppdateres basert på skjermbilde
 const PRODUCTS_TO_UPDATE = [
@@ -142,18 +142,22 @@ async function updateProduct(productId: string, productName: string, supplierUrl
       }
 
       if (variants.length > 0) {
-        const basePrice = product.supplierPrice ? Number(product.supplierPrice) : Number(product.price) / PROFIT_MARGIN;
-        
+        // Med kjent leverandørpris brukes den dynamiske priskurven;
+        // ellers beholdes produktets eksisterende salgspris.
+        const supplierPriceNok = product.supplierPrice ? Number(product.supplierPrice) : null;
+
         const variantData = variants.map((variant) => {
-          const variantSellingPriceNok = Math.round(basePrice * PROFIT_MARGIN);
-          const variantCompareAtPriceNok = Math.round(variantSellingPriceNok * COMPARE_AT_PRICE_MULTIPLIER);
+          const variantSellingPriceNok = supplierPriceNok
+            ? calculateSuggestedRetailPrice(supplierPriceNok)
+            : Math.round(Number(product.price));
+          const variantCompareAtPriceNok = calculateCompareAtPrice(variantSellingPriceNok);
 
           return {
             productId,
             name: variant.name,
             price: variantSellingPriceNok,
             compareAtPrice: variantCompareAtPriceNok,
-            supplierPrice: basePrice,
+            supplierPrice: supplierPriceNok,
             image: images[0] || null,
             attributes: variant.attributes,
             stock: 10,

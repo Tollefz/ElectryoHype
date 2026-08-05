@@ -1,10 +1,17 @@
 'use client';
 
-import { useState, createContext, useContext, ReactNode, useEffect, useMemo } from 'react';
+import {
+  useState,
+  createContext,
+  useContext,
+  useMemo,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from 'react';
 import ProductImageGallery from './ProductImageGallery';
-import ProductVariantSelector from './ProductVariantSelector';
 
-interface Variant {
+export interface ProductVariant {
   id: string;
   name: string;
   price: number;
@@ -16,26 +23,38 @@ interface Variant {
   colorCode?: string;
 }
 
-// Context for sharing selected variant image between components
-const VariantContext = createContext<{
+type VariantContextValue = {
   selectedVariantImage: string | null;
-  selectedVariant: Variant | null;
+  selectedVariant: ProductVariant | null;
   setSelectedVariantImage: (image: string | null) => void;
-  setSelectedVariant: (variant: Variant | null) => void;
-} | null>(null);
-
-export const useVariantImage = () => {
-  const context = useContext(VariantContext);
-  return context; // Returns null if not in provider, which is OK
+  setSelectedVariant: (variant: ProductVariant | null) => void;
 };
+
+const VariantContext = createContext<VariantContextValue | null>(null);
+
+export function useProductVariant() {
+  return useContext(VariantContext);
+}
+
+/** @deprecated Prefer useProductVariant */
+export function useVariantImage() {
+  return useContext(VariantContext);
+}
 
 interface ProductPageClientWrapperProps {
   images: string[];
   productName: string;
-  variants: Variant[];
+  variants: ProductVariant[];
   defaultImage: string;
   activeVariantSlug?: string;
   children: ReactNode;
+  /** Rendered under the gallery so description starts higher (not below tall buy box) */
+  belowGallery?: ReactNode;
+  /** Optional media (video / 360) under the image gallery */
+  galleryExtra?: ReactNode;
+  videoCount?: number;
+  /** Mobile sticky buy bar — must render inside variant context */
+  stickyBuy?: ReactNode;
 }
 
 export default function ProductPageClientWrapper({
@@ -45,129 +64,157 @@ export default function ProductPageClientWrapper({
   defaultImage,
   activeVariantSlug,
   children,
+  belowGallery,
+  galleryExtra,
+  videoCount = 0,
+  stickyBuy,
 }: ProductPageClientWrapperProps) {
-  // Find active variant from slug
-  const getInitialVariant = () => {
+  const initialVariant = useMemo(() => {
     if (activeVariantSlug) {
-      return variants.find((v: Variant) => v.slug === activeVariantSlug) || variants[0] || null;
+      return variants.find((v) => v.slug === activeVariantSlug) || variants[0] || null;
     }
     return variants[0] || null;
-  };
+  }, [activeVariantSlug, variants]);
 
-  const initialVariant = getInitialVariant();
-
-  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(initialVariant);
-  const [selectedVariantImage, setSelectedVariantImage] = useState<string | null>(
+  const [selectedVariant, setSelectedVariantState] = useState<ProductVariant | null>(
+    initialVariant
+  );
+  const [selectedVariantImage, setSelectedVariantImageState] = useState<string | null>(
     initialVariant?.image || defaultImage || null
   );
 
-  // Update image when selectedVariant changes (from user click OR context update)
-  useEffect(() => {
-    if (selectedVariant) {
-      const newImage = selectedVariant.image || defaultImage || null;
-      if (newImage !== selectedVariantImage) {
-        setSelectedVariantImage(newImage);
-        console.log(`[ProductPageClientWrapper] ✅ Variant image updated: ${selectedVariant.name} -> ${newImage?.substring(0, 60)}...`);
-      }
-    }
-  }, [selectedVariant?.id, selectedVariant?.image, defaultImage]); // Only react to variant selection changes
-  
-  // Sync with URL on mount or when URL changes externally (but don't override active selection)
-  useEffect(() => {
-    if (activeVariantSlug) {
-      const variantFromSlug = variants.find((v: Variant) => v.slug === activeVariantSlug);
-      // Only sync if variant is different AND we don't have an active selection
-      if (variantFromSlug && variantFromSlug.id !== selectedVariant?.id) {
-        // Only update if URL variant is actually different (avoid loops)
-        const newImage = variantFromSlug.image || defaultImage || null;
-        setSelectedVariant(variantFromSlug);
-        setSelectedVariantImage(newImage);
-        console.log(`[ProductPageClientWrapper] ✅ Synced with URL variant: ${activeVariantSlug}`);
-      }
-    }
-  }, [activeVariantSlug]); // Only react to external URL changes
+  const setSelectedVariantImage = useCallback((image: string | null) => {
+    setSelectedVariantImageState((prev) => (prev === image ? prev : image));
+  }, []);
 
-  // Determine which images to show - prioritize variant image
-  // CRITICAL: This must recalculate when selectedVariantImage changes
+  const setSelectedVariant = useCallback((variant: ProductVariant | null) => {
+    setSelectedVariantState((prev) => {
+      if (prev?.id === variant?.id) return prev;
+      return variant;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedVariant) return;
+    const next = selectedVariant.image || defaultImage || null;
+    setSelectedVariantImageState((prev) => (prev === next ? prev : next));
+  }, [selectedVariant, defaultImage]);
+
+  useEffect(() => {
+    if (!activeVariantSlug) return;
+    const fromSlug = variants.find((v) => v.slug === activeVariantSlug);
+    if (!fromSlug) return;
+    setSelectedVariantState((prev) => (prev?.id === fromSlug.id ? prev : fromSlug));
+  }, [activeVariantSlug, variants]);
+
+  const imagesKey = JSON.stringify(images);
+
   const displayImages = useMemo(() => {
-    // Filter out invalid/placeholder images
-    const validImages = images.filter(img => 
-      img && 
-      typeof img === 'string' && 
-      img.length > 0 && 
-      img.startsWith('http') &&
-      !img.includes('placeholder') &&
-      !img.includes('placehold.co')
+    let parsedImages: string[] = [];
+    try {
+      const parsed = JSON.parse(imagesKey);
+      parsedImages = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      parsedImages = [];
+    }
+
+    const validImages = parsedImages.filter(
+      (img) =>
+        img &&
+        typeof img === 'string' &&
+        img.length > 0 &&
+        img.startsWith('http') &&
+        !img.includes('placeholder') &&
+        !img.includes('placehold.co')
     );
-    
-    console.log(`[ProductPageClientWrapper] 🔄 Recalculating displayImages`);
-    console.log(`  Variant image: ${selectedVariantImage?.substring(0, 60)}...`);
-    console.log(`  Valid images count: ${validImages.length}`);
-    
-    // If no valid images at all, return empty array (will show placeholder)
+
     if (validImages.length === 0) {
-      console.log(`[ProductPageClientWrapper] ⚠️ No valid images found`);
-      return selectedVariantImage && selectedVariantImage.startsWith('http') && !selectedVariantImage.includes('placeholder')
+      return selectedVariantImage &&
+        selectedVariantImage.startsWith('http') &&
+        !selectedVariantImage.includes('placeholder')
         ? [selectedVariantImage]
         : [];
     }
-    
-    // If no variant image or variant image is invalid, return valid images as-is
-    if (!selectedVariantImage || !selectedVariantImage.startsWith('http') || selectedVariantImage.includes('placeholder')) {
-      console.log(`[ProductPageClientWrapper] No valid variant image, returning valid images`);
+
+    if (
+      !selectedVariantImage ||
+      !selectedVariantImage.startsWith('http') ||
+      selectedVariantImage.includes('placeholder')
+    ) {
       return validImages;
     }
 
-    // If variant image exists in images array, move it to front
-    const variantImageIndex = validImages.findIndex(img => img === selectedVariantImage);
-    console.log(`[ProductPageClientWrapper] Variant image index in array: ${variantImageIndex}`);
-    
-    if (variantImageIndex > 0) {
-      // Move variant image to front
-      const reordered = [
-        selectedVariantImage,
-        ...validImages.filter((img, idx) => idx !== variantImageIndex)
-      ];
-      console.log(`[ProductPageClientWrapper] ✅ Moved variant image to front, new first: ${reordered[0]?.substring(0, 60)}...`);
-      return reordered;
-    } else if (variantImageIndex === -1) {
-      // Variant image not in images array, add it to front
-      const withVariant = [selectedVariantImage, ...validImages];
-      console.log(`[ProductPageClientWrapper] ✅ Added variant image to front, new first: ${withVariant[0]?.substring(0, 60)}...`);
-      return withVariant;
-    } else {
-      // Variant image is already first
-      console.log(`[ProductPageClientWrapper] ✅ Variant image already first`);
-      return validImages;
+    const idx = validImages.findIndex((img) => img === selectedVariantImage);
+    if (idx > 0) {
+      return [selectedVariantImage, ...validImages.filter((_, i) => i !== idx)];
     }
-  }, [selectedVariantImage, JSON.stringify(images)]); // Recalculate when variant image or images change
+    if (idx === -1) {
+      return [selectedVariantImage, ...validImages];
+    }
+    return validImages;
+  }, [selectedVariantImage, imagesKey]);
+
+  const contextValue = useMemo<VariantContextValue>(
+    () => ({
+      selectedVariantImage,
+      selectedVariant,
+      setSelectedVariantImage,
+      setSelectedVariant,
+    }),
+    [selectedVariantImage, selectedVariant, setSelectedVariantImage, setSelectedVariant]
+  );
+
+  const [mediaTab, setMediaTab] = useState<"images" | "video">("images");
+  const hasVideos = videoCount > 0 && Boolean(galleryExtra);
 
   return (
-    <VariantContext.Provider value={{ 
-      selectedVariantImage, 
-      selectedVariant,
-      setSelectedVariantImage, 
-      setSelectedVariant 
-    }}>
-      <div className="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-2">
-        {/* Venstre - Bilder */}
-        <div className="rounded-lg sm:rounded-xl bg-white p-3 sm:p-4 lg:p-6 order-1 lg:order-1">
-          <ProductImageGallery 
-            images={displayImages} 
-            productName={productName}
-            variantImage={selectedVariantImage || null}
-          />
+    <VariantContext.Provider value={contextValue}>
+      <div className="grid items-start gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="order-1 flex min-w-0 flex-col gap-5 sm:gap-6">
+          <div className="rounded-lg bg-white p-3 sm:rounded-xl sm:p-4 lg:p-5">
+            {hasVideos ? (
+              <div className="mb-3 flex gap-2 border-b border-slate-100 pb-2">
+                <button
+                  type="button"
+                  onClick={() => setMediaTab("images")}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
+                    mediaTab === "images"
+                      ? "bg-slate-900 text-white"
+                      : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  Bilder ({displayImages.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMediaTab("video")}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
+                    mediaTab === "video"
+                      ? "bg-slate-900 text-white"
+                      : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  Video ({videoCount})
+                </button>
+              </div>
+            ) : null}
+            {mediaTab === "images" || !hasVideos ? (
+              <ProductImageGallery
+                images={displayImages}
+                productName={productName}
+                variantImage={selectedVariantImage || null}
+              />
+            ) : null}
+            {hasVideos && mediaTab === "video" ? galleryExtra : null}
+            {!hasVideos ? galleryExtra : null}
+          </div>
+          {belowGallery ? <div className="min-w-0">{belowGallery}</div> : null}
         </div>
-
-        {/* Høyre - Produktinfo (children kan inneholde variant selector) */}
-        <div className="order-2 lg:order-2">
-          {children}
-        </div>
+        <div className="order-2 min-w-0 lg:sticky lg:top-24">{children}</div>
       </div>
+      {stickyBuy}
     </VariantContext.Provider>
   );
 }
 
-// Export context for use in ProductVariantSelector
 export { VariantContext };
-

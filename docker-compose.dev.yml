@@ -1,0 +1,25 @@
+# Local PostgreSQL for development (optional)
+# Usage: docker compose -f docker-compose.dev.yml up -d
+# Then set DATABASE_URL in .env.local (see docs/local-database.md)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: electrohype-pg
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: electrohype
+      POSTGRES_PASSWORD: electrohype
+      POSTGRES_DB: electrohype
+    volumes:
+      - electrohype_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U electrohype -d electrohype"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  electrohype_pg_data:

@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { getAuthSession } from '@/lib/auth';
 import { safeQuery } from '@/lib/safeQuery';
+import { calculateCompareAtPrice, calculateSuggestedRetailPrice } from '@/lib/import/pricing';
 
 export async function POST(req: Request) {
   try {
@@ -36,7 +38,7 @@ export async function POST(req: Request) {
       images = [];
     }
 
-    const updates: any = {};
+    const updates: Prisma.ProductUpdateInput = {};
 
     // Fix 1: Ensure at least 1 image
     if (!images || images.length === 0) {
@@ -47,12 +49,12 @@ export async function POST(req: Request) {
 
     // Fix 2: Ensure compareAtPrice is higher than price
     if (product.compareAtPrice && product.compareAtPrice <= product.price) {
-      updates.compareAtPrice = Math.round(product.price * 1.25); // 25% higher
+      updates.compareAtPrice = calculateCompareAtPrice(product.price);
     }
 
-    // Fix 3: Ensure reasonable price margins
+    // Fix 3: Ensure reasonable price margins (dynamic pricing curve)
     if (product.supplierPrice && product.supplierPrice >= product.price) {
-      updates.price = Math.round(product.supplierPrice * 2.5); // 150% markup
+      updates.price = calculateSuggestedRetailPrice(product.supplierPrice);
     }
 
     // Fix 4: Auto-generate description if missing
@@ -84,10 +86,11 @@ Rask levering og god kundeservice inkludert.`;
       fixesApplied: Object.keys(updates).length,
       fixes: Object.keys(updates),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error auto-fixing variants:', error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error.message || 'Error auto-fixing variants' },
+      { error: message || 'Error auto-fixing variants' },
       { status: 500 }
     );
   }

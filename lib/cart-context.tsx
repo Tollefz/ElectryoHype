@@ -1,6 +1,11 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  cartItemToAnalyticsItem,
+  itemsValue,
+  trackEcommerce,
+} from "@/lib/analytics/ecommerce";
 
 export interface CartItem {
   productId: string;
@@ -11,6 +16,7 @@ export interface CartItem {
   slug?: string;
   variantId?: string;
   variantName?: string;
+  category?: string;
 }
 
 interface CartContextType {
@@ -48,6 +54,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addToCart = (item: CartItem, quantity = 1) => {
+    const analyticsItem = cartItemToAnalyticsItem({
+      productId: item.productId,
+      name: item.name,
+      price: item.price,
+      quantity,
+      variantName: item.variantName,
+      category: item.category,
+    });
+    trackEcommerce("add_to_cart", {
+      currency: "NOK",
+      value: itemsValue([analyticsItem]),
+      items: [analyticsItem],
+    });
+
     setItems((prev) => {
       // For products with variants, check both productId and variantId
       const existing = prev.find(
@@ -70,15 +90,35 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeFromCart = (key: string) => {
     // Key format: "productId" or "productId-variantId"
     const [productId, variantId] = key.split("-");
-    setItems((prev) =>
-      prev.filter(
+    setItems((prev) => {
+      const removed = prev.find(
+        (item) =>
+          item.productId === productId &&
+          (variantId ? item.variantId === variantId : !item.variantId)
+      );
+      if (removed) {
+        const analyticsItem = cartItemToAnalyticsItem({
+          productId: removed.productId,
+          name: removed.name,
+          price: removed.price,
+          quantity: removed.quantity,
+          variantName: removed.variantName,
+          category: removed.category,
+        });
+        trackEcommerce("remove_from_cart", {
+          currency: "NOK",
+          value: itemsValue([analyticsItem]),
+          items: [analyticsItem],
+        });
+      }
+      return prev.filter(
         (item) =>
           !(
             item.productId === productId &&
             (variantId ? item.variantId === variantId : !item.variantId)
           )
-      )
-    );
+      );
+    });
   };
 
   const updateQuantity = (key: string, quantity: number) => {

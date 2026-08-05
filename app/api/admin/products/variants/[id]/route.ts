@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { getAuthSession } from '@/lib/auth';
 
 export async function PATCH(
@@ -16,7 +17,7 @@ export async function PATCH(
     const body = await req.json();
     const { image, ...otherFields } = body;
 
-    const updateData: any = { ...otherFields };
+    const updateData: Prisma.ProductVariantUpdateInput = { ...otherFields };
     if (image !== undefined) {
       updateData.image = image;
     }

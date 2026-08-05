@@ -15,21 +15,24 @@ function humanStatus(status: SupplierOrderStatus | null) {
 export default async function SupportOrdersPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ supplierStatus?: string; errorOnly?: string; minTotal?: string }> | { supplierStatus?: string; errorOnly?: string; minTotal?: string };
+  searchParams: Promise<{
+    supplierStatus?: string;
+    errorOnly?: string;
+    minTotal?: string;
+  }>;
 }) {
   const storeId = await getStoreIdFromHeadersServer();
-  
-  // Safely parse searchParams - handle both Promise and object
-  const params = searchParams instanceof Promise ? await searchParams : searchParams || {};
-  const supplierStatus = params?.supplierStatus ?? "";
-  const errorOnly = params?.errorOnly === "true";
-  const minTotal = params?.minTotal ? Number(params.minTotal) : 0;
+  const params = await searchParams;
+  const supplierStatus = params.supplierStatus ?? "";
+  const errorOnly = params.errorOnly === "true";
+  const minTotal = params.minTotal ? Number(params.minTotal) : 0;
 
   const orders = await safeQuery(
     () =>
       prisma.order.findMany({
         where: {
           storeId,
+          archivedAt: null,
           ...(supplierStatus ? { supplierOrderStatus: supplierStatus as SupplierOrderStatus } : {}),
           ...(errorOnly ? { autoOrderError: { not: null } } : {}),
           ...(minTotal > 0 ? { total: { gte: minTotal } } : {}),
@@ -110,10 +113,10 @@ export default async function SupportOrdersPage({
                 Detaljer
               </Link>
               <Link
-                href={`/api/admin/orders/${order.id}/send-to-supplier`}
+                href={`/admin/orders/${order.id}`}
                 className="text-blue-600 hover:underline"
               >
-                Send til leverandør
+                Registrer leverandør-ordre (stub) →
               </Link>
               <Link
                 href={`/api/admin/orders/${order.id}/send-shipping-notification`}

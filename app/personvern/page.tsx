@@ -39,7 +39,12 @@ export default function PersonvernPage() {
             </div>
             <p className="mb-4 text-gray-medium">
               Vi samler inn opplysninger som navn, e-postadresse, telefonnummer, leveringsadresse og betalingsinformasjon
-              når du handler hos oss. Vi bruker også cookies for å forbedre din opplevelse på nettsiden.
+              når du handler hos oss. Nødvendige cookies brukes til admin-innlogging og sikkerhet. Valgfrie cookies
+              (affiliate-sporing og Google Analytics) settes bare etter samtykke. Se{" "}
+              <Link href="/cookies" className="text-brand hover:underline">
+                cookie-oversikten
+              </Link>
+              .
             </p>
           </div>
 
