@@ -17,6 +17,13 @@ import {
 
 export type BuyerCardDensity = "compact" | "standard" | "large";
 
+/** Tailwind grid column classes per card density, used by Desk buyer views. */
+export const DENSITY_GRID: Record<BuyerCardDensity, string> = {
+  compact: "grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6",
+  standard: "grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  large: "grid gap-3 sm:grid-cols-2 lg:grid-cols-3",
+};
+
 type Props = {
   card: DeskBuyerCandidateCard;
   density: BuyerCardDensity;
@@ -619,6 +626,7 @@ export function BuyerProductCard({
 
       {gallery && (
         <BuyerImageGallery
+          open={gallery}
           images={card.images?.length ? card.images : card.imageUrl ? [card.imageUrl] : []}
           videos={card.videos || []}
           title={card.title}

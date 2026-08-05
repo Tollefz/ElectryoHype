@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "@/lib/auth";
 import { validateVariantAttributes } from "@/lib/validation/color-validation";
@@ -45,7 +46,7 @@ export async function PATCH(
         image: body.image !== undefined ? body.image : variant.image,
         name: body.name !== undefined ? body.name : variant.name,
         price: body.price !== undefined ? Number(body.price) : variant.price,
-        attributes: validatedAttributes,
+        attributes: validatedAttributes as Prisma.InputJsonValue,
       },
     });
 

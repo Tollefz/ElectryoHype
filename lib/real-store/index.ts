@@ -137,7 +137,7 @@ export async function buildRealStoreSnapshot(
     catalogIssues,
     performanceProblems,
     dailyImprovements: pendingImprove,
-    workSavedHours30d: kpis.timeSavedHoursEst,
+    workSavedHours30d: kpis.timeSavedHoursEst ?? 0,
     aiReview: stats.aiReview || null,
     readyFor20MinDay,
   };

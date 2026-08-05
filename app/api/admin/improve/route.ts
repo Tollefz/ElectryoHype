@@ -49,7 +49,7 @@ const postSchema = z.discriminatedUnion("action", [
   }),
   z.object({
     action: z.literal("update_objectives"),
-    targets: z.record(z.number()).optional(),
+    targets: z.record(z.string(), z.number()).optional(),
   }),
 ]);
 
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
 
     if (body.action === "run_nightly") {
       const result = await runNightlySelfImprove();
-      return NextResponse.json({ ok: true, ...result });
+      return NextResponse.json({ ...result, ok: true });
     }
 
     if (body.action === "decide") {

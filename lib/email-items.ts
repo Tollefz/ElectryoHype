@@ -22,16 +22,16 @@ type RawItem = Record<string, unknown> & {
   name?: unknown;
   productName?: unknown;
   product?: ProductLike | null;
-  variantName?: unknown;
+  variantName?: string | null;
   variant?: { name?: unknown } | null;
-  image?: unknown;
-  imageUrl?: unknown;
-  thumbnail?: unknown;
+  image?: string | null;
+  imageUrl?: string | null;
+  thumbnail?: string | null;
   quantity?: unknown;
   price?: unknown;
-  variantId?: unknown;
-  productId?: unknown;
-  slug?: unknown;
+  variantId?: string | null;
+  productId?: string | null;
+  slug?: string | null;
 };
 
 type ProductLike = {

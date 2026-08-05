@@ -114,7 +114,7 @@ export async function POST(req: Request) {
       light: body.light,
       modeOverride: body.modeOverride,
     });
-    return NextResponse.json({ ok: true, ...result });
+    return NextResponse.json({ ...result, ok: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ ok: false, error: "Ugyldig forespørsel" }, { status: 400 });

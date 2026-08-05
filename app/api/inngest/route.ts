@@ -17,7 +17,7 @@ async function getInngestHandler() {
     serveHandler = serve({
       client: inngest,
       functions: inngestFunctions,
-    }) as { GET: InngestRouteHandler; POST: InngestRouteHandler; PUT: InngestRouteHandler };
+    }) as unknown as { GET: InngestRouteHandler; POST: InngestRouteHandler; PUT: InngestRouteHandler };
     return serveHandler;
   } catch (error) {
     console.error("Failed to initialize Inngest:", error);

@@ -5,6 +5,7 @@
 
 import "server-only";
 
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateAutonomyPolicy } from "@/lib/autonomy/policy";
 import { runAutonomyQualityGate } from "@/lib/autonomy/quality-gate";
@@ -318,7 +319,7 @@ export async function runAutonomyCycle(opts: RunAutonomyOptions = {}) {
           action: d.action,
           confidence: d.confidence,
           why: d.why,
-          data: d.data || undefined,
+          data: (d.data || undefined) as Prisma.InputJsonValue | undefined,
           risks: d.risks,
         })),
       });

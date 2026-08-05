@@ -253,7 +253,7 @@ export async function runCatalogSync(opts: {
         }
 
         if (applyVideos) {
-          data.videos = internal.videos as Prisma.InputJsonValue;
+          data.videos = internal.videos as unknown as Prisma.InputJsonValue;
           versionEntries.push({
             kind: CatalogVersionKind.videos,
             payload: internal.videos,

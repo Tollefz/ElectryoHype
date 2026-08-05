@@ -5,7 +5,7 @@
 
 import "server-only";
 
-import { ImportQueueStatus } from "@prisma/client";
+import { ImportQueueStatus, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { CatalogSupplierId, SupplierImportResult, SupplierProductDetail } from "@/lib/suppliers/provider";
 import { calculateSupplierPricing } from "@/lib/suppliers/pricing";
@@ -126,7 +126,7 @@ export async function enqueueMappedProduct(
         ? ({ artifactId: rawArtifactId } as object)
         : (detail.raw as object | undefined),
       rawArtifactId,
-      mappedDraft,
+      mappedDraft: mappedDraft as unknown as Prisma.InputJsonValue,
       pricing,
       storeId: opts.storeId ?? null,
       createdById: opts.createdById ?? null,
@@ -144,7 +144,7 @@ export async function enqueueMappedProduct(
         ? ({ artifactId: rawArtifactId } as object)
         : (detail.raw as object | undefined),
       rawArtifactId,
-      mappedDraft,
+      mappedDraft: mappedDraft as unknown as Prisma.InputJsonValue,
       pricing,
       completeness: undefined,
       imageReport: undefined,

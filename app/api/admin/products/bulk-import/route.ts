@@ -23,13 +23,6 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(2, 6);
 }
 
-interface ImportVariant {
-  image?: string | null;
-  name?: string;
-  price?: number;
-  [key: string]: unknown;
-}
-
 /**
  * Map provider name string to SupplierName enum value
  * Returns null if provider name doesn't match any known supplier
@@ -167,7 +160,7 @@ async function importProduct(
     });
     
     // Add variant images
-    variants.forEach((variant: ImportVariant) => {
+    variants.forEach((variant) => {
       if (variant.image && 
           variant.image.startsWith('http') && 
           !variant.image.includes('placeholder') &&
@@ -178,7 +171,7 @@ async function importProduct(
     
     // Convert to array, ensuring variant images are first (they're usually more specific)
     const variantImages = variants
-      .map((v: ImportVariant) => v.image)
+      .map((v) => v.image)
       .filter((img): img is string => !!img && img.startsWith('http') && !img.includes('placeholder'));
     
     const images = [

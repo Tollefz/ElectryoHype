@@ -46,7 +46,7 @@ const addressSchema = z.object({
 });
 
 type InfoData = z.infer<typeof infoSchema>;
-type AddressData = z.infer<typeof addressSchema>;
+type AddressData = z.input<typeof addressSchema>;
 
 function CheckoutForm() {
   const stripe = useStripe();

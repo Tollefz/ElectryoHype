@@ -445,10 +445,10 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Beskrivelse</label>
                           <button
-                            onClick={() => copyToClipboard(result.description)}
-                            className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
-                          >
-                            {copied ? <Check size={14} /> : <Copy size={14} />}
+                          onClick={() => copyToClipboard(result.description ?? "")}
+                          className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
+                        >
+                          {copied ? <Check size={14} /> : <Copy size={14} />}
                             {copied ? "Kopiert!" : "Kopier"}
                           </button>
                         </div>
@@ -465,7 +465,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Nøkkelfordeler</label>
                           <button
-                            onClick={() => copyToClipboard(result.bullets.join("\n"))}
+                            onClick={() => copyToClipboard((result.bullets ?? []).join("\n"))}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -491,7 +491,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">SEO-tittel</label>
                           <button
-                            onClick={() => copyToClipboard(result.title)}
+                            onClick={() => copyToClipboard(result.title ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -513,7 +513,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Meta-beskrivelse</label>
                           <button
-                            onClick={() => copyToClipboard(result.description)}
+                            onClick={() => copyToClipboard(result.description ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -541,7 +541,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Introduksjon</label>
                           <button
-                            onClick={() => copyToClipboard(result.intro)}
+                            onClick={() => copyToClipboard(result.intro ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -561,7 +561,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Kort blurb</label>
                           <button
-                            onClick={() => copyToClipboard(result.shortBlurb)}
+                            onClick={() => copyToClipboard(result.shortBlurb ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -586,7 +586,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Headline</label>
                           <button
-                            onClick={() => copyToClipboard(result.headline)}
+                            onClick={() => copyToClipboard(result.headline ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -605,7 +605,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Subheadline</label>
                           <button
-                            onClick={() => copyToClipboard(result.subheadline)}
+                            onClick={() => copyToClipboard(result.subheadline ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -626,7 +626,7 @@ export function GlobalAIAssistant() {
                           <div className="mb-2 flex items-center justify-between">
                             <label className="text-sm font-medium text-slate-700">Primær CTA</label>
                             <button
-                              onClick={() => copyToClipboard(result.ctaPrimary)}
+                              onClick={() => copyToClipboard(result.ctaPrimary ?? "")}
                               className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                             >
                               {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -644,7 +644,7 @@ export function GlobalAIAssistant() {
                           <div className="mb-2 flex items-center justify-between">
                             <label className="text-sm font-medium text-slate-700">Sekundær CTA</label>
                             <button
-                              onClick={() => copyToClipboard(result.ctaSecondary)}
+                              onClick={() => copyToClipboard(result.ctaSecondary ?? "")}
                               className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                             >
                               {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -668,7 +668,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Emnelinje</label>
                           <button
-                            onClick={() => copyToClipboard(result.subject)}
+                            onClick={() => copyToClipboard(result.subject ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -687,7 +687,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">Preheader</label>
                           <button
-                            onClick={() => copyToClipboard(result.preheader)}
+                            onClick={() => copyToClipboard(result.preheader ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -707,7 +707,7 @@ export function GlobalAIAssistant() {
                         <div className="mb-2 flex items-center justify-between">
                           <label className="text-sm font-medium text-slate-700">E-postinnhold (HTML)</label>
                           <button
-                            onClick={() => copyToClipboard(result.bodyHtml)}
+                            onClick={() => copyToClipboard(result.bodyHtml ?? "")}
                             className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-800 hover:bg-slate-200 transition-colors"
                           >
                             {copied ? <Check size={14} /> : <Copy size={14} />}

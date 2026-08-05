@@ -49,13 +49,6 @@ function mapProviderToSupplierName(providerName: string): SupplierName | null {
   return null;
 }
 
-interface ImportVariant {
-  image?: string | null;
-  name?: string;
-  price?: number;
-  [key: string]: unknown;
-}
-
 async function importProduct(
   inputUrl: string,
   providerName?: string
@@ -161,7 +154,7 @@ async function importProduct(
       }
     });
     
-    variants.forEach((variant: ImportVariant) => {
+    variants.forEach((variant) => {
       if (variant.image && 
           variant.image.startsWith('http') && 
           !variant.image.includes('placeholder') &&
@@ -171,7 +164,7 @@ async function importProduct(
     });
 
     const variantImages = variants
-      .map((v: ImportVariant) => v.image)
+      .map((v) => v.image)
       .filter((img): img is string => !!img && img.startsWith('http') && !img.includes('placeholder'));
 
     const images = [

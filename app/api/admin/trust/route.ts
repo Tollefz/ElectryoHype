@@ -92,8 +92,8 @@ const postSchema = z.discriminatedUnion("action", [
     ]),
     subjectType: z.string(),
     subjectKey: z.string(),
-    aiProposal: z.record(z.unknown()).optional(),
-    humanResult: z.record(z.unknown()).optional(),
+    aiProposal: z.record(z.string(), z.unknown()).optional(),
+    humanResult: z.record(z.string(), z.unknown()).optional(),
     confidence: z.number().optional(),
   }),
   z.object({

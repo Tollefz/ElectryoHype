@@ -284,7 +284,6 @@ export function createCsvCatalogProvider(): SupplierProvider {
     },
 
     getProduct,
-    normalizeProduct,
     ...facets,
 
     async importProducts(supplierProductIds, opts): Promise<SupplierImportResult> {

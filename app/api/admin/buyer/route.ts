@@ -778,13 +778,13 @@ export async function POST(req: Request) {
     if (body.action === "pause_mission") {
       const result = await pauseBuyerMission({ scanRunId: body.scanRunId });
       const scan = await getLatestBuyerScan();
-      return NextResponse.json({ ok: true, ...result, scan });
+      return NextResponse.json({ ...result, ok: true, scan });
     }
 
     if (body.action === "resume_mission") {
       const result = await resumeBuyerMission({ scanRunId: body.scanRunId });
       const scan = await getLatestBuyerScan();
-      return NextResponse.json({ ok: true, ...result, scan });
+      return NextResponse.json({ ...result, ok: true, scan });
     }
 
     if (body.action === "stop_mission") {
@@ -793,7 +793,7 @@ export async function POST(req: Request) {
         reason: body.reason,
       });
       const scan = await getLatestBuyerScan();
-      return NextResponse.json({ ok: true, ...result, scan });
+      return NextResponse.json({ ...result, ok: true, scan });
     }
 
     if (body.action === "import_top") {
@@ -952,8 +952,8 @@ export async function POST(req: Request) {
         actorEmail: auth.email,
       });
       return NextResponse.json({
-        ok: true,
         ...result,
+        ok: true,
         prepared: result.published + result.needsControl,
         ready: result.published,
         needsReview: result.needsControl,

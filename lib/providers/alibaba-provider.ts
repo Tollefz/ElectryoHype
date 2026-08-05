@@ -34,9 +34,12 @@ interface AlibabaProductData {
   shippingEstimate?: string;
   availability?: boolean;
   metadata?: JsonRecord & {
+    warnings?: string[];
     priceRange?: AlibabaPriceInfo;
     moq?: number;
     shipping?: string;
+    source?: string;
+    url?: string;
   };
   warnings?: string[];
 }

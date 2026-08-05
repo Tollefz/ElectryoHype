@@ -4,7 +4,7 @@
 
 import "server-only";
 
-import type { MerchandiserDecisionType, SupplierName } from "@prisma/client";
+import { Prisma, type MerchandiserDecisionType, type SupplierName } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export async function recordMerchandiserDecision(input: {
@@ -26,7 +26,7 @@ export async function recordMerchandiserDecision(input: {
       reason: input.reason || null,
       actorId: input.actorId || null,
       actorEmail: input.actorEmail || null,
-      metadata: input.metadata || undefined,
+      metadata: (input.metadata || undefined) as Prisma.InputJsonValue | undefined,
     },
   });
 }

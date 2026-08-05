@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "@/lib/auth";
 import { validateVariantAttributes } from "@/lib/validation/color-validation";
@@ -144,7 +145,7 @@ export async function PUT(
             compareAtPrice: variant.compareAtPrice ? Number(variant.compareAtPrice) : null,
             supplierPrice: variant.supplierPrice ? Number(variant.supplierPrice) : null,
             image: variant.image || null,
-            attributes: variant.attributes || {},
+            attributes: (variant.attributes || {}) as Prisma.InputJsonValue,
             stock: variant.stock || 0,
             isActive: variant.isActive !== undefined ? variant.isActive : true,
           },

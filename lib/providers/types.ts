@@ -1,9 +1,36 @@
 import type { ScrapedProductData } from "@/lib/scrapers/types";
 
 /**
- * Raw product data as fetched from the source
+ * JSON-shaped metadata attached by import providers (Alibaba, Temu, …).
+ * Comes from scraped/embedded JSON — keep fields used by mapToProduct / bulk-import.
+ */
+export interface RawProductMetadata {
+  warnings?: string[];
+  source?: string;
+  url?: string;
+  priceRange?: {
+    amount?: number;
+    currency?: string;
+    fromPrice?: number;
+    toPrice?: number;
+    minPrice?: number;
+    from?: number;
+    to?: number;
+    min?: number;
+    max?: number;
+  };
+  moq?: number;
+  shipping?: string;
+}
+
+/**
+ * Raw product data as fetched from the source.
+ * Index signature keeps provider-specific JSON keys; `metadata` is typed explicitly
+ * so `rawProduct.metadata?.warnings` typechecks (index-only access is `unknown` → `{}`).
  */
 export interface RawProduct {
+  metadata?: RawProductMetadata;
+  warnings?: string[];
   [key: string]: unknown;
 }
 

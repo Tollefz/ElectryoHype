@@ -4,6 +4,7 @@
 
 import "server-only";
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export type PreferenceModel = {
@@ -136,7 +137,7 @@ export async function recordCategoryManagerDecision(input: {
       reason: input.reason || null,
       actorId: input.actorId || null,
       actorEmail: input.actorEmail || null,
-      metadata: input.metadata || undefined,
+      metadata: (input.metadata || undefined) as Prisma.InputJsonValue | undefined,
     },
   });
 

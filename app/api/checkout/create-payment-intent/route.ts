@@ -119,7 +119,8 @@ export async function POST(req: Request) {
       dbCustomer = await prisma.customer.create({
         data: {
           storeId,
-          email: customer.email,
+          // customer.email is validated as a non-empty string earlier in this handler
+          email: customer.email as string,
           name: customer.name || customer.fullName,
           phone: customer.phone || null,
           addresses: JSON.stringify([
@@ -184,12 +185,17 @@ export async function POST(req: Request) {
       }
 
       const itemPrice = Number(variant ? variant.price : product.price);
-      const variantName = item.variantName || variant?.name || null;
+      const rawVariantName = item.variantName;
+      const variantName =
+        (typeof rawVariantName === "string" ? rawVariantName : undefined) ||
+        variant?.name ||
+        null;
       const variantId = item.variantId || null;
+      const productId = product.id;
       subtotal += itemPrice * quantity;
 
       orderItemsData.push({
-        productId: item.productId,
+        productId,
         productName: product.name,
         variantId,
         variantName,
@@ -198,7 +204,7 @@ export async function POST(req: Request) {
       });
 
       orderItemsCreate.push({
-        productId: item.productId,
+        productId,
         variantId,
         variantName,
         quantity,

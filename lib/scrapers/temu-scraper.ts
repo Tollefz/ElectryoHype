@@ -10,6 +10,34 @@ import { extractTemuPriceNOKFromUrl } from "./temu-price";
 
 type JsonRecord = Record<string, unknown>;
 
+/** Mirrors `a || b || c` semantics for unknown-typed values: first truthy value, else the last one. */
+function orChain(...values: unknown[]): unknown {
+  for (let i = 0; i < values.length - 1; i++) {
+    if (values[i]) return values[i];
+  }
+  return values[values.length - 1];
+}
+
+/** Coerces an unknown value to a string the same way implicit ToString coercion (e.g. parseFloat, `${x}`) would. */
+function toStr(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (value === null || value === undefined) return "";
+  return String(value);
+}
+
+/** Returns the value only if it's already a non-empty string, otherwise undefined. */
+function asOptionalString(value: unknown): string | undefined {
+  return typeof value === "string" && value ? value : undefined;
+}
+
+function firstArrayItem(value: unknown): unknown {
+  return Array.isArray(value) ? value[0] : undefined;
+}
+
+function isRecord(value: unknown): value is JsonRecord {
+  return typeof value === "object" && value !== null;
+}
+
 export class TemuScraper implements Scraper<ScrapedProductData> {
   // Don't extend BaseScraper - this avoids loading Puppeteer entirely
   async scrapeProduct(url: string): Promise<ScraperResult> {
@@ -241,7 +269,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
     try {
       const puppeteerExtraMod = await import("puppeteer-extra");
       const stealthMod = await import("puppeteer-extra-plugin-stealth");
-      const extraMod = puppeteerExtraMod as { default?: PuppeteerExtraLike } & PuppeteerExtraLike;
+      const extraMod = puppeteerExtraMod as unknown as { default?: PuppeteerExtraLike } & PuppeteerExtraLike;
       puppeteerExtra = extraMod.default ?? extraMod;
       const stealth = stealthMod as { default?: () => unknown } & (() => unknown);
       const StealthPlugin = stealth.default ?? stealth;
@@ -345,7 +373,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           cookiesHandled = Boolean(await page.evaluate(acceptCookiesSnippet));
         }
 
-        lastState = JSON.parse(await page.evaluate(collectSnippet));
+        lastState = JSON.parse(await page.evaluate<[], () => string>(collectSnippet));
         if (lastState.login) {
           console.log("[TemuScraper] Gallery collection blocked by login wall");
           return [];
@@ -720,8 +748,8 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                 
                 if (sku.specList && Array.isArray(sku.specList)) {
                   (sku.specList as JsonRecord[]).forEach((spec: JsonRecord) => {
-                    const specName = (spec.specName || spec.name || spec.specKey || '').toLowerCase();
-                    const specValue = spec.specValue || spec.value || spec.specVal || '';
+                    const specName = toStr(orChain(spec.specName, spec.name, spec.specKey, '')).toLowerCase();
+                    const specValue = toStr(orChain(spec.specValue, spec.value, spec.specVal, ''));
                     if (specName && specValue) {
                       attributes[specName] = specValue;
                       if (specName === 'color' || specName === 'farge' || specName === 'colour') {
@@ -734,15 +762,18 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                 }
                 
                 // Try multiple image fields
-                const variantImage = sku.thumbUrl || sku.image || sku.imgUrl || sku.goodsImg || 
-                                   sku.imageUrl || sku.thumb || sku.img || 
-                                   (sku.gallery && sku.gallery[0]) ||
-                                   (sku.images && sku.images[0]);
+                const variantImage = toStr(orChain(
+                  sku.thumbUrl, sku.image, sku.imgUrl, sku.goodsImg,
+                  sku.imageUrl, sku.thumb, sku.img,
+                  firstArrayItem(sku.gallery),
+                  firstArrayItem(sku.images),
+                  ''
+                ));
                 
-                const price = parseFloat(sku.goodsPrice || sku.salePrice || sku.price || sku.minPrice || '0');
+                const price = parseFloat(toStr(orChain(sku.goodsPrice, sku.salePrice, sku.price, sku.minPrice, '0')));
                 
                 // Preserve supplier SKU and stock when the API provides them
-                const skuId = sku.skuId || sku.sku_id || sku.sku || sku.id;
+                const skuId = orChain(sku.skuId, sku.sku_id, sku.sku, sku.id);
                 const stockRaw = sku.stock ?? sku.quantity ?? sku.stockQuantity ?? sku.inventory;
                 const stock = typeof stockRaw === 'number' ? stockRaw : (typeof stockRaw === 'string' && stockRaw !== '' ? parseInt(stockRaw, 10) : undefined);
                 
@@ -884,26 +915,35 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
       const $ = cheerio.load(response.data);
       
       // First, try to find product data in script tags (most reliable)
+      // Uses a plain for-of loop (not `.each`) so TypeScript can correctly
+      // narrow `productData` afterwards instead of widening it to `never`
+      // when a closure reassigns a captured `let` variable.
       let productData: JsonRecord | null = null;
       const scriptTags = $('script');
-      
-      scriptTags.each((_, el) => {
+
+      for (const el of scriptTags.toArray()) {
         const scriptContent = $(el).html() || '';
         
         // Look for window.__NEXT_DATA__ or similar structures
         if (scriptContent.includes('__NEXT_DATA__') || scriptContent.includes('window.__INITIAL_STATE__') || scriptContent.includes('productData') || scriptContent.includes('goodsDetail')) {
           try {
             // Extract JSON from various patterns
-            let jsonData = null;
+            let jsonData: JsonRecord | null = null;
             
             // Pattern 1: window.__NEXT_DATA__ = {...}
             const nextDataMatch = scriptContent.match(/window\.__NEXT_DATA__\s*=\s*({[\s\S]*?});/);
             if (nextDataMatch) {
               jsonData = JSON.parse(nextDataMatch[1]);
-              productData = jsonData?.props?.pageProps?.initialState?.goodsDetail || 
-                           jsonData?.props?.pageProps?.goodsDetail ||
-                           jsonData?.props?.pageProps?.product ||
-                           jsonData?.product;
+              const props = jsonData?.props as JsonRecord | undefined;
+              const pageProps = props?.pageProps as JsonRecord | undefined;
+              const initialState = pageProps?.initialState as JsonRecord | undefined;
+              const candidate = orChain(
+                initialState?.goodsDetail,
+                pageProps?.goodsDetail,
+                pageProps?.product,
+                jsonData?.product
+              );
+              productData = isRecord(candidate) ? candidate : null;
             }
             
             // Pattern 2: var productData = {...}
@@ -923,7 +963,8 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                   jsonData = JSON.parse(jsonMatch[0]);
                   // Check if it looks like product data
                   if (jsonData && (jsonData.variants || jsonData.skus || jsonData.goodsDetail || jsonData.product)) {
-                    productData = jsonData.variants || jsonData.skus || jsonData.goodsDetail || jsonData.product;
+                    const candidate = orChain(jsonData.variants, jsonData.skus, jsonData.goodsDetail, jsonData.product);
+                    productData = isRecord(candidate) ? candidate : null;
                   }
                 } catch (e) {
                   // Not valid JSON, continue
@@ -934,7 +975,7 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             // Continue with next script
           }
         }
-      });
+      }
       
       console.log('📦 Found product data in script:', productData ? 'Yes' : 'No');
       if (productData) {
@@ -953,16 +994,18 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
         try {
           // Try different property names for variants/skus
           // Deep search for variant data in various structures
+          const detail = productData.detail as JsonRecord | undefined;
+          const productInfo = productData.productInfo as JsonRecord | undefined;
           const variantList = productData.skus || 
                             productData.variants || 
                             productData.goodsSkuList ||
                             productData.goodsSku ||
                             productData.skuInfo ||
                             productData.skuList ||
-                            (productData.skuList ? Object.values(productData.skuList) : null) ||
-                            (productData.detail?.skus ? productData.detail.skus : null) ||
-                            (productData.detail?.goodsSkuList ? productData.detail.goodsSkuList : null) ||
-                            (productData.productInfo?.skus ? productData.productInfo.skus : null);
+                            (productData.skuList ? Object.values(productData.skuList as JsonRecord) : null) ||
+                            (detail?.skus ? detail.skus : null) ||
+                            (detail?.goodsSkuList ? detail.goodsSkuList : null) ||
+                            (productInfo?.skus ? productInfo.skus : null);
           
           // If variantList is not an array but an object, try to convert it
           let variantsArray: JsonRecord[] = [];
@@ -971,10 +1014,11 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
               variantsArray = variantList;
             } else if (typeof variantList === 'object') {
               // Try to extract variants from object structure
-              variantsArray = Object.values(variantList);
+              const variantObj = variantList as JsonRecord;
+              variantsArray = Object.values(variantObj) as JsonRecord[];
               // If that doesn't work, check if it's a nested structure
-              if (variantsArray.length === 0 && variantList.list) {
-                variantsArray = Array.isArray(variantList.list) ? variantList.list : [];
+              if (variantsArray.length === 0 && variantObj.list) {
+                variantsArray = Array.isArray(variantObj.list) ? (variantObj.list as JsonRecord[]) : [];
               }
             }
           }
@@ -984,14 +1028,14 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
             
             variantsArray.forEach((variant: JsonRecord, index: number) => {
               // Extract variant name (usually in specList or name property)
-              let variantName = variant.name || variant.title || '';
+              let variantName = toStr(orChain(variant.name, variant.title, ''));
               const attributes: Record<string, string> = {};
               
               // Extract attributes from specList or similar
               if (variant.specList && Array.isArray(variant.specList)) {
                 (variant.specList as JsonRecord[]).forEach((spec: JsonRecord) => {
-                  const specName = spec.specName || spec.name || '';
-                  const specValue = spec.specValue || spec.value || '';
+                  const specName = toStr(orChain(spec.specName, spec.name, ''));
+                  const specValue = toStr(orChain(spec.specValue, spec.value, ''));
                   if (specName && specValue) {
                     attributes[specName.toLowerCase()] = specValue;
                     if (!variantName) {
@@ -1009,11 +1053,11 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
               }
               
               // Extract price — never invent 9.99 USD placeholder
-              const price = variant.salePrice || variant.price || variant.goodsPrice || 0;
+              const price = orChain(variant.salePrice, variant.price, variant.goodsPrice, 0);
               const priceAmount = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : parseFloat(String(price));
               
               // Extract image
-              const variantImage = variant.thumbUrl || variant.image || variant.imgUrl || variant.goodsImg || undefined;
+              const variantImage = toStr(orChain(variant.thumbUrl, variant.image, variant.imgUrl, variant.goodsImg, ''));
               
               variants.push({
                 name: variantName,
@@ -1036,10 +1080,11 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
           if (productData.productImages) imageSources.push(productData.productImages);
           
           // Also try nested paths
-          if (productData.goodsInfo?.gallery) imageSources.push(productData.goodsInfo.gallery);
-          if (productData.goodsInfo?.images) imageSources.push(productData.goodsInfo.images);
-          if (productData.detail?.gallery) imageSources.push(productData.detail.gallery);
-          if (productData.detail?.images) imageSources.push(productData.detail.images);
+          const goodsInfo = productData.goodsInfo as JsonRecord | undefined;
+          if (goodsInfo?.gallery) imageSources.push(goodsInfo.gallery);
+          if (goodsInfo?.images) imageSources.push(goodsInfo.images);
+          if (detail?.gallery) imageSources.push(detail.gallery);
+          if (detail?.images) imageSources.push(detail.images);
           
           // Extract images from variant data
           if (variantsArray && variantsArray.length > 0) {
@@ -1102,13 +1147,13 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                 json.offers.forEach((offer: JsonRecord, index: number) => {
                   if (offer.availability === 'https://schema.org/InStock' || offer.availability === 'InStock') {
                     variants.push({
-                      name: offer.name || `Variant ${index + 1}`,
-                      price: offer.price ? parseFloat(offer.price) : 0,
+                      name: toStr(orChain(offer.name, `Variant ${index + 1}`)),
+                      price: offer.price ? parseFloat(toStr(offer.price)) : 0,
                       attributes: {
-                        color: offer.color || '',
-                        size: offer.size || '',
+                        color: toStr(offer.color),
+                        size: toStr(offer.size),
                       },
-                      image: offer.image || undefined,
+                      image: asOptionalString(offer.image),
                     });
                   }
                 });
@@ -1118,7 +1163,8 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
               if (json.image) {
                 const productImages = Array.isArray(json.image) ? json.image : [json.image];
                 productImages.forEach((img: unknown) => {
-                  const imgUrl = typeof img === 'string' ? img : (img.url || img['@id'] || '');
+                  const imgRecord = typeof img === 'string' ? null : (img as JsonRecord | null);
+                  const imgUrl = typeof img === 'string' ? img : toStr(orChain(imgRecord?.url, imgRecord?.['@id'], ''));
                   if (imgUrl && imgUrl.startsWith('http')) {
                     images.push(imgUrl);
                   }
@@ -1189,18 +1235,18 @@ export class TemuScraper implements Scraper<ScrapedProductData> {
                       console.log(`✅ Found ${foundVariants.length} potential variants in script JSON`);
                       foundVariants.forEach((v: JsonRecord, idx: number) => {
                         if (v && typeof v === 'object') {
-                          const name = v.name || v.title || v.specValue || v.color || `Variant ${idx + 1}`;
-                          const price = parseFloat(v.price || v.salePrice || v.goodsPrice || '0');
+                          const name = orChain(v.name, v.title, v.specValue, v.color, `Variant ${idx + 1}`);
+                          const price = parseFloat(toStr(orChain(v.price, v.salePrice, v.goodsPrice, '0')));
                           variants.push({
                             name: String(name),
                             price: price > 0 ? price : 0,
                             attributes: v.specList ? Object.fromEntries(
                               (Array.isArray(v.specList) ? v.specList as JsonRecord[] : []).map((s: JsonRecord) => [
-                                String(s.specName || s.name || '').toLowerCase(),
-                                String(s.specValue || s.value || '')
+                                toStr(orChain(s.specName, s.name, '')).toLowerCase(),
+                                toStr(orChain(s.specValue, s.value, ''))
                               ])
                             ) : (v.color ? { color: String(v.color) } : {}),
-                            image: v.image || v.thumbUrl || v.imgUrl || undefined,
+                            image: asOptionalString(orChain(v.image, v.thumbUrl, v.imgUrl, undefined)),
                           });
                         }
                       });
