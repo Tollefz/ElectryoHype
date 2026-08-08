@@ -6,6 +6,7 @@ import { storefrontProductTitle } from '@/lib/storefront/product-title';
 import { DEFAULT_STORE_ID } from '@/lib/store';
 import { safeQuery } from '@/lib/safeQuery';
 import { generateProductJSONLD, generateBreadcrumbJSONLD, generateSEOMetadata } from '@/lib/seo';
+import { isValidGtin } from '@/lib/merchant/google-feed';
 import { buildProductPresentation } from '@/lib/products/presentation';
 import { buildStorefrontDescription } from '@/lib/products/storefront-description';
 import { TrackViewItem } from '@/components/analytics/TrackEvents';
@@ -287,9 +288,10 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     activeVariantParam: variantParam,
   });
 
-  const gtin =
+  const rawGtin =
     product.variants.find((v) => v.barcode?.trim())?.barcode?.trim() ||
     undefined;
+  const gtin = rawGtin && isValidGtin(rawGtin) ? rawGtin : undefined;
   const mpn = product.sku || product.supplierSku || undefined;
 
   const productJSONLD = generateProductJSONLD({
