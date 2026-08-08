@@ -90,7 +90,9 @@ export const metadata: Metadata = {
     canonical: siteUrl,
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "ewsW0IFokVpk1pLvr1_1BY8IBvHsmeJ8mn4_7XgCkRY",
     other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
       ? {
           "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION,
