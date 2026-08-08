@@ -2,15 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 
 /**
- * Campaign hero — full-bleed product art with soft navy dissolve into copy.
- * Visual polish only: no routing / CTA / data changes.
+ * Campaign hero — product art stays full-opacity; only navy overlays dissolve into copy.
  */
 export default function HomeHero() {
   return (
     <section className="pt-2 sm:pt-2.5 lg:pt-3">
       <div className="ehx-container">
         <div className="relative overflow-hidden rounded-[1.125rem] bg-[#0b1020] shadow-[var(--ehx-shadow-lg)]">
-          {/* Mobile: priority LCP image (desktop art stays lg-only below) */}
+          {/* Mobile: full-opacity art + overlay for text contrast only */}
           <div className="pointer-events-none absolute inset-0 z-[1] lg:hidden">
             <Image
               src="/images/hero-campaign-v2.webp"
@@ -19,81 +18,59 @@ export default function HomeHero() {
               priority
               sizes="100vw"
               quality={70}
-              className="object-cover object-[62%_42%] opacity-[0.42]"
+              className="object-cover object-[62%_42%]"
             />
             <div
               className="absolute inset-0"
               aria-hidden
               style={{
                 background:
-                  "linear-gradient(180deg, rgba(11,16,32,0.92) 0%, rgba(11,16,32,0.78) 45%, rgba(11,16,32,0.96) 100%)",
+                  "linear-gradient(180deg, rgba(11,16,32,0.88) 0%, rgba(11,16,32,0.72) 42%, rgba(11,16,32,0.9) 100%)",
               }}
             />
           </div>
 
-          {/* Full-bleed art — one canvas with the navy field */}
+          {/* Desktop: product on the right at 100% opacity — no mask / no image opacity */}
           <div className="pointer-events-none absolute inset-0 z-[1] hidden lg:block">
-            {/* Subtle blue glow */}
             <div
-              className="absolute right-[8%] top-[5%] h-[90%] w-[55%] rounded-full"
+              className="absolute right-[6%] top-[4%] h-[92%] w-[58%] rounded-full"
               aria-hidden
               style={{
                 background:
-                  "radial-gradient(ellipse at 42% 48%, rgba(85,140,235,0.5) 0%, rgba(50,100,190,0.16) 42%, transparent 70%)",
+                  "radial-gradient(ellipse at 42% 48%, rgba(85,140,235,0.45) 0%, rgba(50,100,190,0.14) 42%, transparent 70%)",
                 filter: "blur(64px)",
               }}
             />
 
             <div
-              className="absolute inset-0"
+              className="absolute right-[16%] top-[12%] h-[65%] w-[36%] rounded-full"
+              aria-hidden
               style={{
-                WebkitMaskImage:
-                  "linear-gradient(90deg, transparent 0%, transparent 18%, rgba(0,0,0,0.2) 32%, rgba(0,0,0,0.55) 46%, rgba(0,0,0,0.88) 60%, #000 74%)",
-                maskImage:
-                  "linear-gradient(90deg, transparent 0%, transparent 18%, rgba(0,0,0,0.2) 32%, rgba(0,0,0,0.55) 46%, rgba(0,0,0,0.88) 60%, #000 74%)",
-                WebkitMaskSize: "100% 100%",
-                maskSize: "100% 100%",
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
+                background:
+                  "radial-gradient(ellipse at 50% 50%, rgba(120,165,255,0.2) 0%, transparent 70%)",
+                filter: "blur(34px)",
               }}
-            >
+            />
+
+            {/* Product art — full opacity, never masked or faded */}
+            <div className="absolute inset-y-0 right-0 w-[60%]">
               <Image
                 src="/images/hero-campaign-v2.webp"
                 alt="Gaming-utstyr — kampanje"
                 fill
                 priority
-                sizes="(max-width: 1280px) 100vw, 1400px"
-                className="origin-[58%_48%] scale-[1.06] object-cover object-[55%_47%] xl:scale-[1.08] xl:object-[54%_46%]"
+                sizes="(max-width: 1280px) 60vw, 840px"
+                className="origin-[40%_48%] scale-[1.08] object-cover object-[42%_47%] xl:scale-[1.1] xl:object-[40%_46%]"
               />
             </div>
 
-            {/* Continuous navy dissolve across the banner (~180–240px soft ramp) */}
+            {/* Navy dissolve for copy only — gone before the product zone */}
             <div
               className="absolute inset-0"
               aria-hidden
               style={{
                 background:
-                  "linear-gradient(90deg, #0b1020 0%, #0b1020 28%, rgba(11,16,32,0.94) 38%, rgba(11,16,32,0.72) 48%, rgba(11,16,32,0.42) 58%, rgba(11,16,32,0.18) 68%, rgba(11,16,32,0.05) 78%, transparent 88%)",
-              }}
-            />
-
-            <div
-              className="absolute inset-0"
-              aria-hidden
-              style={{
-                background:
-                  "radial-gradient(ellipse 50% 70% at 78% 50%, transparent 30%, rgba(11,16,32,0.28) 100%)",
-              }}
-            />
-
-            <div
-              className="absolute right-[18%] top-[14%] h-[65%] w-[38%] rounded-full"
-              aria-hidden
-              style={{
-                background:
-                  "radial-gradient(ellipse at 50% 50%, rgba(120,165,255,0.26) 0%, transparent 70%)",
-                mixBlendMode: "screen",
-                filter: "blur(34px)",
+                  "linear-gradient(90deg, #0b1020 0%, #0b1020 34%, rgba(11,16,32,0.88) 42%, transparent 50%)",
               }}
             />
           </div>

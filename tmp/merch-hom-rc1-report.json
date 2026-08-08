@@ -1,0 +1,2500 @@
+{
+  "mode": "apply",
+  "analyzed": 424,
+  "improved": [
+    {
+      "id": "cmsdkc8fk0818vf3suqawfxxu",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjyq9b06muvf3shibivp0f",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgvic000ijvf1kbgqn7ijc",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkf0vi08ayvf3sidsvfp7v",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkg34608e8vf3sd2vgat8z",
+      "name": "Trådløst gaming-headset",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiajuy006uvf3sdsmz7xgc",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh3lpf00ahvfgg95c060qf",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkk19w08revf3sxksqfu7x",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkm99g08zrvf3ss2p1pm42",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdipcnf01qtvf3s0mfwwfmj",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlncwj0crbvf3s5zgma618",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmokrw0gg5vf3scbxjw5of",
+      "name": "4-i-1 Trådløs lader",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdh49i500dgvfgg6d0i43ba",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm6xax0eouvf3scvyiczt0",
+      "name": "Justerbart skjermfeste",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl6odm0b2tvf3spe0kr0ml",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdja66803wrvf3sev78ekhf",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlgokm0c5yvf3spgm22n1z",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkx9e10a51vf3s0g0gerkb",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlut6x0di0vf3s8s78kayy",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkjo2e08pyvf3sbwzmbp7b",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlv5ft0djgvf3sjgglmuet",
+      "name": "USB kondensatormikrofon",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkgu7b08gnvf3su4flotu7",
+      "name": "20W Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkpsbe09d1vf3sk1v2ugg8",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkk7an08s4vf3s0lvmn6xn",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkqehv09fbvf3sb07q20ea",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm1ued0e6fvf3slqvfh9t3",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh5hhe00jbvfggmm64ymx3",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjq2lk05omvf3sdhlecgxm",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkuwyr09wtvf3srzxprreh",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjqm6a05qyvf3sh456lhqj",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkrbik09iivf3sf47v5vre",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgxnpg00q2vf1knr167jse",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdko36b097ivf3sl3bgprqj",
+      "name": "Trådløs billader",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdjr31g05sfvf3sp4vsv9m9",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkowc5099tvf3segk8ebi8",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl1l9d0aksvf3syaf706gi",
+      "name": "Kondensatormikrofon",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjrf1g05usvf3sb6au155m",
+      "name": "15W Musematte",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk4f7j078pvf3sfswoeind",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdme0b50fg4vf3smebgktdo",
+      "name": "Justerbart skjermfeste",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdisxt3024evf3s1f0le2v3",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmabte0f46vf3sgjkg7mf0",
+      "name": "Trådløs lader 12",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdj21w3032nvf3su1rk134v",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmbmci0f8pvf3sm0q6gr8v",
+      "name": "Bluetooth-høyttaler",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh6ttk00otvfggnsuvvnye",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "kategori→Data & IT",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh1ptu003mvfgg8it7vdwo",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cms6k7b3y00sovf7k0gl5f4jx",
+      "name": "Personvern-deksel til telefon",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdl9jo30bfcvf3sbvxgxuxy",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj2dst0343vf3ses18rgt6",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlw1b80dncvf3s7nszq8c8",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh7hr500rfvfggt9e4ogxs",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjj10v04x8vf3sku79nt0s",
+      "name": "Klavierhocker X X Mm Klavierbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjdai60489vf3sfx8rb0jj",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjtuhv064lvf3suo8wzajl",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiw46z02gcvf3s14us8y6v",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdldnph0buavf3s5jwuaf8s",
+      "name": "Apple Maiduo MagSafe magnetisk trådløs",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiwgbb02hsvf3s3tp45bdg",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmi28v0fu8vf3src6it64f",
+      "name": "Bluetooth-høyttaler",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj3vxk039evf3smsx3x1sl",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkjvf508qovf3sl77ffqhp",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjkk1d052ovf3sn73ubl9s",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj41rs03a4vf3ssbbzm6bs",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdleraq0bz2vf3sb7qbj0hs",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjg4uh04m4vf3sit821hzc",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlcdrc0bpfvf3schwco6g2",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk94f207pzvf3ss3po8qyt",
+      "name": "Mekanisk tastatur",
+      "changes": [
+        "tittel",
+        "kategori→Gaming",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdij34p012jvf3stpyecgw5",
+      "name": "USB kondensatormikrofon",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk2bag071bvf3siqzwfkk6",
+      "name": "Trådløs lader — White",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdk0l1m06tqvf3sqalirqml",
+      "name": "Multifunctional Five-In-One magnetisk trådløs lading Watch",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiozny01odvf3stu6v8ucg",
+      "name": "Trådløst gaming-headset",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdldzv70bvwvf3s5olby9da",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjrtbj05vovf3siw7mwknr",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgqp7l0015vf1kpjd6skf9",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlanyx0bjavf3sm673bmd7",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj4zwr03dvvf3s7g8g3mjw",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsddxfj0001wvf2k5tl41v04",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm0w0g0e3xvf3s6z280ym4",
+      "name": "Trådløs mus",
+      "changes": [
+        "kategori→Data & IT"
+      ]
+    },
+    {
+      "id": "cmsdhbm0m015evfggvel2xc2d",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm3rhe0ed5vf3scl8jqcaj",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "kategori→Data & IT",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgubf800dovf1k8mey9sx2",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhcavc018jvfggn5mljaac",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjmotx05awvf3sdniuwhii",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgwx1400nvvf1kuc8m47r3",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdixl9a02lkvf3sejpiyx3o",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdixri902mavf3sr1a4vsew",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl4qdg0avovf3seweiamhn",
+      "name": "Bluetooth-høyttaler",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjmuim05bmvf3s9kdzkcrk",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj6vxs03jwvf3sn2ps7dx5",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdms7gr0gu9vf3slzl3sp6u",
+      "name": "Trådløs lader mAh",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhezr801icvfggqifst7b0",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj5jgv03g1vf3s70wrjahn",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdj7hqv03m2vf3suyplcftg",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm7t3r0erwvf3stxd1qc9v",
+      "name": "Dokkingstasjon 2",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdkem5q089ivf3s2654a6ch",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm7h0g0eqgvf3sbw85uycd",
+      "name": "Nettbrettstativ",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdkfpkb08crvf3srwwtb14w",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdimwbm01gxvf3s7bzcnurj",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlznjg0dzwvf3slj68q7p3",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgunkh00f6vf1klpg4ozdg",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhgq1x01ovvfggygmoqch7",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlz10s0dxmvf3s3fansrrx",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdindlg01idvf3s68binjzp",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjob8505hpvf3sklo4oq0v",
+      "name": "Mekanisk tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlvpz40dlrvf3s1uuguz8m",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "kategori→Data & IT",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdioaax01m1vf3s49kjsgnc",
+      "name": "Trådløst gaming-headset",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj9s7703vavf3ss3rdoa4u",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjp09r05ksvf3s9akzhgyr",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjp69p05llvf3syqhnxttc",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj9yj903w0vf3stg7jjp49",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgwgm400mbvf1k3jucnmwi",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjpp3d05n6vf3s4e3dxscm",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjajk203y7vf3s8qxd993p",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjbiu60420vf3s6svv1vgf",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgwny900n2vf1keu2w3r9p",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjbou1042svf3svf84grc6",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk4818077zvf3slc0imbnx",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjbuyy043ivf3si678jvke",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgy1a800rjvf1kuksvz0oj",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl8imp0badvf3syni0kax0",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgyinf00t1vf1klsf66zor",
+      "name": "Trådløs Bluetooth Three-mode RGB Luminous Transparent",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdjc12c0449vf3s8vb9kywt",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmdppp0ffbvf3sfxq31pcu",
+      "name": "Justerbart skjermfeste",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkcnb3082rvf3suw55gfij",
+      "name": "Trådløst tastatur og mus",
+      "changes": [
+        "kategori→Data & IT"
+      ]
+    },
+    {
+      "id": "cmsdjcge2045uvf3s2vutz2as",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiu0zk0283vf3sedbbfhw1",
+      "name": "Kondensatormikrofon",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjsh6p05z5vf3sfx4girsy",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjsogr05zvvf3scf6p6lgv",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiu6vj028vvf3sga0dl6br",
+      "name": "Trådløst gaming-headset",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdket0v08a8vf3swpw7l2uk",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdidb1000hgvf3s194y0gsq",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjt0x4061cvf3shssjf4zm",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjtec3062tvf3s8odc2yob",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjd1lc047gvf3s0wdxskwy",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdivf8l02dgvf3ske5on9aq",
+      "name": "Trådløs Binaural Gaming Moving Coil Without Latency",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdivl5702e6vf3s6s2usq6q",
+      "name": "4K Gaming Set-top Box Recording Audio",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdivy1f02fmvf3sdi44broh",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlwrw00dpovf3s3db4ze7o",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiwa4102h2vf3snxfzk77a",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdielak00lwvf3sk03p2k0n",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdieuv200mmvf3soklajuxt",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdif32o00nevf3sc43ervhc",
+      "name": "Mekanisk tastatur",
+      "changes": [
+        "kategori→Gaming"
+      ]
+    },
+    {
+      "id": "cmsdiwsem02imvf3s1lwt5qb9",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlx0sw0dqhvf3sl9xr31y3",
+      "name": "10W Musematte",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiwzt102jcvf3s1v603itx",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjf10i04eyvf3sjb619ie9",
+      "name": "RGB musematte",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk7t7h07kqvf3s131qjjrz",
+      "name": "Trådløst gaming-headset",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjgc8v04muvf3sycc2m7zc",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdlcrto0bqwvf3sokuiaz2c",
+      "name": "WiFi-nettverkskort Mbps",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdld6tf0bsrvf3s501wb7ob",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmnpnm0gd3vf3sfv0fsubm",
+      "name": "Hurtiglader",
+      "changes": [
+        "tittel",
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm1gsj0e5mvf3sut4iqyic",
+      "name": "Hurtiglader",
+      "changes": [
+        "tittel",
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl7hh90b6kvf3st2ec75ze",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdmft4o0fn1vf3s89sefcyl",
+      "name": "Justerbart skjermfeste",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiko1k019evf3sa7qjoalt",
+      "name": "Justerbart skjermfeste",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm2tba0ea8vf3spebylapd",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkq7lz09ejvf3sdeiczb73",
+      "name": "Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjqvys05rpvf3slgwlfw1d",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmlpvk0g68vf3sdzadlgtl",
+      "name": "Bluetooth-høyttaler",
+      "changes": [
+        "tittel",
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh2vvz007hvfggaprrihvz",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdifbfq00o5vf3slvesiiax",
+      "name": "Bærbar Ultra-thin trådløs Mini Accordion-style Tri-fold",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdizbwu02rxvf3s7s2pnnfn",
+      "name": "Gamepad Box trådløs laptop TV Home USB",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh3fp9009pvfgg5j5iydiu",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdml5lo0g3zvf3sf148xo7h",
+      "name": "Bærbar WiFi-ruter",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdig5pd00r7vf3sbfbppyjc",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdigwfy00uavf3sxjiwpy30",
+      "name": "Trådløst gaming-headset",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh5bkj00ikvfggzq051u3t",
+      "name": "RGB musematte",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjhyuz04tovf3sdkgf9if2",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl7bwm0b5uvf3scxzm1jt3",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl86mr0b8vvf3s4vacutzx",
+      "name": "Trådløs Binaural TWS Gaming Low Latency 5.0 Bluetooth",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjiejw04usvf3sh1czp8lw",
+      "name": "Tastaturablage Unter Dem Schreibtisch Große X Mm",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdihy0n00ysvf3sqe7hsfke",
+      "name": "Trådløs Mini In-ear Noise Reduction Sports Stereo Gaming",
+      "changes": [
+        "beskrivelse",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj27zz033dvf3szj80yec7",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmjpe60fznvf3syvfrnq36",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj2w8r035mvf3sodx9cru1",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj32k0036dvf3su0lci875",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdiiieu010zvf3s1g9oolyk",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm4hkh0efjvf3st70pl76u",
+      "name": "Trådløs mus",
+      "changes": [
+        "kategori→Data & IT"
+      ]
+    },
+    {
+      "id": "cmsdj3hjb037xvf3scpeqs1nx",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj4u3j03d5vf3sh8jtf7wd",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh9sdm00yhvfgg09pmoj4t",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhak8s011lvfggmdq4val2",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdik8jy017vvf3s1c4vxj4p",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm8tp00evxvf3s3zzy5xw9",
+      "name": "Høyttaler",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhcnyj019zvfggutoj5qu9",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhdvm601egvfgg2b01ojw5",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhe2hn01fbvfggwgptj85m",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdheagl01g1vfgg1sg8tzoe",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdilne401d2vf3sla37hfph",
+      "name": "RGB musematte",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdh5tkq00ksvfggst0msmzw",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdhg6tw01mpvfgggxam3bfn",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkjgwg08p8vf3sl4ua0mc7",
+      "name": "Mekanisk tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm3hyj0ecfvf3s02t7zu9c",
+      "name": "Dokkingstasjon 4",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdj7ots03mtvf3sgw3wo0ul",
+      "name": "Handheld Display Bluetooth trådløs lading Dual-mode Grip",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmebum0fhkvf3s8edm496m",
+      "name": "RGB musematte",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdm5zg70el0vf3s56l0f1fw",
+      "name": "Trådløs Qi-lader mAh",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdio40y01lbvf3sukvd2jxo",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdj8d1u03pyvf3s6pk92edb",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjavtb03z1vf3sd953nw2v",
+      "name": "Trådløst Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjbbq9040wvf3su7gprx9f",
+      "name": "RGB musematte",
+      "changes": [
+        "tittel",
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdmxxki0hflvf3s6wxd59c8",
+      "name": "11-i-1 Dokkingstasjon",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdjekta04ddvf3sc73w5umh",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdguh8q00eevf1kd2wffqgq",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgx7d500olvf1kby2w38af",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdgxtxd00qsvf1k35821nvg",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjf73304ievf3sjj4t3m51",
+      "name": "10W Musematte",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjfp5m04klvf3smzjupb3i",
+      "name": "Bluetooth trådløs Dual Mode Small Hand Computer Gaming",
+      "changes": [
+        "beskrivelse",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjkc6r051vvf3silvihyha",
+      "name": "Crystal Jelly Side-engraved Keycaps til A-key Compact",
+      "changes": [
+        "tittel",
+        "bilde-rekkefølge",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjm78p058nvf3skomm4g1p",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjpwu505nwvf3s8h4c444q",
+      "name": "Huawei",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdjr97o05t5vf3s6a6o5vg3",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjt7y70622vf3s36bg19ss",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdjzuvk06qpvf3s00gm2wal",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk3o70075rvf3sdbghmqu7",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdk9lov07s7vf3snp00n3zk",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkcfm4081yvf3sqjli36vt",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdke82l0881vf3s8gfo3u4s",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkgnp708fvvf3s4mpc6v6x",
+      "name": "20W Powerbank",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdknwjs096pvf3s0pbgmwug",
+      "name": "Trådløs lader (4 farger)",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdku38809tpvf3s0q5sbs93",
+      "name": "Mobile phone repair kit",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdkvt8h09zqvf3s3bk2h8r5",
+      "name": "WiFi-adapter",
+      "changes": [
+        "bilde-rekkefølge"
+      ]
+    },
+    {
+      "id": "cmsdkd20p0847vf3svkrjjcmt",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkd7vn084xvf3su0elyo2m",
+      "name": "Gaming-mus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl30nv0apjvf3s2dzanvbr",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdl698u0b1avf3sfj9fyeyn",
+      "name": "Trådløs mus",
+      "changes": [
+        "tittel",
+        "kategori→Data & IT",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkfa1d08bsvf3sdhu2f1ex",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkisbw08mwvf3sbede9tbl",
+      "name": "Datamus",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkjat808oivf3s8dg4iuiy",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkli4908wovf3ssla0i1gp",
+      "name": "Tastatur",
+      "changes": [
+        "tittel",
+        "kategori→Data & IT",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdknekb094bvf3sj543ks2a",
+      "name": "USB-C adapter / hub",
+      "changes": [
+        "kategori→Data & IT"
+      ]
+    },
+    {
+      "id": "cmsdkx26e0a4avf3smp3zulyf",
+      "name": "Gaming-tastatur",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    },
+    {
+      "id": "cmsdkvcai09yavf3sh0x4ddur",
+      "name": "Justerbart skjermfeste",
+      "changes": [
+        "tittel",
+        "seo"
+      ]
+    }
+  ],
+  "hidden": [
+    {
+      "id": "cmsdiae3j0063vf3srxftx6bs",
+      "name": "Mini gaming-tastatur 5821",
+      "reason": "Nær-duplikat av «Mini gaming-tastatur 3785» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdia22h004nvf3sd6au9sva",
+      "name": "Mini gaming-tastatur 2304",
+      "reason": "Nær-duplikat av «Mini gaming-tastatur 3785» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdlyic30dw0vf3stdvphgap",
+      "name": "Powerbank 10400 mAh 1587",
+      "reason": "Nær-duplikat av «Powerbank 20000 mAh 5573» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdmrewm0grvvf3s60dbzpmd",
+      "name": "Powerbank 20000 mAh (ROMOS)",
+      "reason": "Nær-duplikat av «Powerbank 20000 mAh 5573» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdk2uqh072uvf3sjpsjxsaq",
+      "name": "Trådløs lader (2 farger)",
+      "reason": "Nær-duplikat av «Trådløs lader (4 farger)» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdmylj60hhtvf3swhm6rf8e",
+      "name": "Trådløs lader (2 farger)",
+      "reason": "Nær-duplikat av «Trådløs lader (4 farger)» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdknkf40952vf3sxubzwh5f",
+      "name": "Hurtiglader (2 farger)",
+      "reason": "Nær-duplikat av «Hurtiglader (43 g)» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdlfabo0c1avf3spuwi1vmh",
+      "name": "Hurtiglader (264 g)",
+      "reason": "Nær-duplikat av «Hurtiglader (43 g)» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdlrkzn0d6bvf3swdacjyv2",
+      "name": "Powerbank 2186",
+      "reason": "Nær-duplikat av «Powerbank 0145» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdmq4u20gm7vf3sx05lpl6a",
+      "name": "Powerbank 0309",
+      "reason": "Nær-duplikat av «Powerbank 0145» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdkmv600921vf3s35hoyyhe",
+      "name": "Trådløs Qi-lader (2 farger)",
+      "reason": "Nær-duplikat av «Trådløs Qi-lader (2 farger)» — beholder 2 beste i familien",
+      "grade": "D"
+    },
+    {
+      "id": "cmsdmqli40gnuvf3s8o38xtfd",
+      "name": "Trådløs Qi-lader (pad)",
+      "reason": "Nær-duplikat av «Trådløs Qi-lader (2 farger)» — beholder 2 beste i familien",
+      "grade": "D"
+    }
+  ],
+  "removed": [],
+  "kept": 412,
+  "grades": {
+    "A": 271,
+    "B": 134,
+    "C": 7,
+    "D": 12
+  },
+  "best": [
+    {
+      "id": "cmsdkgu7b08gnvf3su4flotu7",
+      "name": "20W Powerbank",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 599,
+      "q": 93
+    },
+    {
+      "id": "cmsdkpsbe09d1vf3sk1v2ugg8",
+      "name": "Powerbank",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdkuwyr09wtvf3srzxprreh",
+      "name": "Powerbank",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "id": "cmsdij34p012jvf3stpyecgw5",
+      "name": "USB kondensatormikrofon",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 429,
+      "q": 93
+    },
+    {
+      "id": "cmsdla9fe0bhpvf3srpl4zbbe",
+      "name": "3-i-1 Hodetelefoner",
+      "grade": "A",
+      "category": "TV, Lyd & Bilde",
+      "price": 299,
+      "q": 93
+    },
+    {
+      "id": "cmsdlznjg0dzwvf3slj68q7p3",
+      "name": "Høyttaler",
+      "grade": "A",
+      "category": "TV, Lyd & Bilde",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "id": "cmsdlz10s0dxmvf3s3fansrrx",
+      "name": "Høyttaler",
+      "grade": "A",
+      "category": "TV, Lyd & Bilde",
+      "price": 399,
+      "q": 93
+    },
+    {
+      "id": "cmsdjob8505hpvf3sklo4oq0v",
+      "name": "Mekanisk tastatur",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 1199,
+      "q": 93
+    },
+    {
+      "id": "cmsdmca1a0fbovf3sijykxvjc",
+      "name": "Powerbank 20W PD",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 1199,
+      "q": 93
+    },
+    {
+      "id": "cmsdkcnb3082rvf3suw55gfij",
+      "name": "Trådløst tastatur og mus",
+      "grade": "A",
+      "category": "Data & IT",
+      "price": 849,
+      "q": 93
+    },
+    {
+      "id": "cmsdm1gsj0e5mvf3sut4iqyic",
+      "name": "Hurtiglader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 429,
+      "q": 93
+    },
+    {
+      "id": "cmsdmmb4z0g7mvf3synmjh7hm",
+      "name": "Bluetooth-høyttaler",
+      "grade": "A",
+      "category": "TV, Lyd & Bilde",
+      "price": 249,
+      "q": 93
+    },
+    {
+      "id": "cmsdkzekh0aclvf3szermaojd",
+      "name": "USB-C adapter / hub",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 429,
+      "q": 93
+    },
+    {
+      "id": "cmsdheagl01g1vfgg1sg8tzoe",
+      "name": "Gaming-mus",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdmebum0fhkvf3s8edm496m",
+      "name": "RGB musematte",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 299,
+      "q": 93
+    },
+    {
+      "id": "cmsdjnhio05eqvf3s7t7rcsyn",
+      "name": "Trådløs Qi-billader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 549,
+      "q": 93
+    },
+    {
+      "id": "cmsdmj9ns0fyrvf3s3xxt2qxr",
+      "name": "3-i-1 Trådløs lader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "id": "cmsdjzuvk06qpvf3s00gm2wal",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "grade": "A",
+      "category": "Data & IT",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "id": "cmsdkgnp708fvvf3s4mpc6v6x",
+      "name": "20W Powerbank",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdkn85n093jvf3s9b01zz47",
+      "name": "Car trådløs lading 10W rask QI infrared sensing magic",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdkjat808oivf3s8dg4iuiy",
+      "name": "Gaming-tastatur",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 1099,
+      "q": 93
+    },
+    {
+      "id": "cmsdkx26e0a4avf3smp3zulyf",
+      "name": "Gaming-tastatur",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 899,
+      "q": 93
+    },
+    {
+      "id": "cmsdkm99g08zrvf3ss2p1pm42",
+      "name": "Høyttaler",
+      "grade": "A",
+      "category": "TV, Lyd & Bilde",
+      "price": 1499,
+      "q": 93
+    },
+    {
+      "id": "cmsdiuk2k02acvf3so3wbmoy3",
+      "name": "Trådløst headset",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 93
+    },
+    {
+      "id": "cmsdk0l1m06tqvf3sqalirqml",
+      "name": "Multifunctional Five-In-One magnetisk trådløs lading Watch",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdkhaet08i9vf3s3f42iqnv",
+      "name": "4-i-1 Hurtiglader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdivy1f02fmvf3sdi44broh",
+      "name": "Trådløst Bluetooth-tastatur",
+      "grade": "A",
+      "category": "Data & IT",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdhe2hn01fbvfggwgptj85m",
+      "name": "Gaming-mus",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdmd9m50fdvvf3slvg4svd5",
+      "name": "3-i-1 Hurtiglader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 93
+    },
+    {
+      "id": "cmsdkcfm4081yvf3sqjli36vt",
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 299,
+      "q": 93
+    },
+    {
+      "id": "cmsdldnph0buavf3s5jwuaf8s",
+      "name": "Apple Maiduo MagSafe magnetisk trådløs",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdkd20p0847vf3svkrjjcmt",
+      "name": "Datamus",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "id": "cmsdm44j00ee3vf3swii89azp",
+      "name": "USB-C Lader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "id": "cmsddx6p00016vf2k5at4wh22",
+      "name": "Gaming-mus",
+      "grade": "A",
+      "category": "Gaming",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "id": "cmsdkbh7x07yxvf3si64u7bhy",
+      "name": "Webkamera",
+      "grade": "A",
+      "category": "Data & IT",
+      "price": 649,
+      "q": 93
+    },
+    {
+      "id": "cmsdlnxb60ctmvf3s5a611jqp",
+      "name": "20W Høyttaler",
+      "grade": "A",
+      "category": "TV, Lyd & Bilde",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "id": "cmsdlycjj0dvavf3sesdnj9z1",
+      "name": "Lader 5W Magnetisk",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 749,
+      "q": 93
+    },
+    {
+      "id": "cmsdl403y0atbvf3sr3r8yyb5",
+      "name": "USB-C Lader",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 329,
+      "q": 93
+    },
+    {
+      "id": "cmsdkuf8m09v5vf3sxlak3plt",
+      "name": "Bærbar Mushroom Small Audio TWS Pair Box LED med Night",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "id": "cmsdkhxfw08jzvf3s0kxsvrba",
+      "name": "Magnetisk telefonholder",
+      "grade": "A",
+      "category": "Mobil & Tilbehør",
+      "price": 449,
+      "q": 91
+    }
+  ],
+  "weakestKept": [
+    {
+      "id": "cmsdme0b50fg4vf3smebgktdo",
+      "name": "Justerbart skjermfeste",
+      "grade": "C",
+      "category": "Data & IT",
+      "price": 749
+    },
+    {
+      "id": "cmsdisxt3024evf3s1f0le2v3",
+      "name": "Tastatur",
+      "grade": "C",
+      "category": "Data & IT",
+      "price": 549
+    },
+    {
+      "id": "cmsdjj10v04x8vf3sku79nt0s",
+      "name": "Klavierhocker X X Mm Klavierbank",
+      "grade": "C",
+      "category": "Gaming",
+      "price": 999
+    },
+    {
+      "id": "cmsdmft4o0fn1vf3s89sefcyl",
+      "name": "Justerbart skjermfeste",
+      "grade": "C",
+      "category": "Data & IT",
+      "price": 749
+    },
+    {
+      "id": "cmsdmlpvk0g68vf3sdzadlgtl",
+      "name": "Bluetooth-høyttaler",
+      "grade": "C",
+      "category": "TV, Lyd & Bilde",
+      "price": 1699
+    },
+    {
+      "id": "cmsdmjzn50g0gvf3s0p33s39b",
+      "name": "Bluetooth-høyttaler kompakt",
+      "grade": "C",
+      "category": "TV, Lyd & Bilde",
+      "price": 299
+    },
+    {
+      "id": "cmsdjb4b90403vf3sf4rp292g",
+      "name": "Suitable Huawei",
+      "grade": "C",
+      "category": "Gaming",
+      "price": 379
+    }
+  ],
+  "strongCategories": [
+    "Gaming (160)",
+    "Data & IT (103)",
+    "Mobil & Tilbehør (97)",
+    "TV, Lyd & Bilde (44)"
+  ],
+  "thinCategories": [
+    "Hjem & Fritid (8)"
+  ],
+  "top25Market": [
+    "20W Powerbank (599 kr)",
+    "Powerbank (499 kr)",
+    "Powerbank (449 kr)",
+    "USB kondensatormikrofon (429 kr)",
+    "3-i-1 Hodetelefoner (299 kr)",
+    "Høyttaler (279 kr)",
+    "Høyttaler (399 kr)",
+    "Mekanisk tastatur (1199 kr)",
+    "Powerbank 20W PD (1199 kr)",
+    "Trådløst tastatur og mus (849 kr)",
+    "Hurtiglader (429 kr)",
+    "Bluetooth-høyttaler (249 kr)",
+    "USB-C adapter / hub (429 kr)",
+    "Gaming-mus (499 kr)",
+    "RGB musematte (299 kr)",
+    "Trådløs Qi-billader (549 kr)",
+    "3-i-1 Trådløs lader (449 kr)",
+    "Sammenleggbart Bluetooth-tastatur (449 kr)",
+    "20W Powerbank (499 kr)",
+    "Car trådløs lading 10W rask QI infrared sensing magic (499 kr)",
+    "Gaming-tastatur (1099 kr)",
+    "Gaming-tastatur (899 kr)",
+    "Høyttaler (1499 kr)",
+    "Trådløst headset (249 kr)",
+    "Multifunctional Five-In-One magnetisk trådløs lading Watch (499 kr)"
+  ],
+  "top25Frontpage": [
+    "20W Powerbank (599 kr)",
+    "Powerbank (499 kr)",
+    "Powerbank (449 kr)",
+    "USB kondensatormikrofon (429 kr)",
+    "3-i-1 Hodetelefoner (299 kr)",
+    "Høyttaler (279 kr)",
+    "Høyttaler (399 kr)",
+    "Mekanisk tastatur (1199 kr)",
+    "Powerbank 20W PD (1199 kr)",
+    "Trådløst tastatur og mus (849 kr)",
+    "Hurtiglader (429 kr)",
+    "Bluetooth-høyttaler (249 kr)",
+    "USB-C adapter / hub (429 kr)",
+    "Gaming-mus (499 kr)",
+    "Trådløs Qi-billader (549 kr)",
+    "3-i-1 Trådløs lader (449 kr)",
+    "Sammenleggbart Bluetooth-tastatur (449 kr)",
+    "20W Powerbank (499 kr)",
+    "Car trådløs lading 10W rask QI infrared sensing magic (499 kr)",
+    "Gaming-tastatur (1099 kr)",
+    "Gaming-tastatur (899 kr)",
+    "Høyttaler (1499 kr)",
+    "Trådløst headset (249 kr)",
+    "Multifunctional Five-In-One magnetisk trådløs lading Watch (499 kr)",
+    "4-i-1 Hurtiglader (499 kr)"
+  ],
+  "top25Shopping": [
+    "20W Powerbank (599 kr)",
+    "Powerbank (499 kr)",
+    "Powerbank (449 kr)",
+    "USB kondensatormikrofon (429 kr)",
+    "3-i-1 Hodetelefoner (299 kr)",
+    "Høyttaler (279 kr)",
+    "Høyttaler (399 kr)",
+    "Mekanisk tastatur (1199 kr)",
+    "Powerbank 20W PD (1199 kr)",
+    "Trådløst tastatur og mus (849 kr)",
+    "Hurtiglader (429 kr)",
+    "Bluetooth-høyttaler (249 kr)",
+    "USB-C adapter / hub (429 kr)",
+    "Gaming-mus (499 kr)",
+    "RGB musematte (299 kr)",
+    "Trådløs Qi-billader (549 kr)",
+    "3-i-1 Trådløs lader (449 kr)",
+    "Sammenleggbart Bluetooth-tastatur (449 kr)",
+    "20W Powerbank (499 kr)",
+    "Car trådløs lading 10W rask QI infrared sensing magic (499 kr)",
+    "Gaming-tastatur (1099 kr)",
+    "Gaming-tastatur (899 kr)",
+    "Høyttaler (1499 kr)",
+    "Trådløst headset (249 kr)",
+    "Multifunctional Five-In-One magnetisk trådløs lading Watch (499 kr)"
+  ],
+  "top25Meta": [
+    "20W Powerbank (599 kr)",
+    "Powerbank (499 kr)",
+    "Powerbank (449 kr)",
+    "Mekanisk tastatur (1199 kr)",
+    "Powerbank 20W PD (1199 kr)",
+    "Trådløst tastatur og mus (849 kr)",
+    "Hurtiglader (429 kr)",
+    "USB-C adapter / hub (429 kr)",
+    "Gaming-mus (499 kr)",
+    "RGB musematte (299 kr)",
+    "Trådløs Qi-billader (549 kr)",
+    "3-i-1 Trådløs lader (449 kr)",
+    "Sammenleggbart Bluetooth-tastatur (449 kr)",
+    "20W Powerbank (499 kr)",
+    "Gaming-tastatur (1099 kr)",
+    "Gaming-tastatur (899 kr)",
+    "Trådløst headset (249 kr)",
+    "4-i-1 Hurtiglader (499 kr)",
+    "Trådløst Bluetooth-tastatur (499 kr)",
+    "Gaming-mus (499 kr)",
+    "3-i-1 Hurtiglader (249 kr)",
+    "Sammenleggbart Bluetooth-tastatur (299 kr)",
+    "Datamus (279 kr)",
+    "USB-C Lader (279 kr)",
+    "Gaming-mus (279 kr)"
+  ],
+  "byCatAfter": {
+    "Gaming": 160,
+    "Mobil & Tilbehør": 97,
+    "Data & IT": 103,
+    "TV, Lyd & Bilde": 44,
+    "Hjem & Fritid": 8
+  },
+  "priceFlags": [
+    {
+      "id": "cms6k79fj00ryvf7k7wmhdcxj",
+      "name": "Ergonomisk håndleddsstøtte",
+      "flag": "ekstrem_overprising",
+      "price": 179
+    },
+    {
+      "id": "cms6k7bt600vhvf7kgnzfz363",
+      "name": "In-ear ørepropper",
+      "flag": "ekstrem_overprising",
+      "price": 229
+    }
+  ],
+  "dupeClustersCulled": [
+    {
+      "base": "mini gaming-tastatur",
+      "before": 4,
+      "kept": 2,
+      "hidden": 2
+    },
+    {
+      "base": "powerbank mah",
+      "before": 4,
+      "kept": 2,
+      "hidden": 2
+    },
+    {
+      "base": "tradlos lader",
+      "before": 4,
+      "kept": 2,
+      "hidden": 2
+    },
+    {
+      "base": "hurtiglader",
+      "before": 4,
+      "kept": 2,
+      "hidden": 2
+    },
+    {
+      "base": "powerbank",
+      "before": 4,
+      "kept": 2,
+      "hidden": 2
+    },
+    {
+      "base": "tradlos qi-lader",
+      "before": 4,
+      "kept": 2,
+      "hidden": 2
+    }
+  ]
+}

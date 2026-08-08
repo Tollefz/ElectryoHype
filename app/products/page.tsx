@@ -13,6 +13,11 @@ import { ListingAnalytics } from "@/components/analytics/ListingAnalytics";
 import { generateSEOMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import { withDatabaseCircuit } from "@/lib/ops/db-circuit";
+import {
+  filterByMinRelevance,
+  rankProductsForSearch,
+  type SearchableProduct,
+} from "@/lib/storefront/product-search";
 
 interface ProductsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -98,14 +103,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     storeId: safeStoreId && safeStoreId !== "demo-store" ? safeStoreId : DEFAULT_STORE_ID,
     // Exclude Sport and Klær categories (unless explicitly requested via categorySlug)
     category: categoryFilter,
-    ...(query
-      ? {
-          name: {
-            contains: query,
-            mode: "insensitive",
-          },
-        }
-      : {}),
   };
 
   if (minPrice || maxPrice) {
@@ -148,7 +145,82 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   };
   const orderBy = orderByMap[sort] ?? { createdAt: "desc" };
 
+  const listSelect = {
+    id: true,
+    name: true,
+    slug: true,
+    price: true,
+    compareAtPrice: true,
+    images: true,
+    category: true,
+    subcategory: true,
+    tags: true,
+    shortDescription: true,
+    isActive: true,
+    metaTitle: true,
+    createdAt: true,
+  } as const;
+
   const primary = await withDatabaseCircuit("products:list", async () => {
+    // Search: load catalog slice once, rank in app (metadata + intent).
+    // Browse: keep SQL pagination.
+    if (query?.trim()) {
+      const candidates = await prisma.product.findMany({
+        where,
+        select: listSelect,
+      });
+      const searchable: SearchableProduct[] = candidates.map((p) => ({
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        price: Number(p.price),
+        compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
+        images: p.images,
+        category: p.category,
+        subcategory: p.subcategory,
+        tags: p.tags,
+        metaTitle: p.metaTitle,
+        shortDescription: p.shortDescription,
+        isActive: p.isActive,
+      }));
+
+      let ranked = filterByMinRelevance(
+        rankProductsForSearch(searchable, query.trim())
+      );
+
+      if (sort === "price-asc") {
+        ranked = [...ranked].sort((a, b) => a.price - b.price);
+      } else if (sort === "price-desc") {
+        ranked = [...ranked].sort((a, b) => b.price - a.price);
+      } else if (sort === "name") {
+        ranked = [...ranked].sort((a, b) =>
+          a.name.localeCompare(b.name, "nb")
+        );
+      }
+      // Default (newest) under search = relevance order from ranker
+
+      const pageSlice = ranked.slice(
+        (page - 1) * PAGE_SIZE,
+        page * PAGE_SIZE
+      );
+
+      return {
+        products: pageSlice.map((p) => ({
+          id: p.id,
+          name: p.name,
+          slug: p.slug,
+          price: p.price,
+          compareAtPrice: p.compareAtPrice,
+          images: p.images,
+          category: p.category,
+          isActive: p.isActive,
+          metaTitle: p.metaTitle,
+        })),
+        total: ranked.length,
+        storeId: safeStoreId,
+      };
+    }
+
     const [primaryProducts, primaryTotal] = await Promise.all([
       prisma.product.findMany({
         where,
@@ -178,46 +250,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     productsRaw = primary.data.products;
     total = primary.data.total;
     usedStoreId = primary.data.storeId;
-
-    if (productsRaw.length === 0 && safeStoreId !== DEFAULT_STORE_ID) {
-      const fallbackWhere: Prisma.ProductWhereInput = {
-        ...where,
-        storeId: DEFAULT_STORE_ID,
-        category: categoryFilter,
-      };
-      const fallback = await withDatabaseCircuit("products:fallback", async () => {
-        const [fallbackProducts, fallbackTotal] = await Promise.all([
-          prisma.product.findMany({
-            where: fallbackWhere,
-            orderBy,
-            skip: (page - 1) * PAGE_SIZE,
-            take: PAGE_SIZE,
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-              price: true,
-              compareAtPrice: true,
-              images: true,
-              category: true,
-              isActive: true,
-              metaTitle: true,
-            },
-          }),
-          prisma.product.count({ where: fallbackWhere }),
-        ]);
-        return {
-          products: fallbackProducts,
-          total: fallbackTotal,
-          storeId: DEFAULT_STORE_ID,
-        };
-      });
-      if (fallback.ok) {
-        productsRaw = fallback.data.products;
-        total = fallback.data.total;
-        usedStoreId = fallback.data.storeId;
-      }
-    }
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);

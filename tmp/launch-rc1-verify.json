@@ -1,0 +1,135 @@
+{
+  "generatedAt": "2026-08-08T11:25:12.904Z",
+  "catalog": {
+    "active": 397,
+    "missingImages": 0,
+    "sampleMissing": [],
+    "badPrice": 0,
+    "badCompare": 0,
+    "zeroStock": 0,
+    "productsWithVariants": 397,
+    "variantStats": [
+      {
+        "_count": {
+          "id": 2445
+        },
+        "isActive": true
+      }
+    ],
+    "grades": {
+      "A": 33,
+      "B": 120,
+      "C": 244,
+      "D": 0,
+      "other": 0
+    }
+  },
+  "search": [
+    {
+      "q": "mus",
+      "hits": 54,
+      "top3": [
+        "Gaming-mus",
+        "Gaming-mus",
+        "Trådløs mus"
+      ],
+      "pass": true
+    },
+    {
+      "q": "musmatte",
+      "hits": 0,
+      "top3": [],
+      "pass": false,
+      "note": "forventet å treffe musematte via synonym/compound"
+    },
+    {
+      "q": "musematte",
+      "hits": 8,
+      "top3": [
+        "RGB musematte",
+        "RGB musematte",
+        "RGB musematte"
+      ],
+      "pass": true
+    },
+    {
+      "q": "tastatur",
+      "hits": 105,
+      "top3": [
+        "Tastatur",
+        "Tastatur",
+        "Tastatur"
+      ],
+      "pass": true
+    },
+    {
+      "q": "gaming tastatur",
+      "hits": 104,
+      "top3": [
+        "Gaming-tastatur",
+        "Gaming-tastatur",
+        "Gaming-tastatur"
+      ],
+      "pass": true
+    },
+    {
+      "q": "usb c",
+      "hits": 16,
+      "top3": [
+        "USB-C Lader",
+        "USB-C Lader",
+        "USB-C Lightning-adapter"
+      ],
+      "pass": true
+    },
+    {
+      "q": "usb-c",
+      "hits": 16,
+      "top3": [
+        "USB-C Lader",
+        "USB-C Lader",
+        "USB-C Lightning-adapter"
+      ],
+      "pass": true
+    },
+    {
+      "q": "webcam",
+      "hits": 6,
+      "top3": [
+        "Webkamera",
+        "Webkamera",
+        "Webkamera"
+      ],
+      "pass": true
+    },
+    {
+      "q": "mobilholder",
+      "hits": 7,
+      "top3": [
+        "Kabelholder under skrivebord",
+        "Magnetisk telefonholder",
+        "Telefonholder"
+      ],
+      "pass": true
+    },
+    {
+      "q": "iphone deksel",
+      "hits": 1,
+      "top3": [
+        "Personvern-deksel til telefon"
+      ],
+      "pass": true
+    }
+  ],
+  "env": {
+    "stripeSecret": false,
+    "stripeWebhook": false,
+    "stripePublishable": false,
+    "database": true,
+    "ga4Public": false,
+    "ga4Secret": false,
+    "metaPixelPublic": false,
+    "metaCapi": false,
+    "adminSecret": true
+  }
+}

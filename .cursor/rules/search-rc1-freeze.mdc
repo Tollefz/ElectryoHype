@@ -1,0 +1,21 @@
+---
+description: Search Release Candidate 1 — søkemotoren er frosset
+alwaysApply: true
+---
+
+# Search RC1 — freeze
+
+Søkesystemet er **Release Candidate 1** (erklært 2026-08-08).
+
+## Ikke rør uten dokumenterte brukerproblemer
+
+- Ingen nye synonymer, compound-regler eller normalisering
+- Ingen ranking-/scoring-justeringer
+- Ingen ny søkearkitektur
+- Ikke endre `lib/storefront/product-search.ts` «for å forbedre»
+
+Unntak kun hvis ekte brukerdata (logger, support, konvertering) viser et konkret, reproduserbart søkeproblem — da målrettet fix, ikke generelle «forbedringer».
+
+## Fokus i stedet
+
+Produktkvalitet, katalog, konvertering, ytelse, ordre, markedsføring, lansering.

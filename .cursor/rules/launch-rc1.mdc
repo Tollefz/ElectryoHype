@@ -1,0 +1,59 @@
+---
+description: Launch RC1 — produksjonsklar butikk, ingen nye features uten dokumentert behov
+alwaysApply: true
+---
+
+# Launch RC1
+
+ElectroHypeX er i **Launch RC1** (erklært 2026-08-08).
+
+Målet er ikke flere funksjoner — det er en **produksjonsklar** butikk frem til offentlig lansering.
+
+## Frosne moduler
+
+Endres ikke uten dokumenterte brukerproblemer eller målbare forbedringer:
+
+- Search RC1
+- Merchandising RC1
+- Buyer RC1
+- Marketing RC1
+- Store DNA RC1
+
+Se også: `search-rc1-freeze.mdc`, `merch-rc1-freeze.mdc`.
+
+## Tillatt arbeid
+
+- Kritiske bugs
+- Checkout, betaling, ordreflyt
+- Ytelse, sikkerhet
+- SEO-feil
+- Produktkvalitet (bilder, beskrivelser, metadata, kategorisering)
+- Juridiske krav
+- Tilgjengelighet (a11y)
+
+## Ikke tillatt (→ dokumenter til Launch RC2)
+
+- Nye AI-systemer
+- Nye dashboards / admin-moduler
+- Refaktorering uten klar gevinst
+- Redesign
+- Eksperimentelle funksjoner
+- Store arkitekturendringer
+
+## Fokus (Operations Manager)
+
+Øke tillit og konvertering. Forbedre produktkvalitet og ytelse. Redusere feil. Enklere bruk.
+
+Ikke endre det som allerede fungerer.
+
+## Beslutningsregel
+
+Før enhver endring:
+
+> Løser dette et reelt problem for kunden eller driften?
+
+Hvis nei → **ikke gjør endringen.**
+
+## Launch RC2
+
+Alle nye idéer, forbedringer og features dokumenteres til Launch RC2 — ikke implementeres i RC1.

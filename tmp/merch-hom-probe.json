@@ -1,0 +1,1096 @@
+{
+  "active": 743,
+  "byCat": {
+    "Gaming": 338,
+    "Mobil & Tilbehør": 168,
+    "Data & IT": 129,
+    "TV, Lyd & Bilde": 100,
+    "Hjem & Fritid": 8
+  },
+  "flagCounts": {
+    "unpublish": 0,
+    "numberedTitle": 328,
+    "badShort": 95,
+    "needDesc": 743,
+    "catMove": 16,
+    "price": 2,
+    "images": 0,
+    "noImages": 0,
+    "caps": 0,
+    "factorySpeak": 0,
+    "dupeClusters": 38,
+    "productsInDupeClusters3plus": 438,
+    "badVariantNames": 0
+  },
+  "topDupeClusters": [
+    {
+      "base": "gaming-mus",
+      "count": 53,
+      "keepHint": [
+        {
+          "id": "cmsddx6p00016vf2k5at4wh22",
+          "name": "Gaming-mus",
+          "q": 93,
+          "imgs": 5,
+          "price": 279
+        },
+        {
+          "id": "cmsdiq7jl01ukvf3sugumlni9",
+          "name": "Gaming-mus 3699",
+          "q": 91,
+          "imgs": 18,
+          "price": 499
+        },
+        {
+          "id": "cmsdiq1gm01tsvf3sew7be8o8",
+          "name": "Gaming-mus 2790",
+          "q": 91,
+          "imgs": 13,
+          "price": 349
+        }
+      ]
+    },
+    {
+      "base": "rgb musematte",
+      "count": 39,
+      "keepHint": [
+        {
+          "id": "cmsdmebum0fhkvf3s8edm496m",
+          "name": "RGB musematte 0394",
+          "q": 93,
+          "imgs": 10,
+          "price": 299
+        },
+        {
+          "id": "cmsdh10az001bvfggla3h3pfw",
+          "name": "RGB musematte 3496",
+          "q": 93,
+          "imgs": 6,
+          "price": 429
+        },
+        {
+          "id": "cmsdh5bkj00ikvfggzq051u3t",
+          "name": "RGB musematte 2023",
+          "q": 91,
+          "imgs": 18,
+          "price": 299
+        }
+      ]
+    },
+    {
+      "base": "trådløs mus",
+      "count": 37,
+      "keepHint": [
+        {
+          "id": "cmsdjtuhv064lvf3suo8wzajl",
+          "name": "Trådløs mus 8919",
+          "q": 91,
+          "imgs": 12,
+          "price": 379
+        },
+        {
+          "id": "cmsdhcvf101auvfgguoobmn0e",
+          "name": "Trådløs mus 8341",
+          "q": 91,
+          "imgs": 11,
+          "price": 379
+        },
+        {
+          "id": "cmsdm4hkh0efjvf3st70pl76u",
+          "name": "Trådløs mus",
+          "q": 91,
+          "imgs": 10,
+          "price": 249
+        }
+      ]
+    },
+    {
+      "base": "trådløst tastatur",
+      "count": 33,
+      "keepHint": [
+        {
+          "id": "cmsdia845005dvf3si8kl9cjl",
+          "name": "Trådløst tastatur 0458",
+          "q": 93,
+          "imgs": 7,
+          "price": 279
+        },
+        {
+          "id": "cmsdh8c4800u2vfgg2hhl0zml",
+          "name": "Trådløst tastatur 0056",
+          "q": 93,
+          "imgs": 6,
+          "price": 279
+        },
+        {
+          "id": "cmsdm517p0ehsvf3s6b11aekq",
+          "name": "Trådløst tastatur 1660",
+          "q": 93,
+          "imgs": 5,
+          "price": 249
+        }
+      ]
+    },
+    {
+      "base": "powerbank",
+      "count": 30,
+      "keepHint": [
+        {
+          "id": "cmsdm27yk0e81vf3sq79r7lzc",
+          "name": "Powerbank 3627",
+          "q": 93,
+          "imgs": 6,
+          "price": 699
+        },
+        {
+          "id": "cmsdlr21h0d44vf3s7xcb30h4",
+          "name": "Powerbank 1293",
+          "q": 93,
+          "imgs": 5,
+          "price": 429
+        },
+        {
+          "id": "cmsdlexa00bzsvf3s8udnltpt",
+          "name": "Powerbank 0209",
+          "q": 93,
+          "imgs": 5,
+          "price": 499
+        }
+      ]
+    },
+    {
+      "base": "gaming-headset",
+      "count": 27,
+      "keepHint": [
+        {
+          "id": "cmsdituzy027cvf3s1rbblmiv",
+          "name": "Gaming-headset 9188",
+          "q": 93,
+          "imgs": 5,
+          "price": 449
+        },
+        {
+          "id": "cmsdkz3640ab2vf3svgml2lkp",
+          "name": "Gaming-headset 2213",
+          "q": 93,
+          "imgs": 5,
+          "price": 649
+        },
+        {
+          "id": "cmsdioaax01m1vf3s49kjsgnc",
+          "name": "Gaming-headset 8559",
+          "q": 91,
+          "imgs": 11,
+          "price": 349
+        }
+      ]
+    },
+    {
+      "base": "høyttaler",
+      "count": 23,
+      "keepHint": [
+        {
+          "id": "cmsdlznjg0dzwvf3slj68q7p3",
+          "name": "Høyttaler 0280",
+          "q": 93,
+          "imgs": 10,
+          "price": 279
+        },
+        {
+          "id": "cmsdlz10s0dxmvf3s3fansrrx",
+          "name": "Høyttaler 6993",
+          "q": 93,
+          "imgs": 9,
+          "price": 399
+        },
+        {
+          "id": "cmsdmjpe60fznvf3syvfrnq36",
+          "name": "Høyttaler 0068",
+          "q": 93,
+          "imgs": 8,
+          "price": 279
+        }
+      ]
+    },
+    {
+      "base": "trådløst bluetooth-tastatur",
+      "count": 22,
+      "keepHint": [
+        {
+          "id": "cmsdj7v9e03njvf3s3hbolfgk",
+          "name": "Trådløst Bluetooth-tastatur",
+          "q": 93,
+          "imgs": 7,
+          "price": 499
+        },
+        {
+          "id": "cmsdju7vc0664vf3spndn1tcn",
+          "name": "Trådløst Bluetooth-tastatur",
+          "q": 91,
+          "imgs": 18,
+          "price": 499
+        },
+        {
+          "id": "cmsdiluwu01dsvf3s630ymx9q",
+          "name": "Trådløst Bluetooth-tastatur",
+          "q": 91,
+          "imgs": 13,
+          "price": 399
+        }
+      ]
+    },
+    {
+      "base": "powerbank mah",
+      "count": 14,
+      "keepHint": [
+        {
+          "id": "cmsdkam9v07vzvf3sk58sf5ig",
+          "name": "Powerbank 20000 mAh 5461",
+          "q": 93,
+          "imgs": 16,
+          "price": 499
+        },
+        {
+          "id": "cmsdlyic30dw0vf3stdvphgap",
+          "name": "Powerbank 10400 mAh 1587",
+          "q": 93,
+          "imgs": 12,
+          "price": 749
+        },
+        {
+          "id": "cmsdkpsbe09d1vf3sk1v2ugg8",
+          "name": "Powerbank 20000 mAh 5573",
+          "q": 93,
+          "imgs": 11,
+          "price": 499
+        }
+      ]
+    },
+    {
+      "base": "usb kondensatormikrofon",
+      "count": 11,
+      "keepHint": [
+        {
+          "id": "cmsdij34p012jvf3stpyecgw5",
+          "name": "USB kondensatormikrofon 7948",
+          "q": 93,
+          "imgs": 18,
+          "price": 429
+        },
+        {
+          "id": "cmsdjld8z055nvf3s3z3ub6nh",
+          "name": "USB kondensatormikrofon 0058",
+          "q": 93,
+          "imgs": 6,
+          "price": 279
+        },
+        {
+          "id": "cmsdii46g00zjvf3sujadxcfk",
+          "name": "USB kondensatormikrofon 8303",
+          "q": 91,
+          "imgs": 18,
+          "price": 499
+        }
+      ]
+    },
+    {
+      "base": "kondensatormikrofon",
+      "count": 11,
+      "keepHint": [
+        {
+          "id": "cmsdiu0zk0283vf3sedbbfhw1",
+          "name": "Kondensatormikrofon 8802",
+          "q": 91,
+          "imgs": 18,
+          "price": 449
+        },
+        {
+          "id": "cmsdiyinf02p9vf3sumaedffb",
+          "name": "Kondensatormikrofon 0021",
+          "q": 91,
+          "imgs": 7,
+          "price": 329
+        },
+        {
+          "id": "cmsdj173p02yrvf3s4nl2iger",
+          "name": "Kondensatormikrofon 0260",
+          "q": 91,
+          "imgs": 7,
+          "price": 449
+        }
+      ]
+    },
+    {
+      "base": "mekanisk tastatur",
+      "count": 9,
+      "keepHint": [
+        {
+          "id": "cmsdif32o00nevf3sc43ervhc",
+          "name": "Mekanisk tastatur",
+          "q": 91,
+          "imgs": 10,
+          "price": 549
+        },
+        {
+          "id": "cmsdjs9xc05ycvf3skk6m2iaw",
+          "name": "Mekanisk tastatur",
+          "q": 91,
+          "imgs": 10,
+          "price": 599
+        },
+        {
+          "id": "cmsdkde77085nvf3scpdc1imb",
+          "name": "Mekanisk tastatur",
+          "q": 91,
+          "imgs": 10,
+          "price": 649
+        }
+      ]
+    },
+    {
+      "base": "bluetooth-høyttaler",
+      "count": 9,
+      "keepHint": [
+        {
+          "id": "cmsdmmb4z0g7mvf3synmjh7hm",
+          "name": "Bluetooth-høyttaler",
+          "q": 93,
+          "imgs": 18,
+          "price": 249
+        },
+        {
+          "id": "cmsdmbmci0f8pvf3sm0q6gr8v",
+          "name": "Bluetooth-høyttaler 7405",
+          "q": 93,
+          "imgs": 9,
+          "price": 699
+        },
+        {
+          "id": "cmsdl4qdg0avovf3seweiamhn",
+          "name": "Bluetooth-høyttaler 4234",
+          "q": 91,
+          "imgs": 18,
+          "price": 549
+        }
+      ]
+    },
+    {
+      "base": "trådløs qi-lader",
+      "count": 9,
+      "keepHint": [
+        {
+          "id": "cmsdmqli40gnuvf3s8o38xtfd",
+          "name": "Trådløs Qi-lader (pad)",
+          "q": 93,
+          "imgs": 5,
+          "price": 299
+        },
+        {
+          "id": "cmsdmy60v0hgcvf3si19b65aa",
+          "name": "Trådløs Qi-lader (2 farger)",
+          "q": 91,
+          "imgs": 7,
+          "price": 279
+        },
+        {
+          "id": "cmsdmyyge0hjevf3s8jvrlyy2",
+          "name": "Trådløs Qi-lader (2 farger)",
+          "q": 91,
+          "imgs": 6,
+          "price": 379
+        }
+      ]
+    },
+    {
+      "base": "datamus",
+      "count": 8,
+      "keepHint": [
+        {
+          "id": "cmsdjyjv506lzvf3sl8j27cn7",
+          "name": "Datamus",
+          "q": 93,
+          "imgs": 7,
+          "price": 399
+        },
+        {
+          "id": "cmsdjycu906l8vf3sbulfn49m",
+          "name": "Datamus",
+          "q": 91,
+          "imgs": 10,
+          "price": 449
+        },
+        {
+          "id": "cmsdh3rat00b7vfgg8b9x47e6",
+          "name": "Datamus",
+          "q": 91,
+          "imgs": 8,
+          "price": 279
+        }
+      ]
+    },
+    {
+      "base": "tastatur",
+      "count": 8,
+      "keepHint": [
+        {
+          "id": "cmsdir7u701yevf3syo3oe86m",
+          "name": "Tastatur",
+          "q": 91,
+          "imgs": 13,
+          "price": 379
+        },
+        {
+          "id": "cmsdigc1i00skvf3sbjnt0a3z",
+          "name": "Tastatur",
+          "q": 91,
+          "imgs": 9,
+          "price": 499
+        },
+        {
+          "id": "cmsdi9v06003wvf3sfvreh96m",
+          "name": "Tastatur",
+          "q": 91,
+          "imgs": 7,
+          "price": 499
+        }
+      ]
+    },
+    {
+      "base": "sammenleggbart bluetooth-tastatur",
+      "count": 8,
+      "keepHint": [
+        {
+          "id": "cmsdifycz00qdvf3sd31u8cmq",
+          "name": "Sammenleggbart Bluetooth-tastatur",
+          "q": 91,
+          "imgs": 9,
+          "price": 449
+        },
+        {
+          "id": "cmsdiiwcy011svf3s3cfatq85",
+          "name": "Sammenleggbart Bluetooth-tastatur",
+          "q": 91,
+          "imgs": 9,
+          "price": 499
+        },
+        {
+          "id": "cmsdl36f80aq9vf3s3koigowb",
+          "name": "Sammenleggbart Bluetooth-tastatur",
+          "q": 91,
+          "imgs": 8,
+          "price": 229
+        }
+      ]
+    },
+    {
+      "base": "kompakt gaming-tastatur",
+      "count": 7,
+      "keepHint": [
+        {
+          "id": "cmsdkx26e0a4avf3smp3zulyf",
+          "name": "Kompakt gaming-tastatur 8940",
+          "q": 93,
+          "imgs": 10,
+          "price": 899
+        },
+        {
+          "id": "cmsdj2dst0343vf3ses18rgt6",
+          "name": "Kompakt gaming-tastatur 1604",
+          "q": 93,
+          "imgs": 5,
+          "price": 849
+        },
+        {
+          "id": "cmsdj27zz033dvf3szj80yec7",
+          "name": "Kompakt gaming-tastatur 8313",
+          "q": 91,
+          "imgs": 9,
+          "price": 849
+        }
+      ]
+    },
+    {
+      "base": "hurtiglader",
+      "count": 7,
+      "keepHint": [
+        {
+          "id": "cmsdm1gsj0e5mvf3sut4iqyic",
+          "name": "Hurtiglader (43 g)",
+          "q": 93,
+          "imgs": 19,
+          "price": 429
+        },
+        {
+          "id": "cmsdlfabo0c1avf3spuwi1vmh",
+          "name": "Hurtiglader (264 g)",
+          "q": 93,
+          "imgs": 8,
+          "price": 599
+        },
+        {
+          "id": "cmsdlrr040d72vf3skvd5k8u8",
+          "name": "Hurtiglader (150 g)",
+          "q": 91,
+          "imgs": 12,
+          "price": 379
+        }
+      ]
+    },
+    {
+      "base": "laptopstativ",
+      "count": 6,
+      "keepHint": [
+        {
+          "id": "cmsdk1j0y06xmvf3sied9ahc6",
+          "name": "Laptopstativ",
+          "q": 90,
+          "imgs": 11,
+          "price": 399
+        },
+        {
+          "id": "cmsdk1ovn06ydvf3s1ig9e873",
+          "name": "Laptopstativ",
+          "q": 90,
+          "imgs": 11,
+          "price": 449
+        },
+        {
+          "id": "cmsdlb5ri0bl0vf3sr3vl3qaw",
+          "name": "Laptopstativ",
+          "q": 90,
+          "imgs": 6,
+          "price": 299
+        }
+      ]
+    },
+    {
+      "base": "webkamera",
+      "count": 6,
+      "keepHint": [
+        {
+          "id": "cmsdkbh7x07yxvf3si64u7bhy",
+          "name": "Webkamera",
+          "q": 93,
+          "imgs": 5,
+          "price": 649
+        },
+        {
+          "id": "cmsdjo4r505gzvf3srrr028cl",
+          "name": "Webkamera",
+          "q": 91,
+          "imgs": 13,
+          "price": 549
+        },
+        {
+          "id": "cmsdlsz0z0dbvvf3subxvq8p8",
+          "name": "Webkamera",
+          "q": 91,
+          "imgs": 5,
+          "price": 279
+        }
+      ]
+    },
+    {
+      "base": "mini gaming-tastatur",
+      "count": 5,
+      "keepHint": [
+        {
+          "id": "cmsdgqp7l0015vf1kpjd6skf9",
+          "name": "Mini gaming-tastatur 3785",
+          "q": 91,
+          "imgs": 11,
+          "price": 499
+        },
+        {
+          "id": "cmsdgwny900n2vf1keu2w3r9p",
+          "name": "Mini gaming-tastatur 5975",
+          "q": 91,
+          "imgs": 11,
+          "price": 499
+        },
+        {
+          "id": "cmsdiae3j0063vf3srxftx6bs",
+          "name": "Mini gaming-tastatur 5821",
+          "q": 91,
+          "imgs": 7,
+          "price": 299
+        }
+      ]
+    },
+    {
+      "base": "justerbart tastaturstativ",
+      "count": 5,
+      "keepHint": [
+        {
+          "id": "cmsdjksrt053evf3s38xuw6p7",
+          "name": "Justerbart tastaturstativ",
+          "q": 91,
+          "imgs": 11,
+          "price": 1099
+        },
+        {
+          "id": "cmsdjkz9v0544vf3skcb8dedv",
+          "name": "Justerbart tastaturstativ",
+          "q": 91,
+          "imgs": 11,
+          "price": 1099
+        },
+        {
+          "id": "cmsdkykfs0a9jvf3sxvhcz13m",
+          "name": "Justerbart tastaturstativ",
+          "q": 91,
+          "imgs": 6,
+          "price": 799
+        }
+      ]
+    },
+    {
+      "base": "trådløs lader",
+      "count": 5,
+      "keepHint": [
+        {
+          "id": "cmsdknwjs096pvf3s0pbgmwug",
+          "name": "Trådløs lader (4 farger)",
+          "q": 91,
+          "imgs": 9,
+          "price": 399
+        },
+        {
+          "id": "cmsdmylj60hhtvf3swhm6rf8e",
+          "name": "Trådløs lader (2 farger)",
+          "q": 91,
+          "imgs": 5,
+          "price": 279
+        },
+        {
+          "id": "cmsdl4cdi0au4vf3slq7bskic",
+          "name": "Trådløs lader (227 g)",
+          "q": 91,
+          "imgs": 5,
+          "price": 549
+        }
+      ]
+    },
+    {
+      "base": "trådløst tastatur og mus",
+      "count": 4,
+      "keepHint": [
+        {
+          "id": "cmsdkcnb3082rvf3suw55gfij",
+          "name": "Trådløst tastatur og mus",
+          "q": 93,
+          "imgs": 9,
+          "price": 849
+        },
+        {
+          "id": "cmsdhgd7o01nfvfgg9w6fcjfe",
+          "name": "Trådløst tastatur og mus",
+          "q": 91,
+          "imgs": 7,
+          "price": 249
+        },
+        {
+          "id": "cmsdkcupu083hvf3sj0m2utrh",
+          "name": "Trådløst tastatur og mus",
+          "q": 91,
+          "imgs": 5,
+          "price": 279
+        }
+      ]
+    }
+  ],
+  "sampleNumbered": [
+    {
+      "id": "cmsdgv64300h3vf1kku9mt374",
+      "name": "Mini gaming-tastatur 0152",
+      "suggested": "Gaming-tastatur"
+    },
+    {
+      "id": "cmsdia22h004nvf3sd6au9sva",
+      "name": "Mini gaming-tastatur 2304",
+      "suggested": "Gaming-tastatur"
+    },
+    {
+      "id": "cmsdkrhjm09jbvf3snwnliyc1",
+      "name": "Powerbank 9270",
+      "suggested": "Powerbank"
+    },
+    {
+      "id": "cmsdke0ai0878vf3so326pju9",
+      "name": "RGB musematte 2254",
+      "suggested": "RGB musematte"
+    },
+    {
+      "id": "cmsdgvcax00htvf1k6f4ndizw",
+      "name": "Gaming-mus 0573",
+      "suggested": "Gaming-mus"
+    },
+    {
+      "id": "cmsdlquhr0d3dvf3sp9k7zkvd",
+      "name": "Powerbank 0107",
+      "suggested": "Powerbank"
+    },
+    {
+      "id": "cmsdh332j0088vfggzge2fb1g",
+      "name": "Gaming-mus 6591",
+      "suggested": "Gaming-mus"
+    },
+    {
+      "id": "cmsdknqoq095xvf3srvr4k8qj",
+      "name": "Powerbank 8731",
+      "suggested": "Powerbank"
+    },
+    {
+      "id": "cmsdh39gl008yvfgg6z8kns1u",
+      "name": "Trådløs mus 0572",
+      "suggested": "Trådløs mus"
+    },
+    {
+      "id": "cmsdhda1201cavfgg2gkbza53",
+      "name": "RGB musematte 4452",
+      "suggested": "RGB musematte"
+    },
+    {
+      "id": "cmsdmp4ot0gifvf3spoyo874m",
+      "name": "Trådløs lader 10",
+      "suggested": "Trådløs lader 10"
+    },
+    {
+      "id": "cmsdkg34608e8vf3sd2vgat8z",
+      "name": "Gaming-headset 3673",
+      "suggested": "Trådløst gaming-headset"
+    },
+    {
+      "id": "cmsdkkdg408syvf3s61ts50z2",
+      "name": "Trådløs mus 5955",
+      "suggested": "Trådløs mus"
+    },
+    {
+      "id": "cmsdjomae05j5vf3s4p42ujp3",
+      "name": "Trådløst tastatur 0789",
+      "suggested": "Trådløst Bluetooth-tastatur"
+    },
+    {
+      "id": "cmsdkm99g08zrvf3ss2p1pm42",
+      "name": "Premium høyttaler 2746",
+      "suggested": "Premium høyttaler"
+    },
+    {
+      "id": "cmsdlncwj0crbvf3s5zgma618",
+      "name": "Høyttaler 4552",
+      "suggested": "Høyttaler"
+    },
+    {
+      "id": "cmsdipiup01rjvf3sihd4q7ng",
+      "name": "Gaming-mus 2226",
+      "suggested": "Gaming-mus"
+    },
+    {
+      "id": "cmsdh4nb600flvfggv7f5ubb0",
+      "name": "Trådløs mus 9407",
+      "suggested": "Trådløs mus"
+    },
+    {
+      "id": "cmsdj9kpn03uhvf3sr3pauude",
+      "name": "Trådløs mus 0769",
+      "suggested": "Trådløs mus"
+    },
+    {
+      "id": "cmsdlpamt0cy4vf3s2f1c3e3q",
+      "name": "RGB musematte 8013",
+      "suggested": "RGB musematte"
+    },
+    {
+      "id": "cmsdm6xax0eouvf3scvyiczt0",
+      "name": "Justerbart skjermfeste (4100 g)",
+      "suggested": "Justerbart skjermfeste"
+    },
+    {
+      "id": "cmsdlqhwx0d2jvf3s1zwhivxp",
+      "name": "Powerbank 9540",
+      "suggested": "Powerbank"
+    },
+    {
+      "id": "cmsdh4zf300h1vfggpkvm023l",
+      "name": "RGB musematte 3891",
+      "suggested": "RGB musematte"
+    },
+    {
+      "id": "cmsdlgokm0c5yvf3spgm22n1z",
+      "name": "Trådløs mus 9261",
+      "suggested": "Trådløs mus"
+    },
+    {
+      "id": "cmsdh55e300htvfggw9ir9wyv",
+      "name": "Trådløs mus 0251",
+      "suggested": "Trådløs mus"
+    },
+    {
+      "id": "cmsdkx9e10a51vf3s0g0gerkb",
+      "name": "RGB gaming-tastatur 0350",
+      "suggested": "Gaming-tastatur"
+    },
+    {
+      "id": "cmsdiqoup01w4vf3sfkk2fpyl",
+      "name": "Trådløst tastatur 3642",
+      "suggested": "Trådløst Bluetooth-tastatur"
+    },
+    {
+      "id": "cmsdkjo2e08pyvf3sbwzmbp7b",
+      "name": "RGB gaming-tastatur 9014",
+      "suggested": "Gaming-tastatur"
+    },
+    {
+      "id": "cmsdlv5ft0djgvf3sjgglmuet",
+      "name": "USB kondensatormikrofon 0003",
+      "suggested": "USB kondensatormikrofon"
+    },
+    {
+      "id": "cmsdkgu7b08gnvf3su4flotu7",
+      "name": "20W Powerbank 5000 mAh",
+      "suggested": "20W Powerbank"
+    }
+  ],
+  "sampleBadShort": [
+    {
+      "id": "cmsdgv64300h3vf1kku9mt374",
+      "name": "Mini gaming-tastatur 0152",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdke0ai0878vf3so326pju9",
+      "name": "RGB musematte 2254",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdjomae05j5vf3s4p42ujp3",
+      "name": "Trådløst tastatur 0789",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdlpamt0cy4vf3s2f1c3e3q",
+      "name": "RGB musematte 8013",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdh4zf300h1vfggpkvm023l",
+      "name": "RGB musematte 3891",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdiqdfy01vbvf3s54k154uh",
+      "name": "Trådløst Bluetooth-tastatur",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdkx9e10a51vf3s0g0gerkb",
+      "name": "RGB gaming-tastatur 0350",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdiqoup01w4vf3sfkk2fpyl",
+      "name": "Trådløst tastatur 3642",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdkjo2e08pyvf3sbwzmbp7b",
+      "name": "RGB gaming-tastatur 9014",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdkxh450a5rvf3sja18d4fl",
+      "name": "Trådløst tastatur 6935",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdjrf1g05usvf3sb6au155m",
+      "name": "15W Musematte",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdjc93i0454vf3syovumffo",
+      "name": "RGB musematte 7916",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdh68hx00mkvfggcmq9oovx",
+      "name": "Trådløst tastatur 8932",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdmehwn0fibvf3sbx75zbfg",
+      "name": "Trådløst tastatur 0835",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdj2dst0343vf3ses18rgt6",
+      "name": "Kompakt gaming-tastatur 1604",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdj2l4i034tvf3sfline4cq",
+      "name": "Kompakt gaming-tastatur 1603",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdjtodr063mvf3swfs8bu19",
+      "name": "RGB musematte 2755",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdidhhk00i6vf3ssxva1el4",
+      "name": "RGB musematte 1130",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdgqfbk000fvf1kmywpslzy",
+      "name": "RGB musematte 3434",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdjpcfc05mbvf3srb7q7um6",
+      "name": "Trådløst tastatur 3814",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdgqp7l0015vf1kpjd6skf9",
+      "name": "Mini gaming-tastatur 3785",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdhbfld014ovfggm7hzqqsv",
+      "name": "RGB musematte 4406",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdhcavc018jvfggn5mljaac",
+      "name": "Trådløst tastatur 0034",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdm517p0ehsvf3s6b11aekq",
+      "name": "Trådløst tastatur 1660",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    },
+    {
+      "id": "cmsdl6gbz0b22vf3s06d7d5sy",
+      "name": "RGB musematte 5074",
+      "short": "Høy presisjon og ergonomisk design gjør musen godt egnet til både gaming og produktivitet."
+    }
+  ],
+  "sampleUnpublish": [],
+  "sampleCatMove": [
+    {
+      "id": "cmsdh6ttk00otvfggnsuvvnye",
+      "name": "Ergonomisk Bluetooth-mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdm0w0g0e3xvf3s6z280ym4",
+      "name": "Trådløs mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdm3rhe0ed5vf3scl8jqcaj",
+      "name": "Trådløs Ergonomisk mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdmh1dz0fqtvf3sc3ffrda8",
+      "name": "Trådløs mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdjnbvf05dzvf3ssjxvwkox",
+      "name": "Trådløst tastatur 1529",
+      "from": "TV, Lyd & Bilde",
+      "to": "Gaming"
+    },
+    {
+      "id": "cmsdlvpz40dlrvf3s1uuguz8m",
+      "name": "Ergonomisk mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdia845005dvf3si8kl9cjl",
+      "name": "Trådløst tastatur 0458",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdkcnb3082rvf3suw55gfij",
+      "name": "Trådløst tastatur og mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdif32o00nevf3sc43ervhc",
+      "name": "Mekanisk tastatur",
+      "from": "Data & IT",
+      "to": "Gaming"
+    },
+    {
+      "id": "cmsdh7ant00qbvfggxbq0pc7u",
+      "name": "Trådløst Bluetooth-tastatur",
+      "from": "Data & IT",
+      "to": "Mobil & Tilbehør"
+    },
+    {
+      "id": "cmsdm4hkh0efjvf3st70pl76u",
+      "name": "Trådløs mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdijwf60168vf3s75nb210w",
+      "name": "Apple trådløs Controller PS3PS2 PC Android",
+      "from": "Gaming",
+      "to": "Mobil & Tilbehør"
+    },
+    {
+      "id": "cmsdimn2c01g7vf3sre7tdcos",
+      "name": "Trådløst Bluetooth-tastatur",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cms6k79au00rvvf7kij9kmjq0",
+      "name": "Høyttaler 0127",
+      "from": "Data & IT",
+      "to": "TV, Lyd & Bilde"
+    },
+    {
+      "id": "cmsdl698u0b1avf3sfj9fyeyn",
+      "name": "Ergonomisk Bluetooth-mus",
+      "from": "Gaming",
+      "to": "Data & IT"
+    },
+    {
+      "id": "cmsdknekb094bvf3sj543ks2a",
+      "name": "USB-C adapter / hub",
+      "from": "Mobil & Tilbehør",
+      "to": "Data & IT"
+    }
+  ],
+  "samplePrice": [
+    {
+      "id": "cms6k79fj00ryvf7k7wmhdcxj",
+      "name": "Ergonomisk håndleddsstøtte",
+      "flag": "ekstrem_overprising",
+      "price": 179
+    },
+    {
+      "id": "cms6k7bt600vhvf7kgnzfz363",
+      "name": "In-ear ørepropper",
+      "flag": "ekstrem_overprising",
+      "price": 229
+    }
+  ],
+  "sampleFactory": [],
+  "sampleBadVariants": []
+}

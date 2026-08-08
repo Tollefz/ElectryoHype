@@ -1,0 +1,45 @@
+---
+description: Merchandising RC1 — katalogkuratering er frosset som butikkens sannhet
+alwaysApply: true
+---
+
+# Merchandising RC1 — freeze
+
+Produktkatalogen er **Merchandising Release Candidate 1** (erklært 2026-08-08).
+
+Sammen med Search RC1 er dette butikkens stabile grunnmur.
+
+## Ikke masseendringer uten dokumentert grunn
+
+- Ingen bulk-rename, bulk-hide eller bulk-import «for å rydde»
+- Ingen nye merch-pass uten konkret, dokumentert problem (salg, support, QA)
+- Unntak: enkeltprodukt-fix ved tydelig feil (tittel, bilde, DNA)
+
+## Sortimentsregler (alltid)
+
+- Kvalitet over kvantitet
+- Ingen off-DNA (se Store DNA / `lib/buyer/store-dna-policy.ts`)
+- Ingen leverandørspam eller nær-duplikater i volum
+- Ingen dårlige bilder som hero
+- Ingen engelske leverandørtitler
+- Ingen masseimport uten review
+
+## Gradering (`merch:A` / `merch:B` / `merch:C` / `merch:D` i tags)
+
+| Grad | Betydning |
+|------|-----------|
+| A | Flaggskip |
+| B | Sterke produkter |
+| C | Greie — behold, ikke prioriter |
+| D | Fases ut / skjult (`isActive: false`) |
+
+## Hvem skal følge RC1
+
+- **Buyer AI** — Merch RC1 er butikkens sannhet ved innkjøp/import
+- **Marketing Brain** — prioriter A og B
+- **Forside** — primært A og B (Populære / Tilbud / Nyheter / hero-pool)
+
+## Relatert
+
+- Search RC1: `.cursor/rules/search-rc1-freeze.mdc` (søkemotor frosset)
+- Buyer / Marketing RC1 er også erklært frosset — ikke bygg ny arkitektur rundt dem

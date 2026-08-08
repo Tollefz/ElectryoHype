@@ -1,0 +1,767 @@
+{
+  "generatedAt": "2026-08-08T10:58:46.237Z",
+  "active": 397,
+  "inactiveTaggedD": 346,
+  "grades": {
+    "A": 33,
+    "B": 120,
+    "C": 244,
+    "D": 0,
+    "?": 0
+  },
+  "byCat": {
+    "TV, Lyd & Bilde": 41,
+    "Mobil & Tilbehør": 92,
+    "Gaming": 156,
+    "Data & IT": 100,
+    "Hjem & Fritid": 8
+  },
+  "byGradeCat": {
+    "TV, Lyd & Bilde": {
+      "A": 5,
+      "B": 17,
+      "C": 19,
+      "D": 0
+    },
+    "Mobil & Tilbehør": {
+      "A": 16,
+      "B": 22,
+      "C": 54,
+      "D": 0
+    },
+    "Gaming": {
+      "A": 6,
+      "B": 49,
+      "C": 101,
+      "D": 0
+    },
+    "Data & IT": {
+      "A": 6,
+      "B": 31,
+      "C": 63,
+      "D": 0
+    },
+    "Hjem & Fritid": {
+      "A": 0,
+      "B": 1,
+      "C": 7,
+      "D": 0
+    }
+  },
+  "improvedNote": "Titler, beskrivelser, bilde-rekkefølge, SEO, kategori og merch-tags oppdatert i Hom RC1-pass",
+  "hiddenSample": [
+    {
+      "name": "Gamepad Box trådløs laptop TV Home USB",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Aluminium legering hub Multi-interface HDMI 7-in-1 Docking",
+      "category": "Data & IT",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs Binaural TWS Gaming Low Latency 5.0 Bluetooth",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Stretch Gamepad Phablet trådløs Game Handle PC Streaming",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs Binaural Gaming Moving Coil Without Latency",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Hub USB hub Splitter One til Four USB C til HDMI Docking",
+      "category": "Data & IT",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Car trådløs lading 10W rask QI infrared sensing magic",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Multifunctional mobile phone sterilizer",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Magic Cart Mobile Phone trådløs Bluetooth Gamepad",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "T306 Bluetooth Gaming Electronic Sports trådløs Clip-on",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "4K Gaming Set-top Box Recording Audio",
+      "category": "Data & IT",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs Bluetooth Subwoofer Sports Gaming Electronic",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Multifunctional Five-In-One magnetisk trådløs lading Watch",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Apple Maiduo MagSafe magnetisk trådløs",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Bærbar Mushroom Small Audio TWS Pair Box LED med Night",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs Qi-lader (pad)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs Qi-lader (2 farger)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Powerbank 0309",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Powerbank 2186",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Hurtiglader (264 g)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Hurtiglader (2 farger)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs lader (2 farger)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Trådløs lader (2 farger)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Powerbank 20000 mAh (ROMOS)",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Powerbank 10400 mAh 1587",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Mini gaming-tastatur 2304",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Mini gaming-tastatur 5821",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "61 Key tastatur deksel 40.9 X 16.9 X 5.1 i Interior Padded",
+      "category": "Data & IT",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "49 Keys Kids Electronic tastatur med Microphone 8 Tones",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Apple trådløs Controller PS3PS2 PC Android",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "1 Set Colorful Ergonomical Designed trådløs Black",
+      "category": "Gaming",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "3 i 1 Bedside Lamp trådløs lading LCD skjerm Alarm Clock",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "108 Keys Diy Satellite Axis laptop Ubs Wired tastatur Kit",
+      "category": "Data & IT",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "9 i 1 USB-C tastatur støtte 4K HDMI Full Size",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "49 Keys Kids Electronic tastatur med Microphone 8 Tones",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "20 i 1 Mobile skjerm Opening Repair Tools Kit Screwdriver",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "Green Skin Pro11 Flat Protective deksel Full skjerm",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "10.2 inch nettbrett -Rechargeable Removable trådløs",
+      "category": "Mobil & Tilbehør",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "61 Key Children's Music Electronic tastatur Puzzle Little",
+      "category": "Data & IT",
+      "grade": "D",
+      "lifecycle": "declining"
+    },
+    {
+      "name": "TV-soundbar 2.0 (24 tommer)",
+      "category": "TV, Lyd & Bilde",
+      "grade": "D",
+      "lifecycle": "declining"
+    }
+  ],
+  "best": [
+    {
+      "name": "Bluetooth-høyttaler",
+      "category": "TV, Lyd & Bilde",
+      "price": 249,
+      "q": 93
+    },
+    {
+      "name": "3-i-1 Hurtiglader",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 93
+    },
+    {
+      "name": "Trådløst headset",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 93
+    },
+    {
+      "name": "Høyttaler",
+      "category": "TV, Lyd & Bilde",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "name": "Datamus",
+      "category": "Gaming",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "name": "USB-C Lader",
+      "category": "Mobil & Tilbehør",
+      "price": 279,
+      "q": 93
+    },
+    {
+      "name": "3-i-1 Hodetelefoner",
+      "category": "TV, Lyd & Bilde",
+      "price": 299,
+      "q": 93
+    },
+    {
+      "name": "Tastatur",
+      "category": "Gaming",
+      "price": 299,
+      "q": 93
+    },
+    {
+      "name": "Trådløs mus",
+      "category": "Data & IT",
+      "price": 379,
+      "q": 93
+    },
+    {
+      "name": "RGB-mus",
+      "category": "Gaming",
+      "price": 399,
+      "q": 93
+    },
+    {
+      "name": "USB kondensatormikrofon",
+      "category": "Mobil & Tilbehør",
+      "price": 429,
+      "q": 93
+    },
+    {
+      "name": "Hurtiglader",
+      "category": "Mobil & Tilbehør",
+      "price": 429,
+      "q": 93
+    },
+    {
+      "name": "USB-C adapter / hub",
+      "category": "Mobil & Tilbehør",
+      "price": 429,
+      "q": 93
+    },
+    {
+      "name": "3-i-1 Trådløs lader",
+      "category": "Mobil & Tilbehør",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "name": "Kondensatormikrofon",
+      "category": "TV, Lyd & Bilde",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "name": "Magnetisk telefonholder",
+      "category": "Mobil & Tilbehør",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "name": "Sammenleggbart Bluetooth-tastatur",
+      "category": "Data & IT",
+      "price": 449,
+      "q": 93
+    },
+    {
+      "name": "Trådløs lader — Black",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "20W Høyttaler",
+      "category": "TV, Lyd & Bilde",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "Powerbank",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "4-i-1 Hurtiglader",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "Trådløst Bluetooth-tastatur",
+      "category": "Data & IT",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "Gaming-mus",
+      "category": "Gaming",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "20W Powerbank",
+      "category": "Mobil & Tilbehør",
+      "price": 499,
+      "q": 93
+    },
+    {
+      "name": "Trådløs Qi-billader",
+      "category": "Mobil & Tilbehør",
+      "price": 549,
+      "q": 93
+    },
+    {
+      "name": "Webkamera",
+      "category": "Data & IT",
+      "price": 649,
+      "q": 93
+    },
+    {
+      "name": "Lader 5W Magnetisk",
+      "category": "Mobil & Tilbehør",
+      "price": 749,
+      "q": 93
+    },
+    {
+      "name": "Trådløst tastatur og mus",
+      "category": "Data & IT",
+      "price": 849,
+      "q": 93
+    },
+    {
+      "name": "Justerbart tastaturstativ",
+      "category": "Data & IT",
+      "price": 1099,
+      "q": 93
+    },
+    {
+      "name": "Actionkamera skjerm",
+      "category": "Mobil & Tilbehør",
+      "price": 1099,
+      "q": 93
+    }
+  ],
+  "weakestKept": [
+    {
+      "name": "Trådløs mus",
+      "category": "Gaming",
+      "price": 199,
+      "q": 72
+    },
+    {
+      "name": "WiFi-adapter",
+      "category": "Data & IT",
+      "price": 199,
+      "q": 72
+    },
+    {
+      "name": "Trådløs lader 11",
+      "category": "Mobil & Tilbehør",
+      "price": 229,
+      "q": 72
+    },
+    {
+      "name": "In-ear ørepropper",
+      "category": "Data & IT",
+      "price": 229,
+      "q": 72
+    },
+    {
+      "name": "15W Trådløs ladestativ",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Trådløs mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Tastatur",
+      "category": "Data & IT",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Hurtiglader — White",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "USB-C-ladestasjon 6 porter",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Gaming-mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "USB-C Lightning-adapter",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Bluetooth-ørepropper med RGB",
+      "category": "TV, Lyd & Bilde",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Dokkingstasjon 2",
+      "category": "Data & IT",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Datamus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Datamus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Bærbar WiFi-ruter",
+      "category": "Mobil & Tilbehør",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Gaming-mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Gaming-mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Trådløs mobil-gamepad",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Gigabit nettverksadapter",
+      "category": "Data & IT",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Gaming-mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Gaming-mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Trådløs mus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Dokkingstasjon 3",
+      "category": "Data & IT",
+      "price": 249,
+      "q": 72
+    },
+    {
+      "name": "Datamus",
+      "category": "Gaming",
+      "price": 249,
+      "q": 72
+    }
+  ],
+  "strongCategories": [
+    {
+      "category": "Gaming",
+      "count": 156
+    },
+    {
+      "category": "Data & IT",
+      "count": 100
+    },
+    {
+      "category": "Mobil & Tilbehør",
+      "count": 92
+    },
+    {
+      "category": "TV, Lyd & Bilde",
+      "count": 41
+    }
+  ],
+  "thinCategories": [
+    {
+      "category": "Hjem & Fritid",
+      "count": 8,
+      "need": "Flere sterke produkter"
+    }
+  ],
+  "top25Market": [
+    "Bluetooth-høyttaler — 249 kr",
+    "3-i-1 Hurtiglader — 249 kr",
+    "Trådløst headset — 249 kr",
+    "Høyttaler — 279 kr",
+    "Datamus — 279 kr",
+    "USB-C Lader — 279 kr",
+    "3-i-1 Hodetelefoner — 299 kr",
+    "Tastatur — 299 kr",
+    "Trådløs mus — 379 kr",
+    "RGB-mus — 399 kr",
+    "USB kondensatormikrofon — 429 kr",
+    "Hurtiglader — 429 kr",
+    "USB-C adapter / hub — 429 kr",
+    "3-i-1 Trådløs lader — 449 kr",
+    "Kondensatormikrofon — 449 kr",
+    "Magnetisk telefonholder — 449 kr",
+    "Sammenleggbart Bluetooth-tastatur — 449 kr",
+    "Trådløs lader — Black — 499 kr",
+    "20W Høyttaler — 499 kr",
+    "Powerbank — 499 kr",
+    "4-i-1 Hurtiglader — 499 kr",
+    "Trådløst Bluetooth-tastatur — 499 kr",
+    "Gaming-mus — 499 kr",
+    "20W Powerbank — 499 kr",
+    "Trådløs Qi-billader — 549 kr"
+  ],
+  "top25Frontpage": [
+    "Bluetooth-høyttaler — 249 kr",
+    "3-i-1 Hurtiglader — 249 kr",
+    "Trådløst headset — 249 kr",
+    "Høyttaler — 279 kr",
+    "Datamus — 279 kr",
+    "USB-C Lader — 279 kr",
+    "3-i-1 Hodetelefoner — 299 kr",
+    "Tastatur — 299 kr",
+    "Trådløs mus — 379 kr",
+    "RGB-mus — 399 kr",
+    "USB kondensatormikrofon — 429 kr",
+    "Hurtiglader — 429 kr",
+    "USB-C adapter / hub — 429 kr",
+    "3-i-1 Trådløs lader — 449 kr",
+    "Kondensatormikrofon — 449 kr",
+    "Magnetisk telefonholder — 449 kr",
+    "Sammenleggbart Bluetooth-tastatur — 449 kr",
+    "Trådløs lader — Black — 499 kr",
+    "20W Høyttaler — 499 kr",
+    "Powerbank — 499 kr",
+    "4-i-1 Hurtiglader — 499 kr",
+    "Trådløst Bluetooth-tastatur — 499 kr",
+    "Gaming-mus — 499 kr",
+    "20W Powerbank — 499 kr",
+    "Trådløs Qi-billader — 549 kr"
+  ],
+  "top25Shopping": [
+    "Bluetooth-høyttaler — 249 kr",
+    "3-i-1 Hurtiglader — 249 kr",
+    "Trådløst headset — 249 kr",
+    "Høyttaler — 279 kr",
+    "Datamus — 279 kr",
+    "USB-C Lader — 279 kr",
+    "3-i-1 Hodetelefoner — 299 kr",
+    "Tastatur — 299 kr",
+    "Trådløs mus — 379 kr",
+    "RGB-mus — 399 kr",
+    "USB kondensatormikrofon — 429 kr",
+    "Hurtiglader — 429 kr",
+    "USB-C adapter / hub — 429 kr",
+    "3-i-1 Trådløs lader — 449 kr",
+    "Kondensatormikrofon — 449 kr",
+    "Magnetisk telefonholder — 449 kr",
+    "Sammenleggbart Bluetooth-tastatur — 449 kr",
+    "Trådløs lader — Black — 499 kr",
+    "20W Høyttaler — 499 kr",
+    "Powerbank — 499 kr",
+    "4-i-1 Hurtiglader — 499 kr",
+    "Trådløst Bluetooth-tastatur — 499 kr",
+    "Gaming-mus — 499 kr",
+    "20W Powerbank — 499 kr",
+    "Trådløs Qi-billader — 549 kr"
+  ],
+  "top25Meta": [
+    "Bluetooth-høyttaler — 249 kr",
+    "3-i-1 Hurtiglader — 249 kr",
+    "Trådløst headset — 249 kr",
+    "Høyttaler — 279 kr",
+    "Datamus — 279 kr",
+    "USB-C Lader — 279 kr",
+    "Tastatur — 299 kr",
+    "Trådløs mus — 379 kr",
+    "RGB-mus — 399 kr",
+    "USB kondensatormikrofon — 429 kr",
+    "Hurtiglader — 429 kr",
+    "USB-C adapter / hub — 429 kr",
+    "3-i-1 Trådløs lader — 449 kr",
+    "Kondensatormikrofon — 449 kr",
+    "Sammenleggbart Bluetooth-tastatur — 449 kr",
+    "Trådløs lader — Black — 499 kr",
+    "20W Høyttaler — 499 kr",
+    "Powerbank — 499 kr",
+    "4-i-1 Hurtiglader — 499 kr",
+    "Trådløst Bluetooth-tastatur — 499 kr",
+    "Gaming-mus — 499 kr",
+    "20W Powerbank — 499 kr",
+    "Trådløs Qi-billader — 549 kr",
+    "Webkamera — 649 kr",
+    "Lader 5W Magnetisk — 749 kr"
+  ],
+  "remainingIssues": {
+    "numberedTitles": 0,
+    "numberedSample": [],
+    "badShort": 0,
+    "badShortSample": []
+  }
+}

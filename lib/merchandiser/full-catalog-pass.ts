@@ -79,7 +79,7 @@ const SOFT_REJECT_PATTERNS: Array<{ pattern: RegExp; reason: string }> = [
 ];
 
 const GENERIC_DESC =
-  /pålitelig lading med stabil strømforsyning|best quality|factory direct|high quality product|plastpose|perfect for home and office|buy now|limited stock/i;
+  /pålitelig lading med stabil strømforsyning|best quality|factory direct|high quality product|plastpose|perfect for home and office|buy now|limited stock|høy presisjon og ergonomisk design gjør musen|tilkobling:\s*bluetooth\.\s*vekt:|kompatibilitet:\s*iphone\.\s*mål:|kategori:\s*chargers/i;
 
 export function merchHaystack(p: MerchProduct): string {
   return [p.name, p.metaTitle, p.shortDescription, p.description, p.category, p.tags]
@@ -380,20 +380,51 @@ function truncateTitle(s: string, max = 58): string {
 
 export function norwegianShortDescription(p: MerchProduct, title: string): string {
   const existing = (p.shortDescription || "").trim();
-  if (existing && !GENERIC_DESC.test(existing) && !looksLikeEnglishTitle(existing) && existing.length >= 40) {
+  const base = title || cleanProductName(p.name);
+  const nameBlob = `${base} ${p.name || ""}`.toLowerCase();
+  const mismatched =
+    (/musematte|tastatur|keyboard|høyttaler|ruter|wifi|webkamera|lader|powerbank/.test(nameBlob) &&
+      /gjør musen|dpi\b|kategori:\s*chargers|kompatibilitet:\s*iphone/.test(existing.toLowerCase())) ||
+    false;
+
+  if (
+    existing &&
+    !GENERIC_DESC.test(existing) &&
+    !looksLikeEnglishTitle(existing) &&
+    existing.length >= 40 &&
+    !mismatched
+  ) {
     return existing.slice(0, 160);
   }
 
+  if (/musematte|mouse\s*pad|skrivebordsmatte/i.test(base)) {
+    return `${base} med jevn overflate for presis bevegelse. Passer gaming og kontor — enkel å holde ren.`.slice(0, 160);
+  }
+  if (/tastatur|keyboard/i.test(base)) {
+    return `${base} med behagelig skrivefølelse. Klar for PC og hverdagsbruk — stabilt og enkelt å koble til.`.slice(0, 160);
+  }
+  if (/\bmus\b|mouse/i.test(base) && !/matte|pad/i.test(base)) {
+    return `${base} med god kontroll og behagelig grep. Egnet til jobb og fritid.`.slice(0, 160);
+  }
+  if (/headset|ørepropper|hodetelefon/i.test(base)) {
+    return `${base} med god lyd og behagelig passform. Enkel å bruke hjemme eller på farten.`.slice(0, 160);
+  }
+  if (/lader|powerbank|kabel|hub|dokking/i.test(base)) {
+    return `${base} for stabil lading og tilkobling. Praktisk i hverdagen.`.slice(0, 160);
+  }
+  if (/høyttaler|webkamera|mikrofon/i.test(base)) {
+    return `${base} med tydelig lyd eller bilde. Enkel oppsett for hjemmekontor og streaming.`.slice(0, 160);
+  }
+
   const cat = p.category || "Elektronikk";
-  const base = title || cleanProductName(p.name);
   const templates: Record<string, string> = {
-    "Mobil & Tilbehør": `${base} — praktisk tilbehør til mobil og hverdagsbruk. Stabil ytelse og enkel i bruk.`,
+    "Mobil & Tilbehør": `${base} — praktisk tilbehør til mobil. Stabil ytelse og enkel i bruk.`,
     Gaming: `${base} — for gaming og setup. God følelse, tydelig design og klar til bruk.`,
-    "Data & IT": `${base} — nyttig for PC, laptop og kontor. Enkel tilkobling og ryddig hverdag.`,
-    "TV, Lyd & Bilde": `${base} — for bedre bilde og lyd hjemme. Enkel installasjon og solid kvalitet.`,
-    "Hjem & Fritid": `${base} — smart tilbehør til hjemmekontor og fritid. Praktisk og gjennomtenkt.`,
+    "Data & IT": `${base} — nyttig for PC og laptop. Enkel tilkobling i hverdagen.`,
+    "TV, Lyd & Bilde": `${base} — for bedre lyd og bilde hjemme. Enkel å komme i gang med.`,
+    "Hjem & Fritid": `${base} — smart tilbehør til hjemmekontor. Praktisk og gjennomtenkt.`,
   };
-  return (templates[cat] || `${base} — kvalitetsprodukt fra ElectroHypeX. Klar til bruk.`).slice(0, 160);
+  return (templates[cat] || `${base} — gjennomtenkt elektronikk fra ElectroHypeX.`).slice(0, 160);
 }
 
 export function needsDescriptionRewrite(p: MerchProduct): boolean {

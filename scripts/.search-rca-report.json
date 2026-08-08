@@ -1,0 +1,5342 @@
+{
+  "generatedAt": "2026-08-08T10:01:30.091Z",
+  "catalogSize": 743,
+  "inventory": {
+    "nameContainsDeksel": [
+      {
+        "id": "cmsdjhyuz04tovf3sdkgf9if2",
+        "name": "All-in-one tastatur med Protective deksel",
+        "category": "Data & IT",
+        "subcategory": "Mobildeksel",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "all-in-one",
+          "keyboard",
+          "protective",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cms6k7b3y00sovf7k0gl5f4jx",
+        "name": "Personvern-deksel til telefon",
+        "category": "Mobil & Tilbehør",
+        "subcategory": null,
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "phone",
+          "anti-peep",
+          "magnetic",
+          "deksler & etuier"
+        ]
+      },
+      {
+        "id": "cmsdhezr801icvfggqifst7b0",
+        "name": "Nettbrett-deksel med tastatur",
+        "category": "Data & IT",
+        "subcategory": "Mobildeksel",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "8inch",
+          "tablet",
+          "keyboard",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdiajuy006uvf3sdsmz7xgc",
+        "name": "Acrylic Transparent tastatur Dust deksel",
+        "category": "Data & IT",
+        "subcategory": "Mobildeksel",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "acrylic",
+          "transparent",
+          "keyboard",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdj10v402xyvf3sp5tos0qd",
+        "name": "Green Skin Pro11 Flat Protective deksel Full skjerm",
+        "category": "Mobil & Tilbehør",
+        "subcategory": "Mobildeksel",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "green",
+          "pro11",
+          "protective",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdklvaa08y4vf3sdaqgak5m",
+        "name": "61 Key tastatur deksel 40.9 X 16.9 X 5.1 i Interior Padded",
+        "category": "Data & IT",
+        "subcategory": "Mobildeksel",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "keyboard",
+          "interior",
+          "padded",
+          "mobil & tilbehør"
+        ]
+      }
+    ],
+    "nameContainsIphone": [
+      {
+        "id": "cmsdkasqb07wrvf3sbqgb90h0",
+        "name": "Lader Qi-Certified Ultra-Slim 5W lading Pad iPhone",
+        "category": "Mobil & Tilbehør",
+        "subcategory": "Lader"
+      }
+    ],
+    "nameContainsIphone15": [],
+    "nameContainsSamsung": [],
+    "nameContainsGalaxy": [],
+    "nameContainsMusematte": 42,
+    "nameContainsMusMatte": 0,
+    "nameContainsTastatur": 177,
+    "nameContainsKeyboard": 0,
+    "nameContainsGamingPc": 0,
+    "nameWordPc": [
+      "Wirelesspro Game Gaming Optical mus PC laptop",
+      "Apple trådløs Controller PS3PS2 PC Android",
+      "Smart Android Entertainment 3G Calling nettbrett PC 10.1",
+      "RGP01 Gamepad støtte Android Ios Computer PC",
+      "Stretch Gamepad Phablet trådløs Game Handle PC Streaming",
+      "10.1 Inch Tablet PC 4GB Ram Android 12.0 PC MTK6762"
+    ],
+    "subMobildeksel": 28,
+    "subMobildekselButNotCase": [
+      {
+        "id": "cmsdh3rat00b7vfgg8b9x47e6",
+        "name": "Datamus",
+        "category": "Data & IT",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "apple",
+          "mouse",
+          "storage",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdml5lo0g3zvf3sf148xo7h",
+        "name": "Bærbar WiFi-ruter",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "bluetooth høyttaler",
+          "compatible",
+          "apple",
+          "portable",
+          "mobil & tilbehør",
+          "metal"
+        ]
+      },
+      {
+        "id": "cmsdig5pd00r7vf3sbfbppyjc",
+        "name": "Magic tastatur til Transparent",
+        "category": "Data & IT",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "compatible",
+          "magic",
+          "keyboard",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdjhqyc04sgvf3sq30hzwww",
+        "name": "Trådløst Bluetooth-tastatur",
+        "category": "Data & IT",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "wireless",
+          "keyboard",
+          "bluetooth",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdjzgdl06p6vf3suz3av3x5",
+        "name": "10.2 inch nettbrett -Rechargeable Removable trådløs",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "tablet",
+          "-rechargeable",
+          "removable",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdjill504vivf3sifbk78nu",
+        "name": "Trådløst Bluetooth-tastatur",
+        "category": "Data & IT",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "13-inch",
+          "all-in-one",
+          "bluetooth",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdh7ant00qbvfggxbq0pc7u",
+        "name": "Trådløst Bluetooth-tastatur",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "touch",
+          "bluetooth",
+          "keyboard",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdiiboe0109vf3s1qbasiek",
+        "name": "Trådløst Bluetooth-tastatur",
+        "category": "Data & IT",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "compatible",
+          "bluetooth",
+          "keyboard",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdh8c4800u2vfgg2hhl0zml",
+        "name": "Trådløst tastatur 0056",
+        "category": "Gaming",
+        "tags": [
+          "tastatur",
+          "compatible",
+          "wireless",
+          "keyboard",
+          "mobil & tilbehør",
+          "plastic"
+        ]
+      },
+      {
+        "id": "cmsddw412000fvfdc8vu6f4vk",
+        "name": "RGB musematte 0942",
+        "category": "Gaming",
+        "tags": [
+          "tastatur",
+          "extended",
+          "gaming",
+          "mouse",
+          "mobil & tilbehør",
+          "plastic"
+        ]
+      },
+      {
+        "id": "cmsdij34p012jvf3stpyecgw5",
+        "name": "USB kondensatormikrofon 7948",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "iphone ipad",
+          "wireless",
+          "lavalier",
+          "lapel",
+          "mobil & tilbehør",
+          "others"
+        ]
+      },
+      {
+        "id": "cmsdk0w4y06ukvf3suen33a8n",
+        "name": "Electronics Organizer Travel kabel Bag Waterproof bærbar",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "electronics",
+          "organizer",
+          "travel",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdk125x06vbvf3sgstzopc5",
+        "name": "Electronics Organizer Travel kabel Bag Waterproof bærbar",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "electronics",
+          "organizer",
+          "travel",
+          "mobil & tilbehør"
+        ]
+      },
+      {
+        "id": "cmsdka9xc07ujvf3s2x6udtur",
+        "name": "Nettbrettmappe stativ",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "mobildeksel",
+          "deksel",
+          "tablet",
+          "sleeve",
+          "stand",
+          "gaming"
+        ]
+      },
+      {
+        "id": "cmsdltwdg0deuvf3so2vte7o4",
+        "name": "Full HD webkamera 1080p",
+        "category": "Mobil & Tilbehør",
+        "tags": [
+          "camera",
+          "1080p",
+          "autofocus",
+          "mobil & tilbehør",
+          "plastic, others",
+          "USB-C"
+        ]
+      }
+    ],
+    "tagsContainMobildeksel": 32
+  },
+  "queries": [
+    {
+      "query": "deksel",
+      "intentDescribed": "Phone/tablet protective case (not keyboard dust cover)",
+      "parsedIntent": "phone_case",
+      "parsedTokens": [
+        "deksel"
+      ],
+      "catalogShouldMatch": 32,
+      "catalogStrongShouldMatch": 2,
+      "searchReturned": 2,
+      "searchReturnedBeforeFloor": 2,
+      "oldNameContainsCount": 6,
+      "strongInTop10": 1,
+      "strongMissingCount": 1,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cms6k7b3y00sovf7k0gl5f4jx",
+          "name": "Personvern-deksel til telefon",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "score": 282,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdj10v402xyvf3sp5tos0qd",
+          "name": "Green Skin Pro11 Flat Protective deksel Full skjerm",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "score": 187,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdhezr801icvfggqifst7b0",
+          "name": "Nettbrett-deksel med tastatur",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "8inch",
+            "tablet",
+            "keyboard",
+            "mobil & tilbehør",
+            "others",
+            "Mobildeksel"
+          ],
+          "metaTitle": "Nettbrett-deksel med tastatur | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "filtrering",
+            "relevansscore"
+          ],
+          "detail": "score=ABSENT intent=phone_case sub=Mobildeksel tags=mobildeksel,deksel,8inch,tablet,keyboard,mobil tilbehor"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdh3rat00b7vfgg8b9x47e6",
+          "name": "Datamus",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "apple",
+            "mouse",
+            "storage",
+            "mobil & tilbehør",
+            "leather",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdml5lo0g3zvf3sf148xo7h",
+          "name": "Bærbar WiFi-ruter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "bluetooth høyttaler",
+            "compatible",
+            "apple",
+            "portable",
+            "mobil & tilbehør",
+            "metal",
+            "Mobildeksel"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdig5pd00r7vf3sbfbppyjc",
+          "name": "Magic tastatur til Transparent",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "compatible",
+            "magic",
+            "keyboard",
+            "mobil & tilbehør",
+            "cloth, plastic",
+            "Mobildeksel"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdjhqyc04sgvf3sq30hzwww",
+          "name": "Trådløst Bluetooth-tastatur",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "wireless",
+            "keyboard",
+            "bluetooth",
+            "mobil & tilbehør",
+            "leather",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdjzgdl06p6vf3suz3av3x5",
+          "name": "10.2 inch nettbrett -Rechargeable Removable trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "tablet",
+            "-rechargeable",
+            "removable",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "filtrering": 1,
+        "relevansscore": 1
+      }
+    },
+    {
+      "query": "iphone",
+      "intentDescribed": "Products for/compatible with iPhone",
+      "parsedIntent": "generic",
+      "parsedTokens": [
+        "iphone"
+      ],
+      "catalogShouldMatch": 19,
+      "catalogStrongShouldMatch": 1,
+      "searchReturned": 9,
+      "searchReturnedBeforeFloor": 19,
+      "oldNameContainsCount": 1,
+      "strongInTop10": 1,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdkasqb07wrvf3sbqgb90h0",
+          "name": "Lader Qi-Certified Ultra-Slim 5W lading Pad iPhone",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 212,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdmo8fy0genvf3skhww0g2e",
+          "name": "Hurtiglader (3 farger)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 69,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 3,
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 69,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 4,
+          "id": "cmsdij34p012jvf3stpyecgw5",
+          "name": "USB kondensatormikrofon 7948",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "score": 69,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 5,
+          "id": "cmsdkzekh0aclvf3szermaojd",
+          "name": "USB-C adapter / hub",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 69,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 6,
+          "id": "cmsdl197c0ajcvf3szq3n19ao",
+          "name": "3-i-1 Sammenleggbar trådløs lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 7,
+          "id": "cmsdjxufe06jgvf3sqv9b70ka",
+          "name": "Powerbank 0380",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 8,
+          "id": "cmsdmwlzb0hayvf3s69mw4ahc",
+          "name": "Trådløs lader 2",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 9,
+          "id": "cmsdms7gr0gu9vf3slzl3sp6u",
+          "name": "Trådløs lader 5000 mAh",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdml5lo0g3zvf3sf148xo7h",
+          "name": "Bærbar WiFi-ruter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "bluetooth høyttaler",
+            "compatible",
+            "apple",
+            "portable",
+            "mobil & tilbehør",
+            "metal",
+            "Mobildeksel"
+          ],
+          "inResults": false,
+          "score": 6
+        },
+        {
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "iphone, samsung, huawei",
+            "20000mah",
+            "high-capacity",
+            "power",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": true,
+          "score": 69
+        },
+        {
+          "id": "cmsdh7ant00qbvfggxbq0pc7u",
+          "name": "Trådløst Bluetooth-tastatur",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "touch",
+            "bluetooth",
+            "keyboard",
+            "mobil & tilbehør",
+            "plastic, leather",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": 6
+        },
+        {
+          "id": "cmsdldnph0buavf3s5jwuaf8s",
+          "name": "Apple Maiduo MagSafe magnetisk trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "compatible",
+            "apple",
+            "maiduo",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs",
+            "MagSafe"
+          ],
+          "inResults": false,
+          "score": 6
+        },
+        {
+          "id": "cmsdij34p012jvf3stpyecgw5",
+          "name": "USB kondensatormikrofon 7948",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "iphone ipad",
+            "wireless",
+            "lavalier",
+            "lapel",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": true,
+          "score": 69
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "iphone 15",
+      "intentDescribed": "iPhone 15 specific products",
+      "parsedIntent": "generic",
+      "parsedTokens": [
+        "iphone",
+        "15"
+      ],
+      "catalogShouldMatch": 2,
+      "catalogStrongShouldMatch": 0,
+      "searchReturned": 3,
+      "searchReturnedBeforeFloor": 10,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 0,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 1,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 145,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 2,
+          "id": "cmsdkasqb07wrvf3sbqgb90h0",
+          "name": "Lader Qi-Certified Ultra-Slim 5W lading Pad iPhone",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 122,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 3,
+          "id": "cmsdldnph0buavf3s5jwuaf8s",
+          "name": "Apple Maiduo MagSafe magnetisk trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 82,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "iphone, samsung, huawei",
+            "20000mah",
+            "high-capacity",
+            "power",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": true,
+          "score": 145
+        },
+        {
+          "id": "cmsdldnph0buavf3s5jwuaf8s",
+          "name": "Apple Maiduo MagSafe magnetisk trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "compatible",
+            "apple",
+            "maiduo",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs",
+            "MagSafe"
+          ],
+          "inResults": true,
+          "score": 82
+        }
+      ],
+      "falsePositiveTopSamples": [
+        {
+          "id": "cmsdkasqb07wrvf3sbqgb90h0",
+          "name": "Lader Qi-Certified Ultra-Slim 5W lading Pad iPhone",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "iphone",
+            "lader iphone",
+            "wireless",
+            "charger",
+            "qi-certified",
+            "mobil & tilbehør"
+          ],
+          "score": 122
+        }
+      ],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "iphone deksel",
+      "intentDescribed": "iPhone cases",
+      "parsedIntent": "phone_case",
+      "parsedTokens": [
+        "iphone",
+        "deksel"
+      ],
+      "catalogShouldMatch": 2,
+      "catalogStrongShouldMatch": 0,
+      "searchReturned": 2,
+      "searchReturnedBeforeFloor": 2,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 0,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 2,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cms6k7b3y00sovf7k0gl5f4jx",
+          "name": "Personvern-deksel til telefon",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "score": 152,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 2,
+          "id": "cmsdj10v402xyvf3sp5tos0qd",
+          "name": "Green Skin Pro11 Flat Protective deksel Full skjerm",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "score": 57,
+          "expected": false,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdh7ant00qbvfggxbq0pc7u",
+          "name": "Trådløst Bluetooth-tastatur",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "touch",
+            "bluetooth",
+            "keyboard",
+            "mobil & tilbehør",
+            "plastic, leather",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdjxufe06jgvf3sqv9b70ka",
+          "name": "Powerbank 0380",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "oxford",
+            "cloth",
+            "wireless",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [
+        {
+          "id": "cms6k7b3y00sovf7k0gl5f4jx",
+          "name": "Personvern-deksel til telefon",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "phone",
+            "anti-peep",
+            "magnetic",
+            "deksler & etuier",
+            "mobil & tilbehør",
+            "herdet glass"
+          ],
+          "score": 152
+        },
+        {
+          "id": "cmsdj10v402xyvf3sp5tos0qd",
+          "name": "Green Skin Pro11 Flat Protective deksel Full skjerm",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "green",
+            "pro11",
+            "protective",
+            "mobil & tilbehør",
+            "plastic, others",
+            "Mobildeksel"
+          ],
+          "score": 57
+        }
+      ],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "samsung",
+      "intentDescribed": "Samsung products / compatibility",
+      "parsedIntent": "generic",
+      "parsedTokens": [
+        "samsung"
+      ],
+      "catalogShouldMatch": 13,
+      "catalogStrongShouldMatch": 0,
+      "searchReturned": 10,
+      "searchReturnedBeforeFloor": 13,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 0,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdlyic30dw0vf3stdvphgap",
+          "name": "Powerbank 10400 mAh 1587",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 69,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 2,
+          "id": "cmsdmvu1f0h7yvf3s1ly8whea",
+          "name": "Powerbank 0361",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 3,
+          "id": "cmsdmuxji0h4tvf3s08kplfeg",
+          "name": "Powerbank 1000 mAh",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 4,
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 5,
+          "id": "cmsddw412000fvfdc8vu6f4vk",
+          "name": "RGB musematte 0942",
+          "category": "Gaming",
+          "subcategory": "Mobildeksel",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 6,
+          "id": "cmsdkazs307xhvf3sdr4c7qhe",
+          "name": "Trådløs lader — Black",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 7,
+          "id": "cmsdjnhio05eqvf3s7t7rcsyn",
+          "name": "Trådløs Qi-billader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 8,
+          "id": "cmsdmqli40gnuvf3s8o38xtfd",
+          "name": "Trådløs Qi-lader (pad)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 9,
+          "id": "cmsdhc519017qvfgg50nq85ay",
+          "name": "Trådløst tastatur 1803",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 10,
+          "id": "cmsdkzekh0aclvf3szermaojd",
+          "name": "USB-C adapter / hub",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdm44j00ee3vf3swii89azp",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "galaxy s20 s21 s22",
+            "lader galaxy s20 s21 s22",
+            "super",
+            "charger",
+            "cable",
+            "mobil & tilbehør"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "iphone, samsung, huawei",
+            "20000mah",
+            "high-capacity",
+            "power",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": true,
+          "score": 63
+        },
+        {
+          "id": "cmsddw412000fvfdc8vu6f4vk",
+          "name": "RGB musematte 0942",
+          "category": "Gaming",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "tastatur",
+            "extended",
+            "gaming",
+            "mouse",
+            "mobil & tilbehør",
+            "plastic",
+            "Samsung",
+            "Mobildeksel"
+          ],
+          "inResults": true,
+          "score": 63
+        },
+        {
+          "id": "cmsdjnhio05eqvf3s7t7rcsyn",
+          "name": "Trådløs Qi-billader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "magnetic",
+            "wireless",
+            "charger",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "inResults": true,
+          "score": 63
+        },
+        {
+          "id": "cmsdl2m700ao0vf3s16zqkva2",
+          "name": "Hurtiglader (454 g)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "galaxy",
+            "lader galaxy",
+            "wireless",
+            "charger",
+            "charging",
+            "mobil & tilbehør"
+          ],
+          "inResults": false,
+          "score": 8
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "galaxy",
+      "intentDescribed": "Samsung Galaxy products",
+      "parsedIntent": "generic",
+      "parsedTokens": [
+        "galaxy"
+      ],
+      "catalogShouldMatch": 8,
+      "catalogStrongShouldMatch": 0,
+      "searchReturned": 10,
+      "searchReturnedBeforeFloor": 13,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 0,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 5,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdlyic30dw0vf3stdvphgap",
+          "name": "Powerbank 10400 mAh 1587",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 69,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 2,
+          "id": "cmsdmvu1f0h7yvf3s1ly8whea",
+          "name": "Powerbank 0361",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 3,
+          "id": "cmsdmuxji0h4tvf3s08kplfeg",
+          "name": "Powerbank 1000 mAh",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 4,
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 5,
+          "id": "cmsddw412000fvfdc8vu6f4vk",
+          "name": "RGB musematte 0942",
+          "category": "Gaming",
+          "subcategory": "Mobildeksel",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 6,
+          "id": "cmsdkazs307xhvf3sdr4c7qhe",
+          "name": "Trådløs lader — Black",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 63,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 7,
+          "id": "cmsdjnhio05eqvf3s7t7rcsyn",
+          "name": "Trådløs Qi-billader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 63,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 8,
+          "id": "cmsdmqli40gnuvf3s8o38xtfd",
+          "name": "Trådløs Qi-lader (pad)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 63,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 9,
+          "id": "cmsdhc519017qvfgg50nq85ay",
+          "name": "Trådløst tastatur 1803",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 10,
+          "id": "cmsdkzekh0aclvf3szermaojd",
+          "name": "USB-C adapter / hub",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 63,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdm44j00ee3vf3swii89azp",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "galaxy s20 s21 s22",
+            "lader galaxy s20 s21 s22",
+            "super",
+            "charger",
+            "cable",
+            "mobil & tilbehør"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdkuwyr09wtvf3srzxprreh",
+          "name": "Powerbank 20000 mAh 8166",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "iphone, samsung, huawei",
+            "20000mah",
+            "high-capacity",
+            "power",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": true,
+          "score": 63
+        },
+        {
+          "id": "cmsddw412000fvfdc8vu6f4vk",
+          "name": "RGB musematte 0942",
+          "category": "Gaming",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "tastatur",
+            "extended",
+            "gaming",
+            "mouse",
+            "mobil & tilbehør",
+            "plastic",
+            "Samsung",
+            "Mobildeksel"
+          ],
+          "inResults": true,
+          "score": 63
+        },
+        {
+          "id": "cmsdl2m700ao0vf3s16zqkva2",
+          "name": "Hurtiglader (454 g)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "galaxy",
+            "lader galaxy",
+            "wireless",
+            "charger",
+            "charging",
+            "mobil & tilbehør"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdl403y0atbvf3sr3r8yyb5",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "galaxy s20 s21 s22 s23",
+            "lader galaxy s20 s21 s22 s23",
+            "usb-c",
+            "super",
+            "charger",
+            "mobil & tilbehør"
+          ],
+          "inResults": false,
+          "score": 8
+        }
+      ],
+      "falsePositiveTopSamples": [
+        {
+          "id": "cmsdmvu1f0h7yvf3s1ly8whea",
+          "name": "Powerbank 0361",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "compatible",
+            "warmer",
+            "heater",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic"
+          ],
+          "score": 63
+        },
+        {
+          "id": "cmsdmuxji0h4tvf3s08kplfeg",
+          "name": "Powerbank 1000 mAh",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "portable",
+            "1000mah",
+            "magnetic",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "score": 63
+        },
+        {
+          "id": "cmsdkazs307xhvf3sdr4c7qhe",
+          "name": "Trådløs lader — Black",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "qi-certified",
+            "mobil & tilbehør",
+            "plastic, metal",
+            "Trådløs"
+          ],
+          "score": 63
+        },
+        {
+          "id": "cmsdjnhio05eqvf3s7t7rcsyn",
+          "name": "Trådløs Qi-billader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "magnetic",
+            "wireless",
+            "charger",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "score": 63
+        },
+        {
+          "id": "cmsdmqli40gnuvf3s8o38xtfd",
+          "name": "Trådløs Qi-lader (pad)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "huawei samsung",
+            "lader huawei samsung",
+            "wireless",
+            "built-in",
+            "charger",
+            "mobil & tilbehør"
+          ],
+          "score": 63
+        }
+      ],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "mus",
+      "intentDescribed": "Computer mice (not primarily mouse pads)",
+      "parsedIntent": "mouse",
+      "parsedTokens": [
+        "mus"
+      ],
+      "catalogShouldMatch": 224,
+      "catalogStrongShouldMatch": 181,
+      "searchReturned": 191,
+      "searchReturnedBeforeFloor": 191,
+      "oldNameContainsCount": 235,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 171,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdgxtxd00qsvf1k35821nvg",
+          "name": "Mus Wired Gaming USB Notebook Home Office skrivebord",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 447,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdjr97o05t5vf3s6a6o5vg3",
+          "name": "Mus Ultimate Non-slip Paste Does Not Stick til Hand",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 417,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdjdai60489vf3sfx8rb0jj",
+          "name": "Trådløs Gaming mus",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 308,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdm0w0g0e3xvf3s6z280ym4",
+          "name": "Trådløs mus",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 308,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdm4hkh0efjvf3st70pl76u",
+          "name": "Trådløs mus",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 308,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdja66803wrvf3sev78ekhf",
+          "name": "Mus tastatur Converter",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 306,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdjtec3062tvf3s8odc2yob",
+          "name": "Mus tastatur U disk Slr camera kabel",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 306,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdj21w3032nvf3su1rk134v",
+          "name": "2.4G trådløs Vertical mus Ergonomic Optical Mice med 6",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 302,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdjsh6p05z5vf3sfx4girsy",
+          "name": "AI smart Voice Input mus trådløs laptop nettbrett",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 302,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdh49i500dgvfgg6d0i43ba",
+          "name": "Anti-skid Stickers til mus",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "score": 302,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdh2k75006ivfgggjh30eip",
+          "name": "Gaming-mus 1063",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wired",
+            "gaming",
+            "mouse",
+            "gamingmus",
+            "others",
+            "RGB"
+          ],
+          "metaTitle": "Gaming-mus 1063 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 302,
+          "rank": 31,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=302 intent=mouse sub=Gamingmus tags=gaming mus,tradlos mus,wired,gaming,mouse,gamingmus"
+        },
+        {
+          "id": "cmsdkc8fk0818vf3suqawfxxu",
+          "name": "Game Console tastatur og mus Converter",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "console",
+            "keyboard",
+            "mouse",
+            "gaming",
+            "plastic, others",
+            "Tastatur"
+          ],
+          "metaTitle": "Game Console tastatur og mus Converter | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 191,
+          "rank": 163,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=191 intent=mouse sub=Tastatur tags=tastatur,console,keyboard,mouse,gaming,plastic others"
+        },
+        {
+          "id": "cmsdkcupu083hvf3sj0m2utrh",
+          "name": "Trådløst tastatur og mus",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "wireless",
+            "flying",
+            "keyboard",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur og mus | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 183,
+          "rank": 180,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=183 intent=mouse sub=Tastatur tags=tastatur,wireless,flying,keyboard,gaming,plastic"
+        },
+        {
+          "id": "cmsdh2vvz007hvfggaprrihvz",
+          "name": "Wirelesspro Game Gaming Optical mus PC laptop",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wirelesspro",
+            "gaming",
+            "optical",
+            "plastic",
+            "Trådløs",
+            "Gamingmus"
+          ],
+          "metaTitle": "Wirelesspro Game Gaming Optical mus PC laptop | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 302,
+          "rank": 129,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=302 intent=mouse sub=Gamingmus tags=gaming mus,tradlos mus,wirelesspro,gaming,optical,plastic"
+        },
+        {
+          "id": "cmsdjyq9b06muvf3shibivp0f",
+          "name": "Wired mus med Detachable Palm Rest Ergonomic Vertical",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wired",
+            "mouse",
+            "detachable",
+            "gaming",
+            "plastic, others",
+            "Gamingmus"
+          ],
+          "metaTitle": "Wired mus med Detachable Palm Rest Ergonomic Ver | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 302,
+          "rank": 128,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=302 intent=mouse sub=Gamingmus tags=gaming mus,tradlos mus,wired,mouse,detachable,gaming"
+        },
+        {
+          "id": "cmsdh332j0088vfggzge2fb1g",
+          "name": "Gaming-mus 6591",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "lightweight",
+            "gaming",
+            "mouse",
+            "gamingmus",
+            "plastic",
+            "Bluetooth"
+          ],
+          "metaTitle": "Gaming-mus 6591 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 302,
+          "rank": 58,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=302 intent=mouse sub=Gamingmus tags=gaming mus,tradlos mus,lightweight,gaming,mouse,gamingmus"
+        },
+        {
+          "id": "cmsdh39gl008yvfgg6z8kns1u",
+          "name": "Trådløs mus 0572",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "power-saving",
+            "silent",
+            "luminous",
+            "gaming",
+            "metal",
+            "Trådløs"
+          ],
+          "metaTitle": "Trådløs mus 0572 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 302,
+          "rank": 98,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=302 intent=mouse sub=Gamingmus tags=gaming mus,tradlos mus,power saving,silent,luminous,gaming"
+        },
+        {
+          "id": "cmsdh3fp9009pvfgg5j5iydiu",
+          "name": "Cooling Hole mus Game Mechanical",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "cooling",
+            "mouse",
+            "mechanical",
+            "gaming",
+            "plastic",
+            "Mekanisk"
+          ],
+          "metaTitle": "Cooling Hole mus Game Mechanical | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 302,
+          "rank": 13,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=302 intent=mouse sub=Gamingmus tags=gaming mus,tradlos mus,cooling,mouse,mechanical,gaming"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cms6k79fj00ryvf7k7wmhdcxj",
+          "name": "Ergonomisk håndleddsstøtte",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "ergonomic",
+            "mouse",
+            "wrist",
+            "gaming",
+            "silikon"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdj7ots03mtvf3sgw3wo0ul",
+          "name": "Handheld Display Bluetooth trådløs lading Dual-mode Grip",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "handheld",
+            "display",
+            "bluetooth",
+            "trådløs lading",
+            "mobil & tilbehør",
+            "plastic, metal, others"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdjb4b90403vf3sf4rp292g",
+          "name": "Suitable Huawei",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "huawei",
+            "suitable",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth",
+            "Gamingmus"
+          ],
+          "inResults": true,
+          "score": 159
+        },
+        {
+          "id": "cmsdgyinf00t1vf1klsf66zor",
+          "name": "Trådløs Bluetooth Three-mode RGB Luminous Transparent",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wireless",
+            "bluetooth",
+            "three-mode",
+            "mobil & tilbehør",
+            "plastic",
+            "RGB"
+          ],
+          "inResults": true,
+          "score": 159
+        },
+        {
+          "id": "cmsdgyueg00ujvf1kpojqdcld",
+          "name": "Laptopstativ i herdet glass",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Skjermbeskytter",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "black",
+            "tempered",
+            "glass",
+            "skjermbeskytter",
+            "mobil & tilbehør",
+            "Esport"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "relevansscore": 8
+      }
+    },
+    {
+      "query": "musematte",
+      "intentDescribed": "Mouse pads",
+      "parsedIntent": "mouse_pad",
+      "parsedTokens": [
+        "musematte"
+      ],
+      "catalogShouldMatch": 43,
+      "catalogStrongShouldMatch": 42,
+      "searchReturned": 43,
+      "searchReturnedBeforeFloor": 43,
+      "oldNameContainsCount": 42,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 32,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdj87j403p7vf3s9gkj9feo",
+          "name": "RGB musematte 0111",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdll48g0cjuvf3skz5832vy",
+          "name": "RGB musematte 0137",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsddygpe005qvf2kyfbhshr2",
+          "name": "RGB musematte 0456",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdh9j5900xivfgg3fqxe0ag",
+          "name": "RGB musematte 0742",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdj97y403syvf3sgp8tyic4",
+          "name": "RGB musematte 0806",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdk6vtn07h0vf3sntynfqvl",
+          "name": "RGB musematte 1458",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdh5bkj00ikvfggzq051u3t",
+          "name": "RGB musematte 2023",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdke0ai0878vf3so326pju9",
+          "name": "RGB musematte 2254",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdj81uc03o9vf3sf1ikxjj6",
+          "name": "RGB musematte 2435",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdjtodr063mvf3swfs8bu19",
+          "name": "RGB musematte 2755",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 317,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+          "name": "RGB musematte 6181",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "tastatur",
+            "transparent",
+            "silicone",
+            "keyboard",
+            "musematter",
+            "gaming",
+            "others",
+            "Musematter"
+          ],
+          "metaTitle": "RGB musematte 6181 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 317,
+          "rank": 16,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=317 intent=mouse_pad sub=Musematter tags=tastatur,transparent,silicone,keyboard,musematter,gaming"
+        },
+        {
+          "id": "cmsdh4zf300h1vfggpkvm023l",
+          "name": "RGB musematte 3891",
+          "category": "Gaming",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "colorful",
+            "wireless",
+            "charging",
+            "trådløs lading",
+            "mobil & tilbehør",
+            "plastic"
+          ],
+          "metaTitle": "RGB musematte 3891 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 253,
+          "rank": 36,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=253 intent=mouse_pad sub=Trådløs lading tags=gaming mus,tradlos mus,colorful,wireless,charging,tradlos lading"
+        },
+        {
+          "id": "cms7etv4q162zvf7kj6ahadbc",
+          "name": "RGB musematte 3421",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charging",
+            "mouse",
+            "gaming"
+          ],
+          "metaTitle": "RGB musematte 3421 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 253,
+          "rank": 34,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=253 intent=mouse_pad sub=null tags=lader,hurtiglader,wireless,charging,mouse,gaming"
+        },
+        {
+          "id": "cms7etvqv1633vf7k14b3iw62",
+          "name": "RGB musematte 2547",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "light",
+            "rgb-belysning",
+            "gaming"
+          ],
+          "metaTitle": "RGB musematte 2547 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 253,
+          "rank": 31,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=253 intent=mouse_pad sub=null tags=lader,hurtiglader,wireless,charger,light,rgb belysning"
+        },
+        {
+          "id": "cmsddw412000fvfdc8vu6f4vk",
+          "name": "RGB musematte 0942",
+          "category": "Gaming",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "tastatur",
+            "extended",
+            "gaming",
+            "mouse",
+            "mobil & tilbehør",
+            "plastic",
+            "Samsung",
+            "Mobildeksel"
+          ],
+          "metaTitle": "RGB musematte 0942 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 253,
+          "rank": 28,
+          "causes": [
+            "feil kategori",
+            "feil tagger",
+            "relevansscore",
+            "feil metadata"
+          ],
+          "detail": "score=253 intent=mouse_pad sub=Mobildeksel tags=tastatur,extended,gaming,mouse,mobil tilbehor,plastic"
+        },
+        {
+          "id": "cmsdj4j9w03cbvf3si44mvopw",
+          "name": "RGB musematte 9913",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wrist",
+            "support",
+            "mouse",
+            "musematter",
+            "gaming",
+            "cloth, plastic"
+          ],
+          "metaTitle": "RGB musematte 9913 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 317,
+          "rank": 20,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=317 intent=mouse_pad sub=Musematter tags=gaming mus,tradlos mus,wrist,support,mouse,musematter"
+        },
+        {
+          "id": "cmsdgqfbk000fvf1kmywpslzy",
+          "name": "RGB musematte 3434",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "5core",
+            "gaming",
+            "mouse",
+            "gamingmus",
+            "others",
+            "RGB"
+          ],
+          "metaTitle": "RGB musematte 3434 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 317,
+          "rank": 14,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=317 intent=mouse_pad sub=Musematter tags=gaming mus,tradlos mus,5core,gaming,mouse,gamingmus"
+        },
+        {
+          "id": "cms7etvxw1636vf7kkpdje38d",
+          "name": "RGB musematte 8218",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "mouse",
+            "hjem & fritid"
+          ],
+          "metaTitle": "RGB musematte 8218 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 253,
+          "rank": 42,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=253 intent=mouse_pad sub=null tags=lader,hurtiglader,wireless,charger,mouse,hjem fritid"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdkjgwg08p8vf3sl4ua0mc7",
+          "name": "Mekanisk gaming-tastatur 7925",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "gaming",
+            "keyboard",
+            "mouse",
+            "tv, lyd & bilde",
+            "others",
+            "RGB"
+          ],
+          "inResults": true,
+          "score": 134
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "relevansscore": 8,
+        "feil kategori": 1,
+        "feil tagger": 1,
+        "feil metadata": 1
+      }
+    },
+    {
+      "query": "mus matte",
+      "intentDescribed": "Mouse pads (spaced Norwegian)",
+      "parsedIntent": "mouse_pad",
+      "parsedTokens": [
+        "musematte"
+      ],
+      "catalogShouldMatch": 43,
+      "catalogStrongShouldMatch": 42,
+      "searchReturned": 43,
+      "searchReturnedBeforeFloor": 43,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 32,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdj87j403p7vf3s9gkj9feo",
+          "name": "RGB musematte 0111",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdll48g0cjuvf3skz5832vy",
+          "name": "RGB musematte 0137",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsddygpe005qvf2kyfbhshr2",
+          "name": "RGB musematte 0456",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdh9j5900xivfgg3fqxe0ag",
+          "name": "RGB musematte 0742",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdj97y403syvf3sgp8tyic4",
+          "name": "RGB musematte 0806",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdk6vtn07h0vf3sntynfqvl",
+          "name": "RGB musematte 1458",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdh5bkj00ikvfggzq051u3t",
+          "name": "RGB musematte 2023",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdke0ai0878vf3so326pju9",
+          "name": "RGB musematte 2254",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdj81uc03o9vf3sf1ikxjj6",
+          "name": "RGB musematte 2435",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdjtodr063mvf3swfs8bu19",
+          "name": "RGB musematte 2755",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "score": 262,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+          "name": "RGB musematte 6181",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "tastatur",
+            "transparent",
+            "silicone",
+            "keyboard",
+            "musematter",
+            "gaming",
+            "others",
+            "Musematter"
+          ],
+          "metaTitle": "RGB musematte 6181 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 262,
+          "rank": 16,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=262 intent=mouse_pad sub=Musematter tags=tastatur,transparent,silicone,keyboard,musematter,gaming"
+        },
+        {
+          "id": "cmsdh4zf300h1vfggpkvm023l",
+          "name": "RGB musematte 3891",
+          "category": "Gaming",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "colorful",
+            "wireless",
+            "charging",
+            "trådløs lading",
+            "mobil & tilbehør",
+            "plastic"
+          ],
+          "metaTitle": "RGB musematte 3891 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 198,
+          "rank": 36,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=198 intent=mouse_pad sub=Trådløs lading tags=gaming mus,tradlos mus,colorful,wireless,charging,tradlos lading"
+        },
+        {
+          "id": "cms7etv4q162zvf7kj6ahadbc",
+          "name": "RGB musematte 3421",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charging",
+            "mouse",
+            "gaming"
+          ],
+          "metaTitle": "RGB musematte 3421 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 198,
+          "rank": 34,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=198 intent=mouse_pad sub=null tags=lader,hurtiglader,wireless,charging,mouse,gaming"
+        },
+        {
+          "id": "cms7etvqv1633vf7k14b3iw62",
+          "name": "RGB musematte 2547",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "light",
+            "rgb-belysning",
+            "gaming"
+          ],
+          "metaTitle": "RGB musematte 2547 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 198,
+          "rank": 31,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=198 intent=mouse_pad sub=null tags=lader,hurtiglader,wireless,charger,light,rgb belysning"
+        },
+        {
+          "id": "cmsddw412000fvfdc8vu6f4vk",
+          "name": "RGB musematte 0942",
+          "category": "Gaming",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "tastatur",
+            "extended",
+            "gaming",
+            "mouse",
+            "mobil & tilbehør",
+            "plastic",
+            "Samsung",
+            "Mobildeksel"
+          ],
+          "metaTitle": "RGB musematte 0942 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 198,
+          "rank": 28,
+          "causes": [
+            "feil kategori",
+            "feil tagger",
+            "relevansscore",
+            "feil metadata"
+          ],
+          "detail": "score=198 intent=mouse_pad sub=Mobildeksel tags=tastatur,extended,gaming,mouse,mobil tilbehor,plastic"
+        },
+        {
+          "id": "cmsdj4j9w03cbvf3si44mvopw",
+          "name": "RGB musematte 9913",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wrist",
+            "support",
+            "mouse",
+            "musematter",
+            "gaming",
+            "cloth, plastic"
+          ],
+          "metaTitle": "RGB musematte 9913 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 262,
+          "rank": 20,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=262 intent=mouse_pad sub=Musematter tags=gaming mus,tradlos mus,wrist,support,mouse,musematter"
+        },
+        {
+          "id": "cmsdgqfbk000fvf1kmywpslzy",
+          "name": "RGB musematte 3434",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "5core",
+            "gaming",
+            "mouse",
+            "gamingmus",
+            "others",
+            "RGB"
+          ],
+          "metaTitle": "RGB musematte 3434 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 262,
+          "rank": 14,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=262 intent=mouse_pad sub=Musematter tags=gaming mus,tradlos mus,5core,gaming,mouse,gamingmus"
+        },
+        {
+          "id": "cms7etvxw1636vf7kkpdje38d",
+          "name": "RGB musematte 8218",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "mouse",
+            "hjem & fritid"
+          ],
+          "metaTitle": "RGB musematte 8218 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 198,
+          "rank": 42,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=198 intent=mouse_pad sub=null tags=lader,hurtiglader,wireless,charger,mouse,hjem fritid"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdkjgwg08p8vf3sl4ua0mc7",
+          "name": "Mekanisk gaming-tastatur 7925",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "gaming",
+            "keyboard",
+            "mouse",
+            "tv, lyd & bilde",
+            "others",
+            "RGB"
+          ],
+          "inResults": true,
+          "score": 134
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "relevansscore": 8,
+        "feil kategori": 1,
+        "feil tagger": 1,
+        "feil metadata": 1
+      }
+    },
+    {
+      "query": "tastatur",
+      "intentDescribed": "Keyboards",
+      "parsedIntent": "keyboard",
+      "parsedTokens": [
+        "tastatur"
+      ],
+      "catalogShouldMatch": 195,
+      "catalogStrongShouldMatch": 160,
+      "searchReturned": 166,
+      "searchReturnedBeforeFloor": 177,
+      "oldNameContainsCount": 177,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 150,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdifqit00pnvf3scdwp12ur",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdigc1i00skvf3sbjnt0a3z",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdl70mp0b4dvf3s0858jjn1",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdi9v06003wvf3sfvreh96m",
+          "name": "Tastatur",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdir1mb01xnvf3s4vmik1xd",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdir7u701yevf3syo3oe86m",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdisbxo022uvf3srpavcl75",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdk8snz07ojvf3slrva8a54",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 627,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdj6vxs03jwvf3sn2ps7dx5",
+          "name": "Tastatur og mus Sets Rainbow LED Backlit PS4 Xbox",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 407,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdielak00lwvf3sk03p2k0n",
+          "name": "Tastatur mus Converter Gamepad Accessories",
+          "category": "Gaming",
+          "subcategory": "Hodetelefoner",
+          "score": 356,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdkc8fk0818vf3suqawfxxu",
+          "name": "Game Console tastatur og mus Converter",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "console",
+            "keyboard",
+            "mouse",
+            "gaming",
+            "plastic, others",
+            "Tastatur"
+          ],
+          "metaTitle": "Game Console tastatur og mus Converter | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 24,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,console,keyboard,mouse,gaming,plastic others"
+        },
+        {
+          "id": "cmsdkcupu083hvf3sj0m2utrh",
+          "name": "Trådløst tastatur og mus",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "wireless",
+            "flying",
+            "keyboard",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur og mus | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 122,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,wireless,flying,keyboard,gaming,plastic"
+        },
+        {
+          "id": "cmsdkds73086ivf3smgt5e6ww",
+          "name": "Trådløst tastatur 7185",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "wireless",
+            "keyboard",
+            "mouse",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur 7185 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 114,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,wireless,keyboard,mouse,gaming,plastic"
+        },
+        {
+          "id": "cmsdkf0vi08ayvf3sidsvfp7v",
+          "name": "Computer laptop Mini sammenleggbar tastatur bærbar trådløs",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "computer",
+            "laptop",
+            "folding",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Computer laptop Mini sammenleggbar tastatur bærb | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 17,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,computer,laptop,folding,gaming,plastic"
+        },
+        {
+          "id": "cmsdkk19w08revf3sxksqfu7x",
+          "name": "Redragon Eris GA200 PS4 tastatur og mus adapter",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "redragon",
+            "ga200",
+            "keyboard",
+            "kontrollere",
+            "gaming",
+            "plastic",
+            "Tastatur"
+          ],
+          "metaTitle": "Redragon Eris GA200 PS4 tastatur og mus adapter | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 61,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,redragon,ga200,keyboard,kontrollere,gaming"
+        },
+        {
+          "id": "cmsdh435800covfggr2k8tfsj",
+          "name": "Trådløst tastatur 0108",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "mouse",
+            "wireless",
+            "keyboard",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur 0108 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 95,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,mouse,wireless,keyboard,gaming,plastic"
+        },
+        {
+          "id": "cmsdifycz00qdvf3sd31u8cmq",
+          "name": "Sammenleggbart Bluetooth-tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "geyes",
+            "bluetooth",
+            "wireless",
+            "gaming",
+            "metal",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Sammenleggbart Bluetooth-tastatur | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 292,
+          "rank": 67,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=292 intent=keyboard sub=Tastatur tags=tastatur,geyes,bluetooth,wireless,gaming,metal"
+        },
+        {
+          "id": "cmsdig5pd00r7vf3sbfbppyjc",
+          "name": "Magic tastatur til Transparent",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "compatible",
+            "magic",
+            "keyboard",
+            "mobil & tilbehør",
+            "cloth, plastic",
+            "Mobildeksel"
+          ],
+          "metaTitle": "Magic tastatur til Transparent | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 241,
+          "rank": 138,
+          "causes": [
+            "feil kategori",
+            "feil tagger",
+            "relevansscore",
+            "feil metadata"
+          ],
+          "detail": "score=241 intent=keyboard sub=Mobildeksel tags=mobildeksel,deksel,compatible,magic,keyboard,mobil tilbehor"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdifbfq00o5vf3slvesiiax",
+          "name": "Bærbar Ultra-thin trådløs Mini Accordion-style Tri-fold",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Kabel",
+          "tags": [
+            "tastatur",
+            "portable",
+            "ultra-thin",
+            "wireless",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdh4nb600flvfggv7f5ubb0",
+          "name": "Trådløs mus 9407",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "youlian",
+            "receiver",
+            "wireless",
+            "gaming",
+            "metal",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+          "name": "RGB musematte 6181",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "tastatur",
+            "transparent",
+            "silicone",
+            "keyboard",
+            "musematter",
+            "gaming",
+            "others",
+            "Musematter"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdl12zs0aimvf3s87u13en4",
+          "name": "Klavierhocker Höhenverstellbar Klavierbank X-förmiger",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "klavierhocker",
+            "henverstellbar",
+            "klavierbank",
+            "gaming",
+            "others",
+            "Tastatur"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdl7o500b7bvf3s4nesz24m",
+          "name": "Miaocontrol trådløs Office rund Parts Hatband Touch",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "miaocontrol",
+            "wireless",
+            "office",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "relevansscore": 8,
+        "feil kategori": 1,
+        "feil tagger": 1,
+        "feil metadata": 1
+      }
+    },
+    {
+      "query": "keyboard",
+      "intentDescribed": "Keyboards (EN synonym)",
+      "parsedIntent": "keyboard",
+      "parsedTokens": [
+        "keyboard"
+      ],
+      "catalogShouldMatch": 195,
+      "catalogStrongShouldMatch": 164,
+      "searchReturned": 172,
+      "searchReturnedBeforeFloor": 176,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 154,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdkjat808oivf3s8dg4iuiy",
+          "name": "3-i-1 gaming-tastatur 2885",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdkfa1d08bsvf3sdhu2f1ex",
+          "name": "300e Yoga Chromebook Gen4 Key Lock tastatur US 5N21L44029",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdk8bhp07mdvf3skf2i68ej",
+          "name": "9 i 1 USB-C tastatur støtte 4K HDMI Full Size",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdhak8s011lvfggmdq4val2",
+          "name": "Backlit tastatur og mus set",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdkf0vi08ayvf3sidsvfp7v",
+          "name": "Computer laptop Mini sammenleggbar tastatur bærbar trådløs",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdk4818077zvf3slc0imbnx",
+          "name": "CronusMAX Plus Supports XboxOne Handle tastatur og mus",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdkcfm4081yvf3sqjli36vt",
+          "name": "Docooler Mini 2.4GHz trådløs Qwerty tastatur Air mus",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdk94f207pzvf3ss3po8qyt",
+          "name": "Dollhouse-height tastatur Keycaps Sublimated Custom Design",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdiiieu010zvf3s1g9oolyk",
+          "name": "Electronic tastatur Pedal universell Sustain",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdindlg01idvf3s68binjzp",
+          "name": "EM Height 130 Key Large Full Set tastatur Cap",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "score": 219,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdkc8fk0818vf3suqawfxxu",
+          "name": "Game Console tastatur og mus Converter",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "console",
+            "keyboard",
+            "mouse",
+            "gaming",
+            "plastic, others",
+            "Tastatur"
+          ],
+          "metaTitle": "Game Console tastatur og mus Converter | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 12,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,console,keyboard,mouse,gaming,plastic others"
+        },
+        {
+          "id": "cmsdkcupu083hvf3sj0m2utrh",
+          "name": "Trådløst tastatur og mus",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "wireless",
+            "flying",
+            "keyboard",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur og mus | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 119,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,wireless,flying,keyboard,gaming,plastic"
+        },
+        {
+          "id": "cmsdkds73086ivf3smgt5e6ww",
+          "name": "Trådløst tastatur 7185",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "wireless",
+            "keyboard",
+            "mouse",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur 7185 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 111,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,wireless,keyboard,mouse,gaming,plastic"
+        },
+        {
+          "id": "cmsdkk19w08revf3sxksqfu7x",
+          "name": "Redragon Eris GA200 PS4 tastatur og mus adapter",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "redragon",
+            "ga200",
+            "keyboard",
+            "kontrollere",
+            "gaming",
+            "plastic",
+            "Tastatur"
+          ],
+          "metaTitle": "Redragon Eris GA200 PS4 tastatur og mus adapter | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 49,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,redragon,ga200,keyboard,kontrollere,gaming"
+        },
+        {
+          "id": "cmsdh435800covfggr2k8tfsj",
+          "name": "Trådløst tastatur 0108",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "mouse",
+            "wireless",
+            "keyboard",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "metaTitle": "Trådløst tastatur 0108 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 92,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,mouse,wireless,keyboard,gaming,plastic"
+        },
+        {
+          "id": "cmsdifqit00pnvf3scdwp12ur",
+          "name": "Tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "customized",
+            "five-sided",
+            "sublimation",
+            "gaming",
+            "plastic",
+            "Tastatur"
+          ],
+          "metaTitle": "Tastatur | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 63,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,customized,five sided,sublimation,gaming,plastic"
+        },
+        {
+          "id": "cmsdifycz00qdvf3sd31u8cmq",
+          "name": "Sammenleggbart Bluetooth-tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "geyes",
+            "bluetooth",
+            "wireless",
+            "gaming",
+            "metal",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Sammenleggbart Bluetooth-tastatur | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 219,
+          "rank": 55,
+          "causes": [
+            "feil tittel",
+            "relevansscore"
+          ],
+          "detail": "score=219 intent=keyboard sub=Tastatur tags=tastatur,geyes,bluetooth,wireless,gaming,metal"
+        },
+        {
+          "id": "cmsdig5pd00r7vf3sbfbppyjc",
+          "name": "Magic tastatur til Transparent",
+          "category": "Data & IT",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "mobildeksel",
+            "deksel",
+            "compatible",
+            "magic",
+            "keyboard",
+            "mobil & tilbehør",
+            "cloth, plastic",
+            "Mobildeksel"
+          ],
+          "metaTitle": "Magic tastatur til Transparent | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 168,
+          "rank": 135,
+          "causes": [
+            "feil tittel",
+            "relevansscore",
+            "feil kategori",
+            "feil tagger",
+            "feil metadata"
+          ],
+          "detail": "score=168 intent=keyboard sub=Mobildeksel tags=mobildeksel,deksel,compatible,magic,keyboard,mobil tilbehor"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdifbfq00o5vf3slvesiiax",
+          "name": "Bærbar Ultra-thin trådløs Mini Accordion-style Tri-fold",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Kabel",
+          "tags": [
+            "tastatur",
+            "portable",
+            "ultra-thin",
+            "wireless",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdh4nb600flvfggv7f5ubb0",
+          "name": "Trådløs mus 9407",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "youlian",
+            "receiver",
+            "wireless",
+            "gaming",
+            "metal",
+            "Trådløs",
+            "Tastatur"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+          "name": "RGB musematte 6181",
+          "category": "Gaming",
+          "subcategory": "Musematter",
+          "tags": [
+            "tastatur",
+            "transparent",
+            "silicone",
+            "keyboard",
+            "musematter",
+            "gaming",
+            "others",
+            "Musematter"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdl12zs0aimvf3s87u13en4",
+          "name": "Klavierhocker Höhenverstellbar Klavierbank X-förmiger",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "klavierhocker",
+            "henverstellbar",
+            "klavierbank",
+            "gaming",
+            "others",
+            "Tastatur"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdl7o500b7bvf3s4nesz24m",
+          "name": "Miaocontrol trådløs Office rund Parts Hatband Touch",
+          "category": "Gaming",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "miaocontrol",
+            "wireless",
+            "office",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "feil tittel": 8,
+        "relevansscore": 8,
+        "feil kategori": 1,
+        "feil tagger": 1,
+        "feil metadata": 1
+      }
+    },
+    {
+      "query": "pc",
+      "intentDescribed": "Computers / PCs / tablets sold as PC — not peripherals mentioning PC",
+      "parsedIntent": "pc",
+      "parsedTokens": [
+        "pc"
+      ],
+      "catalogShouldMatch": 15,
+      "catalogStrongShouldMatch": 2,
+      "searchReturned": 2,
+      "searchReturnedBeforeFloor": 2,
+      "oldNameContainsCount": 7,
+      "strongInTop10": 1,
+      "strongMissingCount": 1,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdl29ka0an4vf3sbvm9b9j8",
+          "name": "10.1 Inch Tablet PC 4GB Ram Android 12.0 PC MTK6762",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "score": 299,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdlcyni0brmvf3see95jmqc",
+          "name": "Smart Android Entertainment 3G Calling nettbrett PC 10.1",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "score": 221,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdizbwu02rxvf3s7s2pnnfn",
+          "name": "Gamepad Box trådløs laptop TV Home USB",
+          "category": "Gaming",
+          "subcategory": "Kontrollere",
+          "tags": [
+            "gamepad",
+            "wireless",
+            "laptop",
+            "kontrollere",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Gamepad Box trådløs laptop TV Home USB | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "filtrering",
+            "relevansscore",
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=ABSENT intent=pc sub=Kontrollere tags=gamepad,wireless,laptop,kontrollere,gaming,plastic"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdkf0vi08ayvf3sidsvfp7v",
+          "name": "Computer laptop Mini sammenleggbar tastatur bærbar trådløs",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "computer",
+            "laptop",
+            "folding",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdln0le0cpovf3swr2som16",
+          "name": "Nettbrett 10,1 tommer (3/64 GB)",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "tags": [
+            "g-tab",
+            "rockchip",
+            "rk3562",
+            "mobil & tilbehør",
+            "metal",
+            "Laptop"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdh72l400pkvfgg07cc20ld",
+          "name": "108 Keys Diy Satellite Axis laptop Ubs Wired tastatur Kit",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "satellite",
+            "laptop",
+            "wired",
+            "gaming",
+            "plastic",
+            "Tastatur"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdgubf800dovf1k8mey9sx2",
+          "name": "Office Notebook Computer Wired Gaming Optical mus",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "office",
+            "notebook",
+            "computer",
+            "gaming",
+            "plastic, others",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdlsis20dacvf3sc7waxj98",
+          "name": "11-i-1 Dokkingstasjon",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "tags": [
+            "macbook",
+            "laptop",
+            "computer",
+            "data & it",
+            "metal",
+            "Laptop"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "filtrering": 1,
+        "relevansscore": 1,
+        "feil tittel": 1,
+        "feil metadata": 1
+      }
+    },
+    {
+      "query": "gaming pc",
+      "intentDescribed": "Gaming desktop/PC systems",
+      "parsedIntent": "pc",
+      "parsedTokens": [
+        "gamingpc"
+      ],
+      "catalogShouldMatch": 2,
+      "catalogStrongShouldMatch": 0,
+      "searchReturned": 2,
+      "searchReturnedBeforeFloor": 2,
+      "oldNameContainsCount": 0,
+      "strongInTop10": 0,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 2,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdl29ka0an4vf3sbvm9b9j8",
+          "name": "10.1 Inch Tablet PC 4GB Ram Android 12.0 PC MTK6762",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "score": 226,
+          "expected": false,
+          "strong": false
+        },
+        {
+          "rank": 2,
+          "id": "cmsdlcyni0brmvf3see95jmqc",
+          "name": "Smart Android Entertainment 3G Calling nettbrett PC 10.1",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "score": 148,
+          "expected": false,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdjmise05a5vf3sr7hq3ils",
+          "name": "Computer Mobile Phone Bluetooth trådløs Gamepad",
+          "category": "Gaming",
+          "subcategory": "Kontrollere",
+          "tags": [
+            "computer",
+            "mobile",
+            "phone",
+            "kontrollere",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "USB-C"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [
+        {
+          "id": "cmsdl29ka0an4vf3sbvm9b9j8",
+          "name": "10.1 Inch Tablet PC 4GB Ram Android 12.0 PC MTK6762",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "tags": [
+            "tablet",
+            "android",
+            "mtk6762",
+            "data & it",
+            "metal",
+            "Laptop"
+          ],
+          "score": 226
+        },
+        {
+          "id": "cmsdlcyni0brmvf3see95jmqc",
+          "name": "Smart Android Entertainment 3G Calling nettbrett PC 10.1",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "tags": [
+            "smart",
+            "android",
+            "entertainment",
+            "mobil & tilbehør",
+            "metal, others",
+            "Bluetooth"
+          ],
+          "score": 148
+        }
+      ],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "laptop",
+      "intentDescribed": "Laptop computers (not stands/mice for laptop)",
+      "parsedIntent": "pc",
+      "parsedTokens": [
+        "laptop"
+      ],
+      "catalogShouldMatch": 8,
+      "catalogStrongShouldMatch": 1,
+      "searchReturned": 2,
+      "searchReturnedBeforeFloor": 2,
+      "oldNameContainsCount": 15,
+      "strongInTop10": 1,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 0,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdl29ka0an4vf3sbvm9b9j8",
+          "name": "10.1 Inch Tablet PC 4GB Ram Android 12.0 PC MTK6762",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "score": 180,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdln0le0cpovf3swr2som16",
+          "name": "Nettbrett 10,1 tommer (3/64 GB)",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "score": 144,
+          "expected": true,
+          "strong": false
+        }
+      ],
+      "missingOrBuriedStrongSamples": [],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdifbfq00o5vf3slvesiiax",
+          "name": "Bærbar Ultra-thin trådløs Mini Accordion-style Tri-fold",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Kabel",
+          "tags": [
+            "tastatur",
+            "portable",
+            "ultra-thin",
+            "wireless",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdml5lo0g3zvf3sf148xo7h",
+          "name": "Bærbar WiFi-ruter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "bluetooth høyttaler",
+            "compatible",
+            "apple",
+            "portable",
+            "mobil & tilbehør",
+            "metal",
+            "Mobildeksel"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdln0le0cpovf3swr2som16",
+          "name": "Nettbrett 10,1 tommer (3/64 GB)",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "tags": [
+            "g-tab",
+            "rockchip",
+            "rk3562",
+            "mobil & tilbehør",
+            "metal",
+            "Laptop"
+          ],
+          "inResults": true,
+          "score": 144
+        },
+        {
+          "id": "cmsdlsis20dacvf3sc7waxj98",
+          "name": "11-i-1 Dokkingstasjon",
+          "category": "Data & IT",
+          "subcategory": "Laptop",
+          "tags": [
+            "macbook",
+            "laptop",
+            "computer",
+            "data & it",
+            "metal",
+            "Laptop"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdkc1iq080gvf3s0g9wh05z",
+          "name": "Camping Hammock med Mosquito Net bærbar Tent Built i Net",
+          "category": "Hjem & Fritid",
+          "subcategory": null,
+          "tags": [
+            "camping",
+            "hammock",
+            "mosquito",
+            "mobil & tilbehør",
+            "cloth"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {}
+    },
+    {
+      "query": "usb",
+      "intentDescribed": "USB products",
+      "parsedIntent": "generic",
+      "parsedTokens": [
+        "usb"
+      ],
+      "catalogShouldMatch": 81,
+      "catalogStrongShouldMatch": 38,
+      "searchReturned": 38,
+      "searchReturnedBeforeFloor": 81,
+      "oldNameContainsCount": 38,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 28,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdl1f7e0ak2vf3srwgup4nk",
+          "name": "USB kondensatormikrofon 0050",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "score": 272,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdm44j00ee3vf3swii89azp",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 272,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdl403y0atbvf3sr3r8yyb5",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 272,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdmh97r0frmvf3s2rz3bgsf",
+          "name": "USB-C Lightning-adapter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 272,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdmhg4t0fscvf3saiz6iqx1",
+          "name": "USB-C-ladestasjon 6 porter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 272,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdiy4md02nqvf3sumzn4ad2",
+          "name": "USB kondensatormikrofon 0115",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "score": 266,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdij8vh013avf3sltb9r5nx",
+          "name": "USB kondensatormikrofon 1412",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "score": 266,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdkywfy0aacvf3szu2271lc",
+          "name": "USB kondensatormikrofon 1805",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "score": 266,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdii46g00zjvf3sujadxcfk",
+          "name": "USB kondensatormikrofon 8303",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "score": 266,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdkzekh0aclvf3szermaojd",
+          "name": "USB-C adapter / hub",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 266,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdizbwu02rxvf3s7s2pnnfn",
+          "name": "Gamepad Box trådløs laptop TV Home USB",
+          "category": "Gaming",
+          "subcategory": "Kontrollere",
+          "tags": [
+            "gamepad",
+            "wireless",
+            "laptop",
+            "kontrollere",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Gamepad Box trådløs laptop TV Home USB | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 143,
+          "rank": 36,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=143 intent=generic sub=Kontrollere tags=gamepad,wireless,laptop,kontrollere,gaming,plastic"
+        },
+        {
+          "id": "cmsdlut6x0di0vf3s8s78kayy",
+          "name": "USB wired mus",
+          "category": "Gaming",
+          "subcategory": "Gamingmus",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "wired",
+            "mouse",
+            "gaming",
+            "plastic",
+            "Trådløs",
+            "Gamingmus"
+          ],
+          "metaTitle": "USB wired mus | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 258,
+          "rank": 23,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=258 intent=generic sub=Gamingmus tags=gaming mus,tradlos mus,wired,mouse,gaming,plastic"
+        },
+        {
+          "id": "cmsdlv5ft0djgvf3sjgglmuet",
+          "name": "USB kondensatormikrofon 0003",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "tags": [
+            "mobilholder",
+            "holder",
+            "neewer",
+            "nw-7000",
+            "professional",
+            "mikrofon",
+            "tv, lyd & bilde",
+            "metal"
+          ],
+          "metaTitle": "USB kondensatormikrofon 0003 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 258,
+          "rank": 13,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=258 intent=generic sub=Mikrofon tags=mobilholder,holder,neewer,nw 7000,professional,mikrofon"
+        },
+        {
+          "id": "cmsdm32h00eazvf3sciifkjk5",
+          "name": "11-i-1 USB-C dokkingstasjon",
+          "category": "Data & IT",
+          "subcategory": "Hub",
+          "tags": [
+            "usb hub",
+            "usb-c hub",
+            "eleven",
+            "type-c",
+            "docking",
+            "mobil & tilbehør",
+            "plastic",
+            "USB-C"
+          ],
+          "metaTitle": "11-i-1 USB-C dokkingstasjon | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 151,
+          "rank": 29,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=151 intent=generic sub=Hub tags=usb hub,usb c hub,eleven,type c,docking,mobil tilbehor"
+        },
+        {
+          "id": "cmsdj1qc00316vf3sd24215ym",
+          "name": "USB spillkontroller",
+          "category": "Gaming",
+          "subcategory": "Kontrollere",
+          "tags": [
+            "wired",
+            "controller",
+            "kontrollere",
+            "gaming",
+            "plastic, metal",
+            "Kontrollere"
+          ],
+          "metaTitle": "USB spillkontroller | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 258,
+          "rank": 20,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=258 intent=generic sub=Kontrollere tags=wired,controller,kontrollere,gaming,plastic metal,kontrollere"
+        },
+        {
+          "id": "cmsdl9dz70beivf3s6vzghg7z",
+          "name": "Series 20W Digital Display Travel lader med USB-A",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "series",
+            "digital",
+            "display",
+            "mobil & tilbehør",
+            "plastic",
+            "USB-C"
+          ],
+          "metaTitle": "Series 20W Digital Display Travel lader med USB-A | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 157,
+          "rank": 28,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=157 intent=generic sub=Lader tags=lader,hurtiglader,series,digital,display,mobil tilbehor"
+        },
+        {
+          "id": "cmsdjld8z055nvf3s3z3ub6nh",
+          "name": "USB kondensatormikrofon 0058",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "tags": [
+            "condenser",
+            "microphone",
+            "mikrofon",
+            "tv, lyd & bilde",
+            "plastic",
+            "Trådløs",
+            "Mikrofon"
+          ],
+          "metaTitle": "USB kondensatormikrofon 0058 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 258,
+          "rank": 14,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=258 intent=generic sub=Mikrofon tags=condenser,microphone,mikrofon,tv lyd bilde,plastic,tradlos"
+        },
+        {
+          "id": "cmsdij34p012jvf3stpyecgw5",
+          "name": "USB kondensatormikrofon 7948",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Mobildeksel",
+          "tags": [
+            "iphone ipad",
+            "wireless",
+            "lavalier",
+            "lapel",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "USB kondensatormikrofon 7948 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 258,
+          "rank": 18,
+          "causes": [
+            "feil kategori",
+            "feil tagger",
+            "relevansscore",
+            "feil metadata"
+          ],
+          "detail": "score=258 intent=generic sub=Mobildeksel tags=iphone ipad,wireless,lavalier,lapel,mobil tilbehor,others"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdkrhjm09jbvf3snwnliyc1",
+          "name": "Powerbank 9270",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "ladekabel",
+            "usb-c kabel",
+            "000mah",
+            "typec",
+            "multi-function",
+            "powerbank",
+            "mobil & tilbehør",
+            "others"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdl4cdi0au4vf3slq7bskic",
+          "name": "Trådløs lader (227 g)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "charging",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdknqoq095xvf3srvr4k8qj",
+          "name": "Powerbank 8731",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "hanging",
+            "warmer",
+            "portable",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic, others"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdkm99g08zrvf3ss2p1pm42",
+          "name": "Premium høyttaler 2746",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Høyttaler",
+          "tags": [
+            "bluetooth høyttaler",
+            "xbox, ps5/4",
+            "bluetooth høyttaler xbox, ps5/4",
+            "1920x1080",
+            "1080p",
+            "portable",
+            "høyttaler",
+            "tv, lyd & bilde"
+          ],
+          "inResults": false,
+          "score": 8
+        },
+        {
+          "id": "cmsdkpsbe09d1vf3sk1v2ugg8",
+          "name": "Powerbank 20000 mAh 5573",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "charging",
+            "20000mah",
+            "high-capacity",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "USB-C",
+            "Powerbank"
+          ],
+          "inResults": false,
+          "score": 8
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "relevansscore": 8,
+        "feil kategori": 1,
+        "feil tagger": 1,
+        "feil metadata": 1
+      }
+    },
+    {
+      "query": "usb c",
+      "intentDescribed": "USB-C products",
+      "parsedIntent": "generic",
+      "parsedTokens": [
+        "usb",
+        "c"
+      ],
+      "catalogShouldMatch": 61,
+      "catalogStrongShouldMatch": 14,
+      "searchReturned": 20,
+      "searchReturnedBeforeFloor": 81,
+      "oldNameContainsCount": 14,
+      "strongInTop10": 10,
+      "strongMissingCount": 0,
+      "strongBuriedCount": 4,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdm44j00ee3vf3swii89azp",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 444,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdl403y0atbvf3sr3r8yyb5",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 444,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdmh97r0frmvf3s2rz3bgsf",
+          "name": "USB-C Lightning-adapter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 444,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdmhg4t0fscvf3saiz6iqx1",
+          "name": "USB-C-ladestasjon 6 porter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 444,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdkzekh0aclvf3szermaojd",
+          "name": "USB-C adapter / hub",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 432,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdknekb094bvf3sj543ks2a",
+          "name": "USB-C adapter / hub",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 432,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdlbo2x0bmjvf3sevboi2hz",
+          "name": "USB-C dokkingstasjon med laptopstativ",
+          "category": "Data & IT",
+          "subcategory": "Docking",
+          "score": 424,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdmdhvr0felvf3sxdgkag11",
+          "name": "USB-A USB-C OTG-adapter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 338,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdlfxwe0c3rvf3s825pvteh",
+          "name": "6-i-1 USB-C-hub M.2-kabinett",
+          "category": "Data & IT",
+          "subcategory": "Hub",
+          "score": 329,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdk8bhp07mdvf3skf2i68ej",
+          "name": "9 i 1 USB-C tastatur støtte 4K HDMI Full Size",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Tastatur",
+          "score": 329,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdm32h00eazvf3sciifkjk5",
+          "name": "11-i-1 USB-C dokkingstasjon",
+          "category": "Data & IT",
+          "subcategory": "Hub",
+          "tags": [
+            "usb hub",
+            "usb-c hub",
+            "eleven",
+            "type-c",
+            "docking",
+            "mobil & tilbehør",
+            "plastic",
+            "USB-C"
+          ],
+          "metaTitle": "11-i-1 USB-C dokkingstasjon | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 317,
+          "rank": 11,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=317 intent=generic sub=Hub tags=usb hub,usb c hub,eleven,type c,docking,mobil tilbehor"
+        },
+        {
+          "id": "cmsdkrvft09ktvf3sede5lx4p",
+          "name": "M.2 NVMe USB-C-kabinett",
+          "category": "Data & IT",
+          "subcategory": "SSD",
+          "tags": [
+            "orico",
+            "tcm2-c3",
+            "mobile",
+            "ssd",
+            "data & it",
+            "plastic, metal",
+            "SSD"
+          ],
+          "metaTitle": "M.2 NVMe USB-C-kabinett | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 313,
+          "rank": 13,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=313 intent=generic sub=SSD tags=orico,tcm2 c3,mobile,ssd,data it,plastic metal"
+        },
+        {
+          "id": "cmsdlbcty0blqvf3st724jrnr",
+          "name": "Hub USB hub Splitter One til Four USB C til HDMI Docking",
+          "category": "Data & IT",
+          "subcategory": "Hub",
+          "tags": [
+            "usb hub",
+            "usb-c hub",
+            "splitter",
+            "docking",
+            "station",
+            "hub",
+            "data & it",
+            "others"
+          ],
+          "metaTitle": "Hub USB hub Splitter One til Four USB C til HDMI | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 317,
+          "rank": 12,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=317 intent=generic sub=Hub tags=usb hub,usb c hub,splitter,docking,station,hub"
+        },
+        {
+          "id": "cmsdk9lov07s7vf3snp00n3zk",
+          "name": "Mini Dust Blower USB Computer tastatur",
+          "category": "Data & IT",
+          "subcategory": "Tastatur",
+          "tags": [
+            "tastatur",
+            "blower",
+            "computer",
+            "keyboard",
+            "gaming",
+            "plastic",
+            "USB-C",
+            "Tastatur"
+          ],
+          "metaTitle": "Mini Dust Blower USB Computer tastatur | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 229,
+          "rank": 14,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=229 intent=generic sub=Tastatur tags=tastatur,blower,computer,keyboard,gaming,plastic"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdkrhjm09jbvf3snwnliyc1",
+          "name": "Powerbank 9270",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "ladekabel",
+            "usb-c kabel",
+            "000mah",
+            "typec",
+            "multi-function",
+            "powerbank",
+            "mobil & tilbehør",
+            "others"
+          ],
+          "inResults": false,
+          "score": 86
+        },
+        {
+          "id": "cmsdl4cdi0au4vf3slq7bskic",
+          "name": "Trådløs lader (227 g)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "wireless",
+            "charger",
+            "charging",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": 86
+        },
+        {
+          "id": "cmsdknqoq095xvf3srvr4k8qj",
+          "name": "Powerbank 8731",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "hanging",
+            "warmer",
+            "portable",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic, others"
+          ],
+          "inResults": false,
+          "score": 86
+        },
+        {
+          "id": "cmsdkm99g08zrvf3ss2p1pm42",
+          "name": "Premium høyttaler 2746",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Høyttaler",
+          "tags": [
+            "bluetooth høyttaler",
+            "xbox, ps5/4",
+            "bluetooth høyttaler xbox, ps5/4",
+            "1920x1080",
+            "1080p",
+            "portable",
+            "høyttaler",
+            "tv, lyd & bilde"
+          ],
+          "inResults": false,
+          "score": 86
+        },
+        {
+          "id": "cmsdkpsbe09d1vf3sk1v2ugg8",
+          "name": "Powerbank 20000 mAh 5573",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "charging",
+            "20000mah",
+            "high-capacity",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "USB-C",
+            "Powerbank"
+          ],
+          "inResults": false,
+          "score": 86
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "relevansscore": 4
+      }
+    },
+    {
+      "query": "lader",
+      "intentDescribed": "Chargers (wall/wireless/car) — not random 'charging' peripherals",
+      "parsedIntent": "charger",
+      "parsedTokens": [
+        "lader"
+      ],
+      "catalogShouldMatch": 173,
+      "catalogStrongShouldMatch": 119,
+      "searchReturned": 62,
+      "searchReturnedBeforeFloor": 109,
+      "oldNameContainsCount": 62,
+      "strongInTop10": 9,
+      "strongMissingCount": 59,
+      "strongBuriedCount": 51,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdmurrd0h43vf3srnk0blvt",
+          "name": "Lader 10W Trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 368,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdlycjj0dvavf3sesdnj9z1",
+          "name": "Lader 5W Magnetisk",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 368,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdkasqb07wrvf3sbqgb90h0",
+          "name": "Lader Qi-Certified Ultra-Slim 5W lading Pad iPhone",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 368,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdmxppu0hervf3s9r2945wv",
+          "name": "Lader 10W Trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Trådløs lading",
+          "score": 352,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdjno8305fgvf3sc6160fpb",
+          "name": "Hurtiglader — Black",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 253,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdknkf40952vf3sxubzwh5f",
+          "name": "Hurtiglader (2 farger)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 253,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsdl2m700ao0vf3s16zqkva2",
+          "name": "Hurtiglader (454 g)",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 253,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdl9dz70beivf3s6vzghg7z",
+          "name": "Series 20W Digital Display Travel lader med USB-A",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 253,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdjnhio05eqvf3s7t7rcsyn",
+          "name": "Trådløs Qi-billader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 253,
+          "expected": true,
+          "strong": false
+        },
+        {
+          "rank": 10,
+          "id": "cmsdm44j00ee3vf3swii89azp",
+          "name": "USB-C Lader",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "score": 253,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdkrhjm09jbvf3snwnliyc1",
+          "name": "Powerbank 9270",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "ladekabel",
+            "usb-c kabel",
+            "000mah",
+            "typec",
+            "multi-function",
+            "powerbank",
+            "mobil & tilbehør",
+            "others"
+          ],
+          "metaTitle": "Powerbank 9270 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=ABSENT intent=charger sub=Powerbank tags=ladekabel,usb c kabel,000mah,typec,multi function,powerbank"
+        },
+        {
+          "id": "cmsdknqoq095xvf3srvr4k8qj",
+          "name": "Powerbank 8731",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "hanging",
+            "warmer",
+            "portable",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic, others"
+          ],
+          "metaTitle": "Powerbank 8731 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": 88,
+          "rank": null,
+          "causes": [
+            "feil søkelogikk",
+            "feil tagger"
+          ],
+          "detail": "score=88 intent=charger sub=Powerbank tags=lader,hurtiglader,hanging,warmer,portable,powerbank"
+        },
+        {
+          "id": "cmsdmq4u20gm7vf3sx05lpl6a",
+          "name": "Powerbank 0309",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "multi-function",
+            "handbag",
+            "power",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic"
+          ],
+          "metaTitle": "Powerbank 0309 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": 88,
+          "rank": null,
+          "causes": [
+            "feil søkelogikk",
+            "feil tagger"
+          ],
+          "detail": "score=88 intent=charger sub=Powerbank tags=lader,hurtiglader,multi function,handbag,power,powerbank"
+        },
+        {
+          "id": "cmsdmf9nt0flgvf3spb5fr7ml",
+          "name": "Powerbank 5994",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "watch",
+            "wireless",
+            "charging",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic, others",
+            "Trådløs",
+            "Powerbank"
+          ],
+          "metaTitle": "Powerbank 5994 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=ABSENT intent=charger sub=Powerbank tags=watch,wireless,charging,powerbank,mobil tilbehor,plastic others"
+        },
+        {
+          "id": "cmsdlqhwx0d2jvf3s1zwhivxp",
+          "name": "Powerbank 9540",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "aluminum",
+            "alloy",
+            "transparent",
+            "mobil & tilbehør",
+            "metal",
+            "Trådløs"
+          ],
+          "metaTitle": "Powerbank 9540 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": 88,
+          "rank": null,
+          "causes": [
+            "feil søkelogikk",
+            "feil tagger"
+          ],
+          "detail": "score=88 intent=charger sub=Powerbank tags=lader,hurtiglader,aluminum,alloy,transparent,mobil tilbehor"
+        },
+        {
+          "id": "cmsdkpsbe09d1vf3sk1v2ugg8",
+          "name": "Powerbank 20000 mAh 5573",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "charging",
+            "20000mah",
+            "high-capacity",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "USB-C",
+            "Powerbank"
+          ],
+          "metaTitle": "Powerbank 20000 mAh 5573 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=ABSENT intent=charger sub=Powerbank tags=charging,20000mah,high capacity,powerbank,mobil tilbehor,others"
+        },
+        {
+          "id": "cmsdm21dr0e77vf3szskzxgif",
+          "name": "Powerbank 3000",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "capsule",
+            "power",
+            "small",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic",
+            "Powerbank"
+          ],
+          "metaTitle": "Powerbank 3000 | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=ABSENT intent=charger sub=Powerbank tags=capsule,power,small,powerbank,mobil tilbehor,plastic"
+        },
+        {
+          "id": "cmsdkqehv09fbvf3sb07q20ea",
+          "name": "Robust utendørs powerbank",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "led lys",
+            "rgb belysning",
+            "outdoor",
+            "light",
+            "mobile",
+            "mobil & tilbehør",
+            "plastic",
+            "Powerbank"
+          ],
+          "metaTitle": "Robust utendørs powerbank | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": null,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=ABSENT intent=charger sub=Powerbank tags=led lys,rgb belysning,outdoor,light,mobile,mobil tilbehor"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdmhg4t0fscvf3saiz6iqx1",
+          "name": "USB-C-ladestasjon 6 porter",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Lader",
+          "tags": [
+            "lader",
+            "hurtiglader",
+            "charging",
+            "station",
+            "6ports",
+            "mobil & tilbehør",
+            "others",
+            "USB-C"
+          ],
+          "inResults": false,
+          "score": 24
+        },
+        {
+          "id": "cmsdh4zf300h1vfggpkvm023l",
+          "name": "RGB musematte 3891",
+          "category": "Gaming",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "gaming mus",
+            "trådløs mus",
+            "colorful",
+            "wireless",
+            "charging",
+            "trådløs lading",
+            "mobil & tilbehør",
+            "plastic"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdlz10s0dxmvf3s3fansrrx",
+          "name": "Høyttaler 6993",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Powerbank",
+          "tags": [
+            "bluetooth høyttaler",
+            "waterproof",
+            "colorful",
+            "luminous",
+            "powerbank",
+            "mobil & tilbehør",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdj2w8r035mvf3sodx9cru1",
+          "name": "Xinmeng 670 trådløs lading tastatur og mus Set Game",
+          "category": "Gaming",
+          "subcategory": "Trådløs lading",
+          "tags": [
+            "tastatur",
+            "xinmeng",
+            "wireless",
+            "charging",
+            "trådløs lading",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": null
+        },
+        {
+          "id": "cmsdldnph0buavf3s5jwuaf8s",
+          "name": "Apple Maiduo MagSafe magnetisk trådløs",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Powerbank",
+          "tags": [
+            "compatible",
+            "apple",
+            "maiduo",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs",
+            "MagSafe"
+          ],
+          "inResults": false,
+          "score": null
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "feil tittel": 5,
+        "feil metadata": 5,
+        "feil søkelogikk": 3,
+        "feil tagger": 3
+      }
+    },
+    {
+      "query": "headset",
+      "intentDescribed": "Headsets / headphones",
+      "parsedIntent": "headset",
+      "parsedTokens": [
+        "headset"
+      ],
+      "catalogShouldMatch": 50,
+      "catalogStrongShouldMatch": 36,
+      "searchReturned": 39,
+      "searchReturnedBeforeFloor": 47,
+      "oldNameContainsCount": 32,
+      "strongInTop10": 10,
+      "strongMissingCount": 2,
+      "strongBuriedCount": 24,
+      "falsePositivesInTop10": 0,
+      "top10": [
+        {
+          "rank": 1,
+          "id": "cmsdjlxkt057uvf3s6v59g5wb",
+          "name": "Headset",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Mikrofon",
+          "score": 576,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 2,
+          "id": "cmsdjj7xd04xyvf3se9g1tt9d",
+          "name": "Gaming-headset 0206",
+          "category": "Gaming",
+          "subcategory": "Headset",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 3,
+          "id": "cmsdibjnk00a0vf3svl00ck7c",
+          "name": "Gaming-headset 0341",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 4,
+          "id": "cmsdkgbg108eyvf3so441xgo8",
+          "name": "Gaming-headset 0676",
+          "category": "Gaming",
+          "subcategory": "Hodetelefoner",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 5,
+          "id": "cmsdigwfy00uavf3sxjiwpy30",
+          "name": "Gaming-headset 1087",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 6,
+          "id": "cmsdk78s407iivf3sktsia9jn",
+          "name": "Gaming-headset 1464",
+          "category": "Gaming",
+          "subcategory": "Headset",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 7,
+          "id": "cmsditnwp026mvf3sperh1v4u",
+          "name": "Gaming-headset 1910",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 8,
+          "id": "cmsdih3gp00v2vf3szb1q3npe",
+          "name": "Gaming-headset 2153",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 9,
+          "id": "cmsdkz3640ab2vf3svgml2lkp",
+          "name": "Gaming-headset 2213",
+          "category": "Gaming",
+          "subcategory": "Headset",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        },
+        {
+          "rank": 10,
+          "id": "cmsdihfzd00wkvf3s4ngyooa9",
+          "name": "Gaming-headset 2429",
+          "category": "Gaming",
+          "subcategory": "Headset",
+          "score": 257,
+          "expected": true,
+          "strong": true
+        }
+      ],
+      "missingOrBuriedStrongSamples": [
+        {
+          "id": "cmsdla9fe0bhpvf3srpl4zbbe",
+          "name": "3-i-1 Hodetelefoner",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Powerbank",
+          "tags": [
+            "bluetooth høyttaler",
+            "portable",
+            "wireless",
+            "bluetooth",
+            "powerbank",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "metaTitle": "3-i-1 Hodetelefoner | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": 160,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=160 intent=headset sub=Powerbank tags=bluetooth hoyttaler,portable,wireless,bluetooth,powerbank,mobil tilbehor"
+        },
+        {
+          "id": "cmsdicxxa00fzvf3swklthh1d",
+          "name": "Hodetelefoner",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Høyttaler",
+          "tags": [
+            "bluetooth høyttaler",
+            "headphone",
+            "speaker",
+            "wireless",
+            "høyttaler",
+            "tv, lyd & bilde",
+            "plastic",
+            "Trådløs"
+          ],
+          "metaTitle": "Hodetelefoner | ElectroHypeX",
+          "strong": true,
+          "inResults": false,
+          "score": 160,
+          "rank": null,
+          "causes": [
+            "feil tittel",
+            "feil metadata"
+          ],
+          "detail": "score=160 intent=headset sub=Høyttaler tags=bluetooth hoyttaler,headphone,speaker,wireless,hoyttaler,tv lyd bilde"
+        },
+        {
+          "id": "cmsdkg34608e8vf3sd2vgat8z",
+          "name": "Gaming-headset 3673",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "gaming",
+            "bluetooth",
+            "headset",
+            "plastic, others",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Gaming-headset 3673 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 257,
+          "rank": 11,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=257 intent=headset sub=Hodetelefoner tags=tradlose orepropper,hodetelefoner,gaming,bluetooth,headset,plastic others"
+        },
+        {
+          "id": "cmsdih9sf00vtvf3s6bbl6tz7",
+          "name": "Gaming-headset 9594",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wireless",
+            "headset",
+            "bluetooth",
+            "gaming",
+            "plastic",
+            "Trådløs"
+          ],
+          "metaTitle": "Gaming-headset 9594 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 257,
+          "rank": 22,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=257 intent=headset sub=Hodetelefoner tags=tradlose orepropper,hodetelefoner,wireless,headset,bluetooth,gaming"
+        },
+        {
+          "id": "cms6k7bfo00vbvf7k0crimzu0",
+          "name": "Hodetelefoner",
+          "category": "Gaming",
+          "subcategory": null,
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wired",
+            "gaming",
+            "headphone",
+            "metall"
+          ],
+          "metaTitle": "Hodetelefoner | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 168,
+          "rank": 38,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=168 intent=headset sub=null tags=tradlose orepropper,hodetelefoner,wired,gaming,headphone,metall"
+        },
+        {
+          "id": "cmsdjjukx0508vf3s3mhz5nzk",
+          "name": "Gaming-headset 3086",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Kabel",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wireless",
+            "gaming",
+            "bluetooth",
+            "mobil & tilbehør",
+            "plastic",
+            "Trådløs"
+          ],
+          "metaTitle": "Gaming-headset 3086 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 241,
+          "rank": 25,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=241 intent=headset sub=Kabel tags=tradlose orepropper,hodetelefoner,wireless,gaming,bluetooth,mobil tilbehor"
+        },
+        {
+          "id": "cmsdioaax01m1vf3s49kjsgnc",
+          "name": "Gaming-headset 8559",
+          "category": "Gaming",
+          "subcategory": "Headset",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wireless",
+            "sports",
+            "gaming",
+            "plastic, others",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "metaTitle": "Gaming-headset 8559 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 257,
+          "rank": 20,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=257 intent=headset sub=Headset tags=tradlose orepropper,hodetelefoner,wireless,sports,gaming,plastic others"
+        },
+        {
+          "id": "cmsdiosae01nnvf3s2wsok0le",
+          "name": "Gaming-headset 5427",
+          "category": "Mobil & Tilbehør",
+          "subcategory": "Kabel",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wireless",
+            "gaming",
+            "latency",
+            "mobil & tilbehør",
+            "plastic, others",
+            "Trådløs"
+          ],
+          "metaTitle": "Gaming-headset 5427 | ElectroHypeX",
+          "strong": true,
+          "inResults": true,
+          "score": 241,
+          "rank": 27,
+          "causes": [
+            "relevansscore"
+          ],
+          "detail": "score=241 intent=headset sub=Kabel tags=tradlose orepropper,hodetelefoner,wireless,gaming,latency,mobil tilbehor"
+        }
+      ],
+      "metadataOnlyShouldMatchSamples": [
+        {
+          "id": "cmsdihm5k00xavf3sb8o8wkv0",
+          "name": "T306 Bluetooth Gaming Electronic Sports trådløs Clip-on",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "bluetooth",
+            "gaming",
+            "electronic",
+            "others",
+            "Trådløs",
+            "Bluetooth"
+          ],
+          "inResults": false,
+          "score": 24
+        },
+        {
+          "id": "cms6k76g100qevf7k6sh57opl",
+          "name": "Ørepropper",
+          "category": "Mobil & Tilbehør",
+          "subcategory": null,
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "conduction",
+            "headphones",
+            "earbuds",
+            "hodetelefoner & ørepropper",
+            "mobil & tilbehør"
+          ],
+          "inResults": true,
+          "score": 174
+        },
+        {
+          "id": "cmsdihrw400y1vf3svv5s8el5",
+          "name": "Tech Noise-canceling Stereo trådløs Ear-hook Gaming",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "noise-canceling",
+            "stereo",
+            "wireless",
+            "tv, lyd & bilde",
+            "plastic",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": 24
+        },
+        {
+          "id": "cmsdl86mr0b8vvf3s4vacutzx",
+          "name": "Trådløs Binaural TWS Gaming Low Latency 5.0 Bluetooth",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wireless",
+            "binaural",
+            "gaming",
+            "tv, lyd & bilde",
+            "others",
+            "Trådløs"
+          ],
+          "inResults": false,
+          "score": 24
+        },
+        {
+          "id": "cmsdihy0n00ysvf3sqe7hsfke",
+          "name": "Trådløs Mini In-ear Noise Reduction Sports Stereo Gaming",
+          "category": "TV, Lyd & Bilde",
+          "subcategory": "Hodetelefoner",
+          "tags": [
+            "trådløse ørepropper",
+            "hodetelefoner",
+            "wireless",
+            "in-ear",
+            "noise",
+            "headset",
+            "gaming",
+            "plastic"
+          ],
+          "inResults": false,
+          "score": 24
+        }
+      ],
+      "falsePositiveTopSamples": [],
+      "causeCountsOnMissingStrong": {
+        "feil tittel": 2,
+        "feil metadata": 2,
+        "relevansscore": 6
+      }
+    }
+  ]
+}

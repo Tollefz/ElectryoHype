@@ -1,0 +1,276 @@
+{
+  "generatedAt": "2026-08-08T10:12:50.928Z",
+  "mode": "APPLY",
+  "catalogSize": 952,
+  "productsUpdated": 6,
+  "changeCount": 6,
+  "byField": {
+    "tags": 6
+  },
+  "sampleChanges": [
+    {
+      "id": "cmsdlz10s0dxmvf3s3fansrrx",
+      "name": "Høyttaler 6993",
+      "kind": "speaker",
+      "field": "tags",
+      "before": "[\"bluetooth høyttaler\",\"waterproof\",\"colorful\",\"luminous\",\"powerbank\",\"Trådløs\",\"Bluetooth\"]",
+      "after": "[\"bluetooth høyttaler\",\"waterproof\",\"colorful\",\"luminous\",\"Trådløs\",\"Bluetooth\"]",
+      "reason": "powerbank (irrelevant for speaker)"
+    },
+    {
+      "id": "cmsdh9j5900xivfgg3fqxe0ag",
+      "name": "RGB musematte 0742",
+      "kind": "mouse_pad",
+      "field": "tags",
+      "before": "[\"tastatur\",\"mouse\",\"extra\",\"large\",\"musematter\",\"gaming\"]",
+      "after": "[\"mouse\",\"extra\",\"large\",\"musematter\",\"gaming\"]",
+      "reason": "tastatur (irrelevant for mouse_pad)"
+    },
+    {
+      "id": "cmsdml5lo0g3zvf3sf148xo7h",
+      "name": "Bærbar WiFi-ruter",
+      "kind": "router_wifi",
+      "field": "tags",
+      "before": "[\"bluetooth høyttaler\",\"compatible\",\"portable\"]",
+      "after": "[\"compatible\",\"portable\"]",
+      "reason": "bluetooth høyttaler (irrelevant for router_wifi)"
+    },
+    {
+      "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+      "name": "RGB musematte 6181",
+      "kind": "mouse_pad",
+      "field": "tags",
+      "before": "[\"tastatur\",\"transparent\",\"silicone\",\"keyboard\",\"musematter\",\"gaming\"]",
+      "after": "[\"transparent\",\"silicone\",\"musematter\",\"gaming\"]",
+      "reason": "tastatur (irrelevant for mouse_pad); keyboard (irrelevant for mouse_pad)"
+    },
+    {
+      "id": "cmsddw412000fvfdc8vu6f4vk",
+      "name": "RGB musematte 0942",
+      "kind": "mouse_pad",
+      "field": "tags",
+      "before": "[\"tastatur\",\"extended\",\"gaming\",\"mouse\"]",
+      "after": "[\"extended\",\"gaming\",\"mouse\"]",
+      "reason": "tastatur (irrelevant for mouse_pad)"
+    },
+    {
+      "id": "cmsdkw0760a0gvf3supcg98b6",
+      "name": "Høyttaler 5937",
+      "kind": "speaker",
+      "field": "tags",
+      "before": "[\"lader\",\"hurtiglader\",\"b-shaped\",\"blutooth\",\"speaker\",\"Trådløs\",\"Bluetooth\",\"Trådløs lading\"]",
+      "after": "[\"b-shaped\",\"blutooth\",\"speaker\",\"Trådløs\",\"Bluetooth\",\"Trådløs lading\"]",
+      "reason": "lader (irrelevant for speaker); hurtiglader (irrelevant for speaker)"
+    }
+  ],
+  "allSubcategoryChanges": [],
+  "tagRemovalsSample": [
+    {
+      "id": "cmsdlz10s0dxmvf3s3fansrrx",
+      "name": "Høyttaler 6993",
+      "kind": "speaker",
+      "removed": [
+        {
+          "tag": "powerbank",
+          "reason": "irrelevant for speaker"
+        }
+      ]
+    },
+    {
+      "id": "cmsdh9j5900xivfgg3fqxe0ag",
+      "name": "RGB musematte 0742",
+      "kind": "mouse_pad",
+      "removed": [
+        {
+          "tag": "tastatur",
+          "reason": "irrelevant for mouse_pad"
+        }
+      ]
+    },
+    {
+      "id": "cmsdml5lo0g3zvf3sf148xo7h",
+      "name": "Bærbar WiFi-ruter",
+      "kind": "router_wifi",
+      "removed": [
+        {
+          "tag": "bluetooth høyttaler",
+          "reason": "irrelevant for router_wifi"
+        }
+      ]
+    },
+    {
+      "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+      "name": "RGB musematte 6181",
+      "kind": "mouse_pad",
+      "removed": [
+        {
+          "tag": "tastatur",
+          "reason": "irrelevant for mouse_pad"
+        },
+        {
+          "tag": "keyboard",
+          "reason": "irrelevant for mouse_pad"
+        }
+      ]
+    },
+    {
+      "id": "cmsddw412000fvfdc8vu6f4vk",
+      "name": "RGB musematte 0942",
+      "kind": "mouse_pad",
+      "removed": [
+        {
+          "tag": "tastatur",
+          "reason": "irrelevant for mouse_pad"
+        }
+      ]
+    },
+    {
+      "id": "cmsdkw0760a0gvf3supcg98b6",
+      "name": "Høyttaler 5937",
+      "kind": "speaker",
+      "removed": [
+        {
+          "tag": "lader",
+          "reason": "irrelevant for speaker"
+        },
+        {
+          "tag": "hurtiglader",
+          "reason": "irrelevant for speaker"
+        }
+      ]
+    }
+  ],
+  "tagRemovalProductCount": 6,
+  "allChanges": [
+    {
+      "id": "cmsdlz10s0dxmvf3s3fansrrx",
+      "name": "Høyttaler 6993",
+      "kind": "speaker",
+      "field": "tags",
+      "before": "[\"bluetooth høyttaler\",\"waterproof\",\"colorful\",\"luminous\",\"powerbank\",\"Trådløs\",\"Bluetooth\"]",
+      "after": "[\"bluetooth høyttaler\",\"waterproof\",\"colorful\",\"luminous\",\"Trådløs\",\"Bluetooth\"]",
+      "reason": "powerbank (irrelevant for speaker)"
+    },
+    {
+      "id": "cmsdh9j5900xivfgg3fqxe0ag",
+      "name": "RGB musematte 0742",
+      "kind": "mouse_pad",
+      "field": "tags",
+      "before": "[\"tastatur\",\"mouse\",\"extra\",\"large\",\"musematter\",\"gaming\"]",
+      "after": "[\"mouse\",\"extra\",\"large\",\"musematter\",\"gaming\"]",
+      "reason": "tastatur (irrelevant for mouse_pad)"
+    },
+    {
+      "id": "cmsdml5lo0g3zvf3sf148xo7h",
+      "name": "Bærbar WiFi-ruter",
+      "kind": "router_wifi",
+      "field": "tags",
+      "before": "[\"bluetooth høyttaler\",\"compatible\",\"portable\"]",
+      "after": "[\"compatible\",\"portable\"]",
+      "reason": "bluetooth høyttaler (irrelevant for router_wifi)"
+    },
+    {
+      "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+      "name": "RGB musematte 6181",
+      "kind": "mouse_pad",
+      "field": "tags",
+      "before": "[\"tastatur\",\"transparent\",\"silicone\",\"keyboard\",\"musematter\",\"gaming\"]",
+      "after": "[\"transparent\",\"silicone\",\"musematter\",\"gaming\"]",
+      "reason": "tastatur (irrelevant for mouse_pad); keyboard (irrelevant for mouse_pad)"
+    },
+    {
+      "id": "cmsddw412000fvfdc8vu6f4vk",
+      "name": "RGB musematte 0942",
+      "kind": "mouse_pad",
+      "field": "tags",
+      "before": "[\"tastatur\",\"extended\",\"gaming\",\"mouse\"]",
+      "after": "[\"extended\",\"gaming\",\"mouse\"]",
+      "reason": "tastatur (irrelevant for mouse_pad)"
+    },
+    {
+      "id": "cmsdkw0760a0gvf3supcg98b6",
+      "name": "Høyttaler 5937",
+      "kind": "speaker",
+      "field": "tags",
+      "before": "[\"lader\",\"hurtiglader\",\"b-shaped\",\"blutooth\",\"speaker\",\"Trådløs\",\"Bluetooth\",\"Trådløs lading\"]",
+      "after": "[\"b-shaped\",\"blutooth\",\"speaker\",\"Trådløs\",\"Bluetooth\",\"Trådløs lading\"]",
+      "reason": "lader (irrelevant for speaker); hurtiglader (irrelevant for speaker)"
+    }
+  ],
+  "allTagRemovals": [
+    {
+      "id": "cmsdlz10s0dxmvf3s3fansrrx",
+      "name": "Høyttaler 6993",
+      "kind": "speaker",
+      "removed": [
+        {
+          "tag": "powerbank",
+          "reason": "irrelevant for speaker"
+        }
+      ]
+    },
+    {
+      "id": "cmsdh9j5900xivfgg3fqxe0ag",
+      "name": "RGB musematte 0742",
+      "kind": "mouse_pad",
+      "removed": [
+        {
+          "tag": "tastatur",
+          "reason": "irrelevant for mouse_pad"
+        }
+      ]
+    },
+    {
+      "id": "cmsdml5lo0g3zvf3sf148xo7h",
+      "name": "Bærbar WiFi-ruter",
+      "kind": "router_wifi",
+      "removed": [
+        {
+          "tag": "bluetooth høyttaler",
+          "reason": "irrelevant for router_wifi"
+        }
+      ]
+    },
+    {
+      "id": "cmsdl6v2q0b3kvf3squ4mv4ox",
+      "name": "RGB musematte 6181",
+      "kind": "mouse_pad",
+      "removed": [
+        {
+          "tag": "tastatur",
+          "reason": "irrelevant for mouse_pad"
+        },
+        {
+          "tag": "keyboard",
+          "reason": "irrelevant for mouse_pad"
+        }
+      ]
+    },
+    {
+      "id": "cmsddw412000fvfdc8vu6f4vk",
+      "name": "RGB musematte 0942",
+      "kind": "mouse_pad",
+      "removed": [
+        {
+          "tag": "tastatur",
+          "reason": "irrelevant for mouse_pad"
+        }
+      ]
+    },
+    {
+      "id": "cmsdkw0760a0gvf3supcg98b6",
+      "name": "Høyttaler 5937",
+      "kind": "speaker",
+      "removed": [
+        {
+          "tag": "lader",
+          "reason": "irrelevant for speaker"
+        },
+        {
+          "tag": "hurtiglader",
+          "reason": "irrelevant for speaker"
+        }
+      ]
+    }
+  ]
+}
