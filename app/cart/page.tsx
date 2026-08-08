@@ -134,7 +134,7 @@ export default function CartPage() {
 
               <div className="space-y-3 border-b border-[var(--border)] pb-4">
                 <div className="flex justify-between text-sm text-[var(--text-secondary)]">
-                  <span>Subtotal</span>
+                  <span>Delsum</span>
                   <span className="font-medium text-[var(--text)]">
                     {total.toLocaleString("no-NO")},-
                   </span>
@@ -167,7 +167,7 @@ export default function CartPage() {
               </div>
 
               <div className="mt-4 flex justify-between text-lg font-bold text-[var(--text)]">
-                <span>Total</span>
+                <span>Totalt</span>
                 <span>{totalWithShipping.toLocaleString("no-NO")},-</span>
               </div>
 

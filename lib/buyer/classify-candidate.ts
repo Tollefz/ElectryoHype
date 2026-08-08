@@ -4,6 +4,7 @@
  */
 
 import { inferMainAndSub } from "@/lib/categories/tree";
+import { detectStoreDnaAbsoluteReject } from "@/lib/buyer/store-dna-policy";
 
 export type BuyerTaxonomy = {
   main: string;
@@ -25,9 +26,6 @@ const MAIN_TO_SHELF: Record<string, { id: string; label: string }> = {
   Hvitevarer: { id: "andre", label: "Hvitevarer" },
 };
 
-const OFF_ASSORTMENT =
-  /\b(solar|solcelle|panel\s*sol|photovoltaic|clothing|klær|dress|shoes|sko|medicine|supplement|vitamin|adult|sex\s*toy|weapon|firearm)\b/i;
-
 const TRUE_GAMING_PERIPHERAL =
   /\b(gaming\s*)?(mouse|mus|keyboard|tastatur|headset|mouse\s*pad|mousepad|musematte|desk\s*mat|desk\s*pad|gamepad|controller)\b/i;
 
@@ -36,7 +34,8 @@ const TRUE_GAMING_PERIPHERAL =
  */
 export function classifyBuyerCandidate(text: string): BuyerTaxonomy {
   const hay = (text || "").trim();
-  if (OFF_ASSORTMENT.test(hay)) {
+  const dnaReject = detectStoreDnaAbsoluteReject(hay);
+  if (dnaReject) {
     return {
       main: "Hjem & Fritid",
       subcategory: null,
@@ -44,7 +43,7 @@ export function classifyBuyerCandidate(text: string): BuyerTaxonomy {
       shelfId: "andre",
       shelfLabel: "Passer ikke",
       fitsElectroHype: false,
-      rejectReason: "Passer ikke ElectroHype-sortimentet",
+      rejectReason: `Store DNA: ${dnaReject}`,
     };
   }
 

@@ -141,6 +141,33 @@ export const syncCatalogSuppliers = inngest.createFunction(
 );
 
 /**
+ * Primary serverless drain for import_item — every minute.
+ * Dedicated process (`npm run worker:import`) is preferred when available;
+ * this cron keeps the queue moving without admin UI traffic.
+ * (Previously only ran every 6h inside syncCatalogSuppliers — pending jobs piled up.)
+ */
+export const importItemWorkerTick = inngest.createFunction(
+  { id: "import-item-worker-tick", name: "Import Item Worker Tick" },
+  { cron: "* * * * *" },
+  async ({ step }) => {
+    return step.run("drain-import-item", async () => {
+      const { runSupplierWorkers } = await import("@/lib/suppliers/workers/jobs");
+      const drain = await runSupplierWorkers({
+        concurrency: 4,
+        limit: 20,
+        types: ["import_item"],
+      });
+      // Sweep off-DNA products that slipped into the live catalog
+      const { unpublishStoreDnaViolations } = await import(
+        "@/lib/buyer/unpublish-dna-violations"
+      );
+      const dna = await unpublishStoreDnaViolations({ limit: 200 });
+      return { ...drain, dnaSweep: dna };
+    });
+  }
+);
+
+/**
  * Primary serverless drain for buyer_scan_batch — every minute.
  * Dedicated process (`npm run worker:buyer-hunt`) is preferred when available;
  * this cron keeps the queue moving without admin UI traffic.
@@ -327,6 +354,7 @@ export const aiTrustWeekly = inngest.createFunction(
 export const inngestFunctions = [
   syncProducts,
   syncCatalogSuppliers,
+  importItemWorkerTick,
   buyerHuntWorkerTick,
   orderAutomationWorkerTick,
   marketingBrainWorkerTick,

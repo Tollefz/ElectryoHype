@@ -2,8 +2,7 @@ import { prisma } from '@/lib/prisma';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ProductStorefront from '@/components/products/ProductStorefront';
-import { cleanProductName } from '@/lib/utils/url-decode';
-import { getStoreIdFromHeadersServer } from '@/lib/store-server';
+import { storefrontProductTitle } from '@/lib/storefront/product-title';
 import { DEFAULT_STORE_ID } from '@/lib/store';
 import { safeQuery } from '@/lib/safeQuery';
 import { generateProductJSONLD, generateBreadcrumbJSONLD, generateSEOMetadata } from '@/lib/seo';
@@ -27,7 +26,7 @@ const productInclude = {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const storeId = await getStoreIdFromHeadersServer();
+  const storeId = DEFAULT_STORE_ID;
 
   const product = await safeQuery(
     () =>
@@ -50,7 +49,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product) {
     return {
-      title: 'Produkt ikke funnet | ElectroHypeX',
+      title: { absolute: 'Produkt ikke funnet | ElectroHypeX' },
       description: 'Produktet du leter etter ble ikke funnet.',
     };
   }
@@ -63,7 +62,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     images = [];
   }
 
-  const cleanedName = cleanProductName(product.metaTitle || product.name);
+  const cleanedName = storefrontProductTitle({
+    name: product.name,
+    metaTitle: product.metaTitle,
+  });
   let rawSpecs: Record<string, string> = {};
   try {
     if (product.specs && typeof product.specs === 'object') {
@@ -101,9 +103,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const { slug } = await params;
   const sp = await searchParams;
   const variantParam = Array.isArray(sp.variant) ? sp.variant[0] : sp.variant;
-  const headerStoreId = await getStoreIdFromHeadersServer();
-  const safeStoreId =
-    headerStoreId && headerStoreId !== 'demo-store' ? headerStoreId : DEFAULT_STORE_ID;
+  const safeStoreId = DEFAULT_STORE_ID;
 
   let product =
     (await safeQuery(
@@ -115,17 +115,6 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       null,
       'product:detail:strategy1'
     )) ||
-    (safeStoreId !== DEFAULT_STORE_ID
-      ? await safeQuery(
-          () =>
-            prisma.product.findFirst({
-              where: { slug, storeId: DEFAULT_STORE_ID, isActive: true },
-              include: productInclude,
-            }),
-          null,
-          'product:detail:strategy2'
-        )
-      : null) ||
     (await safeQuery(
       () =>
         prisma.product.findFirst({
@@ -266,7 +255,10 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
   const presentation = buildProductPresentation({
     id: product.id,
     slug: product.slug,
-    name: product.name,
+    name: storefrontProductTitle({
+      name: product.name,
+      metaTitle: product.metaTitle,
+    }),
     sku: product.sku,
     category: product.category,
     price: Number(product.price),

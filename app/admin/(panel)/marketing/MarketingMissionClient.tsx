@@ -142,6 +142,13 @@ export default function MarketingMissionClient() {
             {data?.workerStatus ?? "—"}. Jeg endrer ikke bud og publiserer ikke
             annonser.
           </p>
+          {data?.workerStatus === "stopped" ? (
+            <p className="mt-2 text-sm font-medium text-amber-800">
+              Worker er stoppet — start `npm run worker:marketing` eller Inngest-tick
+              for oppdaterte tall. Vis ikke 0 som «ingen aktivitet» uten at worker har
+              kjørt.
+            </p>
+          ) : null}
         </div>
         <div className="flex items-center gap-2">
           <select
@@ -230,15 +237,39 @@ export default function MarketingMissionClient() {
       <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
         <h2 className="text-base font-semibold text-slate-900">Dashboard</h2>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
-          <Card label="Sessions" value={d?.sessions ?? 0} />
-          <Card label="CTR" value={fmtPct(d?.ctr)} />
-          <Card label="Add to cart" value={d?.addToCart ?? 0} />
-          <Card label="Checkout" value={d?.beginCheckout ?? 0} />
-          <Card label="Purchases" value={d?.purchases ?? 0} />
-          <Card label="Conv. rate" value={fmtPct(d?.conversionRate)} />
+          <Card
+            label="Økter"
+            value={
+              d?.empty || data?.workerStatus === "stopped"
+                ? "—"
+                : (d?.sessions ?? "—")
+            }
+          />
+          <Card label="CTR" value={d?.empty ? "—" : fmtPct(d?.ctr)} />
+          <Card
+            label="Handlekurv"
+            value={d?.empty ? "—" : (d?.addToCart ?? "—")}
+          />
+          <Card
+            label="Kasse"
+            value={d?.empty ? "—" : (d?.beginCheckout ?? "—")}
+          />
+          <Card
+            label="Kjøp"
+            value={d?.empty && !(d?.purchases > 0) ? "—" : (d?.purchases ?? 0)}
+          />
+          <Card
+            label="Conv. rate"
+            value={d?.empty ? "—" : fmtPct(d?.conversionRate)}
+          />
           <Card label="ROAS" value={d?.roas != null ? `${d.roas}x` : "—"} />
           <Card label="CPA" value={d?.cpa != null ? `${d.cpa} kr` : "—"} />
         </div>
+        {data?.workerStatus === "stopped" ? (
+          <p className="mt-3 text-sm text-amber-800">
+            Worker stoppet — tall kan være ufullstendige til reaggregate kjører.
+          </p>
+        ) : null}
         {d?.empty ? (
           <p className="mt-3 text-sm text-slate-500">
             Ingen first-party events ennå. Når kunder godtar cookies og handler,
@@ -248,7 +279,7 @@ export default function MarketingMissionClient() {
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Panel title="Top products (Marketing Score)">
+        <Panel title="Beste produkter (Marketing Score)">
           {(data?.topProducts || []).length === 0 ? (
             <Empty>Kjør worker-tick for å score produkter</Empty>
           ) : (
@@ -261,7 +292,7 @@ export default function MarketingMissionClient() {
             ))
           )}
         </Panel>
-        <Panel title="Worst products (med trafikk)">
+        <Panel title="Svakeste produkter (med trafikk)">
           {(data?.worstProducts || []).length === 0 ? (
             <Empty>Ingen svake produkter med nok data</Empty>
           ) : (

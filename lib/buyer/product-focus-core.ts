@@ -233,7 +233,6 @@ export const FOCUS_GROUP_DEFS: Array<{
     supplementary: [
       { id: "car_bt_adapter", label: "Bluetooth-adapter" },
       { id: "air_compressor", label: "Luftkompressor" },
-      { id: "jump_starter", label: "Startbooster" },
       { id: "obd_reader", label: "OBD-leser" },
       { id: "battery_charger", label: "Batterilader" },
     ],

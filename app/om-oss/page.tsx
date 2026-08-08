@@ -1,5 +1,14 @@
 import Link from 'next/link';
 import { Building2, Target, Users, Award } from 'lucide-react';
+import type { Metadata } from 'next';
+import { SITE_CONFIG } from '@/lib/site';
+
+export const metadata: Metadata = {
+  title: { absolute: 'Om oss | ElectroHypeX' },
+  description:
+    'Om ElectroHypeX — norsk nettbutikk for elektronikk, gaming og tech til konkurransedyktige priser.',
+  alternates: { canonical: `${SITE_CONFIG.siteUrl}/om-oss` },
+};
 
 export default function OmOssPage() {
   return (

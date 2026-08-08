@@ -1,4 +1,11 @@
-type Check = { key: string; ok: boolean; hint: string; label: string };
+type Check = {
+  key: string;
+  ok: boolean;
+  hint: string;
+  label: string;
+  /** When true, missing item blocks real payments / order confirmations */
+  paymentBlocker: boolean;
+};
 
 function envChecks(): Check[] {
   const stripeSecret = Boolean(process.env.STRIPE_SECRET_KEY?.trim());
@@ -14,6 +21,7 @@ function envChecks(): Check[] {
       key: "STRIPE_SECRET_KEY",
       label: "Betaling (hemmelig nøkkel)",
       ok: stripeSecret,
+      paymentBlocker: true,
       hint: live
         ? "Live-nøkkel er satt"
         : stripeSecret
@@ -24,31 +32,36 @@ function envChecks(): Check[] {
       key: "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
       label: "Betaling (offentlig nøkkel)",
       ok: stripePub,
+      paymentBlocker: true,
       hint: "Trengs for kassen i butikken",
     },
     {
       key: "STRIPE_WEBHOOK_SECRET",
       label: "Betalingsbekreftelse",
       ok: webhook,
+      paymentBlocker: true,
       hint: "Trengs for å markere ordre som betalt og sende e-post",
     },
     {
       key: "RESEND_API_KEY",
       label: "E-postutsending",
       ok: resend,
+      paymentBlocker: true,
       hint: "Trengs for ordrebekreftelser",
     },
     {
       key: "ADMIN_EMAIL",
       label: "Admin-epost",
       ok: adminEmail,
-      hint: "Trengs for varsel om nye ordrer",
+      paymentBlocker: false,
+      hint: "Varsel om nye ordrer (anbefalt, blokkerer ikke betaling)",
     },
     {
       key: "INTERNAL_CRON_TOKEN",
       label: "Planlagte jobber",
       ok: cron,
-      hint: "Trengs for bakgrunnsjobber (importmotor)",
+      paymentBlocker: false,
+      hint: "Trengs for HTTP-cron (buyer/import/ordre-worker) — blokkerer ikke kassen",
     },
   ];
 }
@@ -62,13 +75,21 @@ export function LaunchReadinessBanner() {
   const missing = checks.filter((c) => !c.ok);
   if (missing.length === 0) return null;
 
+  const paymentMissing = missing.filter((c) => c.paymentBlocker);
+  const opsMissing = missing.filter((c) => !c.paymentBlocker);
+
+  const headline =
+    paymentMissing.length > 0
+      ? `Butikken er ikke klar for betaling (${paymentMissing.length} mangler)`
+      : `Drift mangler oppsett (${opsMissing.length}) — betaling kan fungere`;
+
   return (
     <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-950">
-      <h3 className="text-base font-semibold">
-        Butikken er ikke klar for betaling ({missing.length} mangler)
-      </h3>
+      <h3 className="text-base font-semibold">{headline}</h3>
       <p className="mt-1 text-sm text-amber-900/90">
-        Sett opp følgende før du tar imot ekte ordre. Kontakt utvikler hvis du er usikker.
+        {paymentMissing.length > 0
+          ? "Sett opp følgende før du tar imot ekte ordre. Kontakt utvikler hvis du er usikker."
+          : "Disse er ikke betalingsblokkere, men bakgrunnsjobber / varsler vil ikke kjøre korrekt."}
       </p>
       <ul className="mt-3 space-y-1.5 text-sm">
         {missing.map((c) => (
@@ -84,6 +105,7 @@ export function LaunchReadinessBanner() {
           {checks.map((c) => (
             <li key={c.key}>
               {c.key}: {c.ok ? "OK" : "MANGLER"}
+              {!c.paymentBlocker ? " (ops)" : " (betaling)"}
             </li>
           ))}
         </ul>

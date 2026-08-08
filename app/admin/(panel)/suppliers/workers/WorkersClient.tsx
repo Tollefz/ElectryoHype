@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Loader2, Play, RefreshCw } from "lucide-react";
 import { SupplierEngineTabs } from "@/components/admin/supplier/SupplierEngineTabs";
+import { presentImportError } from "@/lib/ops/import-failure-reasons";
 
 type RecentJob = {
   id: string;
@@ -228,7 +229,9 @@ export default function WorkersClient({ initial }: { initial: WorkerSnapshot }) 
                   <p className="text-xs text-slate-500">
                     {j.progressMessage || "—"}
                     {j.attempts > 1 ? ` · retry ${j.attempts}` : ""}
-                    {j.lastError ? ` · ${j.lastError.slice(0, 80)}` : ""}
+                    {j.lastError
+                      ? ` · ${presentImportError(j.lastError).title}`
+                      : ""}
                   </p>
                 </div>
                 <span className="text-[11px] text-slate-400">

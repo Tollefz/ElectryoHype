@@ -1,7 +1,10 @@
 /**
  * Natural-language AI colleague brief for Rob's Desk.
  * Story first — not raw metrics. Defensive against missing data.
+ * Attention / failures come from deskAttentionFromQueues (single source of truth).
  */
+
+import { deskAttentionFromQueues } from "@/lib/ops/desk-attention";
 
 export type DeskAction = {
   id: string;
@@ -16,7 +19,6 @@ export type ColleagueBriefInput = {
   adminName?: string | null;
   morningBrief?: string | null;
   autonomySummary?: Record<string, number> | null;
-  /** Latest Digital Buyer mission result — preferred for morning numbers */
   buyerMission?: {
     analyzed?: number;
     discarded?: number;
@@ -35,6 +37,11 @@ export type ColleagueBriefInput = {
   buyerRanked?: number;
   aiReview?: string | null;
   adminMinutesEst?: number;
+  /** Failed import queue items — must never be ignored in calm copy */
+  importFailed?: number;
+  ordersNeedAttention?: number;
+  failedPay?: number;
+  failedEmail?: number;
 };
 
 export type ColleagueBrief = {
@@ -66,7 +73,9 @@ function safeNum(v: unknown): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-export function buildColleagueBrief(input: ColleagueBriefInput | null | undefined): ColleagueBrief {
+export function buildColleagueBrief(
+  input: ColleagueBriefInput | null | undefined
+): ColleagueBrief {
   const src = input || {};
   const hour = src.hour ?? new Date().getHours();
   const name = (src.adminName || "Robin").trim() || "Robin";
@@ -75,12 +84,15 @@ export function buildColleagueBrief(input: ColleagueBriefInput | null | undefine
   const did: string[] = [];
   const found: string[] = [];
   const recommends: string[] = [];
-  const needsHelp: string[] = [];
 
-  const s = src.autonomySummary && typeof src.autonomySummary === "object"
-    ? src.autonomySummary
-    : {};
-  const bm = src.buyerMission && typeof src.buyerMission === "object" ? src.buyerMission : null;
+  const s =
+    src.autonomySummary && typeof src.autonomySummary === "object"
+      ? src.autonomySummary
+      : {};
+  const bm =
+    src.buyerMission && typeof src.buyerMission === "object"
+      ? src.buyerMission
+      : null;
   const analyzed = safeNum(bm?.analyzed) || safeNum(s.productsAnalyzed);
   const discarded = safeNum(bm?.discarded);
   const candidates =
@@ -97,10 +109,26 @@ export function buildColleagueBrief(input: ColleagueBriefInput | null | undefine
   const pricePending = safeNum(src.priceChangePending);
   const orders = safeNum(src.paidNewOrders);
   const est = Math.max(1, safeNum(src.adminMinutesEst) || 15);
+  const importFailed = safeNum(src.importFailed);
+
+  const attention = deskAttentionFromQueues({
+    importFailed,
+    paidNew: orders,
+    improvePending: improve,
+    priceChangePending: pricePending,
+    readyToPublish: ready,
+    catalogIssuesHigh: src.catalogIssuesHigh,
+    performanceProblems: src.performanceProblems,
+    ordersNeedAttention: src.ordersNeedAttention,
+    failedPay: src.failedPay,
+    failedEmail: src.failedEmail,
+  });
 
   did.push("Jeg jobbet i natt.");
   if (analyzed > 0) {
-    did.push(`Jeg analyserte ${fmt(analyzed)} produkter${hour < 12 ? " i natt" : ""}.`);
+    did.push(
+      `Jeg analyserte ${fmt(analyzed)} produkter${hour < 12 ? " i natt" : ""}.`
+    );
   } else if (src.morningBrief) {
     did.push("Jeg gikk gjennom butikken og skrev en brief til deg.");
   } else {
@@ -118,68 +146,44 @@ export function buildColleagueBrief(input: ColleagueBriefInput | null | undefine
   if (candidates > 0 && !did.some((l) => l.includes("kandidater"))) {
     found.push(`Fant ${fmt(candidates)} kandidater.`);
   }
-  if (buyer > 0) found.push(`${fmt(buyer)} rangerte produkter klare i Digital Buyer.`);
+  if (buyer > 0)
+    found.push(`${fmt(buyer)} rangerte produkter klare i Digital Buyer.`);
   if (merch > 0) found.push(`${fmt(merch)} Merchandiser-forslag venter.`);
+  if (importFailed > 0) {
+    found.push(`${fmt(importFailed)} importer feilet og ligger i kø.`);
+  }
   if (!found.length && candidates === 0) {
-    found.push("Ingen nye store funn å rapportere akkurat nå.");
+    found.push(
+      attention.hasCriticalAttention
+        ? "Det er åpne saker som trenger deg — se nedenfor."
+        : "Ingen nye store funn å rapportere akkurat nå."
+    );
   } else if (!found.length) {
     found.push("Katalogbygging er i gang — se Digital Buyer for detaljer.");
   }
-  if (improve > 0) recommends.push(`Godkjenn ${fmt(improve)} forslag før de går live.`);
+
+  if (improve > 0)
+    recommends.push(`Godkjenn ${fmt(improve)} forslag før de går live.`);
   if (ready > 0) recommends.push(`Publiser ${fmt(ready)} som allerede er klar.`);
   if (orders > 0) recommends.push(`Behandle ${fmt(orders)} betalte ordre.`);
+  if (importFailed > 0) {
+    recommends.push(`Rydd ${fmt(importFailed)} feilede importer.`);
+  }
   if (!recommends.length) {
-    recommends.push("Katalog og kø er rolige — du kan fokusere på strategi.");
+    recommends.push(
+      attention.hasCriticalAttention
+        ? "Prioriter de røde sakene først."
+        : "Katalog og kø er rolige — du kan fokusere på strategi."
+    );
   }
 
-  if (orders > 0) needsHelp.push(`${fmt(orders)} ordre venter.`);
-  if (improve > 0) needsHelp.push(`${fmt(improve)} trenger din godkjenning.`);
-  if (safeNum(src.catalogIssuesHigh) > 0) {
-    needsHelp.push(`${fmt(safeNum(src.catalogIssuesHigh))} katalogproblemer (høy).`);
-  }
-  if (safeNum(src.performanceProblems) > 0) {
-    needsHelp.push(`${fmt(safeNum(src.performanceProblems))} tekniske problemer.`);
-  }
-  if (!needsHelp.length) needsHelp.push("Ingen kritiske problemer.");
+  const needsHelp =
+    attention.needsHelp.length > 0
+      ? attention.needsHelp
+      : ["Ingen kritiske problemer."];
 
-  const actions: DeskAction[] = [];
-  if (improve > 0) {
-    actions.push({
-      id: "approve-improve",
-      label: `Godkjenn ${improve} ${improve === 1 ? "forslag" : "produkter"}`,
-      href: "#ai-approvals",
-      urgency: "green",
-      count: improve,
-    });
-  }
-  if (pricePending > 0) {
-    actions.push({
-      id: "approve-price",
-      label: `Godkjenn ${pricePending} prisendring${pricePending === 1 ? "" : "er"}`,
-      href: "#ai-approvals",
-      urgency: "green",
-      count: pricePending,
-    });
-  }
-  if (ready > 0) {
-    actions.push({
-      id: "publish",
-      label: `Publiser ${ready} produkter`,
-      href: "#desk-publish",
-      urgency: "yellow",
-      count: ready,
-    });
-  }
-  if (orders > 0) {
-    actions.push({
-      id: "orders",
-      label: `Behandle ${orders} ordre`,
-      href: "#orders-today",
-      urgency: "red",
-      count: orders,
-    });
-  }
-  if (buyer > 0) {
+  const actions: DeskAction[] = [...attention.actions];
+  if (buyer > 0 && !actions.some((a) => a.id === "buyer")) {
     actions.push({
       id: "buyer",
       label: `Se ${buyer} innkjøpskandidater`,
@@ -204,6 +208,14 @@ export function buildColleagueBrief(input: ColleagueBriefInput | null | undefine
     closing,
     estimatedMinutes: est,
     actions,
-    storyParagraphs: [greeting, "", ...did, "", ...found.slice(0, 3), "", needsHelp[0]],
+    storyParagraphs: [
+      greeting,
+      "",
+      ...did,
+      "",
+      ...found.slice(0, 3),
+      "",
+      needsHelp[0],
+    ],
   };
 }

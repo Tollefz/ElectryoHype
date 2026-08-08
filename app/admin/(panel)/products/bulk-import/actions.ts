@@ -193,8 +193,32 @@ async function importProduct(
     const baseSellingPriceNok = calculateSuggestedRetailPrice(baseSupplierPriceNok);
     const baseCompareAtPriceNok = calculateCompareAtPrice(baseSellingPriceNok);
 
-    // Forbedre produkt-tittel
-    const improvedTitle = improveTitle(data.title);
+    // Prefer AI Norwegian title (existing generator) over English supplier title
+    const { enrichProductWithAI } = await import("@/lib/import/ai-enrichment");
+    const cleaned = improveTitle(data.title);
+    const specsRecord = data.specs
+      ? Object.fromEntries(
+          Object.entries(data.specs as Record<string, unknown>).map(([k, v]) => [
+            k,
+            String(v ?? ""),
+          ])
+        )
+      : {};
+    const ai = await enrichProductWithAI({
+      context: {
+        supplier: providerUsed,
+        originalTitle: data.title,
+        originalDescription: description || shortDescription || "",
+        costNOK: baseSupplierPriceNok,
+        images,
+        specs: specsRecord,
+        variants: [],
+      },
+      suggestedRetailPrice: baseSellingPriceNok,
+      supplierSpecs: specsRecord,
+    }).catch(() => null);
+    const improvedTitle =
+      (ai?.enrichment?.title && ai.enrichment.title.trim()) || cleaned;
     
     const sku = `${providerUsed.toUpperCase()}-${generateId().toUpperCase()}`;
     const slugBase = slugify(improvedTitle, { lower: true, strict: true });

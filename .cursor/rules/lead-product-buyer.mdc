@@ -17,12 +17,15 @@ Help the owner decide — do not remove their ability to decide.
 
 ## Absolute rules (always REJECTED)
 
+Source of truth: `lib/buyer/store-dna-policy.ts` (do not scatter new regex elsewhere).
+
 - Clothing
 - Adult products
-- Counterfeit or trademark / fake brand products
+- Counterfeit or trademark / fake brand products (incl. Iron Man / Marvel merch)
 - Medicines
 - Supplements
 - Safety-critical children's products
+- Off-DNA: jump starter, piano, pet, baby, kitchen appliances, massage, beauty, oil diffuser, teleprompter, fidget / novelty toys
 
 Everything else may be reviewed manually (including soft off-assortment like shoes, jewelry, toys, seasonal decor).
 
@@ -43,5 +46,6 @@ Mobile accessories, computer accessories, gaming, smart home, USB-C, charging, L
 
 ## Implementation
 
-Buyer policy: `lib/import/buyer-policy.ts`  
-Enforced lightly via scoring, warnings, quality check, and importer save gate (`canImport` for APPROVED/REVIEW; hard-block only REJECTED).
+Store DNA hard-blocks: `lib/buyer/store-dna-policy.ts`  
+Buyer scoring / decisions: `lib/import/buyer-policy.ts`  
+Enforced via scoring, quality check, classify-candidate, auto-publish gate (`canImport` for APPROVED/REVIEW; hard-block only REJECTED).

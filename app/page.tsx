@@ -13,7 +13,6 @@ import HomeHero from "@/components/home/HomeHero";
 import HomeCategoryGrid from "@/components/home/HomeCategoryGrid";
 import HomeProductSection from "@/components/home/HomeProductSection";
 import { DEFAULT_STORE_ID } from "@/lib/store";
-import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { getHomePageData } from "@/lib/storefront/get-home-page-data";
 import type { HomeProduct } from "@/lib/storefront/home-product-distribution";
 import { SITE_CONFIG } from "@/lib/site";
@@ -23,8 +22,8 @@ import {
   generateWebsiteJSONLD,
 } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+/** Cache homepage HTML + data briefly — biggest TTFB win vs force-dynamic. */
+export const revalidate = 60;
 
 const baseUrl = process.env.NEXTAUTH_URL || "https://www.electrohypex.com";
 
@@ -140,8 +139,9 @@ function categoryImageFromPools(
 }
 
 export default async function HomePage() {
-  const headerStoreId = await getStoreIdFromHeadersServer();
-  const primaryStoreId = headerStoreId || DEFAULT_STORE_ID;
+  // Avoid headers() here — it forces dynamic rendering and kills ISR/TTFB.
+  // Single-store ElectroHypeX uses DEFAULT_STORE_ID (same as host fallback).
+  const primaryStoreId = DEFAULT_STORE_ID;
   const isDev = isDevelopment();
 
   const result = await getHomePageData(primaryStoreId);

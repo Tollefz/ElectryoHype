@@ -272,7 +272,7 @@ export default function OrderConfirmationClient() {
 
             <div className="border-t border-green-600/20 pt-4">
               <div className="flex justify-between text-2xl font-bold text-white">
-                <span>Total</span>
+                <span>Totalt</span>
                 <span>{Number(order.total || 0).toFixed(0)} kr</span>
               </div>
               <p className="mt-1 text-xs text-gray-400">Inkl. mva</p>

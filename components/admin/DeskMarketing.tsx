@@ -117,8 +117,21 @@ export function DeskMarketing() {
         <>
           {/* Trafikk siste døgn */}
           <Panel title="Trafikk siste døgn" fact={t?.fact}>
+            {status?.workerStatus === "stopped" ? (
+              <p className="mb-2 text-xs font-medium text-amber-800">
+                Marketing-worker er stoppet — tallene under kan være utdaterte til
+                worker kjører igjen.
+              </p>
+            ) : null}
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
-              <Metric label="Sessions" value={t?.sessions ?? 0} />
+              <Metric
+                label="Sessions"
+                value={
+                  status?.workerStatus === "stopped" && !t?.sessions
+                    ? "—"
+                    : (t?.sessions ?? 0)
+                }
+              />
               <Metric label="Sidevisninger" value={t?.pageViews ?? 0} />
               <Metric label="Produktvisninger" value={t?.viewItem ?? 0} />
               <Metric label="Handlekurv" value={t?.addToCart ?? 0} />

@@ -26,6 +26,7 @@ import {
   type PipelineBucket,
 } from "@/lib/ops/pipeline-status";
 import { useSmartPoll } from "@/lib/admin/useSmartPoll";
+import { presentImportError } from "@/lib/ops/import-failure-reasons";
 
 type QueueItem = {
   id: string;
@@ -493,12 +494,31 @@ export default function ImportQueueClient() {
                       ) : null}
                     </div>
                     {(item.error || aiWarning || item.reviewReason) && (
-                      <p className="flex items-start gap-1 text-xs text-amber-800">
-                        <AlertTriangle size={12} className="mt-0.5 shrink-0" />
-                        <span className="line-clamp-2">
-                          {item.error || aiWarning || item.reviewReason}
-                        </span>
-                      </p>
+                      <div className="flex items-start gap-1 text-xs text-amber-900">
+                        <AlertTriangle size={12} className="mt-0.5 shrink-0 text-amber-700" />
+                        {item.error ? (
+                          <div className="min-w-0 space-y-0.5">
+                            {(() => {
+                              const err = presentImportError(item.error, {
+                                title: item.title,
+                                supplierProductId: item.supplierProductId,
+                              });
+                              return (
+                                <>
+                                  <p className="font-semibold text-amber-950">{err.title}</p>
+                                  {err.productHint ? (
+                                    <p className="text-amber-800/90">Produkt: {err.productHint}</p>
+                                  ) : null}
+                                  <p className="text-amber-800/90">Årsak: {err.reason}</p>
+                                  <p className="text-amber-800/90">Handling: {err.action}</p>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        ) : (
+                          <span className="line-clamp-2">{aiWarning || item.reviewReason}</span>
+                        )}
+                      </div>
                     )}
                   </div>
 

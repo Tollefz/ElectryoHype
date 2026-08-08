@@ -50,15 +50,19 @@ export function generateSEOMetadata({
           },
         ];
 
+  const resolvedTitle = /ElectroHypeX/i.test(title)
+    ? title
+    : `${title} | ElectroHypeX`;
+
   return {
-    title,
+    title: { absolute: resolvedTitle },
     description,
     keywords: keywords.length > 0 ? keywords : undefined,
     robots: noindex
       ? { index: false, follow: false }
       : { index: true, follow: true },
     openGraph: {
-      title,
+      title: resolvedTitle,
       description,
       url: fullUrl,
       siteName: SITE_CONFIG.siteName,
@@ -68,7 +72,7 @@ export function generateSEOMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: resolvedTitle,
       description,
       images: ogImages.length > 0 ? [ogImages[0].url] : undefined,
     },

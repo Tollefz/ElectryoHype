@@ -37,6 +37,45 @@ export default async function AdminCustomers({
       )
     : [];
 
+  // Guest / orphan paid orders (no Customer row) — still searchable by email on Order
+  const orphanOrders =
+    q && customers.length === 0
+      ? await safeQuery(
+          () =>
+            prisma.order.findMany({
+              where: {
+                customerId: null,
+                customerEmail: { contains: q, mode: "insensitive" },
+              },
+              orderBy: { createdAt: "desc" },
+              take: 25,
+            }),
+          [],
+          "customers:orphan-orders"
+        )
+      : [];
+
+  // Group orphans by email for card display
+  const orphanByEmail = new Map<
+    string,
+    { email: string; name: string | null; orders: typeof orphanOrders }
+  >();
+  for (const o of orphanOrders) {
+    const email = (o.customerEmail || "").toLowerCase();
+    if (!email) continue;
+    const addr = o.shippingAddress as { name?: string; fullName?: string } | null;
+    const name = addr?.name || addr?.fullName || null;
+    const existing = orphanByEmail.get(email);
+    if (existing) existing.orders.push(o);
+    else
+      orphanByEmail.set(email, {
+        email: o.customerEmail || email,
+        name,
+        orders: [o],
+      });
+  }
+  const orphanCards = [...orphanByEmail.values()];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -74,7 +113,7 @@ export default async function AdminCustomers({
         </div>
       )}
 
-      {q && customers.length === 0 && (
+      {q && customers.length === 0 && orphanCards.length === 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
           <h2 className="text-base font-semibold text-slate-900">Ingen treff</h2>
           <p className="mt-1 text-sm text-slate-600">
@@ -88,6 +127,13 @@ export default async function AdminCustomers({
             .
           </p>
         </div>
+      )}
+
+      {q && customers.length === 0 && orphanCards.length > 0 && (
+        <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
+          Fant betalte ordrer uten kundekort (gjestekasse). Viser ordrer knyttet til
+          e-posten.
+        </p>
       )}
 
       <div className="space-y-4">
@@ -104,6 +150,63 @@ export default async function AdminCustomers({
                 </div>
                 <div className="text-xs text-gray-500">
                   {c.orders.length} siste ordrer · {paid} betalt · {refunded} refundert
+                </div>
+              </div>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left text-xs uppercase text-gray-500">
+                    <th className="py-2">Ordre</th>
+                    <th className="py-2">Betaling</th>
+                    <th className="py-2">Oppfyllelse</th>
+                    <th className="py-2 text-right">Total</th>
+                    <th className="py-2">Dato</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {c.orders.map((o) => (
+                    <tr key={o.id} className="border-b border-gray-100">
+                      <td className="py-2">
+                        <Link
+                          href={`/admin/orders/${o.id}`}
+                          className="font-medium text-green-600 hover:underline"
+                        >
+                          {o.orderNumber}
+                        </Link>
+                      </td>
+                      <td className="py-2">{o.paymentStatus}</td>
+                      <td className="py-2">{o.fulfillmentStatus}</td>
+                      <td className="py-2 text-right">{formatCurrency(o.total)}</td>
+                      <td className="py-2 text-xs text-gray-500">
+                        {new Date(o.createdAt).toLocaleDateString("no-NO")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+
+        {orphanCards.map((c) => {
+          const paid = c.orders.filter((o) => o.paymentStatus === "paid").length;
+          const refunded = c.orders.filter((o) => o.paymentStatus === "refunded").length;
+          return (
+            <div
+              key={`orphan-${c.email}`}
+              className="rounded-lg border border-amber-200 bg-white p-4 shadow-sm sm:p-5"
+            >
+              <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    {c.name || "Gjestekunde"}
+                  </h2>
+                  <p className="text-sm text-gray-600">{c.email}</p>
+                  <p className="mt-0.5 text-xs text-amber-800">
+                    Ingen kundekort — ordrer knyttet via e-post
+                  </p>
+                </div>
+                <div className="text-xs text-gray-500">
+                  {c.orders.length} ordrer · {paid} betalt · {refunded} refundert
                 </div>
               </div>
               <table className="w-full text-sm">

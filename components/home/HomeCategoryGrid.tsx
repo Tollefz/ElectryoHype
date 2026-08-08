@@ -11,7 +11,6 @@ import {
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
-import { shouldUnoptimizeRemoteImage } from "@/lib/utils/supplier-image";
 
 export type HomeCategoryCard = {
   name: string;
@@ -82,7 +81,7 @@ export default function HomeCategoryGrid({ categories }: HomeCategoryGridProps) 
                         fill
                         sizes="(max-width: 768px) 45vw, 18vw"
                         className="object-contain p-2 transition-transform duration-300 group-hover:scale-[1.06] sm:p-2.5"
-                        unoptimized={shouldUnoptimizeRemoteImage(cat.imageUrl)}
+                        quality={70}
                       />
                     ) : (
                       <Icon

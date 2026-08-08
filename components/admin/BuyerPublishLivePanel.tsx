@@ -71,11 +71,37 @@ export function BuyerPublishLivePanel({
   const remainingDisplay = Math.max(0, job.remaining - (job.inProgress || 0));
 
   if (done) {
+    const published = job.published || 0;
+    const failed = job.failed || 0;
+    const success = published > 0;
+    const headline = success
+      ? "✅ Publisering fullført"
+      : failed > 0
+        ? "⚠ Publisering avsluttet med feil"
+        : "Ingen produkter publisert";
+    const why =
+      published > 0
+        ? null
+        : failed > 0
+          ? "Jobben kjørte ferdig, men ingen produkter ble publisert — se feil nedenfor."
+          : "Jobben kjørte ferdig uten publisering (alle ble hoppet over, eller køen var tom).";
+
     return (
-      <section className="rounded-2xl border border-emerald-300 bg-gradient-to-b from-emerald-50 to-white p-6 shadow-sm">
-        <p className="text-lg font-semibold text-emerald-950">
-          ✅ Publisering fullført
+      <section
+        className={`rounded-2xl border p-6 shadow-sm ${
+          success
+            ? "border-emerald-300 bg-gradient-to-b from-emerald-50 to-white"
+            : "border-amber-300 bg-gradient-to-b from-amber-50 to-white"
+        }`}
+      >
+        <p
+          className={`text-lg font-semibold ${
+            success ? "text-emerald-950" : "text-amber-950"
+          }`}
+        >
+          {headline}
         </p>
+        {why ? <p className="mt-2 text-sm text-amber-900/90">{why}</p> : null}
         <p className="mt-1 font-mono text-xs text-slate-500">JobId: {job.id}</p>
         <ul className="mt-5 space-y-1.5 text-sm text-slate-800 sm:text-base">
           <li>
@@ -87,7 +113,7 @@ export function BuyerPublishLivePanel({
           <li>
             <span className="text-emerald-700">✓</span>{" "}
             <span className="font-semibold tabular-nums">
-              {job.published.toLocaleString("no-NO")}
+              {published.toLocaleString("no-NO")}
             </span>{" "}
             publisert
           </li>
@@ -101,7 +127,7 @@ export function BuyerPublishLivePanel({
           <li>
             <span className="text-amber-700">⚠</span>{" "}
             <span className="font-semibold tabular-nums">
-              {job.failed.toLocaleString("no-NO")}
+              {failed.toLocaleString("no-NO")}
             </span>{" "}
             feilet
           </li>

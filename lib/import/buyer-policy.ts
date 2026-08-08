@@ -58,70 +58,10 @@ export const FOCUS_CATEGORIES = [
   "Hjem & Fritid",
 ] as const;
 
-/**
- * Absolute reject rules – these always REJECTED (owner cannot override via importer).
- * Clothing, adult, counterfeit/trademark, medicines, supplements, child safety.
- */
-const ABSOLUTE_REJECT_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
-  {
-    pattern:
-      /\b(klær|clothing|hoodie|hettegenser|t[- ]?shirt|tyskjorte|bukse|jeans|kjole|skirt|jakke|jacket|genser|sweater|sokker|socks|undertøy|underwear)\b/i,
-    label: "Klær",
-  },
-  {
-    pattern: /\b(adult|sex\b|erotisk|lingerie)\b/i,
-    label: "Voksenprodukter",
-  },
-  {
-    pattern: /\b(replica|1:1|aaa quality|kopi av|counterfeit|fake brand|knockoff)\b/i,
-    label: "Falske/kopiprodukter",
-  },
-  {
-    pattern: /\b(medisin|medicine|prescription|legemiddel)\b/i,
-    label: "Medisin",
-  },
-  {
-    pattern: /\b(supplement|kosttilskudd|protein powder|dietary supplement)\b/i,
-    label: "Kosttilskudd",
-  },
-  {
-    pattern:
-      /\b(barnevogn|barnesete|child safety|bilbarnestol|car seat|pacifier|smokk|baby monitor safety)\b/i,
-    label: "Sikkerhetskritiske barneprodukter",
-  },
-  // Trademark / branded IP risk (unofficial merch)
-  {
-    pattern:
-      /\b(disney|marvel|pokemon|pokémon|hello kitty|lego|nintendo|star wars|harry potter|barbie|nike|adidas|gucci|louis vuitton|chanel|rolex|supreme)\b/i,
-    label: "Varemerke/opphavsrett",
-  },
-];
-
-/**
- * Soft off-assortment signals – push to REVIEW, never hard-reject alone.
- */
-const REVIEW_CATEGORY_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
-  { pattern: /\b(sko|shoes|sneakers|støvler|boots|sandals)\b/i, label: "Sko" },
-  {
-    pattern: /\b(smykke|jewelry|jewellery|necklace|bracelet|ørering|earring|anheng|armbånd|wedding ring|forlovelsesring)\b/i,
-    label: "Smykker",
-  },
-  { pattern: /\b(klokke|wristwatch|smartklokke|smartwatch)\b/i, label: "Klokker" },
-  {
-    pattern: /\b(kosmetikk|cosmetics|makeup|lipstick|mascara|serum|ansiktskrem|skincare)\b/i,
-    label: "Kosmetikk",
-  },
-  { pattern: /\b(godteri|candy|snack food|coffee beans)\b/i, label: "Mat" },
-  { pattern: /\b(leketøy|toys?\b|dukke|doll|bamse|plush)\b/i, label: "Leker" },
-  {
-    pattern: /\b(julepynt|christmas ornament|halloween|påskeegg|party decoration|ballong|balloon)\b/i,
-    label: "Sesongpynt",
-  },
-  {
-    pattern: /\b(dekorasjon|decorative wall|poster frame only|vase\b|figurine)\b/i,
-    label: "Dekor uten praktisk verdi",
-  },
-];
+import {
+  detectStoreDnaAbsoluteReject,
+  detectStoreDnaReviewCategory,
+} from "@/lib/buyer/store-dna-policy";
 
 /** Positive signals that this is on-brand electronics / tech accessories. */
 const FOCUS_PATTERNS: RegExp[] = [
@@ -169,24 +109,14 @@ export interface BuyerFitResult {
   categoryFitScore: number;
 }
 
-function matchFirstLabel(
-  text: string,
-  patterns: Array<{ pattern: RegExp; label: string }>
-): string | null {
-  for (const entry of patterns) {
-    if (entry.pattern.test(text)) return entry.label;
-  }
-  return null;
-}
-
-/** Absolute store-rule violation (always REJECTED). */
+/** Absolute store-rule violation (always REJECTED). Source: store-dna-policy.ts */
 export function detectAbsoluteReject(text: string): string | null {
-  return matchFirstLabel(text.trim(), ABSOLUTE_REJECT_PATTERNS);
+  return detectStoreDnaAbsoluteReject(text);
 }
 
-/** Soft off-assortment signal (REVIEW, not hard reject). */
+/** Soft off-assortment signal (REVIEW, not hard reject). Source: store-dna-policy.ts */
 export function detectReviewCategory(text: string): string | null {
-  return matchFirstLabel(text.trim(), REVIEW_CATEGORY_PATTERNS);
+  return detectStoreDnaReviewCategory(text);
 }
 
 /**

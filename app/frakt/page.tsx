@@ -1,6 +1,14 @@
 import Link from 'next/link';
 import { Truck, Package, Clock, MapPin, CheckCircle } from 'lucide-react';
 import { SITE_CONFIG } from '@/lib/site';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: { absolute: 'Frakt & levering | ElectroHypeX' },
+  description:
+    'Frakt og levering hos ElectroHypeX — fri frakt over 500 kr, levering 5–12 virkedager i hele Norge.',
+  alternates: { canonical: `${SITE_CONFIG.siteUrl}/frakt` },
+};
 
 export default function FraktPage() {
   return (

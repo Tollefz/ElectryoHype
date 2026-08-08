@@ -27,9 +27,9 @@ export function isSupplierCdnUrl(url: string | null | undefined): boolean {
   }
 }
 
-/** Use unoptimized for supplier CDNs that often block / break Next image optimizer. */
+/** Prefer Next Image optimizer; CJ/Temu CDNs work via remotePatterns in next.config. */
 export function shouldUnoptimizeRemoteImage(
-  url: string | null | undefined
+  _url: string | null | undefined
 ): boolean {
-  return isSupplierCdnUrl(url);
+  return false;
 }

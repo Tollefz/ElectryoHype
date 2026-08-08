@@ -12,6 +12,7 @@ import {
 } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { processImportQueueItem } from "@/lib/suppliers/import-queue";
+import { formatImportErrorForStorage } from "@/lib/ops/import-failure-reasons";
 import { logError, logWarning } from "@/lib/utils/logger";
 import { randomUUID } from "crypto";
 
@@ -400,7 +401,10 @@ async function finalizeSuccess(jobId: string, result: unknown) {
 }
 
 async function finalizeFailure(job: SupplierJob, error: unknown) {
-  const message = error instanceof Error ? error.message : "Job failed";
+  const message =
+    error instanceof Error && error.message === "Job cancelled"
+      ? "Job cancelled"
+      : formatImportErrorForStorage(error);
   const attempts = job.attempts + 1;
   const dead = attempts >= job.maxAttempts || message === "Job cancelled";
 

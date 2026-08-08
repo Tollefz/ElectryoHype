@@ -632,15 +632,6 @@ export default function CheckoutPage() {
 
         <aside className="lg:sticky lg:top-24 space-y-4 rounded-xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm h-fit">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Ordresammendrag</h2>
-          <div className="rounded-lg border bg-gray-50 p-3 text-sm space-y-2">
-            <label className="block text-sm font-medium text-slate-800">Rabattkode</label>
-            <input
-              value={discountCode}
-              onChange={(e) => setDiscountCode(e.target.value)}
-              placeholder="Rabattkode (valgfritt)"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-            />
-          </div>
           <div className="space-y-4">
             {items.map((item) => (
               <div key={item.productId} className="flex items-center justify-between text-sm">
@@ -654,7 +645,7 @@ export default function CheckoutPage() {
           </div>
           <div className="space-y-2 border-t pt-4 text-sm text-secondary">
             <div className="flex justify-between">
-              <span>Subtotal</span>
+              <span>Delsum</span>
               <span>{formatCurrency(total)}</span>
             </div>
             <div className="flex justify-between">
@@ -678,7 +669,7 @@ export default function CheckoutPage() {
               </p>
             )}
             <div className="flex justify-between border-t pt-2 text-lg font-semibold text-slate-900">
-              <span>Total</span>
+              <span>Totalt</span>
               <span>{formatCurrency(grandTotal)}</span>
             </div>
             <p className="text-xs text-secondary">Alle priser er inkl. 25% mva</p>

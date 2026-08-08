@@ -8,7 +8,6 @@ import { SortDropdown } from "@/components/products/SortDropdown";
 import { MobileFilterButton } from "@/components/products/MobileFilterButton";
 import { Pagination } from "@/components/products/Pagination";
 import { DEFAULT_STORE_ID } from "@/lib/store";
-import { getStoreIdFromHeadersServer } from "@/lib/store-server";
 import { getCategoryBySlug, getAllCategorySlugs } from "@/lib/categories";
 import { ListingAnalytics } from "@/components/analytics/ListingAnalytics";
 import { generateSEOMetadata } from "@/lib/seo";
@@ -64,8 +63,8 @@ const PAGE_SIZE = 12;
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await resolveSearchParams(searchParams);
-  const headerStoreId = await getStoreIdFromHeadersServer();
-  const storeId = headerStoreId || DEFAULT_STORE_ID;
+  // Single-store: avoid headers() so listing isn't forced fully dynamic beyond searchParams.
+  const storeId = DEFAULT_STORE_ID;
   const page = Math.max(1, Number(params.page ?? "1"));
   const categorySlug = params.category ?? undefined;
   const categoryDef = getCategoryBySlug(categorySlug);
@@ -135,6 +134,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     images: string;
     category: string | null;
     isActive: boolean;
+    metaTitle: string | null;
   }> = [];
   let total = 0;
   let loadError: string | null = null;
@@ -164,6 +164,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           images: true,
           category: true,
           isActive: true,
+          metaTitle: true,
         },
       }),
       prisma.product.count({ where }),
@@ -200,6 +201,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               images: true,
               category: true,
               isActive: true,
+              metaTitle: true,
             },
           }),
           prisma.product.count({ where: fallbackWhere }),

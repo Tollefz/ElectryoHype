@@ -69,6 +69,8 @@ export async function getMarketingDashboard(
     roll.pageViews === 0 &&
     roll.viewItem === 0 &&
     roll.addToCart === 0 &&
+    roll.beginCheckout === 0 &&
+    roll.sessions === 0 &&
     roll.purchases === 0;
 
   return {

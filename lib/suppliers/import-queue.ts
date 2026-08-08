@@ -34,6 +34,7 @@ import {
   snapshotFieldsForVersioning,
 } from "@/lib/suppliers/versioning";
 import { categorizeForSave } from "@/lib/categories/apply-on-save";
+import { formatImportErrorForStorage } from "@/lib/ops/import-failure-reasons";
 
 async function uniqueSlug(base: string): Promise<string> {
   const root =
@@ -427,7 +428,10 @@ export async function processImportQueueItem(itemId: string) {
     };
   } catch (error: unknown) {
     logError(error, `[import-pipeline:${itemId}]`);
-    const message = sanitizeImportError(error);
+    const message = formatImportErrorForStorage(error, {
+      title: item.title,
+      supplierProductId: item.supplierProductId,
+    });
     await prisma.importQueueItem.update({
       where: { id: itemId },
       data: {
@@ -438,32 +442,6 @@ export async function processImportQueueItem(itemId: string) {
     });
     throw error;
   }
-}
-
-function sanitizeImportError(error: unknown): string {
-  const raw = error instanceof Error ? error.message : String(error || "Pipeline feilet");
-  const lower = raw.toLowerCase();
-
-  if (lower.includes("p2002") || lower.includes("unique constraint")) {
-    if (lower.includes("slug")) return "Produktet finnes allerede (slug)";
-    if (lower.includes("supplierproductid") || lower.includes("supplier_product")) {
-      return "Produktet finnes allerede hos leverandør";
-    }
-    return "Produktet finnes allerede";
-  }
-  if (lower.includes("unknown argument")) {
-    return "Database-lagring feilet (ugyldig felt)";
-  }
-  if (lower.includes("timeout") || lower.includes("etimedout")) {
-    return "API timeout";
-  }
-  // Strip huge Prisma dumps — keep first meaningful line
-  const firstLine = raw
-    .split("\n")
-    .map((l) => l.trim())
-    .find((l) => l && !l.startsWith("Invalid `") && !l.startsWith("{"));
-  if (firstLine && firstLine.length < 200) return firstLine;
-  return raw.replace(/\s+/g, " ").slice(0, 240);
 }
 
 export async function processQueuedImports(limit = 10) {

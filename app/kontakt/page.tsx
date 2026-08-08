@@ -1,6 +1,14 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { SITE_CONFIG } from '@/lib/site';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: { absolute: 'Kontakt oss | ElectroHypeX' },
+  description:
+    'Kontakt ElectroHypeX — telefon, e-post og åpningstider. Vi hjelper med ordre, levering og retur.',
+  alternates: { canonical: `${SITE_CONFIG.siteUrl}/kontakt` },
+};
 
 export default function KontaktPage() {
   return (

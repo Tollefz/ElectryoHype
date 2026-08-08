@@ -5,11 +5,10 @@ import Link from "next/link";
 import { ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
-import { cleanProductName } from "@/lib/utils/url-decode";
+import { storefrontProductTitle } from "@/lib/storefront/product-title";
 import { getCategoryByDbValue } from "@/lib/categories";
 import { getAvailability } from "@/lib/products/availability";
 import toast from "react-hot-toast";
-import { shouldUnoptimizeRemoteImage } from "@/lib/utils/supplier-image";
 import { SITE_CONFIG } from "@/lib/site";
 
 interface ProductCardProduct {
@@ -25,6 +24,7 @@ interface ProductCardProduct {
   variants?: Array<{ stock?: number | null }>;
   isActive?: boolean | null;
   isNew?: boolean | null;
+  metaTitle?: string | null;
 }
 
 interface ProductCardProps {
@@ -46,6 +46,7 @@ function displaySocialProof(id: string): { rating: number; reviews: number } {
 
 function ProductCard({ product, showRating = false }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [loadHoverImage, setLoadHoverImage] = useState(false);
   const [imageError, setImageError] = useState(false);
   const { addToCart } = useCart();
   const social = displaySocialProof(product.id);
@@ -80,14 +81,14 @@ function ProductCard({ product, showRating = false }: ProductCardProps) {
   };
 
   const validImages = images.filter((img) => isValidUrl(img));
-  const fallbackImage =
-    "https://placehold.co/400x400/f3f5f7/94a3b8?text=Produkt";
   const mainImage =
-    imageUrl && isValidUrl(imageUrl)
-      ? imageUrl
-      : validImages[0] || fallbackImage;
+    imageUrl && isValidUrl(imageUrl) ? imageUrl : validImages[0] || "";
   const hoverImage = validImages[1] || mainImage;
-  const cleanedName = cleanProductName(product.name);
+  const cleanedName = storefrontProductTitle({
+    name: product.name,
+    metaTitle: product.metaTitle,
+  });
+  const showImageMissing = !mainImage || imageError;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -147,7 +148,10 @@ function ProductCard({ product, showRating = false }: ProductCardProps) {
     <Link
       href={`/products/${product.slug}`}
       className="group block h-full"
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setLoadHoverImage(true);
+      }}
       onMouseLeave={() => setIsHovered(false)}
     >
       <article className="ehx-card-lift relative flex h-full flex-col overflow-hidden rounded-[1rem] border border-[var(--border)] bg-white shadow-[var(--ehx-shadow-sm)]">
@@ -170,42 +174,55 @@ function ProductCard({ product, showRating = false }: ProductCardProps) {
           className="relative aspect-square overflow-hidden"
           style={{ background: "var(--ehx-image-bg)" }}
         >
-          <div
-            className={`absolute inset-0 transition-opacity duration-300 ${
-              isHovered && hoverImage !== mainImage ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            <Image
-              src={imageError ? fallbackImage : mainImage}
-              alt={cleanedName}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 22vw"
-              className="object-contain p-2.5 transition-transform duration-300 group-hover:scale-[1.03] sm:p-3"
-              loading="lazy"
-              unoptimized={shouldUnoptimizeRemoteImage(
-                imageError ? fallbackImage : mainImage
-              )}
-              onError={() => setImageError(true)}
-            />
-          </div>
-          {hoverImage !== mainImage ? (
-            <div
-              className={`absolute inset-0 transition-opacity duration-300 ${
-                isHovered ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <Image
-                src={hoverImage}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 22vw"
-                className="object-contain p-2.5 sm:p-3"
-                loading="lazy"
-                unoptimized={shouldUnoptimizeRemoteImage(hoverImage)}
-                onError={() => setIsHovered(false)}
-              />
+          {showImageMissing ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-4 text-center">
+              <span className="text-xs font-semibold text-[var(--text-muted)]">
+                Bilde mangler
+              </span>
+              <span className="text-[10px] text-[var(--text-muted)]">
+                Produktet er fortsatt tilgjengelig
+              </span>
             </div>
-          ) : null}
+          ) : (
+            <>
+              <div
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                  isHovered && hoverImage !== mainImage
+                    ? "opacity-0"
+                    : "opacity-100"
+                }`}
+              >
+                <Image
+                  src={mainImage}
+                  alt={cleanedName}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 22vw"
+                  className="object-contain p-2.5 transition-transform duration-300 group-hover:scale-[1.03] sm:p-3"
+                  loading="lazy"
+                  quality={70}
+                  onError={() => setImageError(true)}
+                />
+              </div>
+              {hoverImage !== mainImage && loadHoverImage ? (
+                <div
+                  className={`absolute inset-0 transition-opacity duration-300 ${
+                    isHovered ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <Image
+                    src={hoverImage}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 22vw"
+                    className="object-contain p-2.5 sm:p-3"
+                    loading="lazy"
+                    quality={70}
+                    onError={() => setIsHovered(false)}
+                  />
+                </div>
+              ) : null}
+            </>
+          )}
         </div>
 
         <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5 sm:px-3.5 sm:pb-3.5 sm:pt-3">

@@ -913,8 +913,13 @@ export async function tickBuyerPublishJob(opts?: {
     job.nextBatchProductName = null;
     job.events = pushEvent(job.events, {
       at: job.finishedAt,
-      level: "ok",
-      message: `Publisering fullført — ${job.published} publisert, ${job.skipped} hoppet over, ${job.failed} feilet`,
+      level: job.published > 0 ? "ok" : "warn",
+      message:
+        job.published > 0
+          ? `Publisering fullført — ${job.published} publisert, ${job.skipped} hoppet over, ${job.failed} feilet`
+          : job.failed > 0
+            ? `Publisering avsluttet uten publisering — 0 publisert, ${job.skipped} hoppet over, ${job.failed} feilet`
+            : `Ingen produkter publisert — 0 publisert, ${job.skipped} hoppet over (kø tom eller alle hoppet over)`,
     });
     await saveJob(job);
     logPublishComplete(job);
@@ -1038,8 +1043,13 @@ export async function tickBuyerPublishJob(opts?: {
       job.nextBatchProductName = null;
       job.events = pushEvent(job.events, {
         at: job.finishedAt,
-        level: "ok",
-        message: `Publisering fullført — ${job.published} publisert, ${job.skipped} hoppet over, ${job.failed} feilet`,
+        level: job.published > 0 ? "ok" : "warn",
+        message:
+          job.published > 0
+            ? `Publisering fullført — ${job.published} publisert, ${job.skipped} hoppet over, ${job.failed} feilet`
+            : job.failed > 0
+              ? `Publisering avsluttet uten publisering — 0 publisert, ${job.skipped} hoppet over, ${job.failed} feilet`
+              : `Ingen produkter publisert — 0 publisert, ${job.skipped} hoppet over (kø tom eller alle hoppet over)`,
       });
       logPublishComplete(job);
     }

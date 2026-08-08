@@ -104,12 +104,10 @@ const baseSelect = {
   qualityScore: true,
   profitMargin: true,
   createdAt: true,
-  description: true,
+  // Keep short text only — full description blobs dominate home query cost/TTFB.
   shortDescription: true,
   metaTitle: true,
-  metaDescription: true,
   aiCategorySuggested: true,
-  aiCategoryReason: true,
   _count: { select: { orderItems: true } },
 } satisfies Prisma.ProductSelect;
 
@@ -126,12 +124,9 @@ type RawRow = {
   qualityScore: number | null;
   profitMargin: string | null;
   createdAt: Date;
-  description: string | null;
   shortDescription: string | null;
   metaTitle: string | null;
-  metaDescription: string | null;
   aiCategorySuggested: string | null;
-  aiCategoryReason: string | null;
   _count: { orderItems: number };
 };
 
@@ -147,12 +142,12 @@ function toCuratable(p: RawRow): CuratableProduct {
     subcategory: p.subcategory,
     tags: p.tags,
     qualityScore: p.qualityScore,
-    description: p.description,
+    description: null,
     shortDescription: p.shortDescription,
     metaTitle: p.metaTitle,
-    metaDescription: p.metaDescription,
+    metaDescription: null,
     aiCategorySuggested: p.aiCategorySuggested,
-    aiCategoryReason: p.aiCategoryReason,
+    aiCategoryReason: null,
   };
 }
 

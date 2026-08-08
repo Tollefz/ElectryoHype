@@ -96,18 +96,19 @@ export default function AdminProducts() {
     setSelectMode(null);
   }, [debouncedSearch, categoryFilter, supplierFilter, statusFilter, quickFilter, pageSize]);
 
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (pageOverride?: number) => {
     const seq = ++fetchSeq.current;
     setLoading(true);
     setFetchError(null);
     const ac = new AbortController();
     const timer = setTimeout(() => ac.abort(), 10_000);
+    const pageToUse = pageOverride ?? page;
     try {
       if (typeof navigator !== "undefined" && navigator.onLine === false) {
         throw Object.assign(new Error("offline"), { status: 0 });
       }
       const params = new URLSearchParams();
-      params.set("page", String(page));
+      params.set("page", String(pageToUse));
       params.set("limit", String(pageSize));
       if (debouncedSearch) params.set("search", debouncedSearch);
       if (categoryFilter !== "all") params.set("category", categoryFilter);
@@ -181,9 +182,17 @@ export default function AdminProducts() {
     quickFilter,
   ]);
 
+  // Filters change → always fetch page 1 (avoid race with stale high page)
+  useEffect(() => {
+    void fetchProducts(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- filter-driven page-1 fetch
+  }, [debouncedSearch, categoryFilter, supplierFilter, statusFilter, quickFilter, pageSize]);
+
+  // Pagination only
   useEffect(() => {
     void fetchProducts();
-  }, [fetchProducts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- page clicks only
+  }, [page]);
 
   const selectedCount = selectedIds.size;
 

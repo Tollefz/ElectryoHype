@@ -144,7 +144,7 @@ export async function getMarketingWorkerStatus(): Promise<MarketingWorkerDeskSta
   if (state.lastTickAt && tickAgeMs < HEARTBEAT_STALE_MS) {
     status = state.lastBatch?.didWork ? "running" : "idle";
   } else if (state.lastTickAt) {
-    status = "idle";
+    status = "stopped";
   }
 
   return {

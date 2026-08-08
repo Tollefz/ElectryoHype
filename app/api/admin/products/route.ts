@@ -139,11 +139,12 @@ export async function GET(req: Request) {
         OR: [{ images: "[]" }, { images: "" }],
       });
     } else if (filter === "low_margin") {
-      // Selling price not enough above supplier cost (margin < 30% of price)
+      // supplierPrice > 65% of price ≈ margin < 35%
       and.push({
         AND: [
           { supplierPrice: { not: null } },
           { supplierPrice: { gt: 0 } },
+          { price: { gt: 0 } },
         ],
       });
     } else if (filter === "needs_review" || filter === "low_score") {
@@ -399,25 +400,134 @@ export async function GET(req: Request) {
       };
     });
 
-    // NOTE: Do not re-filter `formattedProducts` after pagination — that breaks page totals.
-    // Quick filters are applied in the Prisma `where` clause above.
-    // low_margin / wrong_category need computed fields — filter within the current page for ops triage.
-    let data = formattedProducts;
-    if (filter === "low_margin") {
-      data = formattedProducts.filter((p) => p.marginPct != null && p.marginPct < 35);
-    } else if (filter === "wrong_category") {
-      data = formattedProducts.filter((p) => {
-        if (p.flags?.missingCategory) return true;
-        if (
-          p.aiCategory?.status === "pending" &&
-          p.aiCategory.suggested &&
-          p.category &&
-          p.aiCategory.suggested !== p.category
-        ) {
-          return true;
-        }
-        return false;
+    // Flag English leftover supplier titles + honest computed filters
+    const { looksLikeEnglishTitle } = await import("@/lib/import/norwegian-title");
+
+    let data = formattedProducts.map((p) => ({
+      ...p,
+      flags: {
+        ...p.flags,
+        needsNorwegianTitle: looksLikeEnglishTitle(p.name),
+      },
+    }));
+    let paginationTotal = total;
+    let paginationPages = Math.max(1, Math.ceil(total / limit));
+
+    if (filter === "low_margin" || filter === "wrong_category") {
+      const poolTake = Math.min(800, Math.max(limit * 25, 250));
+      const pool = (await prisma.product
+        .findMany({
+          where,
+          orderBy: { createdAt: "desc" },
+          take: poolTake,
+          select: {
+            ...productListSelectBase,
+            aiCategorySuggested: true,
+            aiCategoryConfidence: true,
+            aiCategoryReason: true,
+            aiCategoryStatus: true,
+          },
+        })
+        .catch(async () =>
+          prisma.product.findMany({
+            where,
+            orderBy: { createdAt: "desc" },
+            take: poolTake,
+            select: { ...productListSelectBase },
+          })
+        )) as typeof products;
+
+      const poolFormatted = pool.map((product) => {
+        const tags = parseTags(product.tags);
+        const archived = hasArchivedTag(tags);
+        const missingCategory = !isValidStoreCategory(product.category);
+        const noSeo = !product.metaTitle?.trim() || !product.metaDescription?.trim();
+        const thinDescription =
+          !product.description?.trim() ||
+          product.description.trim().length < 40 ||
+          /del av vårt utvalg/i.test(product.description || "");
+        const needsReview =
+          missingCategory ||
+          noSeo ||
+          thinDescription ||
+          /^temu produkt$/i.test(product.name.trim());
+        return {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          price: Number(product.price),
+          compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+          supplierPrice: product.supplierPrice != null ? Number(product.supplierPrice) : null,
+          margin:
+            product.supplierPrice != null && Number(product.supplierPrice) > 0
+              ? Number(product.price) - Number(product.supplierPrice)
+              : null,
+          marginPct:
+            product.supplierPrice != null &&
+            Number(product.supplierPrice) > 0 &&
+            Number(product.price) > 0
+              ? ((Number(product.price) - Number(product.supplierPrice)) /
+                  Number(product.price)) *
+                100
+              : null,
+          category: product.category,
+          isActive: product.isActive,
+          images: product.images,
+          supplierUrl: product.supplierUrl,
+          supplierName: product.supplierName,
+          supplierProductId: product.supplierProductId,
+          temuGoodsId:
+            product.supplierProductId || extractTemuGoodsId(product.supplierUrl),
+          sku: product.sku,
+          stock: product.stock,
+          metaTitle: product.metaTitle,
+          metaDescription: product.metaDescription,
+          tags,
+          createdAt: product.createdAt,
+          flags: {
+            missingCategory,
+            noSeo,
+            needsReview,
+            lowScore: needsReview && (missingCategory || noSeo),
+            archived,
+            importedToday: product.createdAt >= startOfToday(),
+            aiPending: product.aiCategoryStatus === "pending",
+            aiNeedsReview: product.aiCategoryStatus === "needs_review",
+            needsNorwegianTitle: looksLikeEnglishTitle(product.name),
+          },
+          categorySuggestion: null as null,
+          aiCategory: product.aiCategorySuggested
+            ? {
+                suggested: product.aiCategorySuggested,
+                confidence: product.aiCategoryConfidence,
+                reason: product.aiCategoryReason,
+                status: product.aiCategoryStatus,
+              }
+            : null,
+        };
       });
+
+      const filtered =
+        filter === "low_margin"
+          ? poolFormatted.filter((p) => p.marginPct != null && p.marginPct < 35)
+          : poolFormatted.filter((p) => {
+              if (p.flags.missingCategory) return true;
+              if (
+                p.aiCategory?.status === "pending" &&
+                p.aiCategory.suggested &&
+                p.category &&
+                p.aiCategory.suggested !== p.category
+              ) {
+                return true;
+              }
+              return false;
+            });
+
+      paginationTotal = filtered.length;
+      paginationPages = Math.max(1, Math.ceil(paginationTotal / limit) || 1);
+      const safePage = Math.min(Math.max(1, page), paginationPages);
+      const pageSkip = (safePage - 1) * limit;
+      data = filtered.slice(pageSkip, pageSkip + limit) as typeof data;
     }
 
     return NextResponse.json({
@@ -432,8 +542,8 @@ export async function GET(req: Request) {
       pagination: {
         page,
         limit,
-        total,
-        totalPages: Math.max(1, Math.ceil(total / limit)),
+        total: paginationTotal,
+        totalPages: paginationPages,
       },
     });
   } catch (error) {

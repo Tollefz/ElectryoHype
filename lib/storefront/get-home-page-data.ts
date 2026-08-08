@@ -3,6 +3,7 @@
  * Product sections are disjoint via home-product-distribution.
  */
 
+import { unstable_cache } from "next/cache";
 import { DEFAULT_STORE_ID } from "@/lib/store";
 import { getCategoriesWithCounts } from "@/lib/utils/product-count";
 import { isDatabaseConfigured, isDevelopment } from "@/lib/utils/database-check";
@@ -70,8 +71,9 @@ async function loadForStore(storeId: string): Promise<HomePageData> {
 
 /**
  * Single choke point for homepage DB I/O.
+ * Data cache (60s) so warm requests skip heavy Prisma distribution work.
  */
-export async function getHomePageData(
+async function getHomePageDataUncached(
   primaryStoreId: string
 ): Promise<Result<HomePageData>> {
   if (isDevelopment() && !isDatabaseConfigured()) {
@@ -111,4 +113,17 @@ export async function getHomePageData(
   }
 
   return primary;
+}
+
+export async function getHomePageData(
+  primaryStoreId: string
+): Promise<Result<HomePageData>> {
+  const storeId =
+    primaryStoreId !== "demo-store" ? primaryStoreId : DEFAULT_STORE_ID;
+
+  return unstable_cache(
+    () => getHomePageDataUncached(storeId),
+    ["home-page-data", storeId],
+    { revalidate: 60, tags: ["home", `home:${storeId}`] }
+  )();
 }

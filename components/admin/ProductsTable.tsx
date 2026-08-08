@@ -47,6 +47,7 @@ export interface AdminProductRow {
     importedToday: boolean;
     aiPending?: boolean;
     aiNeedsReview?: boolean;
+    needsNorwegianTitle?: boolean;
   };
   categorySuggestion?: {
     category: string;
@@ -432,6 +433,11 @@ export default function ProductsTable({
                             {product.name}
                           </span>
                           <div className="mt-0.5 flex flex-wrap gap-1">
+                            {flags?.needsNorwegianTitle && (
+                              <span className="inline-flex rounded px-1.5 py-0.5 text-[10px] font-medium bg-orange-100 text-orange-900">
+                                Trenger norsk tittel
+                              </span>
+                            )}
                             {flags?.missingCategory && (
                               <span className="inline-flex rounded px-1.5 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-800">
                                 Mangler kategori

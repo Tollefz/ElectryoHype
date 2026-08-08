@@ -39,6 +39,11 @@ export function DeskAiColleague({ brief }: Props) {
   const needsHelp = Array.isArray(b.needsHelp) ? b.needsHelp : [];
   const actions = Array.isArray(b.actions) ? b.actions : [];
 
+  const hasOpenWork =
+    actions.length > 0 ||
+    needsHelp.some((l) => !/ingen kritiske/i.test(l)) ||
+    found.some((l) => /feilet|trenger deg|venter på/i.test(l));
+
   return (
     <section className="relative overflow-hidden rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-sky-50 p-5 shadow-sm sm:p-8">
       <div
@@ -77,9 +82,13 @@ export function DeskAiColleague({ brief }: Props) {
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
             Det du må gjøre
           </p>
-          {actions.length === 0 ? (
+          {!hasOpenWork ? (
             <p className="rounded-xl bg-emerald-100/80 px-4 py-3 text-sm font-semibold text-emerald-900">
               Tomt skrivebord — du kan lukke laptopen.
+            </p>
+          ) : actions.length === 0 ? (
+            <p className="rounded-xl bg-amber-100/80 px-4 py-3 text-sm font-semibold text-amber-950">
+              Det er åpne saker over — start med den høyeste prioriteten.
             </p>
           ) : (
             <ul className="flex flex-col gap-2 sm:max-w-md">

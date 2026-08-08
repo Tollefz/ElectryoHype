@@ -52,7 +52,7 @@ export function CookieConsentBanner() {
     >
       <div className="mx-auto flex max-w-screen-xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-sm text-gray-700">
-          <p className="font-semibold text-gray-900">Cookies</p>
+          <p className="font-semibold text-gray-900">Informasjonskapsler</p>
           <p className="mt-1 text-gray-600">
             Nødvendige cookies brukes til innlogging (admin) og sikkerhet. Valgfrie cookies brukes til
             affiliate-sporing, statistikk og markedsføring (GA4 / GTM / Meta / TikTok / Clarity når

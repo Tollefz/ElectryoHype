@@ -124,9 +124,7 @@ async function bumpDailyStat(input: {
     data.purchases = { increment: 1 };
     data.revenue = { increment: input.value };
   }
-  if (input.event === "page_view" && input.sessionId) {
-    data.sessions = { increment: 1 };
-  }
+  // Sessions: unique count only via reaggregateDailyStats — never bump per page_view
 
   if (Object.keys(data).length === 0) return;
 
@@ -143,7 +141,7 @@ async function bumpDailyStat(input: {
       beginCheckout: input.event === "begin_checkout" ? 1 : 0,
       purchases: input.event === "purchase" ? 1 : 0,
       revenue: input.event === "purchase" ? input.value : 0,
-      sessions: input.event === "page_view" && input.sessionId ? 1 : 0,
+      sessions: 0,
     },
     update: data,
   });

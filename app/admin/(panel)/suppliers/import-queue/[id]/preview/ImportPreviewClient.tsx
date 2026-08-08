@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PipelineStepper } from "@/components/admin/supplier/PipelineStepper";
 import { ScoreBar, StatusBadge } from "@/components/admin/supplier/StatusBadge";
 import { SupplierEngineTabs } from "@/components/admin/supplier/SupplierEngineTabs";
+import { presentImportError } from "@/lib/ops/import-failure-reasons";
 
 type Completeness = {
   score?: number;
@@ -28,6 +29,7 @@ type Props = {
     supplierPrice: number | null;
     supplierCurrency: string | null;
     title?: string | null;
+    supplierProductId?: string | null;
     mappedDraft: unknown;
     enrichment: unknown;
     pricing: unknown;
@@ -107,7 +109,26 @@ export default function ImportPreviewClient({ item, product }: Props) {
           </span>
         ) : null}
         {item.error || item.reviewReason ? (
-          <span className="text-xs text-amber-800">{item.error || item.reviewReason}</span>
+          item.error ? (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-950">
+              {(() => {
+                const err = presentImportError(item.error, {
+                  title: item.title,
+                  supplierProductId: item.supplierProductId,
+                });
+                return (
+                  <>
+                    <p className="font-semibold">{err.title}</p>
+                    {err.productHint ? <p className="mt-0.5">Produkt: {err.productHint}</p> : null}
+                    <p className="mt-0.5">Årsak: {err.reason}</p>
+                    <p className="mt-0.5">Handling: {err.action}</p>
+                  </>
+                );
+              })()}
+            </div>
+          ) : (
+            <span className="text-xs text-amber-800">{item.reviewReason}</span>
+          )
         ) : null}
         <div className="ml-auto flex flex-wrap gap-2">
           {product ? (

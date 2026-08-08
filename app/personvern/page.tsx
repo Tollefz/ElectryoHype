@@ -1,6 +1,14 @@
 import Link from 'next/link';
 import { Shield, Lock, Eye, FileText } from 'lucide-react';
 import { SITE_CONFIG } from '@/lib/site';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: { absolute: 'Personvern | ElectroHypeX' },
+  description:
+    'Personvernerklæring for ElectroHypeX — hvordan vi behandler personopplysninger i henhold til norsk lov.',
+  alternates: { canonical: `${SITE_CONFIG.siteUrl}/personvern` },
+};
 
 export default function PersonvernPage() {
   return (

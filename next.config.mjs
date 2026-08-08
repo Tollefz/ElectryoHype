@@ -159,6 +159,17 @@ const nextConfig = {
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+
+  async redirects() {
+    return [
+      { source: "/about", destination: "/om-oss", permanent: true },
+      { source: "/contact", destination: "/kontakt", permanent: true },
+      { source: "/privacy", destination: "/personvern", permanent: true },
+      { source: "/shipping", destination: "/frakt", permanent: true },
+      { source: "/terms", destination: "/vilkar", permanent: true },
+      { source: "/search", destination: "/products", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

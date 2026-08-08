@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { CartProvider } from "@/lib/cart-context";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { StorefrontChrome } from "@/components/StorefrontChrome";
 import RefTracker from "./RefTracker";
 import { Toaster } from "react-hot-toast";
 import { SITE_CONFIG } from "@/lib/site";
@@ -19,6 +20,8 @@ const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  // Full variable 200–800 pulls a much larger file than the storefront uses.
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const siteUrl = SITE_CONFIG.siteUrl;
@@ -96,7 +99,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -116,26 +119,35 @@ export default function RootLayout({
           <AppOverlayGuard />
           <AppErrorBoundary>
             <CartProvider>
-              <div className="flex min-h-screen flex-col">
-                <Suspense
-                  fallback={
-                    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
-                      <div className="h-16 bg-gray-900"></div>
-                    </header>
-                  }
-                >
-                  <Header />
-                </Suspense>
-                <Suspense fallback={null}>
-                  <RefTracker />
-                </Suspense>
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <Suspense fallback={null}>
-                <ConsentAwareAnalytics />
-              </Suspense>
-              <CookieConsentBanner />
+              <StorefrontChrome
+                header={
+                  <>
+                    <Suspense
+                      fallback={
+                        <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+                          <div className="h-16 bg-gray-900"></div>
+                        </header>
+                      }
+                    >
+                      <Header />
+                    </Suspense>
+                    <Suspense fallback={null}>
+                      <RefTracker />
+                    </Suspense>
+                  </>
+                }
+                footer={<Footer />}
+                extras={
+                  <>
+                    <Suspense fallback={null}>
+                      <ConsentAwareAnalytics />
+                    </Suspense>
+                    <CookieConsentBanner />
+                  </>
+                }
+              >
+                {children}
+              </StorefrontChrome>
               <Toaster
                 position="top-right"
                 toastOptions={{
