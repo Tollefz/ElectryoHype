@@ -82,13 +82,13 @@ function MobileStickyBuy({
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--border)] bg-white/95 p-3 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--border)] bg-white p-3 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] lg:hidden">
       <div className="mx-auto flex max-w-lg items-center gap-3">
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs text-[var(--text-muted)]">
             {presentation.title}
           </p>
-          <p className="text-lg font-extrabold tabular-nums text-[var(--text)]">
+          <p className="text-lg font-bold tabular-nums text-[var(--text)]">
             {Math.floor(price).toLocaleString('no-NO')},-
           </p>
         </div>
@@ -171,7 +171,7 @@ export default function ProductStorefront({
           <div className="rounded-[1rem] border border-[var(--border)] bg-white p-5 shadow-[var(--ehx-shadow-sm)] sm:p-6 lg:p-7">
             <div className="mb-3 flex flex-wrap items-center gap-2">
               {p.hasDiscount ? (
-                <span className="rounded-md bg-[var(--danger)] px-2.5 py-1 text-xs font-extrabold text-white">
+                <span className="rounded-md bg-[var(--danger)] px-2.5 py-1 text-xs font-bold text-white">
                   SPAR {p.discountPercent}%
                 </span>
               ) : null}
@@ -186,7 +186,7 @@ export default function ProductStorefront({
               {p.category}
             </p>
 
-            <h1 className="mb-4 text-xl font-extrabold tracking-tight text-[var(--text)] sm:mb-5 sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
+            <h1 className="mb-4 text-xl font-bold tracking-tight text-[var(--text)] sm:mb-5 sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
               {p.title}
             </h1>
 

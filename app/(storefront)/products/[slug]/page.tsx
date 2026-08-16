@@ -185,12 +185,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         subcategory: true,
         tags: true,
         qualityScore: true,
-        description: true,
-        shortDescription: true,
         metaTitle: true,
-        metaDescription: true,
-        aiCategorySuggested: true,
-        aiCategoryReason: true,
       } as const;
 
       const sameCategory = product.category

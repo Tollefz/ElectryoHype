@@ -1,12 +1,6 @@
-"use client";
-
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import {
-  TrackPromotionView,
-} from "@/components/analytics/TrackEvents";
-import { trackEcommerce } from "@/lib/analytics/ecommerce";
+import { HomeSectionPromoLink } from "@/components/home/HomeSectionPromoLink";
+import { TrackPromotionView } from "@/components/analytics/TrackEvents";
 
 type Product = {
   id: string;
@@ -35,8 +29,13 @@ interface HomeProductSectionProps {
   /** Use 4-column grid (Ukens tilbud). */
   columns?: 4 | 5;
   promotionId?: string;
+  /** Defer paint for below-fold sections (mobile scroll). */
+  deferPaint?: boolean;
 }
 
+/**
+ * RSC home section — product cards stay server-rendered; only promo links hydrate.
+ */
 export default function HomeProductSection({
   title,
   href,
@@ -49,6 +48,7 @@ export default function HomeProductSection({
   limit,
   columns = 5,
   promotionId,
+  deferPaint = false,
 }: HomeProductSectionProps) {
   const status: SectionStatus =
     statusProp ||
@@ -66,24 +66,17 @@ export default function HomeProductSection({
     columns === 4 ? "ehx-product-grid-4" : "ehx-product-grid";
 
   const promoId = promotionId || (badge ? `home-${title}` : undefined);
-
-  const onPromoSelect = () => {
-    if (!promoId) return;
-    trackEcommerce("select_promotion", {
-      promotion_id: promoId,
-      promotion_name: title,
-      creative_name: badge || title,
-      creative_slot: "home_section",
-    });
-  };
+  const creativeName = badge || title;
 
   return (
-    <section className={`ehx-section ${bg}`}>
+    <section
+      className={`ehx-section ${bg}${deferPaint ? " ehx-cv-auto" : ""}`}
+    >
       {promoId ? (
         <TrackPromotionView
           promotionId={promoId}
           promotionName={title}
-          creativeName={badge || title}
+          creativeName={creativeName}
           creativeSlot="home_section"
         />
       ) : null}
@@ -92,18 +85,19 @@ export default function HomeProductSection({
           <div className="flex flex-wrap items-center gap-2.5">
             <h2 className="ehx-heading-2">{title}</h2>
             {badge ? (
-              <span className="rounded-md bg-[var(--danger)] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-sm">
+              <span className="rounded-md bg-[var(--danger)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">
                 {badge}
               </span>
             ) : null}
           </div>
-          <Link
+          <HomeSectionPromoLink
             href={href}
-            onClick={onPromoSelect}
+            label={linkLabel}
+            promotionId={promoId}
+            promotionName={title}
+            creativeName={creativeName}
             className="hidden items-center gap-0.5 text-sm font-semibold text-[var(--brand-dark)] transition hover:underline sm:flex"
-          >
-            {linkLabel} <ChevronRight size={16} />
-          </Link>
+          />
         </div>
 
         {status === "error" ? (
@@ -132,13 +126,14 @@ export default function HomeProductSection({
         )}
 
         <div className="mt-4 sm:hidden">
-          <Link
+          <HomeSectionPromoLink
             href={href}
-            onClick={onPromoSelect}
+            label={linkLabel}
+            promotionId={promoId}
+            promotionName={title}
+            creativeName={creativeName}
             className="inline-flex items-center gap-0.5 text-sm font-semibold text-[var(--brand-dark)]"
-          >
-            {linkLabel} <ChevronRight size={16} />
-          </Link>
+          />
         </div>
       </div>
     </section>

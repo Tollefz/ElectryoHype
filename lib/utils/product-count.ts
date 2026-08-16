@@ -1,6 +1,7 @@
 /**
  * Utility functions for consistent product counting.
- * Counts are always live (noStore) and only for allowlisted mains.
+ * Homepage path is cacheable (used inside unstable_cache).
+ * Live listing counts still opt out of Full Route Cache via noStore.
  */
 
 import { unstable_noStore as noStore } from "next/cache";
@@ -57,11 +58,11 @@ export async function getProductCount(
 }
 
 /**
- * Live counts per allowlist main category.
- * Legacy names are folded into allowlist via normalizeLegacyCategory during transition.
+ * Counts per allowlist main category (cache-safe — no noStore).
+ * Uses groupBy instead of loading every product row.
+ * Legacy names fold into allowlist via normalizeLegacyCategory.
  */
 export async function getCategoryCounts(storeId?: string): Promise<Record<string, number>> {
-  noStore();
   if (shouldUseDevFallback()) {
     return {};
   }
@@ -71,28 +72,27 @@ export async function getCategoryCounts(storeId?: string): Promise<Record<string
     allowlist.map((c) => [c, 0])
   );
 
-  const products = await safeQuery(
+  const rows = await safeQuery(
     () =>
-      prisma.product.findMany({
+      prisma.product.groupBy({
+        by: ["category"],
         where: {
           isActive: true,
           ...(storeId ? { storeId } : {}),
         },
-        select: {
-          category: true,
-        },
+        _count: { _all: true },
       }),
     [],
     "product-category-counts"
   );
 
-  for (const product of products) {
-    const raw = product.category?.trim() || null;
+  for (const row of rows) {
+    const raw = row.category?.trim() || null;
     if (!raw) continue;
     const main =
       (allowlist.includes(raw) ? raw : null) || normalizeLegacyCategory(raw);
     if (main && counts[main] !== undefined) {
-      counts[main] += 1;
+      counts[main] += row._count._all;
     }
   }
 
@@ -100,7 +100,7 @@ export async function getCategoryCounts(storeId?: string): Promise<Record<string
 }
 
 /**
- * Allowlist categories with live counts for frontpage / nav.
+ * Allowlist categories with counts for frontpage / nav.
  * Hides zero-count categories. Uses slug for hrefs.
  */
 export async function getCategoriesWithCounts(storeId?: string): Promise<

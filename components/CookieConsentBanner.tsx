@@ -11,10 +11,11 @@ import {
   readConsentFromStorage,
 } from "@/lib/consent";
 
+export const CONSENT_CHANGED_EVENT = "ehx-consent-changed";
+
 /**
  * Minimal ePrivacy/GDPR banner.
- * Shown because non-essential cookies (affiliate attribution + optional GA) need prior consent.
- * Strictly necessary cookies (NextAuth admin session) do not require this banner alone.
+ * No full-page reload on accept — critical for Slow 4G / mid-CPU phones.
  */
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
@@ -33,13 +34,18 @@ export function CookieConsentBanner() {
 
     if (value === "all") {
       applyPendingAffiliateCookie();
-      setVisible(false);
-      window.location.reload();
-      return;
+    } else {
+      clearAffiliateCookie();
     }
 
-    clearAffiliateCookie();
     setVisible(false);
+    try {
+      window.dispatchEvent(
+        new CustomEvent(CONSENT_CHANGED_EVENT, { detail: value })
+      );
+    } catch {
+      /* ignore */
+    }
   };
 
   if (!visible) return null;

@@ -22,7 +22,7 @@ export function MarketingTags() {
     <>
       {gtmId ? (
         <>
-          <Script id="gtm-init" strategy="afterInteractive">{`
+          <Script id="gtm-init" strategy="lazyOnload">{`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -44,10 +44,10 @@ export function MarketingTags() {
       {loadDirectGa ? (
         <>
           <Script
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
           />
-          <Script id="ga4-init" strategy="afterInteractive">{`
+          <Script id="ga4-init" strategy="lazyOnload">{`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -60,7 +60,7 @@ export function MarketingTags() {
       ) : null}
 
       {metaPixelId ? (
-        <Script id="meta-pixel" strategy="afterInteractive">{`
+        <Script id="meta-pixel" strategy="lazyOnload">{`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -75,7 +75,7 @@ export function MarketingTags() {
       ) : null}
 
       {tiktokPixelId ? (
-        <Script id="tiktok-pixel" strategy="afterInteractive">{`
+        <Script id="tiktok-pixel" strategy="lazyOnload">{`
           !function (w, d, t) {
             w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
             ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];
@@ -95,7 +95,7 @@ export function MarketingTags() {
       ) : null}
 
       {clarityId ? (
-        <Script id="ms-clarity" strategy="afterInteractive">{`
+        <Script id="ms-clarity" strategy="lazyOnload">{`
           (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;

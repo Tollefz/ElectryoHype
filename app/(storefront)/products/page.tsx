@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { Suspense } from "react";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { FilterSidebar } from "@/components/products/FilterSidebar";
@@ -26,6 +27,68 @@ interface ProductsPageProps {
 function firstParam(value: string | string[] | undefined): string | undefined {
   if (Array.isArray(value)) return value[0];
   return value;
+}
+
+const searchListSelect = {
+  id: true,
+  name: true,
+  slug: true,
+  price: true,
+  compareAtPrice: true,
+  images: true,
+  category: true,
+  subcategory: true,
+  tags: true,
+  shortDescription: true,
+  isActive: true,
+  metaTitle: true,
+  createdAt: true,
+} as const;
+
+/** Cache search candidate load only — ranking stays identical (Search RC1). */
+function getCachedSearchCandidates(
+  storeId: string,
+  categoryKey: string,
+  minPrice: number | undefined,
+  maxPrice: number | undefined,
+  inStockOnly: boolean
+) {
+  return unstable_cache(
+    async () => {
+      const categoryFilter =
+        categoryKey.startsWith("eq:")
+          ? { equals: categoryKey.slice(3) }
+          : { notIn: ["Sport & Trening", "Klær", "Sport"] };
+
+      const where: Prisma.ProductWhereInput = {
+        isActive: true,
+        storeId,
+        category: categoryFilter,
+      };
+      if (minPrice || maxPrice) {
+        where.price = {};
+        if (minPrice) where.price.gte = minPrice;
+        if (maxPrice) where.price.lte = maxPrice;
+      }
+      if (inStockOnly) {
+        where.stock = { gt: 0 };
+      }
+
+      return prisma.product.findMany({
+        where,
+        select: searchListSelect,
+      });
+    },
+    [
+      "plp-search-candidates",
+      storeId,
+      categoryKey,
+      String(minPrice ?? ""),
+      String(maxPrice ?? ""),
+      String(inStockOnly),
+    ],
+    { revalidate: 60, tags: ["products", `products:${storeId}`] }
+  )();
 }
 
 async function resolveSearchParams(searchParams: ProductsPageProps["searchParams"]) {
@@ -165,10 +228,21 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     // Search: load catalog slice once, rank in app (metadata + intent).
     // Browse: keep SQL pagination.
     if (query?.trim()) {
-      const candidates = await prisma.product.findMany({
-        where,
-        select: listSelect,
-      });
+      const categoryKey =
+        !isUnknownCategory && categorySlug && categoryDbValue
+          ? `eq:${categoryDbValue}`
+          : "default-exclude";
+      const listStoreId =
+        safeStoreId && safeStoreId !== "demo-store"
+          ? safeStoreId
+          : DEFAULT_STORE_ID;
+      const candidates = await getCachedSearchCandidates(
+        listStoreId,
+        categoryKey,
+        minPrice,
+        maxPrice,
+        inStockOnly
+      );
       const searchable: SearchableProduct[] = candidates.map((p) => ({
         id: p.id,
         name: p.name,

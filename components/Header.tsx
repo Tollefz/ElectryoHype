@@ -31,7 +31,7 @@ export function Header() {
   }));
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white">
       <div className="bg-[var(--brand)]">
         <div className="ehx-container">
           <div className="flex items-center justify-between gap-4 py-1.5 text-[11px] text-white sm:text-xs">

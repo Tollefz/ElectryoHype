@@ -315,6 +315,7 @@ export default async function HomePage() {
         tone="default"
         status={sectionStatus(loadError, popular)}
         error={loadError}
+        limit={4}
       />
 
       <HomeProductSection
@@ -325,6 +326,8 @@ export default async function HomePage() {
         tone="plain"
         status={sectionStatus(loadError, newest)}
         error={loadError}
+        limit={4}
+        deferPaint
       />
 
       {!loadError && mobil.length > 0 ? (
@@ -335,6 +338,8 @@ export default async function HomePage() {
           products={mobil}
           tone="default"
           status="success"
+          limit={4}
+          deferPaint
         />
       ) : null}
 
@@ -346,6 +351,8 @@ export default async function HomePage() {
           products={gaming}
           tone="muted"
           status="success"
+          limit={4}
+          deferPaint
         />
       ) : null}
 
@@ -357,6 +364,8 @@ export default async function HomePage() {
           products={data}
           tone="plain"
           status="success"
+          limit={4}
+          deferPaint
         />
       ) : null}
 
@@ -368,6 +377,8 @@ export default async function HomePage() {
           products={tv}
           tone="default"
           status="success"
+          limit={4}
+          deferPaint
         />
       ) : null}
 
@@ -379,6 +390,8 @@ export default async function HomePage() {
           products={hjem}
           tone="muted"
           status="success"
+          limit={4}
+          deferPaint
         />
       ) : null}
 

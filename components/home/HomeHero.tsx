@@ -2,69 +2,32 @@ import Link from "next/link";
 import Image from "next/image";
 
 /**
- * Campaign hero — product art stays full-opacity; only navy overlays dissolve into copy.
+ * Mobile-first hero (iPhone / Slow 4G):
+ * - Below lg: CSS-only navy — no hero image bytes (overlay hid ~all of the art anyway).
+ * - lg+: single prioritized campaign image.
+ * Text paints immediately; LCP is typography, not a 70KB+ decode on mid-CPU.
  */
 export default function HomeHero() {
   return (
     <section className="pt-2 sm:pt-2.5 lg:pt-3">
       <div className="ehx-container">
         <div className="relative overflow-hidden rounded-[1.125rem] bg-[#0b1020] shadow-[var(--ehx-shadow-lg)]">
-          {/* Mobile: full-opacity art + overlay for text contrast only */}
-          <div className="pointer-events-none absolute inset-0 z-[1] lg:hidden">
+          {/* Desktop / large only — never compete with mobile LCP bandwidth */}
+          <div className="pointer-events-none absolute inset-0 z-[1] hidden lg:block">
             <Image
               src="/images/hero-campaign-v2.webp"
-              alt=""
+              alt="Gaming-utstyr — kampanje"
               fill
               priority
-              sizes="100vw"
+              fetchPriority="high"
+              sizes="(min-width: 1024px) 100vw, 1px"
               quality={70}
-              className="object-cover object-[62%_42%]"
+              className="origin-[40%_48%] scale-[1.08] object-cover object-[42%_47%] xl:scale-[1.1] xl:object-[40%_46%]"
             />
             <div
-              className="absolute inset-0"
+              className="absolute right-[6%] top-[4%] h-[92%] w-[58%] rounded-full bg-[radial-gradient(ellipse_at_42%_48%,rgba(85,140,235,0.35)_0%,rgba(50,100,190,0.1)_42%,transparent_70%)]"
               aria-hidden
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(11,16,32,0.88) 0%, rgba(11,16,32,0.72) 42%, rgba(11,16,32,0.9) 100%)",
-              }}
             />
-          </div>
-
-          {/* Desktop: product on the right at 100% opacity — no mask / no image opacity */}
-          <div className="pointer-events-none absolute inset-0 z-[1] hidden lg:block">
-            <div
-              className="absolute right-[6%] top-[4%] h-[92%] w-[58%] rounded-full"
-              aria-hidden
-              style={{
-                background:
-                  "radial-gradient(ellipse at 42% 48%, rgba(85,140,235,0.45) 0%, rgba(50,100,190,0.14) 42%, transparent 70%)",
-                filter: "blur(64px)",
-              }}
-            />
-
-            <div
-              className="absolute right-[16%] top-[12%] h-[65%] w-[36%] rounded-full"
-              aria-hidden
-              style={{
-                background:
-                  "radial-gradient(ellipse at 50% 50%, rgba(120,165,255,0.2) 0%, transparent 70%)",
-                filter: "blur(34px)",
-              }}
-            />
-
-            {/* Product art — full opacity, never masked or faded */}
-            <div className="absolute inset-y-0 right-0 w-[60%]">
-              <Image
-                src="/images/hero-campaign-v2.webp"
-                alt="Gaming-utstyr — kampanje"
-                fill
-                priority
-                sizes="(max-width: 1280px) 60vw, 840px"
-                className="origin-[40%_48%] scale-[1.08] object-cover object-[42%_47%] xl:scale-[1.1] xl:object-[40%_46%]"
-              />
-            </div>
-
-            {/* Navy dissolve for copy only — gone before the product zone */}
             <div
               className="absolute inset-0"
               aria-hidden
@@ -75,12 +38,12 @@ export default function HomeHero() {
             />
           </div>
 
-          <div className="relative z-10 grid min-h-[300px] items-center sm:min-h-[340px] lg:min-h-[400px] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:min-h-[440px]">
-            <div className="ehx-fade-up relative flex flex-col justify-center px-6 py-9 sm:px-10 sm:py-11 lg:px-12 lg:py-12 xl:pl-14 xl:pr-4">
+          <div className="relative z-10 grid min-h-[280px] items-center sm:min-h-[320px] lg:min-h-[400px] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:min-h-[440px]">
+            <div className="relative flex flex-col justify-center px-6 py-9 sm:px-10 sm:py-11 lg:px-12 lg:py-12 xl:pl-14 xl:pr-4">
               <span className="mb-4 inline-flex w-fit items-center rounded-md bg-[var(--brand)] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.05em] text-white sm:mb-5 sm:text-[11px]">
                 Opptil 25% på utvalgte produkter
               </span>
-              <h1 className="text-[clamp(2.1rem,4.4vw,3.35rem)] font-extrabold leading-[1.06] tracking-tight text-white">
+              <h1 className="text-[clamp(2.1rem,4.4vw,3.35rem)] font-bold leading-[1.06] tracking-tight text-white">
                 Smart teknologi
                 <br />
                 til hverdagen
@@ -104,7 +67,7 @@ export default function HomeHero() {
               </div>
             </div>
 
-            <div className="ehx-fade-up-delay-1 relative hidden h-full min-h-[inherit] self-stretch lg:block" />
+            <div className="relative hidden h-full min-h-[inherit] self-stretch lg:block" />
           </div>
         </div>
       </div>

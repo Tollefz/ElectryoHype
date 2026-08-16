@@ -273,15 +273,21 @@ html {
 }
 
 .ehx-card-lift {
-  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 200ms ease;
+  /* No transition cost on touch / mid-CPU scroll */
 }
 
-.ehx-card-lift:hover {
-  transform: var(--ehx-card-lift);
-  box-shadow: var(--ehx-shadow-hover);
-  border-color: rgba(11, 18, 32, 0.12);
+@media (hover: hover) and (pointer: fine) {
+  .ehx-card-lift {
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 200ms ease;
+  }
+
+  .ehx-card-lift:hover {
+    transform: var(--ehx-card-lift);
+    box-shadow: var(--ehx-shadow-hover);
+    border-color: rgba(11, 18, 32, 0.12);
+  }
 }
 
 .ehx-cat-card {
@@ -307,20 +313,39 @@ html {
   }
 }
 
+/* Desktop-only entrance motion — on mobile opacity:0 delays LCP/FCP. */
 .ehx-fade-up {
-  animation: ehx-fade-up 0.45s ease both;
+  animation: none;
 }
 
-.ehx-fade-up-delay-1 {
-  animation-delay: 0.06s;
-}
-
-.ehx-fade-up-delay-2 {
-  animation-delay: 0.12s;
-}
-
+.ehx-fade-up-delay-1,
+.ehx-fade-up-delay-2,
 .ehx-fade-up-delay-3 {
-  animation-delay: 0.18s;
+  animation: none;
+}
+
+@media (min-width: 1024px) {
+  .ehx-fade-up {
+    animation: ehx-fade-up 0.45s ease both;
+  }
+
+  .ehx-fade-up-delay-1 {
+    animation-delay: 0.06s;
+  }
+
+  .ehx-fade-up-delay-2 {
+    animation-delay: 0.12s;
+  }
+
+  .ehx-fade-up-delay-3 {
+    animation-delay: 0.18s;
+  }
+}
+
+/* Skip layout/paint work for below-fold home sections on mobile CPUs */
+.ehx-cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 640px;
 }
 
 @media (prefers-reduced-motion: reduce) {

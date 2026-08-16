@@ -20,7 +20,7 @@ export default function ProductPrice({ basePrice, baseCompareAt }: ProductPriceP
   return (
     <div className="space-y-1.5">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="text-[1.75rem] font-extrabold tracking-tight text-[var(--text)] sm:text-4xl">
+        <span className="text-[1.75rem] font-bold tracking-tight text-[var(--text)] sm:text-4xl">
           {Math.floor(price).toLocaleString('no-NO')},-
         </span>
         {hasDiscount ? (
@@ -29,7 +29,7 @@ export default function ProductPrice({ basePrice, baseCompareAt }: ProductPriceP
           </span>
         ) : null}
         {hasDiscount ? (
-          <span className="rounded-md bg-[var(--danger)] px-2 py-0.5 text-xs font-extrabold text-white">
+          <span className="rounded-md bg-[var(--danger)] px-2 py-0.5 text-xs font-bold text-white">
             −{discountPercent}%
           </span>
         ) : null}
